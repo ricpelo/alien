@@ -418,7 +418,7 @@ Include "Acciones";
 
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
-Include "barra";          ! Para cambiar la barra de estado
+Include "Barra";          ! Para cambiar la barra de estado
 
 
 Object barra_estado

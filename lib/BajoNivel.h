@@ -88,33 +88,33 @@ Constant TARGET_ZCODE;
 #endif;
 
 #ifdef TARGET_GLULX;
-![ BorrarPantalla w;
-!    if (w==0) w=gg_mainwin;
-!    if (gg_quotewin) ! Cerrar la ventana de boxes
-!    {
-!        glk($0024, gg_quotewin, 0); ! close_window
-!        gg_quotewin = 0;
-!    }
-!    glk($002A, w);  ! window_clear
-!];
-!
-![ EsperarTecla s delay;
-!    if (s) print (string) s;
-!    glk($00D6, delay*100); ! request_timer_events
-!    glk($00D2, gg_mainwin); ! glk_request_char_event(gg_mainwin);
-!    while(1) 
-!    {
-!    glk($00C0, gg_arguments); ! glk_select(gg_arguments);
-!    if ((gg_arguments-->0) == 2) break; ! 2=evType_CharInput
-!    if ((gg_arguments-->0) == 1)
-!    {
-!        glk($00D3, gg_mainwin); ! cancel_char_event
-!            glk($00D6, 0); ! request_timer_events (cancelados)
-!        return 0;
-!    }
-!    }
-!    return gg_arguments-->2;
-!];
+[ BorrarPantalla w;
+    if (w==0) w=gg_mainwin;
+    if (gg_quotewin) ! Cerrar la ventana de boxes
+    {
+        glk($0024, gg_quotewin, 0); ! close_window
+        gg_quotewin = 0;
+    }
+    glk($002A, w);  ! window_clear
+];
+
+[ EsperarTecla s delay;
+    if (s) print (string) s;
+    glk($00D6, delay*100); ! request_timer_events
+    glk($00D2, gg_mainwin); ! glk_request_char_event(gg_mainwin);
+    while(1) 
+    {
+    glk($00C0, gg_arguments); ! glk_select(gg_arguments);
+    if ((gg_arguments-->0) == 2) break; ! 2=evType_CharInput
+    if ((gg_arguments-->0) == 1)
+    {
+        glk($00D3, gg_mainwin); ! cancel_char_event
+            glk($00D6, 0); ! request_timer_events (cancelados)
+        return 0;
+    }
+    }
+    return gg_arguments-->2;
+];
 
 Constant GLK_ESTILO_NORMAL 0;
 Constant GLK_ESTILO_ENFASIS 1;
