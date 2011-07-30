@@ -9377,7 +9377,8 @@ Endif;
   if (hayGraficos) {
     viewImageCenter(Sin_Imagen_jpg);
   }
-  print "A·L·I·E·N : LA AVENTURA - (c) 2008 Alpha Aventuras^^";
+  print "A·L·I·E·N : LA AVENTURA - EDICIÓN ESPECIAL^";
+  print "(c) 2008-2011 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
   print "    Ricardo Pérez López^^";
   print "- GRÁFICOS E IDEA ORIGINAL:^";
@@ -9415,7 +9416,7 @@ Endif;
   EsperarTecla();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
          directa o indirectamente, en el desarrollo de esta aventura.^^
-         (c) 2008 Alpha Aventuras.^^
+         (c) 2008-2011 Alpha Aventuras.^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
   style fixed;
