@@ -1,0 +1,550 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>:: Simple Glulx Wrapper con Damusix (SGW+DMX) - Documentación ::</title>
+<style type="text/css">
+body {
+	background-color: #C0DFFD;
+	font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13pt;
+	font-style: normal;
+	color: #003366;
+	text-align: justify;
+	margin: 0px;
+}
+p {
+	margin: 0px;
+}
+pre {
+	font-family: Consolas, "Courier New", Courier, monospace;
+	font-size: 10pt;
+	color: #660000;
+	background-color: #FFFFCC;
+	text-align: left;
+	border: 1px dashed #660000;
+	font-style: normal;
+	font-weight: normal;
+	padding: 24px;
+	margin-top: 0px;
+	margin-right: 24px;
+	margin-bottom: 0px;
+	margin-left: 24px;
+}
+ul,ol {
+	color: #990000;
+	font-weight: bold;
+	font-size: 12pt;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+blockquote {
+	background-color: #EAF5FF;
+	padding: 12px;
+	margin: 0px;
+}
+blockquote a:hover {
+	text-decoration: underline;
+}
+a:hover {
+	background-color: #EAF5FF;
+}
+a:link {
+	color: #6600CC;
+	text-decoration: none;
+	font-weight: bold;
+}
+a:active {
+	color: #9900FF;
+	text-decoration: none;
+	font-weight: bold;
+}
+a:visited {
+	color: #6600CC;
+	text-decoration: none;
+	font-weight: bold;
+}
+.Titulo {
+	font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 24pt;
+	font-weight: bold;
+	color: #3366CC;
+	text-align: left;
+	font-style: normal;
+	margin: 0px;
+}
+.SubTitulo {
+	font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 18pt;
+	font-weight: bold;
+	color: #3366CC;
+	text-align: left;
+	font-style: italic;
+	margin: 0px;
+}
+.Rutina {
+	font-family: Consolas, "Courier New", Courier, monospace;
+	font-size: 14pt;
+	color: #660000;
+	background-color: #FFFFCC;
+	font-style: normal;
+	font-weight: bold;
+	border: 1px dashed #660000;
+	padding: 1px;
+}
+.Codigo {
+	font-family: Consolas, "Courier New", Courier, monospace;
+	font-size: 12pt;
+	color: #660000;
+	background-color: #FFFFCC;
+	font-style: normal;
+	font-weight: normal;
+}
+.BordesDivisorVerde {
+	border-top-width: 1px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+	border-left-width: 0px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #003366;
+	border-right-color: #003366;
+	border-bottom-color: #003366;
+	border-left-color: #003366;
+}
+#MenuSuperior {
+	color: #003366;
+	font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	text-align: left;
+	}
+#MenuSuperior a:link {
+	color: #003366;
+	background-color: #CCFF99;
+}
+#MenuSuperior a:hover {
+	text-decoration: underline;
+}
+#MenuSuperior a:visited {
+	color: #003366;
+	background-color: #CCFF99;
+}
+</style>
+</head>
+
+<body>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="200" bgcolor="#3366CC"><img src="logo.jpg" width="780" height="200" /></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr class="BordesDivisorVerde">
+        <td width="24" height="24" bgcolor="#CCFF99" class="BordesDivisorVerde"><img src="spacer.gif" width="24" height="24" /></td>
+        <td height="24" bgcolor="#CCFF99" class="BordesDivisorVerde" id="MenuSuperior"><a href="#Comenzando">Comenzando</a> :: <a href="#Para_que_sirve">Para qué sirve</a> :: <a href="#Como_se_usa">Cómo se usa</a> :: <a href="#Funciones_Graficas">Funciones Gráficas</a> :: <a href="#Funciones_de_Audio">Funciones de Audio</a> :: <a href="#Licencia">Licencia</a></td>
+        <td width="24" height="24" bgcolor="#CCFF99" class="BordesDivisorVerde"><img src="spacer.gif" width="24" height="24" /></td>
+      </tr>
+      <tr>
+        <td width="24" height="24"><img src="spacer.gif" width="24" height="24" /></td>
+        <td height="24">&nbsp;</td>
+        <td width="24" height="24"><img src="spacer.gif" width="24" height="24" /></td>
+      </tr>
+      <tr>
+        <td width="24">&nbsp;</td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="left" valign="top"><span class="Titulo">Introducción</span></td>
+                <td align="right" valign="top"><strong><em>DocV 2.3 (InformATE!)</em></strong></td>
+              </tr>
+            </table>
+            <p>&nbsp;</p>
+          <p>La extensión <strong>Simple Glulx Wrapper con Damusix (SGW+DMX)</strong> es una <em>modificación</em> de la extensión <strong>SGW v1.6.1</strong>, desarrollada por Alessandro Schillaci (con aportaciones de Vincenzo Scarpa y Paolo Maroncelli). También incluye buenas ideas y un poco de código de la versión para InformATE! de SGW, desarrollada por Mapache y Depresiv.</p>
+          <p>&nbsp;</p>
+          <p>Esta versión <em>modificada</em> existe debido a los deseos de algunos amigos del CAAD (el grupo hispano de Ficción Interactiva) de tener la posibilidad de usar SGW (por su notable facilidad de uso) junto con mi extensión <strong>Damusix</strong>, un potente <em>Administrador Unificado de Sonido en Glulx</em>.</p>
+          <p>&nbsp;</p>
+          <p>Tanto la versión original de SGW como <strong>Damusix</strong> hacen uso de un par de <em>Puntos de Entrada Glk</em> que son necesarios para el correcto funcionamiento de ambas extensiones. La versión original de SGW implementa estos puntos de entrada de una manera &#8220;tiránica&#8221; (jeje! =P) desde su propio código, sin posibilidad de alteraciones a menos que se &#8220;hackee&#8221; la extensión. <strong>Damusix</strong>, por otro lado, ocupa un &#8220;método amigable&#8221; de implementación de código para estos <em>Puntos de Entrada Glk</em>, usando para ello una extensión de soporte llamada <strong>Dainunek</strong>. La implementación &#8220;tiránica&#8221; de los puntos de entrada en la versión original de SGW, provoca que tanto ésta como <strong>Damusix</strong> sean extensiones totalmente incompatibles.</p>
+          <p>&nbsp;</p>
+          <p>La extensión <strong>Dainunek</strong> fue originalmente escrita para <strong>Damusix</strong> con el fin de crear un sistema de <em>Inicialización Unificada de Extensiones en Glk</em> para permitir que varias extensiones que ocupan los <em>Puntos de Entrada Glk</em> puedan usarse en conjunto, sin que el programador tenga que re-escribir dichos puntos de entrada combinando el código que cada extensión utiliza para sus propios fines. <strong>Dainunek</strong> se encarga de “colectar” todo el código de los <em>Puntos de Entrada Glk</em> que cada extensión implementa y los ejecuta de manera unificada. Algo en verdad muy práctico.</p>
+          <p>&nbsp;</p>
+          <p><strong>SGW+DMX</strong> ocupa la extensión <strong>Dainunek</strong> para implementar su código que debe ejecutarse en los <em>Puntos de Entrada Glk</em>. Gracias a este simple cambio, ya se puede utilizar en conjunto con <strong>Damusix</strong>. Esto supone una gran ventaja, puesto que las <em>funciones nativas de audio</em> de <strong>SGW+DMX</strong> (y de la versión original de SGW) son muy básicas. Usando <strong>Simple Glulx Wrapper con Damusix</strong> puedes utilizar el potente <em>Gestor de Audio</em> de <strong>Damusix</strong> para hacer cosas realmente muy interesantes y mucho más avanzadas.</p>
+          <p>&nbsp;</p>
+          <p>Adicionalmente, <strong>SGW+DMX</strong> trae una serie de <em>mejoras y correcciones de Bugs</em> respecto de la SGW original.</p>
+          <p>&nbsp;</p>
+          <p><strong>¡Disfruta programando con SGW+DMX! =D</strong></p>
+          <p>&nbsp;</p>
+          <p><em>P.S: ¡Este es un regalo para ti, Jen! =P Que fuiste tú la que inició el bichillo de usar SGW junto a Damusix.</em></p>
+          <p>&nbsp;</p>
+          <blockquote>
+              <p>Si has decidido ocupar la extensión <strong>SGW+DMX</strong> en tu juego, recibe mi agradecimiento. Mientras más personas la usen y revisen, más crecerá. Si detectas un BUG, por favor repórtalo a mi e-Mail. Y no olvides estar atento a las nuevas versiones de la extensión.</p>
+            <p align="right"><strong><em>Eliuk Blau</em></strong></p>
+            <p align="right"><strong><a href="mailto:eliukblau%20(AT)%20gmail.com"><em>eliukblau (AT) gmail.com</em></a></strong></p>
+          </blockquote>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Comenzando" id="Comenzando"></a>Comenzando</p>
+          <p>&nbsp;</p>
+          <p><strong>Simple Glulx Wrapper con Damusix</strong> requiere para funcionar correctamente:</p>
+          <p>&nbsp;</p>
+          <ul>
+              <li>Compilador Inform v6.30 o superior</li>
+            <li>Librería Española InformATE! 6/10</li>
+            <li>Librería &#8220;infglk.h&#8221;</li>
+          </ul>
+          <p>&nbsp;</p>
+          <p>Como ves, no es necesario tener <strong>Damusix</strong> para usar <strong>Simple Glulx Wrapper con Damusix</strong>, jejeje! =D No, <strong>Damusix</strong> no es un requisito. Si no la incluyes, <strong>SGW+DMX</strong> compilará correctamente y podrás ocupar sus <em>funciones nativas de audio</em>. <strong>Si incluyes adicionalmente Damusix, entonces SGW+DMX <em>inhabilitará todas sus funciones  nativas de audio</em> y usará en su lugar las que Damusix proporciona.</strong> Evidentemente, en el código de tu juego ya no podrás utilizar las funciones  de <strong>SGW+DMX</strong> para manejar el audio, sino que deberás ocupar las rutinas propias de <strong>Damusix</strong> (no te asustes, son fáciles de ocupar... además, <em>¿no es acaso ése el propósito de esta versión modificada?</em> =D).</p>
+          <p>&nbsp;</p>
+          <p>Entonces, si vas a usar también <strong>Damusix</strong>, estos son los requisitos adicionales:</p>
+          <p>&nbsp;</p>
+          <ul>
+              <li>Extensión Damusix (para InformATE!)</li>
+            <li>Extension Dainunek (viene incluida con Damusix)</li>
+          </ul>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Para_que_sirve" id="Para_que_sirve"></a>Para qué sirve SGW+DMX</p>
+          <p>&nbsp;</p>
+          <p><strong>SGW+DMX</strong> es un pequeño y sencillo <em>wrapper para Glulx</em>, especialmente creado  para programadores con un nivel novato en Inform-Glulx.</p>
+          <p>&nbsp;</p>
+          <p>Con esta  extensión es posible mostrar una imagen o simplemente tocar un sonido o música,  usando un reducido conjunto de rutinas que “envuelven” las verdaderas funciones  de la API Glk de Glulx. Adicionalmente se puede especificar y utilizar los  diferentes estilos de texto que Glulx provee.</p>
+          <p>&nbsp;</p>
+          <p><strong>SGW+DMX</strong> es tan simple de usar que fácilmente  se puede “actualizar” una aventura escrita originalmente para la Máquina-Z a  una aventura con soporte multimedia para la moderna Máquina Glulx.</p>
+          <p>&nbsp;</p>
+          <p>Lo mejor de  todo es que utilizando <strong>SGW+DMX</strong> se  puede programar una aventura que compile tanto para Glulx como para la Máquina-Z,  sin apenas variar el código. Si se utilizan sólo las funciones provistas por  esta extensión, no será necesario modificar nada para obtener código <em>biplataforma</em>.</p>
+          <p>&nbsp;</p>
+          <p><strong>SGW+DMX</strong> ha sido concebida pensando  especialmente para su uso junto con la extensión <strong>Damusix</strong>. Así podrás dotar a tu juego de funcionalidades de audio  muy potentes a la vez que bien sencillas de utilizar.</p>
+          <p>&nbsp;</p>
+          <p>La extensión <strong>SGW+DMX</strong> implementa las siguientes características:</p>
+          <p>&nbsp;</p>
+          <ul>
+              <li> 2 Ventanas  Gráficas:<br />
+                - una para  mostrar imágenes grandes (Ej.: de la localidad actual)<br />
+                - una para  mostrar imágenes pequeñas (Ej.: descripción de objetos)</li>
+          </ul>
+          <p>&nbsp;</p>
+          <ul>
+              <li>3 Canales  de Audio:<br />
+                - <span class="Codigo">music</span>:  canal para la música de fondo<br />
+                - <span class="Codigo">chan1</span>:  canal 1 para los efectos de sonido<br />
+                - <span class="Codigo">chan2</span>:  canal 2 para los efectos de sonido </li>
+          </ul>
+          <p>&nbsp;</p>
+          <blockquote>
+              <p>Si usas <strong>Damusix</strong> junto con <strong>SGW+DMX</strong>, <em>los tres canales de audio antes mencionados <strong>ya no serán  creados</strong> y todas las funciones relacionadas con el sonido de <strong>SGW+DMX</strong> serán <strong>inhabilitadas</strong></em>. Entonces ya podrás manejar el sistema de audio completo  directamente con <strong>Damusix</strong>.</p>
+          </blockquote>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Como_se_usa" id="Como_se_usa"></a>Cómo usar SGW+DMX</p>
+          <p>&nbsp;</p>
+          <p>Tan sencillo como seguir las siguientes instrucciones:</p>
+          <p>&nbsp;</p>
+          <p><strong>1)</strong> Incluye <strong>SGW+DMX</strong> en el código fuente de tu juego <em>después  de incluir el propio Parser de InformATE!, pero antes del archivo de Gramática</em>. Ejemplo:</p>
+          <p>&nbsp;</p>
+          <pre>Include &quot;EParser&quot;;
+Include &quot;sgw+dmx&quot;;       ! Incluir la extension SGW+DMX
+Include &quot;&gt;aventura.bli&quot;; ! Incluir los recursos (imagenes y sonidos)
+Include &quot;Acciones&quot;;
+!--------------------
+! ... mas codigo ...
+!--------------------
+Include &quot;Mensajes&quot;;
+Include &quot;Gramatica&quot;;</pre>
+            <p>&nbsp;</p>
+          <p><strong>SGW+DMX</strong> utiliza la extensión “infglk.h” para compilar  correctamente. Viene incluida en el paquete de <strong>SGW+DMX</strong>, así que recuerda <strong>copiarla en el directorio de tus librerías para InformATE!</strong></p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>2)</strong> En la rutina <span class="Codigo">Inicializar()</span>, llama a la rutina <span class="Codigo">initializeSGW(x)</span> para indicarle a <strong>SGW+DMX que prepare las ventanas gráficas y el sistema de audio.</strong> El argumento <span class="Codigo">x</span> corresponde a la <strong>altura que deberá tener la ventana superior</strong> para imágenes  grandes (por ejemplo, para las imágenes de localidad). Ejemplo:</p>
+          <p>&nbsp;</p>
+          <pre>initializeSGW(240);</pre>
+            <p>&nbsp;</p>
+          <p>Esto va a configurar el tamaño de la ventana superior para  permitir mostrar imágenes de “idealmente” 240px de altura. No es obligatorio que  la imagen realmente tenga esa altura, pues si tiene una altura mayor que la  indicada para la ventana entonces dicha imagen será “redimensionada” para  ajustarse a la altura actual de la ventana.</p>
+          <p>&nbsp;</p>
+          <p>Si indicas <strong>altura cero</strong>, es decir: <span class="Codigo">initializeSGW(0)</span>, entonces <strong>SGW+DMX</strong> se inicializará correctamente, pero <strong>sin abrir la ventana gráfica superior</strong>. Podrás abrirla tú mismo más adelante, si así lo deseas, mediante la rutina <span class="Codigo">openGraphicWindow()</span>.</p>
+          <p>&nbsp;</p>
+          <blockquote>
+            <p><strong>NOTA:</strong> Si vas a ocupar <strong>Damusix</strong>, la rutina <span class="Codigo">initializeSGW()</span> también se encargará de <strong><em>inicializar el Gestor de Audio, ejecutando automáticamente la rutina <span class="Codigo">Damusix.InicializarGlk()</span></em></strong>, por lo que <em><strong>no tienes que preocuparte de hacerlo tú mismo</strong></em>, a mano, en la rutina <span class="Codigo">Inicializar()</span> de tu juego. <strong>SGW+DMX lo hara por ti.</strong></p>
+            <p>&nbsp;</p>
+            <p><em>(En InformATE!, el Gestor de <strong>Damusix</strong> debe ser inicializado antes de poder trabajar con él. Usualmente esto lo debería hacer de forma manual el propio programador, llamando a <span class="Codigo">Damusix.InicializarGlk()</span> desde la rutina <span class="Codigo">Inicializar()</span> de su juego. Sin embargo, <strong>SGW+DMX</strong> intentar hacer las cosas todavía más simples, <strong>inicializando automáticamente el Gestor de Damusix</strong>, así que el programador no debe preocuparse de estos asuntos.)</em></p>
+          </blockquote>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>3)</strong> Una vez que <strong>SGW+DMX esté inicializada</strong> ya puedes intentar <strong>reproducir un sonido o mostrar alguna imagen</strong>. La rutina <span class="Codigo">playSound()</span> sirve para tocar la <em>música y sonidos</em>. Para mostrar <em>imágenes</em> puedes usar  las siguientes rutinas:</p>
+          <p>&nbsp;</p>
+          <pre>viewImageCenter(img) -&gt; Imagen centrada en la ventana grande
+viewImageRight(img)  -&gt; Imagen a la derecha en la ventana grande
+viewImageLeft(img)   -&gt; Imagen a la izquierda en la ventana grande
+viewImageSlide(img)  -&gt; Imagen con deslizamiento en la ventana pequeña
+closeImageSlide()    -&gt; Si la ventana pequeña esta abierta, la cierra</pre>
+            <p>&nbsp;</p>
+          <p>En ninguna de estas rutinas es necesario especificar el tamaño de la imagen. Lo averiguaran por ellas mismas.</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>4)</strong> Puedes configurar los <strong>colores que quieres que tenga el juego</strong>. Simplemente tienes que <strong>declarar las siguientes constantes</strong> antes de incluir <strong>SGW+DMX</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>Constant SCBACK = $110101;      ! estilo fondo
+Constant SCTEXT = $DDBB99;      ! estilo texto
+Constant SCEMPH = $FFFFDD;      ! estilo enfasis
+Constant SCHEAD = $EEDDAA;      ! estilo cabecera (nombre localidades)
+Constant SCINPU = $DDEEAA;      ! estilo input del jugador
+Constant SCUSR1 = CLR_GG_BLUE;  ! estilo configurable User1
+Constant SCUSR2 = CLR_GG_PINK;  ! estilo configurable User2</pre>
+            <p>&nbsp;</p>
+            <p><strong><em>Opcionalmente</em></strong><em>, puedes indicar <strong>colores personalizados</strong> también para la <strong>Línea de Estado</strong> del juego:</em></p>
+            <p>&nbsp;</p>
+            <pre>Constant LIBACK = $30FF30;  ! estilo fondo linea de estado
+Constant LITEXT = $0000A0;  ! estilo texto linea de estado</pre>
+            <p>&nbsp;</p>
+          <p>Los colores deben estar expresados en  <strong>formato RRGGBB, mediante un  número hexadecimal</strong>. Si no sabes el valor hexadecimal de algún color, puedes averiguarlo  fácilmente con cualquier programa de retoque fotográfico. <strong>Hay una serie de  constantes fáciles para los colores usados con mayor frecuencia</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>CLR_GG_AZURE       CLR_GG_BLACK
+CLR_GG_BLUE        CLR_GG_BROWN
+CLR_GG_CYAN        CLR_GG_GREEN
+CLR_GG_GREY        CLR_GG_MAGENTA
+CLR_GG_ORANGE      CLR_GG_PINK
+CLR_GG_PURPLE      CLR_GG_RED
+CLR_GG_YELLOW      CLR_GG_WHITE</pre>
+            <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>5)</strong> Al mostrar mensajes de texto puedes usar <strong>diferentes estilos</strong>. Ejemplos:</p>
+          <p>&nbsp;</p>
+          <pre>print &quot;Estilo de Texto: &quot;, (s_emph) &quot;Emphasized&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_bold) &quot;Bold&quot;, &quot; (como Máquina-Z)^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_pref) &quot;Preformatted&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_fixed) &quot;Fixed&quot;, &quot; (como Máquina-Z)^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_head) &quot;Header&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_subhead) &quot;Subheader&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_alert) &quot;Alert&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_reverse) &quot;Reverse&quot;, &quot; (como Máquina-Z)^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_note) &quot;Note&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_underline) &quot;Underline/Italic&quot;, &quot; (como Máquina-Z)^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_block) &quot;BlockQuote&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_input) &quot;Input&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_user1) &quot;User1&quot;, &quot;^&quot;;
+print &quot;Estilo de Texto: &quot;, (s_user2) &quot;User2&quot;, &quot;^&quot;;</pre>
+            <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>6)</strong> Si <strong>no quieres ocupar gráficos</strong> simplemente tienes que <strong>declarar la siguiente constante</strong> antes de incluir <strong>SGW+DMX</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>Constant SGW_SIN_GRAFICOS;</pre>
+            <p>&nbsp;</p>
+          <p>Ahora tu juego <strong>sólo tendrá sonido, sin capacidades gráficas</strong>.</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>7)</strong> Si <strong>quieres usar Damusix para gestionar el audio</strong>, tienes que <strong>declarar la siguiente constante</strong> antes de incluir <strong>SGW+DMX</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>Constant SGW_CON_DAMUSIX;</pre>
+            <p>&nbsp;</p>
+          <p>Ahora <strong>SGW+DMX <em>incluirá  e inicializará automáticamente</em> la extensión Damusix</strong>.  Todas las <em>funciones nativas de audio</em> de <strong>SGW+DMX</strong> serán <strong>inhabilitadas</strong> con este cambio y ya podrás usar sin problemas las rutinas de <strong>Damusix</strong>. Además, <strong>SGW+DMX</strong> hará todos los ajustes  necesarios en el <em>Marco de Trabajo</em> (ver  siguiente ítem) para que se usen las rutinas de <strong>Damusix</strong> que son mucho más potentes.</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>8)</strong> <strong>SGW+DMX</strong> <em>implementa automáticamente</em> un simple <strong>“Marco de  Trabajo”</strong> que te hará la vida mas fácil a la hora de programar tu juego. El <strong>Marco de Trabajo</strong> <em>mostrará una Imagen y tocará una Música de Fondo para cada  Localidad</em> de manera <strong>automática</strong>. También <em>mostrará una imagen para cada Objeto  que sea “examinado”</em> durante el juego.</p>
+          <p>&nbsp;</p>
+          <p>Para que una <em>Localidad </em>u <em>Objeto</em> <strong>muestren su Imagen</strong>, deben <strong>tener una propiedad</strong> <span class="Codigo">sgw_img</span> con la imagen que deseas.</p>
+          <p>&nbsp;</p>
+          <p>Para que una <em>Localidad</em> <strong>toque su Música de Fondo</strong>, debe <strong>tener una propiedad</strong> <span class="Codigo">sgw_mus</span> con la música que deseas. Opcionalmente <em><strong>puedes  indicar un volumen</strong></em> para aquella música, incluyendo una propiedad <span class="Codigo">sgw_vol</span> con  el porcentaje de volumen (0-100) que deseas. Hay <strong>tres constantes fáciles</strong> que  puedes usar también: <span class="Codigo">VOLUMEN_ALTO</span> (100%), <span class="Codigo">VOLUMEN_MEDIO</span> (75%), <span class="Codigo">VOLUMEN_BAJO</span> (50%). Ejemplos:</p>
+          <p>&nbsp;</p>
+          <pre>Object La_Localidad &quot;Una Localidad Cualquiera&quot;
+  has luz,
+  with
+    sgw_img grafico_localidad, ! el grafico de la localidad
+    sgw_mus musica_localidad,  ! la musica de la localidad
+    sgw_vol VOLUMEN_ALTO,      ! el volumen de la musica
+    descripcion &quot;Yeah. Imagen y Musica de Fondo.&quot;,
+;<br />
+Object El_Objeto &quot;Un Objeto Cualquiera&quot;
+  with
+    sgw_img grafico_objeto, ! el grafico del objeto
+    descripcion &quot;Cool. Este objeto tiene una Imagen.&quot;,
+;</pre>
+            <p>&nbsp;</p>
+          <p>Si una localidad <em>no tiene luz</em>, el <strong>Marco de Trabajo <em>no mostrará su imagen</em></strong>, limitándose sólo a dibujar la ventana gráfica vacía. Sin embargo, opcionalmente <strong>puedes indicar una imagen <em>que sea representativa de &#8220;la oscuridad&#8221;</em></strong>, y el <strong>Marco de Trabajo la mostrará <em>en cada localidad que no esté iluminada</em></strong>. Para usar este comportamiento, <strong>debes declarar la siguiente variable global</strong> antes de incluir <strong>SGW+DMX</strong>, asignándole el valor de la imagen que representará <em>&#8220;la oscuridad&#8221;</em>:</p>
+          <p>&nbsp;</p>
+          <pre>Global SGW_IMAGEN_OSCURIDAD = OSCURIDAD_TETRICA;</pre>
+          <p>&nbsp;</p>
+          <p>En este ejemplo, <span class="Codigo">OSCURIDAD_TETRICA</span> será la imagen que se va a mostrar cuando las localidades no tengan iluminación. Como <span class="Codigo">SGW_IMAGEN_OSCURIDAD</span> es una <em>variable global</em>, nada te impide <em>asignarle una nueva imagen</em> en cualquier otra parte del juego.</p>
+          <p>&nbsp;</p>
+          <p>El <strong>Marco de Trabajo</strong> <em>hace uso</em> de las rutinas <span class="Codigo">TrasElPrompt()</span> y <span class="Codigo">RutinaPostJuego()</span>. Si necesitas<strong> implementar una versión propia de estas rutinas en tu juego</strong>, simplemente <em><strong>escríbelas  antes</strong></em> de incluir <strong>SGW+DMX</strong>.  <strong>No olvides  que debes llamar en alguna parte de ellas a la rutina &#8220;gancho&#8221; del Marco de Trabajo.</strong> Así, dentro de <span class="Codigo">TrasElPrompt()</span> <em>debes llamar a</em> <span class="Codigo">SGW_MarcoDeTrabajo(1)</span> y dentro de <span class="Codigo">RutinaPostJuego()</span> <em>debes llamar a</em> <span class="Codigo">SGW_MarcoDeTrabajo(2)</span>.  Con esto, el <strong>Marco de Trabajo</strong> <em>seguirá  funcionando normalmente</em>. Ejemplos:</p>
+          <p>&nbsp;</p>
+          <pre>[ TrasElPrompt ;
+    SGW_MarcoDeTrabajo(1);
+    !---------------------------------------------------------
+    ! ... todo el codigo tuyo que necesites poner aqui ...
+    !---------------------------------------------------------
+];<br />
+[ RutinaPostJuego ;
+    SGW_MarcoDeTrabajo(2);
+    !---------------------------------------------------------
+    ! ... todo el codigo tuyo que necesites poner aqui ...
+    !---------------------------------------------------------
+    rfalse; ! IMPORTANTE: SIN ESTO NO SE MUESTRA NINGUN TEXTO
+];</pre>
+            <p>&nbsp;</p>
+          <p>Si por algún motivo necesitas escribir estas rutinas <em><strong>después</strong></em> de incluir <strong>SGW+DMX</strong> <em>(por ejemplo, si estás copiando el mismo código que implementa <strong>SGW+DMX</strong> para el <strong>Marco de Trabajo</strong>, pero levemente modificado a manera de &#8220;hackeo&#8221;)</em>, entonces <strong>deberás hacer un <span class="Codigo">Replace TrasElPrompt</span> o un <span class="Codigo">Replace RutinaPostJuego</span> antes de incluir SGW+DMX</strong>, según sea la rutina que lo necesite.</p>
+          <p>&nbsp;</p>
+          <p>Por otro lado, <strong>si no quieres usar el Marco de Trabajo</strong> sólo debes <strong>declarar la siguiente constante</strong> antes de incluir <strong>SGW+DMX</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>Constant SGW_SIN_MARCO_DE_TRABAJO;</pre>
+            <p>&nbsp;</p>
+          <p>Ahora <strong>SGW+DMX</strong> compilará <strong>sin el Marco de Trabajo</strong>, <em>lo cual sería algo muy triste, la verdad... =P</em></p>
+          <p>&nbsp;</p>
+          <blockquote>
+              <p><strong><em>Información Técnica Adicional (no es necesaria para usos básicos):</em></strong></p>
+            <p>&nbsp;</p>
+            <p>Si compilas con <strong>Damusix</strong>, el <strong>Marco de Trabajo</strong> reproducirá la <em>música de fondo de la localidad</em> siempre en el <strong>último canal</strong> del Gestor de Audio; vale decir, en el <strong>canal 9</strong> (<span class="Codigo">DAMUSIX_NCANALMAX-1</span>). Así, por ejemplo, si en un momento determinado quieres detener la <em>música de fondo</em>, tendrás que ejecutar <span class="Codigo">Damusix.PararCanal(9)</span>. El mismo resultado lo puedes conseguir ejecutando <span class="Codigo">Damusix.Parar(localizacion.sgw_mus)</span>, que es más intuitivo, pero entonces deberás tener la seguridad de que la localidad actual dispone de una propiedad <span class="Codigo">sgw_mus</span> y de que su <em>música de fondo</em> indicada ya se ha puesto en reproducción (esto es justo después de mostrar el <em>Prompt</em> luego de llegar a la localidad). <span class="Codigo">Damusix.PararTodo()</span> también puede serte útil si en el momento en que la llamas solamente está sonando la <em>música de fondo</em>. =P</p>
+            <p>&nbsp;</p>
+            <p>Por otro lado, si utilizas el <strong>Marco de Trabajo</strong> hay un hecho que debes tener presente: como <strong>Damusix</strong> cuenta con un sistema de <em>Volumen Global</em>, el volumen de la <em>música de fondo</em> para cada localidad (es decir, la propiedad <span class="Codigo">sgw_vol</span>) siempre será <em>&#8220;recalculado&#8221;,</em> tomando como base el porcentaje de <em>Volumen Global</em> del Gestor de <strong>Damusix</strong> que se usará como valor máximo. Por ejemplo, si has puesto el valor <span class="Codigo">VOLUMEN_ALTO</span> (o 100%), se usará el valor actual del <em>Volumen Global</em> de <strong>Damusix</strong>; si has puesto <span class="Codigo">VOLUMEN_MEDIO</span> (o 75%), se usarán &#8220;tres cuartos&#8221; del valor actual del <em>Volumen Global</em>; si has puesto <span class="Codigo">VOLUMEN_BAJO</span> (o 50%), se usará &#8220;la mitad&#8221; del valor actual del <em>Volumen Global</em>; y así por el estilo. <strong>En resumen, el valor del volumen para las propiedades <span class="Codigo">sgw_vol</span> siempre será recalculado a partir de un máximo establecido por el valor actual del <em>Volumen Global</em> de Damusix.</strong></p>
+          </blockquote>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p><strong>9)</strong> <strong>NOTA TÉCNICA:</strong> La extensión <strong>SGW+DMX</strong> ocupa los siguientes <em>Puntos de Entrada  Glk</em> para <strong>funcionar correctamente</strong>: <span class="Codigo">IdentifyGlkObject()</span> y <span class="Codigo">HandleGlkEvent()</span>. Si  necesitas <strong><em>implementar una versión propia</em></strong> de estas rutinas en tu juego,  simplemente <strong>escríbelas antes</strong> de incluir <strong>SGW+DMX</strong>.  Pero <strong>no debes olvidar algo MUY  IMPORTANTE</strong>:</p>
+          <p>&nbsp;</p>
+          <pre>- Dentro de IdentifyGlkObject() debes llamar a:
+    <strong>SGW_IdentifyGlk(fase,tipo,ref,rock);</strong><br />
+- Dentro de HandleGlkEvent() debes llamar a:
+    <strong>SGW_HandleGlk(ev);</strong></pre>
+            <p>&nbsp;</p>
+          <p>Ejemplos:</p>
+          <p>&nbsp;</p>
+          <pre>[ IdentifyGlkObject fase tipo ref rock;
+    ! IdentifyGlkObject de libreria SGW
+    SGW_IdentifyGlk(fase,tipo,ref,rock);
+    !------------------------------------------------------------------
+    ! ESTA LINEA ES NECESARIA SOLO SI ESTAS USANDO DAMUSIX:
+    ! Damusix.IdentificarSonidos(fase);
+    !------------------------------------------------------------------
+    !------------------------------------------------------------------
+    ! ... todo el codigo tuyo que necesites poner aqui ...
+    !------------------------------------------------------------------
+];<br />
+[ HandleGlkEvent ev;
+    ! HandleGlkEvent de libreria SGW
+    SGW_HandleGlk(ev);
+    !------------------------------------------------------------------
+    ! ESTA LINEA ES NECESARIA SOLO SI ESTAS USANDO DAMUSIX:
+    ! Damusix.NotificarFade(ev); ! solo si usas Fades en &quot;tiempo-real&quot;
+    !------------------------------------------------------------------
+    !------------------------------------------------------------------
+    ! ... todo el codigo tuyo que necesites poner aqui ...
+    !------------------------------------------------------------------
+];</pre>
+            <p>&nbsp;</p>
+          <p>Con esto, <strong>SGW+DMX</strong> <em>funcionará normalmente</em> y podrás <strong>programar tus propias versiones</strong> de los <em>Puntos de Entrada Glk</em> mencionados.</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Funciones_Graficas" id="Funciones_Graficas"></a>Funciones Gráficas</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">testGraphics(flag_aviso)</span><em><strong> (Rutina disponible sólo para Máquina Glulx)</strong></em></p>
+          <p>Averigua si el intérprete Glulx en el que se está ejecutando el juego puede dibujar gráficos. Si el argumento <span class="Codigo">flag_aviso</span> vale 1, entonces se mostrará un mensaje de aviso apropiado indicando que el intérprete no soporta gráficos, si fuera el caso. Esta rutina devolverá <span class="Codigo">true</span> si hay soporte para gráficos y <span class="Codigo">false</span> si no lo hay.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">initializeSGW(x)</span></p>
+          <p>Inicia todo lo necesario dentro en la Máquina Glulx para que <strong>SGW+DMX</strong> pueda funcionar. Abre las ventanas gráficas y prepara el sistema de audio. El argumento <span class="Codigo">x</span> indica el alto en píxeles que debe tener la ventana gráfica superior (idealmente, no mayor a 240px). Si el argumento <span class="Codigo">x</span> <strong>vale cero</strong>, entonces <strong>SGW+DMX</strong> iniciará correctamente, pero <strong>sin abrir la ventana gráfica superior</strong>; posteriormente, el programador puede  abrirla, si lo desea, mediante la rutina <span class="Codigo">openGraphicWindow()</span>. <strong>Importante:</strong> <em>la presente rutina debe ser llamada solamente desde el interior de la rutina </em><span class="Codigo">Inicializar()</span>. <strong>Información adicional: </strong><em>mirar <a href="#Nota_Ventanas_Graficas">Nota sobre el Tamaño de las Ventanas Gráficas</a></em>. (<strong>NOTA CON DAMUSIX:</strong> esta rutina <em><strong>inicializará automáticamente el Gestor de Damusix</strong></em>, por lo que <em><strong>no es necesario</strong></em> que el programador haga una llamada a <strong></strong> <strong><em><span class="Codigo">Damusix.InicializarGlk()</span></em></strong> desde la rutina <span class="Codigo">Inicializar()</span> del juego.)</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">clearMainWindow()</span></p>
+          <p>Limpia el contenido de la ventana principal del juego (es decir, limpia la ventana del buffer de texto y la ventana gráfica superior).</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">clearGraphicWindow()</span></p>
+          <p>Limpia el contenido de la ventana gráfica superior.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">clearTextWindow()</span></p>
+          <p>Limpia el contenido de la ventana del buffer de texto.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">clearStatusLine()</span></p>
+          <p>Limpia el contenido de la ventana de la línea de estado.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">closeAllWindows()</span></p>
+          <p>Cierra todas las ventanas gráficas abiertas.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">openGraphicWindow(x)</span></p>
+          <p>Abre la ventana gráfica superior. El argumento <span class="Codigo">x</span> indica el alto en píxeles que debe tener la ventana (idealmente, no mayor a 240px). Si la ventana ya está abierta, la cierra y la vuelve abrir con el alto especificado. <strong>Información adicional: </strong><em>mirar <a href="#Nota_Ventanas_Graficas">Nota sobre el Tamaño de las Ventanas Gráficas</a></em>.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">closeGraphicWindow()</span></p>
+          <p>Cierra la ventana gráfica superior si estuviera abierta. En caso contrario, no se hace nada.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">viewImageCenter(img)</span></p>
+          <p>Muestra una imagen en la ventana superior con posición centrada.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">viewImageLeft(img)</span></p>
+          <p>Muestra una imagen en la ventana superior con posición a la derecha.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">viewImageRight(img)</span></p>
+          <p>Muestra una imagen en la ventana superior con posición a la izquierda.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">viewImageSlide(img,flag_deslizar)</span> <em><strong>(Esta rutina hace uso del Timer Glk)</strong></em></p>
+          <p>Muestra una imagen en la ventana gráfica pequeña (para objetos) con un bonito efecto de deslizamiento de entrada, luego espera unos segundos y finalmente cierra la ventana con un deslizamiento de salida. Si el argumento <span class="Codigo">flag_deslizar</span> vale 1, entonces el efecto de deslizamiento no se producirá; en tal situación, el programador deberá cerrar por sí mismo la ventana, mediante la rutina <span class="Codigo">closeImageSlide()</span>, o esperar que la cierre automáticamente el <strong>Marco de Trabajo</strong> (si se estuviera usando) en el siguiente turno de juego. El tamaño de las imágenes mostradas en esta ventana debería ser idealmente no mayor a 200px de alto. <strong>Información adicional: </strong><em>mirar <a href="#Nota_Ventanas_Graficas">Nota sobre el Tamaño de las Ventanas Gráficas</a></em>. (<strong>NOTA CON DAMUSIX:</strong> si un efecto de <em>Fade en &#8220;tiempo-real&#8221;</em> está activo cuando se ocupa esta rutina, entonces siempre <em><strong>se forzará el no-deslizamiento</strong></em> para no interrumpir el Fade, que también usa el <em>Timer Glk</em>.)</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">closeImageSlide()</span></p>
+          <p>Cierra la ventana gráfica pequeña (para objetos) si estuviera abierta. En caso contrario, no se hace nada.</p>
+          <p>&nbsp;</p>
+          <blockquote> 
+            <p><strong><a name="Nota_Ventanas_Graficas" id="Nota_Ventanas_Graficas"></a>Nota sobre el Tamaño de las Ventanas Gráficas:</strong> las rutinas que dibujan gráficos en la ventana grande y pequeña dejarán por defecto un borde de 10px alrededor de la imagen (sólo por estética), por lo que la imagen se dibujaría siempre con 20px menos de altura. Para compensar esta variación y que la imagen se dibuje realmente con el tamaño que le corresponde, siempre se sumarán 20px al propio tamaño de la ventana gráfica. Por ejemplo, si abres una ventana superior de 100px, entonces se creará dicha ventana con una altura efectiva de 120px realmente. Con estos 20px adicionales, la imagen ya tendrá espacio para dibujarse con la altura &#8220;verdadera&#8221; que indicamos para la ventana. De la misma manera, la ventana pequeña siempre toma el ancho de la imagen que va a mostrar y le suma 20px más (por ejemplo, si tenemos una imagen de 50px de ancho, la ventana se abrirá con 70px de ancho para compensar el borde). Si no te gusta este comportamiento puedes definir la constante <span class="Codigo">BORDEWIN</span> con valor cero antes de incluir <strong>SGW+DMX</strong>; o si quieres un borde más o menos grueso, puedes poner un valor a tu gusto. Ejemplos:</p>
+            <p>&nbsp;</p>
+            <pre>Constant BORDEWIN = 0;  ! para no tener borde alrededor de las imagenes, o...
+Constant BORDEWIN = 40; ! para tener un borde de 40px alrededor de las imagenes</pre>
+            </blockquote>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Funciones_de_Audio" id="Funciones_de_Audio"></a>Funciones de Audio</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">testSounds(flag_aviso)</span> <em><strong>(Rutina disponible sólo para Máquina Glulx)</strong></em></p>
+          <p>Averigua si el intérprete Glulx en el que se está ejecutando el juego puede reproducir sonidos. Si el argumento <span class="Codigo">flag_aviso</span> vale 1, entonces se mostrará un mensaje de aviso apropiado indicando que el intérprete no soporta sonidos, si fuera el caso. Esta rutina devolverá <span class="Codigo">true</span> si hay soporte para sonidos y <span class="Codigo">false</span> si no lo hay.</p>
+          <p></p>
+          <p>&nbsp;</p>
+          <blockquote>
+              <p>Las siguientes <em>funciones nativas de audio</em> de <strong>SGW+DMX</strong> estarán <strong>inhabilitadas</strong> si se compila usando la extensión <strong>Damusix</strong>. Tenga presente el programador que <em><strong>no se podrá ejecutar ninguna de estas rutinas</strong></em>, pues simplemente no existirán.</p>
+          </blockquote>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">playSound(canal,sonido,repeticiones,volumen)</span></p>
+          <p>Toca un sonido o música en el canal de audio indicado. El canal debe ser alguno de los tres canales disponibles: <span class="Codigo">music</span> (para la música), <span class="Codigo">chan1</span> (para efectos de sonido 1) o <span class="Codigo">chan2</span> (para efectos de sonido 2). El argumento <span class="Codigo">repeticiones</span> debe ser siempre un valor mayor a cero, con la excepción del valor especial -1 que indica <em>&#8220;repeticiones infinitas&#8221;</em>. El volumen se expresa siempre en porcentaje (0 a 100).</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">setVolume(volumen,canal)</span></p>
+          <p>Cambia el volumen del canal de audio indicado. El volumen se expresa siempre en porcentaje (0 a 100).</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">silenceChannel(canal)</span></p>
+          <p>Detiene el sonido del canal de audio indicado.</p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">silenceAll()</span></p>
+          <p>Detiene todos los sonidos (es decir, detiene los canales <span class="Codigo">music</span>, <span class="Codigo">chan1</span> y <span class="Codigo">chan2</span>).</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo">Otras Funciones</p>
+          <p></p>
+          <p>&nbsp;</p>
+          <p><span class="Rutina">wait(&quot;texto&quot;,tiempo_espera)</span> <em><strong>(En modo &#8220;temporizado&#8221;, esta rutina hace uso del Timer Glk)</strong></em></p>
+          <p>Espera hasta que se pulse una tecla. Los dos argumentos de la rutina son completamente opcionales. Si se le pasa un texto, lo mostrará mientras espera la pulsación. Si se indica un <em>tiempo de espera límite</em>, entonces esperará hasta que se pulse una tecla o se acabe el tiempo, lo que suceda primero. El tiempo de espera debe expresarse en décimas de segundo. Si no se quiere mostrar texto, pero sí usar un tiempo de espera, la llamada deber tener la siguiente forma: <span class="Codigo">wait(0,tiempo_espera)</span>. Esta rutina devolverá el valor del carácter de la tecla pulsada (1 a 255) o cero si durante una <em>espera temporizada</em> se agotó el tiempo y no se pulsó ninguna tecla. (<strong>NOTA CON DAMUSIX:</strong> si un efecto de <em>Fade en &#8220;tiempo-real&#8221;</em> está activo cuando se ocupa esta rutina, entonces siempre <em><strong>se forzará la no-temporización</strong></em> para no interrumpir el Fade, que también usa el <em>Timer Glk</em>.)</p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <p class="Titulo"><a name="Licencia" id="Licencia_Original2"></a>Licencia de SGW+DMX</p>
+          <p>&nbsp;</p>
+          <p><strong>Copyright © 2008 Eliuk Blau.</strong></p>
+          <p>&nbsp;</p>
+          <p>Puedes usar, modificar y redistribuir la extensión <strong>SGW+DMX</strong> de acuerdo a los términos de la licencia <em>GNU Lesser General Public License versión 3</em>.</p>
+          <p>&nbsp;</p>
+          <p>Si modificas la extensión <strong>SGW+DMX</strong>, estaré muy agradecido si me mandas el código fuente por e-Mail.</p>
+          <p>&nbsp;</p>
+          <p>If you modify the <strong>SGW+DMX</strong> extension, I would be grateful if you send me the source code by e-Mail.</p>
+          <p>&nbsp;</p>
+          <pre>This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation, either version 3 of the License.<br />
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+License for more details.<br />
+You should have received a copy of the GNU Lesser General Public License
+along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</pre>          </td>
+        <td width="24">&nbsp;</td>
+      </tr>
+      <tr>
+        <td width="24" height="24"><img src="spacer.gif" width="24" height="24" /></td>
+        <td height="24">&nbsp;</td>
+        <td width="24" height="24"><img src="spacer.gif" width="24" height="24" /></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

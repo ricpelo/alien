@@ -1,0 +1,21 @@
+! Blorb Resource Definitions File
+! Generated automatically by bres.
+! Do not edit!
+! Include this file in your inform source with "Include "C:\Documents and Settings\Eliuk\Escritorio\src_\sgw+dmx_demo.bli";"
+
+Message "Including bres resource declarations generated on 4063608-12-4063608";
+
+Constant LOC_01 3;	!Blorb Pict:loc_01.jpg
+Constant LOC_02 4;	!Blorb Pict:loc_02.jpg
+Constant LOC_03 5;	!Blorb Pict:loc_03.jpg
+Constant LOC_04 6;	!Blorb Pict:loc_04.jpg
+Constant WOOKIE 7;	!Blorb Pict:wookie.jpg
+Constant CHICA 8;	!Blorb Pict:chica.jpg
+Constant CAAD 9;	!Blorb Pict:caad.jpg
+Constant MAPA 10;	!Blorb Pict:mapa.jpg
+Constant DESPEDIDA 11;	!Blorb Pict:despedida.jpg
+Constant MUSICA_FONDO 3;	!Blorb Snd:mus_fondo.mod
+Constant MUSICA_DEMO 4;	!Blorb Snd:mus_demo.mod
+Constant MUSICA_DMX 5;	!Blorb Snd:mus_dmx.mod
+Constant VICTORIA 6;	!Blorb Snd:victoria.ogg
+Constant GRITO 7;	!Blorb Snd:grito.ogg
