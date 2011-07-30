@@ -1,0 +1,139 @@
+================================================================
+  Zipi:  Z-InvisiPistas
+  (c) 1999 Zak McKraken
+
+  Basado en Slag, (c) 1999 Brian 'Beej' Hall
+================================================================
+
+1- ¿Para que sirve?
+----------------------------------------------------------------
+
+Si eres aficionado a los juegos de aventuras (tanto los de texto como
+los gráficos), seguro que en más de una ocasión te has quedado
+atascado y has necesitado ayuda para seguir.
+
+Seguramente habrás buscado ayuda en Internet, donde puedes encontrar
+ficheros que te explican la solución completa del juego.
+
+El problema es que leyendo estos ficheros probablemente encuentres más
+información de la que estabas buscando, y sin quererlo descubras la
+solución a otros rompecabezas a los que todavía no habías llegado. Por
+otra parte a lo mejor no querías la solución entera a tu rompecabezas
+sino solo una pequeña pista...
+
+Para esto se inventaron las InvisiPistas.
+
+2- ¿Qué son las InvisiPistas?
+----------------------------------------------------------------
+
+Originalmente eran unos libros publicados por Infocom (una compañía
+americana que creó gran cantidad de juegos conversacionales, hoy
+desaparecida). Estos libros contenían preguntas frecuentes sobre un
+juego (por ejemplo: ¿Cómo consigo la muela de oro del camarero?) pero
+sus respuestas estaban ocultas, tachadas con tinta roja. Mediante un
+filtro rojo que venía con el libro podías eliminar la tachadura y leer
+solo una de las respuestas. De hecho, para cada pregunta se daban una
+serie de respuestas, la primera era una pista genérica, la siguiente
+era algo más concreta y así cada vez más explícito hasta darte la
+solución final a ese rompecabezas. El lector decidía hasta dónde
+quería leer haciendo uso de su filtro.
+
+3- ¿Qué son las Z-InvisiPistas?
+----------------------------------------------------------------
+
+El concepto es el mismo que el de las invisipistas, pero ahora no hay
+libro ni filtro. Un ordenador hace las veces de ambas cosas,
+presentándote una lista de preguntas sobre el juego que te interesa,
+en forma de menu. Una vez que eliges el rompecabezas que te trae loco,
+el programa te da una pista cada vez que pulsas la tecla P. De este
+modo tú decides cuándo parar (el programa te indica también cuántas
+pistas hay en total para ese tema, para darte una indicación de cuánto
+te falta para revelar la solución).
+
+4- ¿Qué significa la Z?
+----------------------------------------------------------------
+
+La Z viene de Z-machine. 
+
+5- ¿Qué es la Z-machine?
+----------------------------------------------------------------
+
+Es una máquina virtual que ejecuta el programa de las
+InvisiPistas. Algo así como Java. Necesitas un intérprete de esta
+máquina Z para poder leer las invisipistas. Afortunadamente existen
+intérpretes de la máquina Z para casi cualquier ordenador y
+operativo. En ftp://ftp.gmd.de/if-archive/zmachine/interpreters tienes
+toneladas de ellos. Te recomiendo Frotz.
+
+6- ¿Qué tengo que hacer para ver un fichero zipi?
+----------------------------------------------------------------
+
+Lo primero conseguir un intérprete Z. Ver pregunta anterior. Si ya lo
+tienes, es tan simple como:
+
+>FROTZ PISTAS.Z5
+
+(siendo Frotz el intérprete Z, y Pistas.z5 el fichero zipi con las
+pistas del juego que te interesa). Una vez dentro, sigue las
+instrucciones en pantalla. Para navegar por los menus usa las teclas
+del cursor. Si en tu ordenador no hay esas teclas o el menu no cabe
+bien en la pantalla (puede ocurrir, ten en cuenta que la máquina Z
+puede ejecutarse incluso en ordenadores del tamaño de la palma de la
+mano), entonces elige la opción 't' al empezar.
+
+7- ¿Cómo puedo crear mis propios ficheros zipi?
+----------------------------------------------------------------
+
+Necesitas tres cosas:
+
+1) Aprenderte el lenguaje Zipi. ¡Es facilísimo! Solo tiene cinco
+palabras reservadas y la estructura es muy intuitiva. Mirate el
+ejemplo EJEMPLO.ZTM (ZTM ó ZTML=ZIPI Text Markup Language), y el
+documento LENGUAJE.DOC que acompaña a éste.
+
+2) El conversor llamado zipi.awk. Para ejecutarlo necesitarás tener un
+programa llamado AWK (o GAWK), que forma parte del sistema operativo
+Unix (y linux). Si tu sistema operativo es Windows, existe una versión
+de Awk para Windows (generalmente llamada gawk.exe). Necesitas este
+programa para hacer la conversión, la cual se realiza así:
+
+ > GAWK -f zipi.awk EJEMPLO.ZTM > EJEMPLO.INF
+
+3) El compilador Inform que es quien convertirá finalmente el
+EJEMPLO.INF en código Z. (Inform puedes encontrarlo para una gran
+variedad de sistemas operativos en 
+http://www.geocities.com/TimesSquare/Fortress/9939/descarga.htm). Se
+usaría así:
+
+ > INFORM EJEMPLO
+
+Ya está. Ahora deberías tener un EJEMPLO.Z5 que es la versión que
+puedes distribuir a tus amigos. Recuerda que ellos necesitarán Frotz
+para poder leer las pistas.
+
+
+8- Me salen errores al ejecutar gawk
+------------------------------------
+
+Eso es probablemente porque el fichero que has escrito no se adapta al
+lenguaje ZTML. El documento "lenguaje.doc" que acompaña a este te
+explica cómo tiene que ser ese lenguaje.
+
+El error más frecuente consiste en escribir una pista cuyo texto es
+muy largo dividiéndolo en varias líneas. La especificación de ZTML
+indica que esto no puede hacerse, es decir, que debes poner todo el
+texto de cada pista en una sola línea aunque esta sea muy larga, sin
+pulsar retorno de carro para romperla.
+
+También puede ocurrir que hayas puesto más de 32 pistas en un solo
+menu. Inform tiene la limitación de que una propiedad de tipo lista no
+puede contener más de 32 elementos, por lo que ZIPI no te deja hacer
+esto. La solución típica es poner en la pista número 32 un nuevo
+submenú, que diga "Mas pistas..." y así se tiene lugar para otras 32.
+
+9- Sigo teniendo problemas
+--------------------------
+
+Contacta con el autor:
+
+spinf@geocities.com

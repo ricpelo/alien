@@ -1,0 +1,60 @@
+* En Gramatica.h:
+-----------------
+
+ Verb 'mierda' 'joder' etc....
+     *                               -> Tacos     <--- AÑADIR ESTA LINEA
+     * topic                         -> Tacos;
+
+* En Moviles.h:
+---------------
+
+ - en la línea 59:
+ 
+   Array tablaMoviles table maximoMoviles;
+ 
+   cambiar maximoMoviles por maximoNumeroMoviles
+   
+ - en la línea 389:
+ 
+   if (~~(parent(pnj) ofclass claseVal) || parent(pnj) ==
+                                              LugarObjetivo)
+
+   añadir paréntesis que encierren cada término del ||, quedando:
+
+   if ((~~(parent(pnj) ofclass claseVal)) || (parent(pnj) ==
+                                              LugarObjetivo))
+
+ - en la línea 156, quitar la definición de la propiedad tras_abrir, porque ya está
+   definida en la librería PNJPuertas.h
+
+ - en la línea 322, donde pone:
+
+   if (tipo_movimiento == MOVIMIENTO_PERSEGUIR)
+   {
+       pnj.perseguido = LugarObjetivo;
+       LugarObjetivo = parent(pnj.perseguido);
+       pnj.zonaValida = zona;
+       pnj.tipo_de_movimiento = MOVIMIENTO_PERSEGUIR;  <--- AÑADIR ESTA
+                                                            LINEA
+   }
+    
+ - en la línea 443, donde pone:
+
+   if (encontrado == false) rfalse; ! hemos alcanzado la máxima longitud
+   
+   cambiar por:
+   
+   if (encontrado == false) {
+      pnj.longitud_precamino = 0; ! si no lo encuentra: camino tiene longitud 0, (c) Alpha
+      rfalse; ! hemos alcanzado la máxima longitud
+    }
+ 
+
+* En PNJPuertas:
+----------------
+
+ - if(self has cerrojo)
+     print" echandole el pestillo.^";
+   else                                   <------  AÑADIR ESTAS
+     print ".^";                          <------   LINEAS
+	

@@ -1,0 +1,55 @@
+COSAS POR HACER:
+----------------
+
+- Hacer que Jason tenga más personalidad. [a medio hacer]
+- Darle un arma a Jason. [HECHO]
+- Meter a la niña en el juego. La niña responderá a muy pocas órdenes, se limitará poco menos que a seguirte, y huirá cuando se encuentre con el alien (o, quizás, cuando éste esté cerca).
+- Pensar en cómo arreglar el procesador atmosférico. [podemos poner unos circuitos electrónicos fundidos, y el robot hace un "puente" soldando un par de conexiones, en un panel o caja de conexiones electrónicas] [HECHO]
+- Hacer que Jason no lleve su traje cuando esté dentro de la vaina. [HECHO]
+- No puedes sacar a Jason de la vaina hasta que se haya restablecido el oxígeno (porque no lleva el traje). [HECHO]
+- Hacer todo el puzzle de la oficina.
+- Poner el bisturí laser. [HECHO]
+- Crear la caja de herramientas. Meter dentro un destornillador y la linterna. Poner la caja de herramientas dentro del armario. [HECHO]
+- Poner el detector de movimiento en el armario. [HECHO]
+- Investigar la forma de hacer que el detector de movimiento pueda detectar al alien y a la niña al mismo tiempo.
+- Investigar la forma de saber hacia qué dirección está un Móvil. [HECHO]
+- Hacer que Jason diga que la niña es un coñazo, cada vez que ésta grite o diga que vamos a morir todos.
+- Poner un daemon al Alien, que se active cuando te lo encuentres en una habitación, y que te mate cuando hayan pasado dos turnos sin moverte. [ahora mismo funciona sin daemon] [HECHO]
+- Hacer que la computadora sea un PNJ. La nave estaría gobernada totalmente por la computadora. Ejemplos: "computadora, abre la compuerta exterior", "computadora, abre el compartimento de los trajes", "computadora, despega", "computadora, hablame del exterior"... [casi hecho; falta que tenga más conversación]
+- No matar al jugador cuando intente salir de la nave sin el traje. [HECHO]
+- Pensar si es mejor que el detector lo lleve Jason, y se le caiga cuando lo coja el Alien. [el detector forma parte del rifle que lleva Jason, y se le cae] [HECHO]
+
+TEMAS DE CONVERSACIÓN:
+----------------------
+
+DE LA COMPUTADORA:
+------------------
+
+planeta, atmósfera, trajes, informe de situación... [HECHO]
+
+DE JASON:
+---------
+
+
+
+FINAL DEL JUEGO:
+----------------
+
+- En el holocubo aparece un menú de opciones que hay que ver en secuencia, en orden una tras otra:
+
+  1. Proyecto Alien
+  2. Características del bicho
+  3. Procedimiento de emergencia.
+
+Mirar fhablaoo para ver cómo hacer el menú con Glulx.
+
+- En el procedimiento de emergencia se explica que hay que pulsar "simultáneamente" los botones que hay en las localidades hangar1 y hangar3 (hay que cambiar las descripciones). Al hacerlo se activa la bomba y se abre el ascensor que está en wc1.
+
+- Para pulsar los dos botones a la vez hay que poner a Jason en un sitio y moverse al otro, y decirle por el comunicador que pulse el botón, y luego, inmediatamente, lo pulsas tú.
+
+- Al montarse en el ascensor hay una escena en la que el alien se cuelga y se produce una escena de "tensión"... con el alien colgado intentando subirse al ascensor, y Jason y tú dándole golpes hasta que se cae....
+
+- Al final se sale en exterior3.
+
+- Hay que irse con el holocubo. Jason te avisa cuando terminas de verlo (si está en la misma localidad que tú, es decir, en el aula). Y de todas formas no puedes activar los botones hasta que no tengas el holocubo en tu poder.
+

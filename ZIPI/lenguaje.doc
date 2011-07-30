@@ -1,0 +1,165 @@
+================================================================
+  ZTML: ZIPI Text Markup Language
+================================================================
+
+Es similar al HTML pero muchisimo más simplificado.
+
+La estructura de un "documento" escrito en este lenguaje es la
+siguiente:
+
+  <INTRO>
+  Texto introductorio 
+  en formato 
+  libre
+  </INTRO>
+
+  <MENU> Titulo del menu principal
+   [... opciones del menu principal...]
+  </MENU>
+
+
+Esto es todo.
+
+Las opciones del menu pueden ser una de las siguientes:
+
+* <NADA>------------
+
+  Para poner un separador.
+
+* Otro menu. De nuevo se repite la estructura:
+  <MENU> Titulo del submenu
+   [ ... opciones ...]
+  </MENU>
+
+  Las opciones de este sub-menu pueden ser otros menús a su
+  vez. Pueden anidarse hasta cualquier profundidad pero no suele ser
+  frecuente anidar más de dos o tres niveles)
+
+* Una pregunta acerca del juego sobre la que ofrecer pistas. En este
+  caso se utiliza la sintaxis:
+
+  <PREGUNTA> Enunciado de la pregunta
+    <PISTA> Texto de una pista relacionada con la pregunta anterior
+    <PISTA> otra pista para la pregunta anterior
+    <PISTA> una pista más ... etc.
+
+* Una pregunta acerca del juego sobre la que se ofrece un largo texto
+  a modo de respuesta (por ejemplo, créditos, agradecimientos, o
+  similares). En este caso la sintaxis es:
+
+  <TEXTO> Titulo del texto
+    Texto en formato libre
+  </TEXTO>
+
+etc.
+
+Por ejemplo:
+
+<MENU>InvisiPistas para Zak McKraken
+  <MENU>En la habitacion de Zak
+    <PREGUNTA>¿Para que sirve la persiana?
+      <PISTA>Puedes cerrarla
+      <PISTA>Y abrirla otra vez
+      <PISTA>Realmente no sirve para nada
+   <PREGUNTA>¿Para qué sirve el contestador automático?
+      <PISTA>Graba mensajes telefónicos
+      <PISTA>Enciendelo y vuelve más tarde
+   <PREGUNTA>¿Cómo saco la tarjeta de crédito de debajo de la mesa?
+      <PISTA>Necesitas empujarla con algo
+      <PISTA>Cualquier cosa sirve. Usa la factura de teléfono.
+   </MENU>
+
+  <MENU>En el salón
+     <PREGUNTA>¿Cómo enciendo el televisor?
+       <PISTA>No tiene botones y está desenchufada
+       <PISTA>El enchufe en la pared está oculto por un cojín
+       <PISTA>Necesitas usar el mando a distancia
+       <PISTA>El mando está escondido en algún sitio busca bien
+       <PISTA>Está debajo de un cojín en el sofá
+     <PREGUNTA>¿Cómo funciona el triturador de basuras?
+       <PISTA>No funciona hasta que no le pongas la tubería que falta
+       <PISTA>Necesitarás comprar herramienta.
+  </MENU>
+  <TEXTO>Consejos generales
+     Examina bien todo lo que encuentras. Recoge todos los objetos
+     mientras puedas. Si te atascas en un lugar ve a otros, tal vez 
+     haya cambiado algo desde la última vez que estuviste.
+  </TEXTO>
+</MENU>
+
+Esto haría aparecer un menú así:
+
+  Invisipistas de Zak McKraken
+ 
+  >En el dormitorio de Zak
+   En el salon
+   Consejos Generales
+
+Al elegir la primera o la segunda opción aparecería un menú de pistas,
+mientras que al elegir la tercera apacerecerá un texto explicativo.
+
+Observa que el "tag" <MENU> debe ir cerrado por el correspondiente
+</MENU>, y lo mismo ocurre con los tags <INTRO> y <TEXTO>. En cambio
+el tag <PREGUNTA> y <PISTA> no van cerrados, sino que se entiende que
+alcanzan hasta el final de la línea (esto implica que debes escribir
+todo el texto de una pregunta o pista en una sola línea, por lo que
+debes usar un editor de texto que no rompa las líneas de forma
+automática. La línea, no obstante, puede ser tan larga como quieras).
+
+Dentro de los tags <INTRO> y <TEXTO> puedes usar tres tipos de texto:
+
+- Texto normal. Simplemente escribelo en formato libre (es decir, que
+  puedes romper las líneas por donde quieras). Los saltos de línea que
+  verá finalmente el usuario dependerán del tamaño de su pantalla y no
+  de la forma en que tú hayas escrito este texto. [Excepto en el caso de
+  que dejes una línea en blanco, entonces se incluirán dos retornos de
+  carro en el texto]
+
+  Los espacios en blanco al principio de cada línea son ignorados. Si
+  quieres forzar un retorno de carro "manualmente" debes escribir el
+  carácter "^" donde quieras romper la línea.
+
+- Texto centrado. Escribelo delimitado por el tag <CENTRA>. Por
+  ejemplo:
+
+ <CENTRA>
+ **********************
+ Pistas de Zak Mckraken
+ **********************
+ </CENTRA>
+
+En este caso sí tiene importancia por dónde rompas la línea, ya que
+cada final de línea que pongas indica el comienzo de una nueva línea
+centrada.
+
+- Texto de ancho fijo. Tienes que tener en cuenta que el lector de tus
+  pistas puede estar trabajando desde MSDOS o desde Windows o desde Mac,
+  etc.. Cada sistema tiene sus propios tipos de letra y como sabrás
+  algunos tipos de letra son "proporcionales" (lo que significa que unas
+  letras son más anchas que otras, como por ejemplo la "m" es más ancha
+  que la "i") mientras que otros tipos de letra son "de ancho fijo" (por
+  ejemplo el tipo de letra Courier). Si deseas incluir en el texto
+  algún tipo de diagrama dibujado mediante simbolos ( - |, etc) sería
+  conveniente asegurarse de que tu lector lo verá con un tipo de letra
+  de ancho fijo, o de lo contrario el dibujo quedará irreconocible. Para
+  esto está el tag <NOFONT>. Por ejemplo:
+
+<TEXTO>
+Aqui tienes un mapa de las habitaciones:
+
+<NOFONT>
+   +--------+  +--------+
+   | Cocina |--| Salon  |
+   +--------+  +--------+
+                   |
+               +------------+
+               | Biblioteca | (puerta
+               +------------+  secreta)
+</NOFONT>
+</TEXTO>
+
+En el texto dentro de <NOFONT> tienen importancia los retornos de
+carro (es decir, por dónde rompes las líneas) y también los espacios
+al principio de cada línea, que serán respetados tal y como los
+escribes.
+        
