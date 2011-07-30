@@ -962,7 +962,7 @@ with
   ];
 [ ZIPI_Empezar ;
 !  ZIPI_InitGlk();
-  BorrarPantalla();
+  clearMainWindow();
   ZIPI_Intro();
 !  barra_estado.numero_lineas = 26;
 !  barra_estado.dibujar();

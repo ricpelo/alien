@@ -231,7 +231,7 @@ END{
 
   print "[ ZIPI_Empezar ;";
   print "!  ZIPI_InitGlk();";
-  print "  BorrarPantalla();";
+  print "  clearMainWindow();";
   print "  ZIPI_Intro();";
   print "!  barra_estado.numero_lineas = 26;";
   print "!  barra_estado.dibujar();";
