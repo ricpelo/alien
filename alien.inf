@@ -71,6 +71,8 @@ Constant CANAL_TRUENO = 3;
 Constant CANAL_COMPUTADORA = 4;
 Constant CANAL_TRANSMISOR = 5;
 
+! Vamos a usar Damusix junto con SGW+DMX
+Constant SGW_CON_DAMUSIX;
 
 
 ! ====================================================================
@@ -137,11 +139,8 @@ Replace PermitirEmpujarDir;
 
 Include "EParser";
 
-Include "infglk";        ! Debe ir antes que six
-Include "grafdemo";      ! Estas dos líneas hay que meterlas justo ahí,
-Replace IdentifyGlkObject;
 Replace EsperarTecla;
-Include "six";           ! entre EParser y Acciones
+Include "sgw+dmx";       ! entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
@@ -847,13 +846,13 @@ Object nave1 "Interior de la nave"
           ApagarGraficosSub(true);
         }
         EsperarTecla();
-        BorrarPantalla();
+        clearMainWindow();
         tt_final.visualiza();
         control_sonido_varios.activar(Grito_Jason_ogg);
         if (t) {
           EncenderGraficosSub(true);
-          PintarGrafico(Oscuridad_jpg);
-          PintarGrafico(Logo_Alien_jpg);
+          viewImageCenter(Oscuridad_jpg);
+          viewImageCenter(Logo_Alien_jpg);
         }
       }
     ];
@@ -1889,7 +1888,7 @@ Object procesador "Procesador atmosférico"
             ! (ver rutina ruido_puerta_rota.tiempo_agotado)
             ArrancarReloj(ruido_puerta_rota, 2);
             control_sonido_varios.activar(Grito_Jason_ogg);
-            PintarGrafico(Alien_Rapta_Jason_jpg);
+            viewImageCenter(Alien_Rapta_Jason_jpg);
             print "^El monstruo gira la cabeza hacia vosotros, y emite un chillido
                    insoportable, agudo, que os hiela la sangre nada más oirlo. Tú te quedas
                    petrificado ante tal visión, pero Jason grita salvajemente y comienza
@@ -1899,7 +1898,7 @@ Object procesador "Procesador atmosférico"
                    puerta del procesador atmosférico. Comienzas a respirar en cuanto te das
                    cuenta de que estás solo...^";
             EsperarTecla();
-            PintarGrafico(procesador.numgrafico);
+            viewImageCenter(procesador.numgrafico);
           }
         }
       }
@@ -4318,7 +4317,7 @@ Object laberinto28
                 t = true;
                 ApagarGraficosSub(true);
               }
-              BorrarPantalla();
+              clearMainWindow();
               tt_escape1.visualiza();
               control_sonido_varios.activar(Rugido_ogg);
               tt_escape2.visualiza();
@@ -6406,7 +6405,7 @@ Object alien procesador
     primera_vez true,
     muerte_final [;
       Bandera_Fin(1);
-      PintarGrafico(Alien_Mata_jpg);
+      viewImageCenter(Alien_Mata_jpg);
       "El monstruo salta sobre ti. Sientes sus afiladas garras hundirse en tu
        carne como si fuese mantequilla, y su poderosa boca se abre completamente
        alrededor de tu cabeza, que en pocos segundos deja de formar parte de tu
@@ -6415,7 +6414,7 @@ Object alien procesador
     describir [;
       if (self.primera_vez) {
         self.primera_vez = false;
-        PintarGrafico(procesador.numgrafico);
+        viewImageCenter(procesador.numgrafico);
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
                terrorífico comienza a sobresalir entre un conglomerado de tuberías.
                Conforme se va incorporando, lo tienes más fácil para comprobar su enorme
@@ -6458,7 +6457,7 @@ Object alien procesador
           rfalse;
         }
         Bandera_Fin(1);
-        PintarGrafico(Alien_Mata_jpg);
+        viewImageCenter(Alien_Mata_jpg);
         "Descargas una ráfaga de munición directamente en el ~corazón~ del monstruoso ser,
          provocando una lluvia verde de sangre ácida que cae directamente sobre tu cuerpo.
          Y mientras éste se disuelve, casi desintegrándose a marchas forzadas, pides por
@@ -6592,9 +6591,9 @@ Object robot "robot de mantenimiento" exterior3,
     despues [;
       Examinar:
         if (self hasnt general) {
-          PintarGrafico(Robot_jpg);
+          viewImageCenter(Robot_jpg);
           EsperarTecla();
-          PintarGrafico(exterior3.numgrafico);
+          viewImageCenter(exterior3.numgrafico);
         }
       EmpujarDir:
         give self general;
@@ -7804,11 +7803,12 @@ Object tt_final
   }
 
   ! Inicialización gráfica
-  BorrarPantalla();
-  PonerAltodeVentanaGrafica(ALTO_VENTANA_GRAFICA);
-  BorrarPantalla();
-  PintaMarco(true);
-  PintarGrafico(Oscuridad_jpg);
+  initializeSGW(ALTO_VENTANA_GRAFICA);
+  clearMainWindow();
+  ! PonerAltodeVentanaGrafica(ALTO_VENTANA_GRAFICA);
+  ! clearMainWindow();
+  ! PintaMarco(true);
+  viewImageCenter(Oscuridad_jpg);
   localizacion = laoscuridad;
 
   ! Inicialización sonora
@@ -7844,7 +7844,7 @@ Object tt_final
   localizacion = nave1;
   
   BorrarGraficos();
-  BorrarPantalla();
+  clearMainWindow();
 
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
   PNJ_Ruta(alien, MOVIMIENTO_NINGUNO);
@@ -7855,13 +7855,13 @@ Object tt_final
 
   EncenderMusicaSub(true);
 
-  PintaMarco(true);
-  PintarGrafico(Logo_Alien_jpg);
+  ! PintaMarco(true);
+  viewImageCenter(Logo_Alien_jpg);
   print "Copyright (c) 2008 Alpha Aventuras";
   EsperarTecla();
-  BorrarPantalla();
-  PintaMarco(true);
-  PintarGrafico(Nave1_jpg);
+  clearMainWindow();
+  ! PintaMarco(true);
+  viewImageCenter(Nave1_jpg);
 ];
 
 
@@ -8410,45 +8410,6 @@ Object tt_final
 ];
 
 
-[ IdentifyGlkObject fase tipo ref rock;
-  EfectosSonoros.IdentifyGlk(fase);
-  if (fase == 0) {
-    ! Inicializar a cero todos nuestros objetos glk
-    gg_ventanagrafica = 0;
-    return;
-  }
-
-  if (fase == 1) {
-     switch (tipo) {
-      0: ! Es una ventana
-         switch (rock) {
-           GG_VENTANAGRAFICA_ROCK: gg_ventanagrafica = ref;
-         }
-      1: ! Es un stream
-	       ! Pero este juego no ha creado ninguno
-	    2: ! Es un fichero
-         ! Pero este juego no ha creado ninguno
-    }
-    return;
-  }
- 
-  if (fase == 2) {
-    ! Ahora que todos los objetos han sido recuperados, y todas
-    ! las variables globales gg_* inicializadas, podemos pasar a
-    ! restaurar el estado de los gráficos
-
-    ! Aqui habria que llamar a algun punto de entrada
-    ! proporcionado por el programador, que se ocupe de repintar
-    ! la ventana gráfica. Pero esto es dependiente del juego, ya
-    ! que puede que la ventana conste simplemente de un gráfico, o
-    ! bien de una serie de ellos (fondo, marco, localidad, objetos
-    ! flotantes sobre la imagen, etc...)
-    !
-    RepintarGraficos();
-  }
-];
-
-
 [ EsperarTecla s delay;
   if (s) print (string) s;
   glk($00D6, delay * 5);                ! request_timer_events
@@ -8467,28 +8428,28 @@ Object tt_final
 
 
 [ Introduccion;
-  BorrarPantalla();
-  PintarGrafico(Oscuridad_jpg);
+  clearMainWindow();
+  viewImageCenter(Oscuridad_jpg);
   control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
   tt_inicial1.visualiza();
-  PintarGrafico(A_jpg);
+  viewImageCenter(A_jpg);
   EsperarTecla();
-  BorrarPantalla();
+  clearMainWindow();
   tt_inicial2.visualiza();
-  PintarGrafico(Al_jpg);
+  viewImageCenter(Al_jpg);
   EsperarTecla();
-  BorrarPantalla();
+  clearMainWindow();
   tt_inicial3.visualiza();
-  PintarGrafico(Ali_jpg);
+  viewImageCenter(Ali_jpg);
   EsperarTecla();
-  BorrarPantalla();
+  clearMainWindow();
   tt_inicial4.visualiza();
-  PintarGrafico(Alie_jpg);
+  viewImageCenter(Alie_jpg);
   EsperarTecla();
-  BorrarPantalla();
+  clearMainWindow();
   tt_inicial5.visualiza();
   EsperarTecla();
-  PintarGrafico(Logo_Alien_jpg);
+  viewImageCenter(Logo_Alien_jpg);
   EsperarTecla();
 ];
 
@@ -9137,13 +9098,13 @@ Extend 'di' first
 
 [ EncenderGraficosSub t;
   hayGraficos = true;
-  PonerAltodeVentanaGrafica(ALTO_VENTANA_GRAFICA);
-  BorrarPantalla();
-  PintaMarco(true);
+  openGraphicWindow(ALTO_VENTANA_GRAFICA);
+  clearMainWindow();
+  ! PintaMarco(true);
   if (LugarReal() provides numgrafico) {
-    PintarGrafico(LugarReal().numgrafico);
+    viewImageCenter(LugarReal().numgrafico);
   } else {
-    PintarGrafico(Sin_Imagen_jpg);
+    viewImageCenter(Sin_Imagen_jpg);
   }
   if (~~t) {
     "[Activados los gráficos.]";
@@ -9153,7 +9114,7 @@ Extend 'di' first
 
 [ ApagarGraficosSub t;
   hayGraficos = false;
-  PonerAltodeVentanaGrafica(0);
+  closeGraphicWindow();
   BorrarGraficos();
   if (~~t) {
     "[Desactivados los gráficos.]";
@@ -9403,7 +9364,7 @@ Endif;
 
 [ CreditosSub;
   if (hayGraficos) {
-    PintarGrafico(Sin_Imagen_jpg);
+    viewImageCenter(Sin_Imagen_jpg);
   }
   print "A·L·I·E·N : LA AVENTURA - (c) 2008 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
@@ -9451,7 +9412,7 @@ Endif;
   style roman;
   EsperarTecla();
   if (hayGraficos) {
-    PintarGrafico(LugarReal().numgrafico);
+    viewImageCenter(LugarReal().numgrafico);
   }
 ];
 
