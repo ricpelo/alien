@@ -24,10 +24,7 @@ Ifdef STRICT_MODE; Ifndef DEBUG; Constant DEBUG; Endif; Endif;
 
 Constant NumSerieLib      = "080625_git";
 Constant RevisionLib      = "6/10+";
-Constant VERSION_LIBRERIA = 610;
 Constant Grammar__Version = 2;
-
-Default CARACTER_COMENTARIO '!';
 
 ! Algunos avisos
 Message "InformATE! 6/10+";
@@ -316,8 +313,10 @@ Global just_undone;                  ! Can't have two successive UNDOs
   Global gg_savestr           = 0;
   Global gg_statuswin_cursize = 0;
   Global gg_statuswin_size    = 1;
-  Global gg_commandstr        = 0;
-  Global gg_command_reading   = 0;   ! true if gg_commandstr is being replayed
+!  Ifdef DEBUG;
+    Global gg_commandstr = 0;
+    Global gg_command_reading = 0;   ! true if gg_commandstr is being replayed
+!  Endif;
 #Endif; ! TARGET_GLULX
 
 ! ------------------------------------------------------------------------------
@@ -1257,28 +1256,14 @@ Object ParserInform "(Parser de Inform)"
     if (nw == 0)
     { M__L(##Miscelanea,10); jump FreshInput; }
 
-    ! Unless the opening word was "oops", return
-    ! Conveniently, a_table-->1 is the first word in both ZCODE and GLULX.
+!  Unless the opening word was "oops", return
+!  Conveniently, a_table-->1 is the first word in both ZCODE and GLULX.
 
-    w = a_table-->1;
+    w=a_table-->1;
     if (w == OOPS1__WD or OOPS2__WD or OOPS3__WD) jump DoOops;
 
-    ! Manejo de comentarios por parte del jugador (o betatester)
-    if (a_buffer->WORDSIZE == CARACTER_COMENTARIO) {
-        #Ifdef TARGET_ZCODE;
-        if ((HDR_GAMEFLAGS-->0) & 1 || xcommsdir)
-                                           M__L(##Miscelanea, 54);
-        else                               M__L(##Miscelanea, 55);
-        #Ifnot; ! TARGET_GLULX
-        if (gg_scriptstr || gg_commandstr) M__L(##Miscelanea, 54);
-        else                               M__L(##Miscelanea, 55);
-        #Endif; ! TARGET_
-
-        jump FreshInput;
-    }
-
-    #IfV5;
-    ! Undo handling
+#IfV5;
+!  Undo handling
 
 !  In Graham's 6/9 code, the following line tests (parse->1==1) instead
 !  of (nw==1). I believe that's wrong. In particular, it prevents "undo"
@@ -3315,17 +3300,11 @@ Constant SCORE__DIVISOR = 20;
 #Ifdef DEBUG;
   if (parser_trace>=4)
   {   print "   Agrupados en ", n, " posibilidades por el nombre:^";
-      for (i = 1 : i <= n : i++)
-      {
-          print "     Grupo ", i, " (";
-          j = 0; while (encajan_clases-->j ~= i or -i) j++;
-          print (The) lista_encajan-->j, "): ", lista_encajan-->j;
-          if (encajan_clases-->j == -i)  ! Si es -i, hay más de este grupo
-              for (j++ : j < numero_de_encajados : j++)
-                  if (encajan_clases-->j == i)  ! Sólo el primero puede ser -i
-                      print " ", lista_encajan-->j;
-          print "^";
-      }
+      for (i=0:i<numero_de_encajados:i++)
+          if (encajan_clases-->i > 0)
+              print "   ", (The) lista_encajan-->i,
+                  " (", lista_encajan-->i, ")  ---  grupo ",
+                  encajan_clases-->i, "^";
   }
 #Endif;
 
@@ -6168,8 +6147,3 @@ Array magic_array -->         ! This is so nitfol can do typo correction /
 
 ! ----------------------------------------------------------------------------
 
-! ==============================================================================
-
-Constant LIBRERIA_EPARSER;      ! Para el chequeo de dependencias
-
-! ==============================================================================
