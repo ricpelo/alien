@@ -1,0 +1,65 @@
+! Blorb Resource Definitions File
+! Generated automatically by bres.
+! Do not edit!
+! Include this file in your inform source with "Include "alien.bli";"
+
+Message "Including bres resource declarations generated on 1-1-1";
+
+Constant Nave1_jpg 3;	!Blorb Pict:res/img/nave1.jpg
+Constant Nave2_jpg 4;	!Blorb Pict:res/img/nave2.jpg
+Constant Exterior1_jpg 5;	!Blorb Pict:res/img/exterior1.jpg
+Constant Exterior3_jpg 6;	!Blorb Pict:res/img/exterior3.jpg
+Constant Junto_Procesador_jpg 7;	!Blorb Pict:res/img/junto_procesador.jpg
+Constant Junto_Procesador_Abierto_jpg 8;	!Blorb Pict:res/img/junto_procesador_abierto.jpg
+Constant Junto_Puerta_jpg 9;	!Blorb Pict:res/img/junto_puerta.jpg
+Constant Junto_Puerta_Abierta_jpg 10;	!Blorb Pict:res/img/junto_puerta_abierta.jpg
+Constant Procesador_jpg 11;	!Blorb Pict:res/img/procesador.jpg
+Constant Entrada_jpg 12;	!Blorb Pict:res/img/entrada.jpg
+Constant Laberinto_jpg 13;	!Blorb Pict:res/img/laberinto.jpg
+Constant Aula_jpg 14;	!Blorb Pict:res/img/aula.jpg
+Constant Balcon_jpg 15;	!Blorb Pict:res/img/balcon.jpg
+Constant Seguridad_jpg 16;	!Blorb Pict:res/img/seguridad.jpg
+Constant Laboratorio_jpg 17;	!Blorb Pict:res/img/laboratorio.jpg
+Constant Enfermeria_jpg 18;	!Blorb Pict:res/img/enfermeria.jpg
+Constant Cocina_jpg 19;	!Blorb Pict:res/img/cocina.jpg
+Constant Comedor_jpg 20;	!Blorb Pict:res/img/comedor.jpg
+Constant Despensa_jpg 21;	!Blorb Pict:res/img/despensa.jpg
+Constant Oficina_jpg 22;	!Blorb Pict:res/img/oficina.jpg
+Constant Ventilacion1_jpg 23;	!Blorb Pict:res/img/ventilacion1.jpg
+Constant Hueco_Techo_jpg 24;	!Blorb Pict:res/img/hueco_techo.jpg
+Constant Ascensor_Emergencia_jpg 25;	!Blorb Pict:res/img/ascensor_emergencia.jpg
+Constant Emergencia_Pasillo_jpg 26;	!Blorb Pict:res/img/emergencia_pasillo.jpg
+Constant Emergencia_Oeste_jpg 27;	!Blorb Pict:res/img/emergencia_oeste.jpg
+Constant Emergencia_Este_jpg 28;	!Blorb Pict:res/img/emergencia_este.jpg
+Constant Robot_jpg 29;	!Blorb Pict:res/img/robot.jpg
+Constant Alien_Rapta_Jason_jpg 30;	!Blorb Pict:res/img/alien_rapta_jason.jpg
+Constant Alien_Mata_jpg 31;	!Blorb Pict:res/img/alien_mata.jpg
+Constant Sin_Imagen_jpg 32;	!Blorb Pict:res/img/logo_alpha_aventuras.jpg
+Constant Oscuridad_jpg 33;	!Blorb Pict:res/img/oscuridad.jpg
+Constant Logo_Alien_jpg 34;	!Blorb Pict:res/img/logo_alien.jpg
+Constant A_jpg 35;	!Blorb Pict:res/img/a.jpg
+Constant Al_jpg 36;	!Blorb Pict:res/img/al.jpg
+Constant Ali_jpg 37;	!Blorb Pict:res/img/ali.jpg
+Constant Alie_jpg 38;	!Blorb Pict:res/img/alie.jpg
+Constant Intro_ogg 3;	!Blorb Snd:res/snd/intro.ogg
+Constant Teletipo_ogg 4;	!Blorb Snd:res/snd/teletipo.ogg
+Constant Detector1_ogg 5;	!Blorb Snd:res/snd/detector1.ogg
+Constant Detector2_ogg 6;	!Blorb Snd:res/snd/detector2.ogg
+Constant Detector3_ogg 7;	!Blorb Snd:res/snd/detector3.ogg
+Constant Detector4_ogg 8;	!Blorb Snd:res/snd/detector4.ogg
+Constant Detector5_ogg 9;	!Blorb Snd:res/snd/detector5.ogg
+Constant Sirena_ogg 10;	!Blorb Snd:res/snd/sirena.ogg
+Constant Transmisor_ogg 11;	!Blorb Snd:res/snd/transmisor.ogg
+Constant Nave_ogg 12;	!Blorb Snd:res/snd/nave.ogg
+Constant Lluvia_ogg 13;	!Blorb Snd:res/snd/lluvia.ogg
+Constant Maquinaria_ogg 14;	!Blorb Snd:res/snd/maquinaria.ogg
+Constant Junto_Procesador_ogg 15;	!Blorb Snd:res/snd/junto_procesador.ogg
+Constant Pasillo_ogg 16;	!Blorb Snd:res/snd/pasillo.ogg
+Constant Balcon_ogg 17;	!Blorb Snd:res/snd/balcon.ogg
+Constant Estancia_ogg 18;	!Blorb Snd:res/snd/estancia.ogg
+Constant Ventilacion_ogg 19;	!Blorb Snd:res/snd/ventilacion.ogg
+Constant Grito_Jason_ogg 20;	!Blorb Snd:res/snd/grito_jason.ogg
+Constant Grito_Jugador_ogg 21;	!Blorb Snd:res/snd/grito_jugador.ogg
+Constant Rugido_ogg 22;	!Blorb Snd:res/snd/rugido.ogg
+Constant Trueno_ogg 23;	!Blorb Snd:res/snd/trueno.ogg
+Constant Explosion_ogg 24;	!Blorb Snd:res/snd/explosion.ogg
