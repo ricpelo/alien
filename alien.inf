@@ -1,13 +1,13 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=57000
+!% $MAX_PROP_TABLE_SIZE=55900
 !% $MAX_VERBS=153
 
 !
-! "A·L·I·E·N" - Edición especial
+! "A·L·I·E·N"
 !
-! Copyright (c) 2008-2011 Ricardo Pérez López (Alpha Aventuras)
+! Copyright (c) 2008 Ricardo Pérez López (Alpha Aventuras)
 !
 
 ! This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,8 @@
 
 
 
-Constant Historia "~A·L·I·E·N~ - Edición especial";
-Constant Titular "^(c) 2008-2011 Alpha Aventuras^^
+Constant Historia "~A·L·I·E·N~";
+Constant Titular "^(c) 2008 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
 Release 1;
@@ -73,7 +73,6 @@ Constant CANAL_TRANSMISOR = 5;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
-Constant SONIDO_BUCLE_INFINITO = -1;
 
 
 ! ====================================================================
@@ -141,7 +140,6 @@ Replace PermitirEmpujarDir;
 Include "EParser";
 
 Replace EsperarTecla;
-Replace InitGlkWindow;
 Include "sgw+dmx";       ! entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
@@ -399,7 +397,7 @@ Object barra_estado
 Class Lugar
   class LugarConRastro
   with
-    sgw_mus Estancia_ogg,
+    sonido_fondo Estancia_ogg,
     describir [;
       ImprimirOEjecutar(self, descripcion);
       if (mostrarSalidas) {
@@ -441,7 +439,7 @@ Class Lugar
       Ir:
         ! Cuando el jugador se mueve a otra localidad, se comprueba si hay que activar el
         ! sonido de fondo
-        if (control_sonido_fondo.hay_sonido && LugarReal() provides sgw_mus) {
+        if (control_sonido_fondo.hay_sonido && LugarReal() provides sonido_fondo) {
           EncenderMusicaSub(true);
         } else {
           control_sonido_fondo.desactivar();
@@ -489,7 +487,7 @@ Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
-! Include "Efectos";        ! Efectos de sonido
+Include "Efectos";        ! Efectos de sonido
 Include "Decorado";       ! Objetos de decorado
 Include "Array";          ! Necesario para escr
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
@@ -587,30 +585,25 @@ Class ControlSonido
   with
     sonido null,      ! El sonido que está sonando en este momento
     canal,            ! El canal por el que suena
-    volumen 100,      ! $10000,
+    volumen $10000,
     activar [ efecto rep;
       self.sonido = efecto;
       if (rep) {
-        Damusix.AsignarCanal(efecto, self.canal, self.volumen, rep);
-        ! EfectosSonoros.ActivarEfecto(efecto, rep, self.canal);
+        EfectosSonoros.ActivarEfecto(efecto, rep, self.canal);
       } else {
-        Damusix.AsignarCanal(efecto, self.canal, self.volumen, 1);
-        ! EfectosSonoros.ActivarEfecto(efecto, 1, self.canal);
+        EfectosSonoros.ActivarEfecto(efecto, 1, self.canal);
       }
-      Damusix.Tocar(efecto);
     ],
     desactivar [;
-      Damusix.Parar(self.sonido);
       self.sonido = null;
-      ! EfectosSonoros.DesactivarEfecto(self.canal);
+      EfectosSonoros.DesactivarEfecto(self.canal);
     ],
     cambiar_volumen [ v;
       self.volumen = v;
-      Damusix.Volumen(self.sonido, v);
-      ! EfectosSonoros.Volumen(v, self.canal);
+      EfectosSonoros.Volumen(v, self.canal);
     ],
     iniciar [;
-      ! EfectosSonoros.Volumen(self.volumen, self.canal);
+      EfectosSonoros.Volumen(self.volumen, self.canal);
     ];
     
 
@@ -623,7 +616,7 @@ Object control_sonido_fondo
   with
     hay_sonido true,
     canal CANAL_FONDO,
-    volumen 50; ! $5000;
+    volumen $5000;
 
 Object control_sonido_varios
   class ControlSonido
@@ -635,7 +628,7 @@ Object control_sonido_detector
   with
     hay_detector true,
     canal CANAL_DETECTOR,
-    volumen 70; ! $7000;
+    volumen $7000;
 
 Object control_sonido_trueno
   class ControlSonido
@@ -676,8 +669,8 @@ Object nave1 "Interior de la nave"
                  una vista desoladora del exterior.",
     afuera puerta_nave,
     al_o nave2,
-    sgw_img Nave1_jpg,
-    sgw_mus Nave_ogg,
+    numgrafico Nave1_jpg,
+    sonido_fondo Nave_ogg,
     cerrar [;
       puerta_nave.cerrar();
       HablaMadre("Cerrando compuerta de la nave.");
@@ -1291,8 +1284,8 @@ Object nave2 "Parte posterior de la nave"
                  lo demás, destaca el enorme contraste con la proa de la nave en cuanto a
                  falta de decoración e instrumentación.",
     al_e nave1,
-    sgw_img Nave2_jpg,
-    sgw_mus Nave_ogg;
+    numgrafico Nave2_jpg,
+    sonido_fondo Nave_ogg;
 
 
 Object decorado_nave2 nave2
@@ -1476,8 +1469,8 @@ Object exterior1 "Junto a la nave"
                  colonia minera. A causa de la lluvia, una neblina fantasmagórica lo
                  envuelve todo, lo que hace que las siluetas de la colonia se difuminen.
                  Pese a todo, la temperatura es elevada.",
-    sgw_img Exterior1_jpg,
-    sgw_mus Lluvia_ogg,
+    numgrafico Exterior1_jpg,
+    sonido_fondo Lluvia_ogg,
     adentro puerta_nave,
     al_s exterior3,
     al_n junto_procesador,
@@ -1528,8 +1521,8 @@ Object junto_procesador "Frente al procesador atmosférico"
                  junto a ella se ha situado un panel de control. El edificio es altísimo,
                  y su fachada frontal tiene signos de haber sido maltratada. Sigue
                  lloviendo, y el calor es asfixiante.",
-    sgw_img Junto_Procesador_jpg,
-    sgw_mus Junto_Procesador_ogg,
+    numgrafico Junto_Procesador_jpg,
+    sonido_fondo Junto_Procesador_ogg,
     al_s exterior1,
     adentro puerta_procesador,
     antes [;
@@ -1734,7 +1727,7 @@ Object panel_control "panel de control" junto_procesador
             t->2 == '8' && t->3 == '7' && t->4 == '4' && t->5 == '1') {
           ! Código nuevo: 268741
           puerta_procesador.abrir();
-          junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
+          junto_procesador.numgrafico = Junto_Procesador_Abierto_jpg;
           give self ~general;
           bateria.energia = 0;
           print "El display dice: ~";
@@ -1852,8 +1845,8 @@ Object procesador "Procesador atmosférico"
       }
       "";
     ],
-    sgw_img Procesador_jpg,
-    sgw_mus Maquinaria_ogg,
+    numgrafico Procesador_jpg,
+    sonido_fondo Maquinaria_ogg,
     afuera puerta_procesador,
     antes [;
       Ir:
@@ -1905,7 +1898,7 @@ Object procesador "Procesador atmosférico"
                    puerta del procesador atmosférico. Comienzas a respirar en cuanto te das
                    cuenta de que estás solo...^";
             EsperarTecla();
-            viewImageCenter(procesador.sgw_img);
+            viewImageCenter(procesador.numgrafico);
           }
         }
       }
@@ -2064,8 +2057,8 @@ Object exterior3 "Exterior de la colonia"
                  sin vida, carente de todo tipo de vegetación y cubierto de charcos y
                  lodo húmedo. Multitud de piezas mecánicas aparecen desperdigadas por
                  el suelo.",
-    sgw_img Exterior3_jpg,
-    sgw_mus Lluvia_ogg,
+    numgrafico Exterior3_jpg,
+    sonido_fondo Lluvia_ogg,
     al_n exterior1,
     al_e junto_puerta,
     antes [;
@@ -2138,8 +2131,8 @@ Object junto_puerta "Junto a la entrada de acceso al complejo"
                  bajo, pero muy extenso. Todo tiene aspecto de haber sido innecesariamente
                  maltrado. Más allá sólo continúa la superficie de la colonia, que apenas
                  alcanzas a ver debido a la neblina.",
-    sgw_img Junto_Puerta_jpg,
-    sgw_mus Lluvia_ogg,
+    numgrafico Junto_Puerta_jpg,
+    sonido_fondo Lluvia_ogg,
     al_o exterior3,
     adentro puerta_rara;
 
@@ -2238,8 +2231,8 @@ Class Laberinto
       }
       "";
     ],
-    sgw_img Laberinto_jpg,
-    sgw_mus Pasillo_ogg,
+    numgrafico Laberinto_jpg,
+    sonido_fondo Pasillo_ogg,
     antes [;
       Examinar:
         if (uno == obj_abajo) {
@@ -2304,8 +2297,8 @@ Class Balcon
     ],
     posicion 0,
     nivel 0,
-    sgw_img Balcon_jpg,
-    sgw_mus Balcon_ogg,
+    numgrafico Balcon_jpg,
+    sonido_fondo Balcon_ogg,
     antes [;
       Ir, Examinar:
         if (uno == IntercambiarDireccion(self.posicion)) {
@@ -2420,7 +2413,7 @@ Object entrada "Entrada al complejo"
                  Nada de decoración lujosa ni elementos ornamentales, sino más bien un
                  sencillo y amplio pasillo, semejante a un recibidor, y totalmente
                  vacío y sin vida.",
-    sgw_img Entrada_jpg,
+    numgrafico Entrada_jpg,
     afuera puerta_rara,
     al_s balcon1,
     cada_turno [;
@@ -2524,7 +2517,7 @@ Object oficina "Oficina"
                  decenas de cuadros que prácticamente ocultan por completo la pared con
                  escenas marciales y bélicas. En una esquina, cerca del techo,
                  una cámara de seguridad lo observa todo con su único ojo.",
-    sgw_img Oficina_jpg,
+    numgrafico Oficina_jpg,
     al_e balcon2,
     antes [;
       Examinar:
@@ -2739,7 +2732,7 @@ Object enfermeria "Enfermería"
                  con una lechosa luz blanca. La estancia se encuentra rodeada por una gran
                  fila de armarios. Un charco de sangre roja y brillante reposa en el suelo
                  junto a varias camillas desperdigadas.",
-    sgw_img Enfermeria_jpg,
+    numgrafico Enfermeria_jpg,
     al_s laberinto16,
     al_o balcon7,
   has
@@ -2897,7 +2890,7 @@ Object laboratorio "Laboratorio"
                  lo que hubiera estado dentro, contenido, ya no lo está. Manchas y charcos
                  de sangre cubren ciertas partes de la estancia, y una cámara situada
                  cerca del techo barre la sala de izquierda a derecha.",
-    sgw_img Laboratorio_jpg,
+    numgrafico Laboratorio_jpg,
     al_n laberinto19,
     antes [;
       Examinar:
@@ -3162,7 +3155,7 @@ Object despensa "Despensa"
                  soportan los distintos tipos de comida prefabricada o enlatada de la que
                  disponen los colonos. Algunos expositores están rotos y la comida
                  desperdigada.",
-    sgw_img Despensa_jpg,
+    numgrafico Despensa_jpg,
     al_o comedor1,
     al_e cocina;
 
@@ -3243,7 +3236,7 @@ Object comedor1 "Comedor"
                  pasar las bandejas y servirte la comida, se extiende hacia la habitación
                  contigua hasta penetrar en ella. En una mesa cercana hay algunas bandejas
                  de comida sin empezar.",
-    sgw_img Comedor_jpg,
+    numgrafico Comedor_jpg,
     al_e despensa,
     al_s balcon6;
 
@@ -3289,7 +3282,7 @@ Object cocina "Cocina"
                  extracción adornan la parte alta de sendos fogones. Por lo demás, resulta
                  sorprendende la ausencia de todo rastro de comida.",
     nombre_localidad "cocina",
-    sgw_img Cocina_jpg,
+    numgrafico Cocina_jpg,
     al_s balcon7,
     al_o despensa,
   has
@@ -3517,7 +3510,7 @@ Object emergencia_este "Sala este de emergencia"
   class SalaEmergencia
   class ZonaEmergencia
   with
-    sgw_img Emergencia_Este_jpg,
+    numgrafico Emergencia_Este_jpg,
     situacion "este",
     al_o emergencia_pasillo;
 
@@ -3534,7 +3527,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
     afuera puerta_emergencia,
     al_e emergencia_este,
     al_o emergencia_oeste,
-    sgw_img Emergencia_Pasillo_jpg,
+    numgrafico Emergencia_Pasillo_jpg,
     despues [;
       Ir:
         if (self hasnt visitado) {
@@ -3692,7 +3685,7 @@ Object emergencia_oeste "Sala oeste de emergencia"
   class SalaEmergencia
   class ZonaEmergencia
   with
-    sgw_img Emergencia_Oeste_jpg,
+    numgrafico Emergencia_Oeste_jpg,
     situacion "oeste",
     al_e emergencia_pasillo;
 
@@ -3823,7 +3816,7 @@ Object aula "Aula"
                  mesa del docente, pulcramente ordenada. En el centro de la sala hay un
                  proyector orientado hacia una enorme pantalla blanca, situada al
                  fondo.",
-    sgw_img Aula_jpg,
+    numgrafico Aula_jpg,
     al_o laberinto3,
     al_s laberinto7;
 
@@ -4011,7 +4004,7 @@ Object seguridad "Sala de seguridad"
                  hendidura en la pared, para acabar conectados a la parte posterior de la
                  consola. Aquí la luz es más apagada y por las paredes fluyen tubos de
                  distinto grosor.",
-    sgw_img Seguridad_jpg,
+    numgrafico Seguridad_jpg,
     al_n laberinto18,
   has
     femenino;
@@ -4310,7 +4303,7 @@ Object laberinto19
 Object laberinto28
   class Laberinto,
   with
-    sgw_img Ascensor_Emergencia_jpg,
+    numgrafico Ascensor_Emergencia_jpg,
     al_e balcon12,
     adentro laberinto28, ! Esto es para que funcione "jason, vete adentro"
     no_puedes_ir "Este nivel aún está sin terminar. No hay más salidas.",
@@ -4443,8 +4436,8 @@ Object ventilacion1
                  complejo. En el techo anormalmente bajo de la estancia puedes ver varios
                  de los muchos ventiladores que se encargan de suministrar aire por toda
                  la subterránea del complejo. El zumbido que producen es casi hipnótico.",
-    sgw_mus Ventilacion_ogg,
-    sgw_img Ventilacion1_jpg,
+    sonido_fondo Ventilacion_ogg,
+    numgrafico Ventilacion1_jpg,
     abajo laberinto36,
     al_e hueco_techo,
     antes [;
@@ -4490,8 +4483,8 @@ Object hueco_techo "Sala este de ventilación"
                  paredes y el techo. Un techo tan bajo que casi te impide permanecer
                  totalmente de pie, y en el que, además, se aprecia un enorme
                  hueco, cubierto también por la misma desagradable viscosidad.",
-    sgw_mus Ventilacion_ogg,
-    sgw_img Hueco_Techo_jpg,
+    sonido_fondo Ventilacion_ogg,
+    numgrafico Hueco_Techo_jpg,
     al_o ventilacion1,
     antes [;
       Examinar:
@@ -6421,7 +6414,7 @@ Object alien procesador
     describir [;
       if (self.primera_vez) {
         self.primera_vez = false;
-        viewImageCenter(procesador.sgw_img);
+        viewImageCenter(procesador.numgrafico);
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
                terrorífico comienza a sobresalir entre un conglomerado de tuberías.
                Conforme se va incorporando, lo tienes más fácil para comprobar su enorme
@@ -6600,7 +6593,7 @@ Object robot "robot de mantenimiento" exterior3,
         if (self hasnt general) {
           viewImageCenter(Robot_jpg);
           EsperarTecla();
-          viewImageCenter(exterior3.sgw_img);
+          viewImageCenter(exterior3.numgrafico);
         }
       EmpujarDir:
         give self general;
@@ -7802,7 +7795,7 @@ Object tt_final
 ! Rutina principal y obligatoria de todo juego InformATE
 [ Inicializar;
 
-  if (~~testGraphics()) {
+  if (~~ComprobarInterprete()) {
     print "^Lo sentimos, pero este juego necesita un intérprete Glulx
             con capacidades gráficas.^^";
     EsperarTecla();
@@ -7819,8 +7812,8 @@ Object tt_final
   localizacion = laoscuridad;
 
   ! Inicialización sonora
-  ! EfectosSonoros.InicializarCanales(NUM_CANALES);
-  ! IniciarSonidos();
+  EfectosSonoros.InicializarCanales(NUM_CANALES);
+  IniciarSonidos();
 
   dibujarEstado = false;
   print "¿Quieres ver la introducción? (S/N): ";
@@ -7850,7 +7843,7 @@ Object tt_final
   ! Localización donde comienza el jugador
   localizacion = nave1;
   
-  ! BorrarGraficos();
+  BorrarGraficos();
   clearMainWindow();
 
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
@@ -7880,241 +7873,6 @@ Object tt_final
   control_sonido_computadora.iniciar();
   control_sonido_transmisor.iniciar();
 ];
-
-
-![ InitGlkWindow winrock;
-!  switch (winrock) {
-!    GG_MAINWIN_ROCK:
-!      glk_stylehint_set(wintype_TextBuffer, style_Normal,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_Normal,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Normal,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Normal,
-!                        stylehint_Weight, 0);
-!      glk_stylehint_set(wintype_TextBuffer, style_Normal,
-!                        stylehint_Proportional, 1);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_Input,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextBuffer, style_Input,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Input,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Input,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Input,
-!                        stylehint_Weight, 1);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_User1,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_User1,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_User1,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_User1,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_User1,
-!                        stylehint_Weight, 1);
-!  
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_Proportional, 0);
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_Weight, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_User2,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_Alert,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_Alert,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Alert,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Alert,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Alert,
-!                        stylehint_Weight, 1);
-!         
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_Oblique, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_Weight, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_TextColor, $00aa00);
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_Proportional, 0);
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_Weight, 0);
-!      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_Header,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextBuffer, style_Header,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_Header,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_Header,
-!                        stylehint_Weight, 1);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_Subheader,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextBuffer, style_Subheader,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextBuffer, style_SubHeader,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextBuffer, style_SubHeader,
-!                        stylehint_Weight, 1);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_Note,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_Note,
-!                        stylehint_BackColor, $000000);
-!
-!      glk_stylehint_set(wintype_TextBuffer, style_BlockQuote,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextBuffer, style_BlockQuote,
-!                        stylehint_BackColor, $000000);
-!
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Normal,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_Normal,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Normal,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Normal,
-!                        stylehint_Weight, 0);
-!      glk_stylehint_set(wintype_TextGrid, style_Normal,
-!                        stylehint_Proportional, 1);
-!         
-!      glk_stylehint_set(wintype_TextGrid, style_Input,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextGrid, style_Input,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Input,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Input,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Input,
-!                        stylehint_Weight, 1);
-! 
-!      glk_stylehint_set(wintype_TextGrid, style_User1,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_User1,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_User1,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_User1,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_User1,
-!                        stylehint_Weight, 1);
-!  
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_Proportional, 0);
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_Weight, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_User2,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Alert,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_Alert,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Alert,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Alert,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Alert,
-!                        stylehint_Weight, 1);
-!         
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_Proportional, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_Oblique, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_Weight, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Emphasized,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_TextColor, $00aa00);
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_Proportional, 0);
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_Weight, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-!                        stylehint_Justification, stylehint_just_LeftRight);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Header,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextGrid, style_Header,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_Header,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_Header,
-!                        stylehint_Weight, 1);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Subheader,
-!                        stylehint_TextColor, $00ff00);
-!      glk_stylehint_set(wintype_TextGrid, style_Subheader,
-!                        stylehint_BackColor, $000000);
-!      glk_stylehint_set(wintype_TextGrid, style_SubHeader,
-!                        stylehint_Size, 1);
-!      glk_stylehint_set(wintype_TextGrid, style_SubHeader,
-!                        stylehint_Weight, 1);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_Note,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_Note,
-!                        stylehint_BackColor, $000000);
-!
-!      glk_stylehint_set(wintype_TextGrid, style_BlockQuote,
-!                        stylehint_TextColor, $ffffff);
-!      glk_stylehint_set(wintype_TextGrid, style_BlockQuote,
-!                        stylehint_BackColor, $000000);
-!  }
-!
-!  rfalse; ! si te olvidas esta linea, el juego no funcionará bien
-!];
 
 
 [ InitGlkWindow winrock;
@@ -8191,6 +7949,7 @@ Object tt_final
                         stylehint_Weight, 1);
       glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
                         stylehint_Justification, stylehint_just_LeftRight);
+
       glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
                         stylehint_TextColor, $00aa00);
       glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
@@ -8403,7 +8162,7 @@ Object tt_final
   IniciarSonidos();
   
   if (control_sonido_fondo.hay_sonido &&
-      LugarReal() provides sgw_mus) {
+      LugarReal() provides sonido_fondo) {
     control_sonido_fondo.sonido = null;
     EncenderMusicaSub(true);
   }
@@ -8675,19 +8434,19 @@ Object tt_final
   tt_inicial1.visualiza();
   viewImageCenter(A_jpg);
   EsperarTecla();
-  clearTextWindow();
+  clearMainWindow();
   tt_inicial2.visualiza();
   viewImageCenter(Al_jpg);
   EsperarTecla();
-  clearTextWindow();
+  clearMainWindow();
   tt_inicial3.visualiza();
   viewImageCenter(Ali_jpg);
   EsperarTecla();
-  clearTextWindow();
+  clearMainWindow();
   tt_inicial4.visualiza();
   viewImageCenter(Alie_jpg);
   EsperarTecla();
-  clearTextWindow();
+  clearMainWindow();
   tt_inicial5.visualiza();
   EsperarTecla();
   viewImageCenter(Logo_Alien_jpg);
@@ -8876,7 +8635,7 @@ Object tt_computadora
   PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
   ! La puerta ahora está rota
   puerta_rara.abrir();
-  junto_puerta.sgw_img = Junto_Puerta_Abierta_jpg;
+  junto_puerta.numgrafico = Junto_Puerta_Abierta_jpg;
 !  give puerta_rara abierta;
   ! Pero no ya no permite abrirla. Esto se hace para que los PNJ no abran ni cierren la
   ! puerta cuando la crucen automáticamente.
@@ -9342,8 +9101,8 @@ Extend 'di' first
   openGraphicWindow(ALTO_VENTANA_GRAFICA);
   clearMainWindow();
   ! PintaMarco(true);
-  if (LugarReal() provides sgw_img) {
-    viewImageCenter(LugarReal().sgw_img);
+  if (LugarReal() provides numgrafico) {
+    viewImageCenter(LugarReal().numgrafico);
   } else {
     viewImageCenter(Sin_Imagen_jpg);
   }
@@ -9356,7 +9115,7 @@ Extend 'di' first
 [ ApagarGraficosSub t;
   hayGraficos = false;
   closeGraphicWindow();
-  ! BorrarGraficos();
+  BorrarGraficos();
   if (~~t) {
     "[Desactivados los gráficos.]";
   }
@@ -9544,7 +9303,7 @@ Endif;
 
 
 [ EncenderSonidoSub;
-  Damusix.ActivarAudio();
+  EfectosSonoros.ActivarSonidos();
   EncenderMusicaSub(true);
   if (control_sonido_detector.sonido ~= null) {
     control_sonido_detector.activar(control_sonido_detector.sonido, SONIDO_BUCLE_INFINITO);
@@ -9554,7 +9313,7 @@ Endif;
 
 
 [ ApagarSonidoSub;
-  Damusix.DesactivarAudio();
+  EfectosSonoros.DesactivarSonidos();
   control_sonido_fondo.hay_sonido = false;
   "[Desactivados todos los efectos sonoros.]";
 ];
@@ -9562,8 +9321,8 @@ Endif;
 
 [ EncenderMusicaSub i sf;
 
-  if (LugarReal() provides sgw_mus) {
-    sf = (LugarReal()).sgw_mus;
+  if (LugarReal() provides sonido_fondo) {
+    sf = (LugarReal()).sonido_fondo;
   } else {
     sf = null;
   }
@@ -9640,7 +9399,7 @@ Endif;
   print "- Decorado_NG (adaptación de Decorado, de Zak y Mel Hython)^";
   print "- Escr_NG (adaptación de Escr, de Baltasarq)^";
   print "- Adaptación de Barra, de Presi^";
-  print "- Adaptación de BajoNivel, de Zak y Baltasarq^";
+  print "- Adaptación de BajoNivel, de Zak y Baltasarq";
   print "- Adaptación de ZIPI, de Zak";
   EsperarTecla();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
@@ -9653,7 +9412,7 @@ Endif;
   style roman;
   EsperarTecla();
   if (hayGraficos) {
-    viewImageCenter(LugarReal().sgw_img);
+    viewImageCenter(LugarReal().numgrafico);
   }
 ];
 

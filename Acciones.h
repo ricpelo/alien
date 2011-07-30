@@ -2775,3 +2775,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 ];
 
 ! ==============================================================================
+
+Constant LIBRERIA_ACCIONES;     ! Para el chequeo de dependencias
+
+! ==============================================================================
