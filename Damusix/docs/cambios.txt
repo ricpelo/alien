@@ -1,0 +1,567 @@
+===============================================================================
+  DREAMBYTES ADVENTURES: AD(M)INISTRADOR (U)NIFICADO DE (S)ON(I)DO EN GLUL(X)
+  **** Log de Cambios - Extension Damusix ****
+-------------------------------------------------------------------------------
+
+  2009/01/03  Eliuk Blau - Nuevo Release: ** Damusix v3/090103 r2 **
+                         - Se re-empaqueta todo con motivo de un cambio
+                           en la documentacion. Ahora dice que Damusix
+                           es perfectamente compatible con el interprete
+                           Git v1.2.3 o superior (Gracias, David Kinder!).
+                         - Documentacion version actual: DocV 3.2.
+
+  2009/01/03  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v3/090103 **
+                         - Actualizacion para compatibilidad con la nueva
+                           extension de soporte: Dainunek v3.
+                         - La rutina Damusix.Inicializar() ahora se llama
+                           Damusix.InicializarGlk() para compatibilidad
+                           con la Libreria Española InformATE!
+                         - Se agrega nuevo array 'gg_damusix_event' para
+                           la gestion de eventos especifica de Damusix, de
+                           esta manera se deja libre array 'gg_event'; este
+                           es un cambio solo por "precaucion", para volver
+                           el codigo de Damusix todavia mas "autocontenido".
+                         - Se corrigen insignificantes despistes en
+                           la documentacion. Version actual: DocV 3.1.
+                         - Se actualiza Damusix Demo de acuerdo a los
+                           cambios realizados. Version actual: v3.3.
+
+  2008/11/04  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v3/081104 **
+                         - Se realizan IMPRESIONANTES cambios en la extension,
+                           con el fin de conseguir un efecto muy deseado por
+                           los programadores Glulx que usan musica en sus
+                           juegos: que la musica que esta "sonando de fondo"
+                           NO SEA RE-LANZADA si se hace UNDO/RESTORE/RESTART.
+                         - El efecto de "conservar las musicas de fondo" se
+                           ha conseguido con la llamada en ensamblador-Glulx
+                           '@protect' (que protege una porcion de la memoria
+                           de los "cambios de estado" del juego), ademas de
+                           una compleja "adaptacion-reestructuracion" de las
+                           rutinas del Gestor (todas las de Kernel) y a la
+                           incorporacion de codigo "especial" que se encarga
+                           de gestionar los datos que han sido protegidos.
+                         - Todo el "mecanismo de proteccion de sonidos" ante
+                           UNDO/RESTORE/RESTART puede evitarse declarando en
+                           el codigo fuente del juego una nueva constante de
+                           compilacion: 'DAMUSIX_NO_PROTEGER_SONIDOS'. Esta
+                           constante hara que en el codigo de Damusix se
+                           omitan todas la referencias al "mecanismo de
+                           proteccion de sonidos", con lo cual se compilara
+                           sin esta grandiosa funcionalidad. El motivo de
+                           esta constante es permitir que pueda usarse la
+                           extension Damusix para compilar juegos que vayan
+                           a usarse en interpretes Glulx con implementaciones
+                           mas bien pobres o especializadas. Por ejemplo,
+                           GIT es un interprete de Glulx muy rapido, pero
+                           que gana esa rapidez a costa de no implementar
+                           algunas funcionalidades de Glulx que no se usan
+                           en las aventuras compiladas con Inform. Al parecer,
+                           la llamada a '@protect' no funciona muy bien en
+                           GIT, por lo que la "proteccion de sonidos" de
+                           Damusix produce comportamientos inestables y hasta
+                           caidas y cuelgues irrecuperables en ese interprete.
+                           Si un autor quiere obtener "maxima compatibilidad"
+                           con interpretes "no muy buenos" (con perdon de
+                           sus creadores =P), puede compilar su juego
+                           usando la constante ya explicada.
+                         - Damusix es la *primera extension para Inform* que
+                           es capaz de conseguir la funcionalidad descrita
+                           anteriormente (hasta donde tengo conocimiento).
+                           Cambios:
+                           * Se agrega nuevo array 'Damusix.pib_reg': es
+                             el "registro del estado PIB" de los canales
+                             de audio normales de Damusix. Este es el dato
+                             que se protege de los "cambios de estado".
+                             PIB significa "Playing in the Background"
+                             ('Sonando de Fondo' [un estado del Kernel]).
+                           * ActualizarCanal() [Kernel-1] modificada para
+                             usar el registro PIB al actualizar un canal.
+                           * ActualizarCanales() [Kernel-2] modificada para
+                             usar el registro PIB al actualizar los canales.
+                           * NUEVA RUTINA: ActualizarPIB() [Kernel-3]. Es
+                             la encargada de realizar las comprobaciones
+                             necesarias para determinar si un canal debe
+                             ser re-lanzado luego de UNDO/RESTORE/RESTART
+                             y ademas actualiza el registro del estado PIB
+                             del canal que se le ha pasado como argumento.
+                           * Inicializar() ahora borra completamente el
+                             registro del estado PIB para obtener un
+                             inicio de juego limpio en un 'RESTART'.
+                           * IdentificarSonidos() ahora ejecuta siempre
+                             una llamada a '@protect' para proteger el
+                             registro del estado PIB. Ademas, ahora la
+                             actualizacion masiva de los canales se realiza
+                             con ActualizarCanales(1) [notar arg. oscuro '1'].
+                             La llamada con este argumento se usa unicamente
+                             dentro IdentificarSonidos() y no en las llamadas
+                             a ActualizarCanales() de las otras rutinas del
+                             Gestor de Damusix. [En codigo hay mas detalles.]
+                         - Ahora los Fades en "tiempo-real" (In/Out) RECUPERAN
+                           CORRECTAMENTE su situacion actual si es que se carga
+                           una partida (o se hace UNDO), cambiando el "estado
+                           del juego" a un momento en el que ya estaba activo
+                           alguno de estos Fades. En tal caso, el efecto sera
+                           recuperado para continuar su ejecucion a contar
+                           de su estado actual (es decir, si se vuelve a
+                           un estado donde el Fade iba en la mitad, se carga
+                           y continua desde ese punto: no se hace el efecto
+                           de Fade otra vez desde el principio).
+                           Cambios:
+                           * Se agrega nueva variable del Kernel 'tick_fade'
+                             que se usa para "recordar" el calculo de la
+                             cadencia de los 'ticks' del Timer para el
+                             efecto de Fade en "tiempo-real" actual.
+                           * NUEVA RUTINA: RecuperarFade(), que se llama
+                             solamente desde dentro de IdentificarSonidos().
+                             Sirve para comprobar si en el "nuevo estado del
+                             juego" (cuando se hace UNDO/RESTORE/RESTART)
+                             existe un Fade activo. En tal caso se reinicia
+                             el Timer (podria estar desprogramado) para
+                             continuar el Fade (con este fin se usa la
+                             nueva variable del Kernel 'tick_fade').
+                         - Se programa nuevo mecanismo en todos los efectos
+                           de Fade incorporando ahora la capacidad de indicar
+                           un 'volumen final' ARBITRARIO para estos efectos.
+                           Lo anterior quiere decir que ahora los Fades
+                           permitiran hacer In/Out hacia un volumen indicado
+                           explicitamente por el programador, no necesariamente
+                           determinado por los valores limites (0% como minimo;
+                           Vol.Global como maximo). Este nuevo 'volumen final'
+                           arbitrario corresponde al 3er argumento de todas las
+                           rutinas de Fade y es completamente opcional. Si no
+                           se usa, las rutinas ocuparan los 'valores limites'
+                           por defecto ya mencionados.
+                         - Ahora, si se pasa un 'volumen final' en un FadeOut
+                           y este volumen es mayor que 0%, entonces la rutina
+                           de FadeOut no intentara detener la reproduccion
+                           del sonido en Fade (porque no tiene sentido, ya
+                           que aun no ha llegado al 'volumen minimo' [0%]).
+                         - Se corrigen bugs "apenas notorios" en el algoritmo
+                           de FadeIn en 'tiempo-real', que siempre tomaba como
+                           valor de volumen maximo el 100% y no el porcentaje
+                           actual del Vol.Global de Damusix. Esto provocaba
+                           que con porcentajes de Vol.Global muy bajos la
+                           duracion de los FadeIn no fuera la correcta.
+                         - La rutina AbortarFade() ya no necesita el uso
+                           del argumento oscuro 'xis' y ya no es llamada
+                           desde IdentificarSonidos() [ahora el proposito
+                           no es "abortar" el Fade ante UNDO y similares,
+                           sino "recuperarlo" [mediante RecuperarFade()].
+                           [NOTA: estos cambios descritos no afectan al
+                           programador; son cambios "internos" del Gestor].
+                         - Ahora cuando se "aborta un Fade", si el efecto
+                           cuenta con un 'volumen final' explicito, entonces
+                           el Fade sera abortado aplicandole al sonido el
+                           'volumen final' indicado. En el caso de FadeOut,
+                           si el 'volumen final' es 0%, entonces el sonido
+                           ademas sera detenido, aplicandole un 'volumen
+                           final' igual al 'volumen original' que tenia
+                           aquel sonido antes de realizar el Fade. Para
+                           este fin se ha agregado un nuevo 'slot' al
+                           array del Kernel 'vol_fade' (-->2==vol.orig.).
+                         - Se corrigen "despistes" menores en las rutinas
+                           FadeIn() y FadeOut() [fades en 'tiempo-real'].
+                         - Se hacen unas simples correcciones en las rutinas
+                           del Gestor: AsignarCanal() y LiberarCanal(), para
+                           evitar un 'potencial bug' si se consulta con una
+                           rutina tecnica un dato del kernel correspondiente
+                           a un canal previamente liberado (en tal caso, este
+                           Bug hacia que se devolvieran datos erroneos porque
+                           algunos de estos datos no se 'limpiaban' totalmente
+                           al momento de liberar el canal). Por causa de este
+                           nuevo comportamiento, ahora AsignarCanal() SIEMPRE
+                           detendra la reproduccion del canal que esta siendo
+                           asignado, sin importarle si tiene o no un sonido
+                           anterior aun en reproduccion.
+                         - Se actualiza la documentacion de acuerdo a los
+                           cambios realizados. Version actual: DocV 3.0.
+                         - Se actualiza Damusix Demo de acuerdo a los
+                           cambios realizados. Version actual: v3.2.
+
+  2008/09/23  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v2/080923 **
+                         - Se hacen varios cambios en el Gestor de Damusix
+                           con el fin de aumentar la compatibilidad con I7:
+                           * La constante DAMUSIX_ERROR que englobaba los
+                             dos errores mas comunes al usar Damusix, ahora
+                             se separa en dos constantes de error todavia
+                             mas especificas:
+                             + DAMUSIX_ERROR_SND -> SONIDO INCORRECTO
+                             + DAMUSIX_ERROR_CNL -> CANAL INCORRECTO
+                         - Se corrige y mejora la rutina GlkAudio().
+                           Habia un 'potencial error' que podia ocurrir
+                           si se guardaba una partida desde un interprete
+                           sin soporte de audio y luego se cargaba en uno
+                           que si lo soportara. En este caso, GlkAudio()
+                           no le avisaba al kernel de Damusix que ahora
+                           el audio SI ESTABA SOPORTADO EFECTIVAMENTE.
+                         - En el modo DEBUG, ahora GlkAudio() muestra
+                           los mensajes de aviso de "no soporte de audio"
+                           *SOLAMENTE* al principio del juego. Al hacer
+                           UNDO/RESTORE [es decir, en IdentificarSonidos()]
+                           estos mensajes ya no son mostrados (provocaba que
+                           se mostraran varias veces, lo cual era un bug).
+                         - Nueva Rutina: BuscarSonido(). Se le debe pasar
+                           como argumento el numero del canal con el que
+                           se desea trabajar y devolvera el sonido que esta
+                           actualmente asignado a aquel canal (0 si no tiene
+                           ningun sonido asignado al momento de la llamada).
+                         - Las rutinas FadeInX() y FadeOutX() ahora se llaman
+                           SimpleFadeIn() y SimpleFadeOut(), respectivamente
+                           (ver Log del 2008/04/21).
+                         - Se actualiza la documentacion de acuerdo a los
+                           cambios realizados. Version actual: DocV 2.0.
+                         - Se actualiza Damusix Demo de acuerdo a los
+                           cambios realizados. Version actual: v3.0.
+
+  2008/09/20  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v1/080920 **
+                         - En la rutina Damusix.Inicializar() se eliminan
+                           las lineas que llamaban a ActualizarCanales()
+                           y PararCanalesExtra(); eran redudantes porque
+                           este trabajo ya lo hace IdentificarSonidos()
+                           mucho antes que Damusix.Inicializar().
+                         - Se corrige un error en la documentacion y se
+                           mejora un poco el comentario en el codigo fuente
+                           sobre el argumento oscuro 'xis' en AbortarFade().
+                         - Se re-empaqueta todo y se incrementa el numero de
+                           version para diferenciar del paquete anterior.
+                         - Se comienza a versionar la documentacion. En
+                           este release corresponde a DocV 1.2.
+                         - 23 el 23, jejeje! =P
+
+  2008/07/25  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v1/080725 **
+                         - Se mejora la rutina interna HacerPausa(), que se
+                           ocupa para la temporizacion de los sonidos en la
+                           'lista de reproduccion' y en los efectos de Fade
+                           en "tiempo-no-real". Ahora ante cualquier evento
+                           de redimension o repintado durante la pausa, se
+                           lanzara una actualizacion de todas las ventanas
+                           y un redibujado de la barra de estado.
+                         - Se aisla el 'Log de Cambios' en archivo de texto
+                           aparte del codigo fuente para tener mas orden.
+
+  2008/07/16  Eliuk Blau - IMPORTANTE!! Nuevo Release: ** Damusix v1/080716 **
+                         - Agregada nueva funcionalidad:
+                           * Rutina LimpiarLista() -> Limpia el contenido
+                             de la 'lista de reproduccion de sonidos'.
+                         - Se modifica apropiadamente rutina TocarLista()
+                           para usar el cambio antes mencionado.
+
+  2008/07/14  Eliuk Blau - IMPORTANTE!! Primer Release: ** Damusix v1/080714 **
+                         - Se programan nuevas rutinas de consulta "normales"
+                           y sus equivalentes "tecnicas" (por canales):
+                           * QueRepeticion()
+                           * QueRepeticionCanal()
+                           * QueVolumen()
+                           * QueVolumenCanal()
+                           * QueVolumenV()
+                           * QueVolumenLista()
+                           * QueVolumenGlobal()
+                           Todas estas rutinas averiguan el valor de algunas
+                           variables importantes del kernel de Damusix y
+                           devuelven estos valores para uso del programador.
+                         - Se programa nueva rutina de consulta:
+                           * SonidosLista() -> devuelve cantidad de sonidos
+                             agregados actualmente en la 'lista de reprod.'
+                         - IMPORTANTE!! Se mejora TODAVIA MAS el algoritmo de
+                           los Fades en "tiempo-real/tiempo-no-real". Ahora
+                           ya no se especifica un tiempo entre cada incremento
+                           (o 'tick' del Timer), sino que se proporciona un
+                           "tiempo de duracion total" del efecto de Fade. El
+                           tiempo de duracion minimo para los Fades es de
+                           100ms (se cambia 1 unidad de volumen por cada 'X'
+                           cantidad de milisegundos, por lo tanto 100ms de
+                           "tiempo total de duracion" del efecto equivale a
+                           cambiar 100 unidades de vol. en intervalos de 1ms
+                           [esto porque el volumen se mide en porcentajes, por
+                           lo tanto el tiempo minimo para cambiar el volumen
+                           desde 0% a 100% o viceversa es, evidentemente,
+                           de 1ms cada vez... es decir, no hay espera, porque
+                           la Glk no puede manejar tiempos menores al mseg.]).
+                           Como Inform no maneja numeros reales, los calculos
+                           del algoritmo de Fade pueden ser inapreciablemente
+                           inexactos si se proporcionan "tiempos de duracion"
+                           que no sean multiplos de 10. Asi, por ejemplo, un
+                           "tiempo de duracion" de 6000ms (6 segs.) producira
+                           un Fade de efectivamente 6 segs., pero un tiempo
+                           de 6001ms podria producir eventualmente un efecto
+                           imperceptiblemente mas corto (a nivel matematico,
+                           por cierto). Como sea, el potencial jugador no
+                           notara estas "inexactidudes" a menos que tenga
+                           superpoderes de percepcion "nanocronometrica". =D
+                         - Se mejora AUN MAS el algoritmo de los Fades en
+                           "tiempo-no-real" para eliminar el impedimento
+                           de usar tiempos de duracion menores a 100ms.
+                           Ahora existen 2 algoritmos que se seleccionaran
+                           automaticamente segun se requiera: un 'algoritmo
+                           sencillo' en el caso de tiempos de duracion iguales
+                           o superiores a 100ms; y un 'algoritmo complejo'
+                           especialmente concebido para tiempos de duracion
+                           muy cortos (menores a 100ms). De los dos algoritmos,
+                           el 'sencillo' produce un efecto mas "suave" porque
+                           realiza cambios de 1 unidad de volumen cada vez;
+                           por el contrario, el 'complejo' produce un efecto
+                           mas "aspero" porque tiene que calcular la cantidad
+                           de unidades de volumen que cambiara cada vez y
+                           entonces el volumen se modifica a "saltos".
+                         - Se corrigen inofensivos "despistes" en codigo de
+                           HacerFade(), motor de los Fades en "tiempo-real".
+                         - Se elimina constante 'DAMUSIX_LOOP' (con valor -1)
+                           debido a su poco uso en el codigo de la extension.
+                           La linea del kernel que la utilizaba ahora lleva
+                           simplemente el valor '-1'. Aparte de este uso,
+                           la constante no se ocupaba en ningun otro codigo.
+                         - Cambio de nombre de la constante 'DAMUSIX_NOCANAL';
+                           ahora se llama 'DAMUSIX_ERROR' (tiene mas sentido).
+                         - Cambio de nombre de la constante 'GG_DAMUSIX_ROCK';
+                           ahora se llama 'DAMUSIX_GG_ROCK' (caprichos! =P).
+                         - Se re-ordena bastante todo el codigo de Damusix.
+
+  2008/05/08  Eliuk Blau - COMPATIBILIDAD I7: Se cambia la sintaxis de todos
+                           los 'for (:: i++/i--)' por 'for (:: i=i+1/i=i-1)'
+                           debido a que I7 a veces se niega a compilar el
+                           codigo I6 que contenga los textos '+)' o '-)'.
+                           Pifia de I7 (sobre todo porque no deberia pasar en
+                           los bucles 'for', pero corregido aqui en Damusix).
+
+  2008/04/24  Eliuk Blau - Se agrega nuevo mensaje de aviso (ver Log
+                           del 2008/03/29): 'ERROR_LISTA_REPROD_LLENA'.
+
+  2008/04/21  Eliuk Blau - Se agrega nueva funcionalidad: FadeIn y FadeOut
+                           en "tiempo-no-real". Esta nuevas rutinas hacen un
+                           Fade a algun sonido al que se le haya asignado un
+                           canal "normal" (al igual de los efecto de Fade en
+                           "tiempo-real"), pero suben o bajan el volumen del
+                           sonido dentro de la misma rutina, por lo que solo
+                           se devuelve el control y se continua la ejecucion
+                           del resto del codigo del juego una vez que haya
+                           acabado el efecto de Fade. La utilidad de estos
+                           efectos de Fade en "tiempo-no-real" consiste
+                           basicamente en facilitar la utilizacion de estos
+                           efectos para el programador que no quiera liarse
+                           coordinando el Timer de Glk entre su propio codigo
+                           temporizado y los efectos de Fade de "tiempo-real"
+                           de Damusix. Asi se evita tener que hacer
+                           comprobaciones del tipo Damusix.EnFade() para
+                           averiguar si hay un Fade de "tiempo-real" activo
+                           y, en consecuencia, evitar lanzar alguna rutina que
+                           reprograme el Timer y "mate" el efecto de Fade de
+                           Damusix. Las nuevas rutinas son las siguientes:
+                           * FadeInX()  -> Hace FadeIn en "tiempo-no-real"
+                           * FadeOutX() -> Hace FadeOut en "tiempo-no-real"
+
+  2008/04/12  Eliuk Blau - Varios cambios en el mecanismo de gestion de los
+                           efectos de Fade en "tiempo-real":
+                           * La variable 'snd_fade' ahora se llama 'cnl_fade'
+                             y guarda el numero del canal del sonido que esta
+                             actualmente en fade.
+                           * Nueva rutina AbortarFade(), aborta de inmediato
+                             el Fade que se encuentre activo en el momento.
+                           * Las rutinas AsignarCanal() y LiberarCanal(), asi
+                             como demas rutinas que tienen incidencia directa
+                             en la reprod. de sonidos (tocarlos, pararlos,
+                             etc.) ahora comprueban si canal con el que van
+                             a trabajar esta en Fade. De ser asi, 'abortan
+                             el trabajo de Fade' antes de hacer nada.
+
+  2008/04/04  Eliuk Blau - Ahora el flag 'sin_audio' se llama 'glk_sin_audio'.
+                         - Ahora GlkAudio() realiza la comprobacion llamando a
+                           la nueva rutina utilitaria TestAudio(). Esta rutina
+                           se pone a disposicion del programador para que la
+                           utilice en el caso que desee hacer comprobaciones
+                           de disponibilidad completa de audio en Glulx (vale
+                           decir, samples y MODs). Si la rutina devuelve 1
+                           significa que hay FULL AUDIO; pero si devuelve 0,
+                           significa que el audio no tiene soporte completo
+                           (ver Log del 2008/03/05).
+                         - El flag 'en_silencio' cambia ahora de nombre y de
+                           sentido. Su nuevo nombre es 'audio_activado' e
+                           indica si la Salida de Audio de Damusix esta
+                           activada o no en un momento determinado.
+
+  2008/03/29  Eliuk Blau - CAPRICHOS!! Se reemplaza el concepto de "libreria"
+                           por el concepto de "extension". Se modifican todas
+                           las palabras del codigo fuente y la documentacion
+                           en consecuencia. (Observacion solo por motivos
+                           historicos.)
+                         - Se retocan algunos mensajes de informacion.
+
+  2008/03/28  Eliuk Blau - IMPORTANTE!!:
+                           * 'gg_cnl' se llama ahora 'gg_ncnl'
+                           * 'num_cnl' eliminada porque ya no se usa
+                           * 'DAMUSIX_CANALMAX' es ahora 'DAMUSIX_NCANALMAX'
+                           * ActualizarSonidos() es ahora ActualizarCanales()
+                         - IMPORTANTE!! Ahora Damusix inicializa siempre y
+                           por defecto el numero MAXIMO DE CANALES declarado
+                           en la constante 'DAMUSIX_NCANALMAX'. Esto implica
+                           que ya no sera necesario determinar un numero de
+                           canales a inicializar. Siempre se creara el numero
+                           maximos de canales indicado en esa constante.
+                         - IMPORTANTE!! Ahora la inicializacion de Damusix
+                           se realiza con el metodo estandar que proporciona
+                           la lib. Inform 6/11 para la inicializacion de
+                           extensiones. Un objeto especial de Damusix metido
+                           dentro del objeto 'LibraryExtensions' se encarga
+                           de ejecutar la rutina Damusix.Inicializar()
+                           siempre al comienzo del juego (antes que todo).
+                         - NUEVA FUNCIONALIDAD!! Reproduccion de sonidos
+                           en 'canales virtuales' sin tener que preocuparse
+                           por asignarles un canal. Los sonidos lanzados en
+                           los canales virtuales no se interrumpen unos a
+                           otros, pudiendo ser lanzados un maximo de 10
+                           sonidos a la vez sin que se interrumpan (porque
+                           son 10 canales virtuales y llegando al ultimo,
+                           el siguiente sonido sera lanzado en el 1er canal).
+                           Rutinas involucradas con los 'canales virtuales':
+                           * TocarV()   -> Toca sonido en un 'canal virtual'
+                           * VolumenV() -> Cambia vol. de 'canales virtuales'
+                         - NUEVA FUNCIONALIDAD!! Lista de 'reproduccion de
+                           sonidos'. Ahora se puede crear una lista de sonidos
+                           que se reproduciran en el orden en que han sido
+                           agregados a la lista, uno por uno, separados por
+                           la duracion de cada sonido especificada por el
+                           programador. La lista tiene espacio para 10 sonidos
+                           distintos. No es necesario que previamente tengan
+                           un canal asignado, pues la 'lista de reproduccion'
+                           cuenta con su propio canal. Rutinas involucradas:
+                           * CrearLista()   -> Agrega un sonido a la 'lista'
+                           * TocarLista()   -> Toca el contenido de la 'lista'
+                           * VolumenLista() -> Cambia el volumen de la 'lista'
+                         - Nueva constante DAMUSIX_VCANALMAX: indica el
+                           numero maximo de canales virtuales que van a ser
+                           creados para lanzar sonidos sin 'canal asignado'.
+                         - Nueva rutina PararCanalesExtra(): se usa para
+                           detener, en determinados puntos de ejecucion,
+                           el sonido en todos los canales virtuales y en
+                           el canal de la 'lista de reproduccion de sonidos'.
+
+  2008/03/15  Eliuk Blau - IMPORTANTE!! **Damusix 'version temprana' 1/080315**
+                           Debido a todos los cambios acumulados hasta ahora,
+                           se incrementa el numero de version de la extension.
+                           Ademas, se cambia metodo de versionado segun el
+                           nuevo formato: [release]/[AAMMDD].
+                         - IMPORTANTE!! Se cambia la licencia de Damusix.
+                           Ahora esta licenciada bajo los terminos de LGPLv3.
+                         - IMPORTANTE!! Cambio en el orden de los argumentos
+                           para la llamada a la rutina AsignarCanal().
+                           El nuevo orden es el siguiente:
+                           * 1) Sonido;
+                           * 2) Numero de Canal;
+                           * 3) Porcentaje de Volumen;
+                           * 4) Numero de Repeticiones.
+                         - IMPORTANTE!! Cambio de nombre en las siguientes
+                           rutinas de consulta: EstaTocando() ahora se llama
+                           SonandoDeFondo() y  EstaTocandoCanal() ahora se
+                           llama SonandoDeFondoCanal().
+                         - Ahora HacerFade() cambia el porcentaje de volumen
+                           fuera del bloque 'switch' nuclear de la rutina. Se
+                           realiza el cambio para compatibilidad con Inform7.
+                         - El intervalo por defecto entre cada 'tick' en el
+                           trabajo de los Fades es ahora de 50 milisegundos.
+                         - Ahora el FadeIn incrementa el volumen hasta el
+                           maximo establecido en el Volumen Global. Tambien,
+                           ahora cuando un FadeOut acaba, se re-establece el
+                           volumen del sonido con el valor actual guardado
+                           en el Volumen Global (ninguno de los Fades usa
+                           ya los valores absolutos de 0% / 100% del volumen).
+                         - La variable 'en_fade' se llama ahora 'que_fade',
+                           para permitir el uso de la nueva rutina EnFade().
+                         - Nueva rutina EnFade() disponible para averiguar
+                           si en el momento actual se esta realizando un
+                           efecto de Fade en "tiempo-real" (devuelve 1 si
+                           hay Fade activo al momento y 0 si no lo hay).
+                         - Muchas mejoras en el orden del codigo y se amplian
+                           bastante los comentarios en alguna secciones. Se
+                           eliminan y/o mejoran codigos redundantes tambien.
+
+  2008/03/05  Eliuk Blau - ActivarSonido() y DesactivarSonido() ahora se
+                           llaman ActivarAudio() y DesactivarAudio().
+                         - HaySonido() ahora se llama HayAudio().
+                         - La nueva rutina GlkAudio() comprueba si el
+                           interprete soporta la reproduccion de audio y
+                           modifica la variable 'sin_audio' apropiadamente
+                           de acuerdo con el resultado del test.
+                         - IMPORTANTE!! Ahora IdentificarSonidos() comprueba
+                           siempre si el interprete permite la reproduccion
+                           de audio. Antes, aquello se dejaba en manos de
+                           Inicializar(), lo que podia provocar un
+                           comportamiento erroneo si se grababa una partida
+                           desde un interprete sin soporte de audio y se
+                           cargaba luego en uno que si tuviera disponible esa
+                           funcionalidad. Debido a que el valor de la variable
+                           'sin_audio' se recuperaba tras cada carga, esto
+                           podia producir un comportamiento inestable. Ahora
+                           se comprueba la disponibilidad del audio tambien
+                           durante la identificacion de canales de sonido
+                           tras cada recuperacion de la partida o ante el
+                           comando 'undo'.
+                         - La rutina Damusix.Inicializar() ahora solo permite
+                           ser llamada la primera vez con el numero total de
+                           canales que se van a inicializar. Si se intenta
+                           volver a ejecutarla luego de haber inicializado ya
+                           un numero cualquiera de canales, la rutina se negara
+                           a hacerlo y avisara del hecho con un mensaje ad-hoc.
+
+  2008/03/04  Eliuk Blau - Se programa nueva rutina VolumenGlobal() que
+                           establece un 'volumen global' para todos aquellos
+                           sonidos que tengan un canal asignado en el momento
+                           del cambio. Si el sonido esta tocando, el cambio
+                           de volumen tendra efecto inmediatamente; si no, el
+                           cambio tendra efecto la proxima vez que se intente
+                           reproducir el sonido. El 'volumen global' se guarda
+                           en la nueva variable 'vol_global' (que por defecto
+                           vale 100% de volumen) y ante cada cambio recuerda
+                           su nuevo valor. (Muchas gracias a "Urbatain" por
+                           sugerir sobre la utilidad de esta funcionalidad.)
+                         - La rutina AsignarCanal() ha sido apropiadamente
+                           modificada para responder al nuevo control de
+                           'volumen global'. Ahora cada vez que se intente
+                           asignar un canal a un sonido y el argumento de %
+                           de volumen inicial valga '-1' (o si no se indica
+                           un valor correcto), se utilizara el porcentaje de
+                           'volumen global' que este guardado en ese momento.
+                         - Para las rutinas Volumen() y VolumenCanal(): si
+                           el argumento de porcentaje de volumen tiene valor
+                           '-1' (o si no se indica un valor correcto), se
+                           utilizara el porcentaje de 'volumen global'
+                           que este guardado en ese momento.
+
+  2007/08/15  Eliuk Blau - Se agregan las siguientes rutinas TECNICAS
+                           (ver Log del 2007/07/18):
+                           * VolumenCanal()
+                           * RepeticionCanal()
+
+  2007/08/05  Eliuk Blau - Ahora la inicializacion automatica de Damusix es
+                           gestionada por la extension Dainunek para que
+                           puedan incluirse distintas extensiones 'DA' que
+                           hagan uso de los puntos de entrada para Glk sin
+                           que el programador deba implementarlos por si
+                           mismo si quiere ocupar dos o mas extensiones 'DA'.
+
+  2007/07/25  Eliuk Blau - Ahora es la propia rutina ActualizarCanal() la que
+                           detiene los sonidos cuando se hace una llamada a
+                           la rutina DesactivarSonido(). De esta manera se
+                           corrige un pequeño BUG de la extension que hacia
+                           que no se controlaran bien los estados de los
+                           sonidos mientras se estaba en el MODO SILENCIOSO,
+                           y provocaba que la reproduccion de los sonidos no
+                           fuera restaurada correctamente luego de hacer un
+                           'load' en el juego.
+                         - Se programa nueva rutina HaySonido() que averigua
+                           el estado actual de la salida de audio de Damusix
+                           (es decir, si acaso esta o no en MODO SILENCIOSO).
+
+  2007/07/18  Eliuk Blau - Se agregan las siguientes rutinas TECNICAS (esta
+                           denominacion se debe a que estas rutinas trabajan
+                           directamente con el numero de un canal y no con
+                           el sonido asignado a dicho canal):
+                           * EstaTocandoCanal()
+                           * PararCanal()
+                           * PararTodo()
+
+  2007/07/07  Eliuk Blau - Release 1.0.0 de Damusix (version temprana).
+
+  2007/07/01  Eliuk Blau - Se crea el archivo de codigo fuente.
+
+-------------------------------------------------------------------------------
+  **** Fin del Log de Cambios **** (este documento no usa vocales acentuadas)
+===============================================================================

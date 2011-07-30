@@ -1,0 +1,32 @@
+===============================================================================
+  DREAMBYTES ADVENTURES: AD(M)INISTRADOR (U)NIFICADO DE (S)ON(I)DO EN GLUL(X)
+===============================================================================
+
+  CONSIDERACIONES ESPECIALES PARA LIBRERIA ESPAÑOLA INFORMATE!:
+  -------------------------------------------------------------
+
+  Esta version de Damusix esta especialmente modificada para su utilizacion
+  con la Libreria Española InformATE! Todo funciona tal y como dicen los
+  distintos archivos de documentacion, salvo la siguiente excepcion...
+
+  IMPORTANTE:  En InformATE!, Damusix DEBE SER INICIALIZADA SIEMPRE AL
+               COMIENZO DEL JUEGO. Para conseguirlo, llama a la rutina
+               Damusix.InicializarGlk() desde la rutina Inicializar()
+               de tu juego. Recomiendo que esta llamada sea lo primero
+               que se ejecute, asi que lo mejor sera que la escribas
+               como primera linea de codigo de la rutina Inicializar().
+
+  EJEMPLO:
+
+    [ Inicializar ;
+      ! PRIMERO INICIALIZAMOS DAMUSIX ANTES DE HACER NINGUNA OTRA ACTIVIDAD
+      Damusix.InicializarGlk(); ! EJECUTAR ESTA RUTINA ES MUY IMPORTANTE!!!
+
+      ! ... mas codigo ...
+    ];
+
+  Revisa el codigo de "damusix_demo.inf" si deseas estudiar un ejemplo
+  de utilizacion completo. ¡Disfruta programando con Damusix! =)
+
+  Atte. Eliuk Blau (autor de la extension Damusix).
+  e-Mail: eliukblau (AT) gmail.com
