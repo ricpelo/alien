@@ -122,18 +122,6 @@ Verb meta 'q//' 'quit' 'terminar' 'fin' 'acabar' 'abandonar'
 VerboIrregular "abandonar el juego" with imperativo 'q//' 'quit' 'terminar'
   'fin' 'acabar' 'abandonar';
 
-Verb meta 'recording' 'grabacion'
-  *                                   -> ActivarComandos
-  * 'on'/'si'                         -> ActivarComandos
-  * 'off'/'no'                        -> DesactivarComandos;
-VerboIrregular "activar la grabación de comandos" with imperativo 'recording'
-  'grabacion';
-
-Verb meta 'replay' 'reproducir'
-  *                                   -> LeerComandos;
-VerboIrregular "iniciar una reproducción de comandos" with imperativo 'replay'
-  'reproduccion';
-
 Verb meta 'recuperar' 'cargar' 'load' 'restaurar' 'restore'
   *                                   -> Restaurar;
 VerboIrregular "cargar un juego previamente guardado en disco" with imperativo
@@ -247,10 +235,20 @@ VerboIrregular "cambiar el dialecto del juego" with imperativo 'dialecto';
     * 'on'/'si'	                      -> ActivarRelojes
     * 'off'/'no'                      -> DesactivarRelojes;
 
+  Verb meta 'recording' 'grabacion'
+    *                                 -> ActivarComandos
+    * 'on'/'si'                       -> ActivarComandos
+    * 'off'/'no'                      -> DesactivarComandos;
+
   Verb meta 'changes' 'cambios'
     *                                 -> CambiosOn
     * 'on'/'si'                       -> CambiosOn
     * 'off'/'no'                      -> CambiosOff;
+
+! TODO: ¿Alguna forma en español para este comando?
+
+  Verb meta 'replay'
+    *                                 -> LeerComandos;
 
   Verb meta 'random' 'aleatorio' 'predecible'
     *                                 -> Predecible;
@@ -469,7 +467,7 @@ Verb 'sal' 'fuera' 'afuera' 'salte' 'bajate' 'levantate' 'bajarse'
     'levantarse' 'salirse' 'bajarte' 'levantarte' 'salirte'
     *                                	-> Salir
     * 'de' noun                      	-> Salirse
-    * 'por' noun                     	-> Meterse  ! [VERGIT] Descomentada
+!    * 'por' noun                     	-> Meterse
     * 'fuera'                        	-> Salir
     * 'afuera'                       	-> Salir;
 VerboIrregular "salir" with imperativo 'sal' 'fuera' 'afuera' 'salte'
@@ -756,51 +754,43 @@ Verb meta 'xlista'
 !  }
 !  return 0;
 !];
-
 ! ----------------------------------------------------------------------------
 !  Final task: provide trivial routines if the user hasn't already:
 ! ----------------------------------------------------------------------------
 
-#Stub MasAlla           0;
-#Stub TrasElPrompt      0;
-#Stub Curiosidades      0;
-#Stub AntesDelParsing   0;
-#Stub ElegirObjetos     2;
-#Stub CaminarAOscuras   0;
-#Stub MensajeMuerte     0;
-#Stub RutinaPostJuego   0;
-#Stub RutinaPreJuego    0;
-#Stub AlAlcance         1;
-#Stub RutinaMirar       0;
-#Stub LugarNuevo        0;
+#Stub PasaElTiempo    0;
+#Stub Curiosidades    0;
+#Stub MensajeMuerte   0;
+#Stub CaminarAOscuras 0;
+#Stub LugarNuevo      0;
+#Stub RutinaMirar     0;
+#Stub MasAlla         0;
+#Stub RutinaPreJuego  0;
+#Stub RutinaPostJuego 0;
+#Stub TrasElPrompt    0;
+#Stub AntesDelParsing 0;
+#Stub ImprimirTareas  1;
+#Stub AlAlcance       1;
+#Stub VerboDesconocido 1;
+#Stub ImprimirVerbo    1;
+#Stub ErrorParser     1;
 #Stub InterpretarNumero 2;
-#Stub ErrorParser       1;
-#Stub ImprimirTareas    1;
-#Stub ImprimirVerbo     1;
-#Stub PasaElTiempo      0;
-#Stub VerboDesconocido  1;
-
-#Ifdef TARGET_GLULX;
-#Stub HandleGlkEvent    2;
-#Stub IdentifyGlkObject 4;
-#Stub InitGlkWindow     1;
-#Endif; ! TARGET_GLULX
-
+#Stub ElegirObjetos   2;
 #Stub PreguntarPreposicion 0;
-#Stub MirarHaciaSub        1;
-
+#Stub MirarHaciaSub   1;
 #Ifndef ImprimirRango;
-! Constant Crear__IR;
-! #Endif;
-! #Ifdef Crear__IR;
+Constant Crear__IR;
+#Endif;
+#Ifdef Crear__IR;
 [ ImprimirRango; "."; ];
 #Endif;
-
 #Ifndef InterpretarNombre;
-! Constant Crear__IN;
-! #Endif;
-! #Ifdef Crear__IN;
+Constant Crear__IN;
+#Endif;
+#Ifdef Crear__IN;
 
+
+!
 ! La rutina InterpretarNombre se ocupa de ignorar "de" cuando aparece entre
 ! dos palabras reconocidas como nombres de un mismo objeto. Así, si
 ! un objeto tiene en su campo "name" los valores "caja" "madera" "caoba"
@@ -815,7 +805,7 @@ Verb meta 'xlista'
 ! InterpretarNombre debe retornar un número que indica cuántas palabras admite
 ! como pertenecientes al objeto. En nuestro ejemplo, ante "caja de madera"
 ! debe retornar 3, pero ante "caja de bolsa" debe retornar 1.
-
+!
 [ InterpretarNombre obj n dudas seguir gen p aux;
 
     n=0;   ! numero de palabras reconocidas de momento
@@ -930,25 +920,28 @@ Verb meta 'xlista'
     return n;
     !return -1;
 ];
+
 #Endif;
-
 #Default Historia 0;
-#Default Titular  0;
+#Default Titular 0;
 
+#Ifdef TARGET_GLULX;
+#Stub IdentifyGlkObject 4;
+#Stub HandleGlkEvent  2;
+#Stub InitGlkWindow   1;
+#Endif; ! TARGET_GLULX
 
 ! [010515] Cambiado de sitio el punto de inclusión de Mensajes.h
 ! para dar la oportunidad al usuario de incluir su propio Mensajes
 ! si lo desea (antes del include Gramatica)
 #Ifndef MLIdioma;
-#Include "Mensajes";
+include "Mensajes";
 #Endif;
 
 #Ifdef INFIX;
-#Include "infixe";
+include "infixe";
 #Endif;
 
-! ==============================================================================
 
-Constant LIBRERIA_GRAMATICA;    ! Para el chequeo de dependencias
 
-! ==============================================================================
+! ----------------------------------------------------------------------------

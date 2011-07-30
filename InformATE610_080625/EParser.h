@@ -22,35 +22,12 @@ System_file;
 Ifdef INFIX; Ifndef DEBUG; Constant DEBUG; Endif; Endif;
 Ifdef STRICT_MODE; Ifndef DEBUG; Constant DEBUG; Endif; Endif;
 
-Constant NumSerieLib      = "080625_git";
-Constant RevisionLib      = "6/10+";
-Constant VERSION_LIBRERIA = 610;
+Constant NumSerieLib      = "080625";
+Constant RevisionLib      = "6/10E";
 Constant Grammar__Version = 2;
 
-Default CARACTER_COMENTARIO '!';
-
 ! Algunos avisos
-Message "InformATE! 6/10+";
-
-#Ifdef TARGET_ZCODE;                ! desplazamientos en cabecera de Máquina-Z
-
-Constant HDR_GAMERELEASE   $02;     ! word
-Constant HDR_HIGHMEMORY    $04;     ! word
-Constant HDR_DICTIONARY    $08;     ! word
-Constant HDR_STATICMEMORY  $0E;     ! word
-Constant HDR_GAMEFLAGS     $10;     ! word
-Constant HDR_GAMESERIAL    $12;     ! six ASCII characters
-Constant HDR_TERPNUMBER    $1E;     ! byte
-Constant HDR_TERPVERSION   $1F;     ! byte
-Constant HDR_SCREENWCHARS  $21;     ! byte
-Constant HDR_TERPSTANDARD  $32;     ! two bytes
-
-#Ifnot; ! TARGET_GLULX              ! desplazamientos en cabecera Glulx y ROM
-
-Constant ROM_GAMERELEASE   $34;     ! short word
-Constant ROM_GAMESERIAL    $36;     ! six ASCII characters
-
-#Endif; ! TARGET_
+Message "InformATE! 6/10 biplataforma";
 
 #Ifndef VN_1610;
   Message fatalerror "*** La versión 6/10 necesita Inform v6.10 o superior ***";
@@ -294,7 +271,9 @@ Global just_undone;                  ! Can't have two successive UNDOs
 
 #Ifdef TARGET_ZCODE;
   Global modo_transcripcion;         ! true when game scripting is on
-  Global xcommsdir;                  ! true if command recording is on
+  Ifdef DEBUG;
+    Global xcommsdir;                ! true if command recording is on
+  Endif;
 #Endif; ! TARGET_ZCODE
 
 #Ifdef TARGET_GLULX;
@@ -316,8 +295,10 @@ Global just_undone;                  ! Can't have two successive UNDOs
   Global gg_savestr           = 0;
   Global gg_statuswin_cursize = 0;
   Global gg_statuswin_size    = 1;
-  Global gg_commandstr        = 0;
-  Global gg_command_reading   = 0;   ! true if gg_commandstr is being replayed
+  Ifdef DEBUG;
+    Global gg_commandstr = 0;
+    Global gg_command_reading = 0;   ! true if gg_commandstr is being replayed
+  Endif;
 #Endif; ! TARGET_GLULX
 
 ! ------------------------------------------------------------------------------
@@ -1068,6 +1049,7 @@ Object ParserInform "(Parser de Inform)"
   jx = ch; ! squash compiler warnings
   if (win == 0)
     win = gg_mainwin;
+#Ifdef DEBUG;
   if (gg_commandstr ~= 0 && gg_command_reading ~= false) {
     ! get_line_stream
     done = glk($0091, gg_commandstr, gg_arguments, 31);
@@ -1103,6 +1085,7 @@ Object ParserInform "(Parser de Inform)"
       jump KCPContinue;
     }
   }
+#Endif;
   done = false;
   glk($00D2, win); ! request_char_event
   while (~~done) {
@@ -1131,6 +1114,7 @@ Object ParserInform "(Parser de Inform)"
       done = false;
     }
   }
+#Ifdef DEBUG;
   if (gg_commandstr ~= 0 && gg_command_reading == false) {
     if (res < 32 || res >= 256 || (res == '\' or ' ')) {
       glk($0081, gg_commandstr, '\'); ! put_buffer_char
@@ -1155,11 +1139,13 @@ Object ParserInform "(Parser de Inform)"
     }
     glk($0081, gg_commandstr, 10); ! put_char_stream (newline)
   }
+#Endif;
 .KCPContinue;
   return res;
 ];
 
 [ KeyboardPrimitive  a_buffer a_table done ix;
+#Ifdef DEBUG;
   if (gg_commandstr ~= 0 && gg_command_reading ~= false) {
     ! get_line_stream
     done = glk($0091, gg_commandstr, a_buffer+WORDSIZE,
@@ -1183,6 +1169,7 @@ Object ParserInform "(Parser de Inform)"
       jump KPContinue;
     }
   }
+#Endif;
   done = false;
   glk($00D0, gg_mainwin, a_buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE,
     0); ! request_line_event
@@ -1203,11 +1190,13 @@ Object ParserInform "(Parser de Inform)"
     else if (ix == -1)
       done = false;
   }
+#Ifdef DEBUG;
   if (gg_commandstr ~= 0 && gg_command_reading == false) {
     ! put_buffer_stream
     glk($0085, gg_commandstr, a_buffer+WORDSIZE, a_buffer-->0);
     glk($0081, gg_commandstr, 10); ! put_char_stream (newline)
   }
+#Endif;
 .KPContinue;
   ! [080625] Pasamos todo el buffer a minúscula antes de llamar a Tokenise__
   for (ix = 0: ix < a_buffer-->0: ix++)
@@ -1257,28 +1246,14 @@ Object ParserInform "(Parser de Inform)"
     if (nw == 0)
     { M__L(##Miscelanea,10); jump FreshInput; }
 
-    ! Unless the opening word was "oops", return
-    ! Conveniently, a_table-->1 is the first word in both ZCODE and GLULX.
+!  Unless the opening word was "oops", return
+!  Conveniently, a_table-->1 is the first word in both ZCODE and GLULX.
 
-    w = a_table-->1;
+    w=a_table-->1;
     if (w == OOPS1__WD or OOPS2__WD or OOPS3__WD) jump DoOops;
 
-    ! Manejo de comentarios por parte del jugador (o betatester)
-    if (a_buffer->WORDSIZE == CARACTER_COMENTARIO) {
-        #Ifdef TARGET_ZCODE;
-        if ((HDR_GAMEFLAGS-->0) & 1 || xcommsdir)
-                                           M__L(##Miscelanea, 54);
-        else                               M__L(##Miscelanea, 55);
-        #Ifnot; ! TARGET_GLULX
-        if (gg_scriptstr || gg_commandstr) M__L(##Miscelanea, 54);
-        else                               M__L(##Miscelanea, 55);
-        #Endif; ! TARGET_
-
-        jump FreshInput;
-    }
-
-    #IfV5;
-    ! Undo handling
+#IfV5;
+!  Undo handling
 
 !  In Graham's 6/9 code, the following line tests (parse->1==1) instead
 !  of (nw==1). I believe that's wrong. In particular, it prevents "undo"
@@ -1509,9 +1484,8 @@ Object ParserInform "(Parser de Inform)"
             else
             {
 #Ifdef TARGET_ZCODE;
-                if (CompararSinSigno (j, HDR_DICTIONARY --> 0) >= 0 &&
-                    CompararSinSigno (j, HDR_HIGHMEMORY --> 0) < 0)
-                  print (address) j;
+                if (CompararSinSigno(j, 0-->4)>=0
+                    && CompararSinSigno(j, 0-->2)<0) print (address) j;
                 else print j;
 #Ifnot; ! TARGET_GLULX
                 if (j->0 == $60) print (address) j;
@@ -1727,7 +1701,7 @@ Object ParserInform "(Parser de Inform)"
 !  table for the given verb...
 
 #Ifdef TARGET_ZCODE;
-    syntax = (HDR_STATICMEMORY --> 0) --> i;
+    syntax=(0-->7)-->i;
 #Ifnot; ! TARGET_GLULX
     syntax=(#grammar_table)-->(i+1);
 #Endif; ! TARGET_
@@ -3315,17 +3289,11 @@ Constant SCORE__DIVISOR = 20;
 #Ifdef DEBUG;
   if (parser_trace>=4)
   {   print "   Agrupados en ", n, " posibilidades por el nombre:^";
-      for (i = 1 : i <= n : i++)
-      {
-          print "     Grupo ", i, " (";
-          j = 0; while (encajan_clases-->j ~= i or -i) j++;
-          print (The) lista_encajan-->j, "): ", lista_encajan-->j;
-          if (encajan_clases-->j == -i)  ! Si es -i, hay más de este grupo
-              for (j++ : j < numero_de_encajados : j++)
-                  if (encajan_clases-->j == i)  ! Sólo el primero puede ser -i
-                      print " ", lista_encajan-->j;
-          print "^";
-      }
+      for (i=0:i<numero_de_encajados:i++)
+          if (encajan_clases-->i > 0)
+              print "   ", (The) lista_encajan-->i,
+                  " (", lista_encajan-->i, ")  ---  grupo ",
+                  encajan_clases-->i, "^";
   }
 #Endif;
 
@@ -4524,8 +4492,8 @@ Constant SCORE__DIVISOR = 20;
 
 #Ifdef TARGET_ZCODE;
 
-[ DirDicc__Num w; return (w - (HDR_DICTIONARY-->0 + 7)) / 9; ];
-[ Num__DirDicc n; return HDR_DICTIONARY-->0 + 7 + 9*n; ];
+[ DirDicc__Num w; return (w-(0-->4 + 7))/9; ];
+[ Num__DirDicc n; return 0-->4 + 7 + 9*n; ];
 
 #Ifnot; ! TARGET_GLULX
 
@@ -4694,8 +4662,8 @@ Object LibreriaInform "(Librería Inform)"
   with jugar
        [ i j k l;
 #Ifdef TARGET_ZCODE;
-       interprete_estandar = HDR_TERPSTANDARD --> 0;
-       modo_transcripcion = ((HDR_GAMEFLAGS --> 0) & 1);
+       interprete_estandar = $32-->0;
+       modo_transcripcion = ((0-->8) & 1);
 #Ifnot; ! TARGET_GLULX
        GGInitialise();
 #Endif; ! TARGET_
@@ -5464,12 +5432,12 @@ Object LibreriaInform "(Librería Inform)"
       "Prueba poniendo ~xverbo~ seguido del nombre de un verbo.";
     meta=((uno->#dict_par1) & 2)/2;
     i = $ff-(uno->#dict_par2);
-    address = (HDR_STATICMEMORY --> 0) --> i;
+    address = (0-->7)-->i;
     lines = address->0;
     address++;
     print "Verb ";
     if (meta) print "meta ";
-    da = HDR_DICTIONARY --> 0;
+    da = 0-->4;
     for (j=0:j < (da+5)-->0:j++)
         if (da->(j*9 + 14) == $ff-i)
             print "'", (address) (da + 9*j + 7), "' ";
@@ -6168,8 +6136,3 @@ Array magic_array -->         ! This is so nitfol can do typo correction /
 
 ! ----------------------------------------------------------------------------
 
-! ==============================================================================
-
-Constant LIBRERIA_EPARSER;      ! Para el chequeo de dependencias
-
-! ==============================================================================

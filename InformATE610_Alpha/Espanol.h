@@ -137,50 +137,50 @@ Object Brujula "brújula"
   has
     oculto;
 
-#Ifndef SIN_DIRECCIONES;
+Ifndef SIN_DIRECCIONES;
   DireccionBrujula -> obj_n "norte"
     with
-      nombre 'n//' 'norte',
+      nombre 'n//' 'norte' 'lado',
       direcc_puerta al_n;
 
   DireccionBrujula -> obj_s "sur"
     with
-      nombre 's//' 'sur',
+      nombre 's//' 'sur' 'lado',
       direcc_puerta al_s;
 
   DireccionBrujula -> obj_e "este"
     with
-      nombre 'e//' 'este',
+      nombre 'e//' 'este' 'lado',
       direcc_puerta al_e;
 
   DireccionBrujula -> obj_o "oeste"
     with
-      nombre 'w//' 'o//' 'oeste',
+      nombre 'w//' 'o//' 'oeste' 'lado',
       direcc_puerta al_o;
 
   DireccionBrujula -> obj_ne "nordeste"
     with
-      nombre 'ne' 'nordeste' 'noreste',
+      nombre 'ne' 'nordeste' 'noreste' 'lado',
       direcc_puerta al_ne;
 
   DireccionBrujula -> obj_no "noroeste"
     with
-      nombre 'no' 'nw' 'noroeste',
+      nombre 'no' 'nw' 'noroeste' 'lado',
       direcc_puerta al_no;
 
   DireccionBrujula -> obj_se "sudeste"
     with
-      nombre 'se' 'sureste' 'sudeste',
+      nombre 'se' 'sureste' 'sudeste' 'lado',
       direcc_puerta al_se;
 
   DireccionBrujula -> obj_so "sudoeste"
     with
-      nombre 'so' 'sw' 'suroeste' 'sudoeste',
+      nombre 'so' 'sw' 'suroeste' 'sudoeste' 'lado',
       direcc_puerta al_so;
 
   DireccionBrujula -> obj_arriba "arriba",
     with
-      nombre 'u//' 'arriba' 'r//' 'sube' 'techo' 'cielo',
+      nombre 'u//' 'arriba' 'r//' 'sube' 'techo' 'lado' 'cielo',
       direcc_puerta arriba,
     has
       propio;
@@ -191,16 +191,16 @@ Object Brujula "brújula"
       direcc_puerta abajo,
     has
       propio;
-#endif; ! SIN_DIRECCIONES
+Endif; ! SIN_DIRECCIONES
 
 DireccionBrujula -> obj_afuera "exterior"
   with
-    nombre 'fuera' 'afuera' 'exterior',
+    nombre 'fuera' 'afuera' 'exterior',       ! (c) Alpha
     direcc_puerta afuera;
 
 DireccionBrujula -> obj_adentro "interior"
   with
-    nombre 'dentro' 'adentro' 'interior',
+    nombre 'dentro' 'adentro' 'interior',     ! (c) Alpha
     direcc_puerta adentro;
 
 
@@ -209,8 +209,8 @@ DireccionBrujula -> obj_adentro "interior"
 !   Parte II.   Vocabulario
 ! ---------------------------------------------------------------------------
 Constant OTRAVEZ1__WD = 'repetir';
-Constant OTRAVEZ2__WD = 'g//';
-Constant OTRAVEZ3__WD = 're';
+Constant OTRAVEZ2__WD = 're';
+Constant OTRAVEZ3__WD = 'g//';
 Constant OOPS1__WD    = 'oops';
 Constant OOPS2__WD    = 'epa';
 Constant OOPS3__WD    = 'eepa';
@@ -329,20 +329,6 @@ Array IdiomaNumeros table
 ! ---------------------------------------------------------------------------
 !   Parte III.   Traducción
 ! ---------------------------------------------------------------------------
-
-!-----------------------------------------------------
-! IdiomaAInformes
-!
-! Esta parte es interesante. Debe separar los sufijos pronominales
-! como en "cogela" "mirale", claro que no basta con ver si las dos
-! últimas letras del verbo son "la" "le", etc, pues el verbo podría
-! terminar de forma "natural" en esas letras (como en "habla"). Así
-! que hay que separar el sufijo sólo si el verbo no ha sido hallado en
-! el diccionario.
-!
-[ IdiomaAInformes ;
-    EspanolAInformes(buffer, parse);
-];
 
 !---
 ! Funciones de ayuda a la depuración
@@ -566,6 +552,20 @@ Array IdiomaNumeros table
 #Endif; ! TARGET_
 
 
+
+!-----------------------------------------------------
+! IdiomaAInformes
+!
+! Esta parte es interesante. Debe separar los sufijos pronominales
+! como en "cogela" "mirale", claro que no basta con ver si las dos
+! últimas letras del verbo son "la" "le", etc, pues el verbo podría
+! terminar de forma "natural" en esas letras (como en "habla"). Así
+! que hay que separar el sufijo sólo si el verbo no ha sido hallado en
+! el diccionario.
+!
+[ IdiomaAInformes ;
+    EspanolAInformes(buffer, parse);
+];
 
 ! La función que verdaderamente hace la traducción es la siguiente. Ha
 ! sido separada de IdiomaAInformes porque es llamada también desde
@@ -1031,7 +1031,7 @@ Array IdiomaNumeros table
 !   con todos los verbos irregulares conocidos. Si en uno de ellos
 !   encontramos coincidencia, retornamos el primer elemento de la
 !   propiedad "imperativo" del verbo en cuestión.
-
+!
 [ IdiomaEsVerbo buf pars pos
     i;
 
@@ -1204,8 +1204,44 @@ Array IdiomaNumeros table
 
 
 ! ---------------------------------------------------------------------------
-!   Parte IV.   Impresión
+!   Parte IV.   Imprimir
 ! ---------------------------------------------------------------------------
+
+
+! Definimos una función para imprimir el verbo coger. Esto hace más fácil
+! la adaptación de los juegos a los dialectos sudamericanos, en los
+! que debe usarse "tomar" en lugar de "coger"
+!
+! La variable global que elige el dialecto se fija en tiempo de
+! ejecución con el meta-verbo "dialecto". También puede fijarse en
+! Inicializar para que su valor por defecto sea 1.
+!
+[ coge sufijo;
+    if (dialecto_sudamericano)
+	print "toma";
+    else print "coge";
+    print (string) sufijo;
+];
+
+! La siguiente es la versión con la primera letra mayúscula
+
+[ MCoge sufijo;
+    if (dialecto_sudamericano)
+	print "Toma";
+    else print "Coge";
+    print (string) sufijo;
+];
+
+! Y finalmente una versión con todo mayúsculas
+
+[ MMCoge sufijo;
+    if (dialecto_sudamericano)
+	print "TOMA";
+    else print "COGE";
+    print (string) sufijo;
+];
+
+
 
 Constant IdiomaGeneroAnimado   = masculino;
 Constant IdiomaGeneroInanimado = masculino;
@@ -1298,6 +1334,38 @@ Array IdiomaGNAsAArticulos --> 0 1 0 2 3 2 0 1 0 2 3 2;
     print "diecinueve";
 ];
 
+[ DigitoEspanol n venti;
+    if (n==1) { print "un"; rfalse; }
+    if (n==2) {
+         if (venti) {print "dós";} else {print "dos"; };
+         rfalse; }
+    if (n==3) {
+         if (venti) {print "trés";} else {print "tres"; };
+         rfalse; }
+    if (n==4) { print "cuatro"; rfalse; }
+    if (n==5) { print "cinco"; rfalse; }
+    if (n==6) {
+         if (venti) {print "séis";} else {print "seis"; };
+         rfalse; }
+    if (n==7) { print "siete"; rfalse; }
+    if (n==8) { print "ocho"; rfalse; }
+    if (n==9) { print "nueve"; rfalse; }
+];
+
+[ CientosEspanol n;
+
+if (n==1) { print "ciento"; rfalse; }
+if (n==2) { print "dos";}
+if (n==3) { print "tres";}
+if (n==4) { print "cuatro";}
+if (n==5) { print "quinientos"; rfalse;}
+if (n==6) { print "seis";}
+if (n==7) { print "sete";}
+if (n==8) { print "ocho";}
+if (n==9) { print "nove";}
+print "cientos"; rfalse;
+];
+
 [ IdiomaHoraDelDia hours mins i;
    i = hours%12;
    if (i == 0) i = 12;
@@ -1343,6 +1411,32 @@ Array IdiomaGNAsAArticulos --> 0 1 0 2 3 2 0 1 0 2 3 2;
 #Endif;
     rtrue;
 
+];
+
+
+[ ImprimirIrregular v i;
+  ! Imprime los verbos irregulares (es decir, aquellos en los que no basta
+  ! añadir una "r" al imperativo). Por ejemplo, si el jugador teclea "friega"
+  ! la respuesta por defecto sería "¿Qué quieres friegar?"
+  ! Para evitar esto, el programador debe definir un objeto de la clase
+  ! VerboIrregular, con nombre "fregar" y propiedad name = "friega"
+  ! Esta rutina busca entre los verbos así definidos, en el campo name
+  ! y si encuentra una coincidencia imprime el nombre del objeto para
+  ! el cual se halló.
+
+  ! Para mayor flexibilidad aún, se permite que el programador incluya
+  ! una rutina en la propiedad nombre_corto del verbo, por si el nombre
+  ! del verbo a imprimir es variable según el momento en que se llame.
+  ! Si existe nombre_corto para el verbo en cuestión, se ejecuta dicha rutina
+  ! de lo contrario se imprime el nombre de ese verbo sin más.
+
+  ! Ver SpanishG.h para ejemplos de declaración de verbos irregulares.
+
+  objectloop (i ofclass VerboIrregular)
+   if (PalabraEnPropiedad(v, i, imperativo)) {
+     if (i.&nombre_corto~=0) return(ImprimirOEjecutar(i, nombre_corto, 1));
+     else { print (name) i; rtrue;}}
+  rfalse;
 ];
 
 
@@ -1592,98 +1686,6 @@ Constant ELCUAL__TX     = "que ";  ! de antes de los 'que'. [020423]
     }
 ];
 
-! Definimos una función para imprimir el verbo coger. Esto hace más fácil
-! la adaptación de los juegos a los dialectos sudamericanos, en los
-! que debe usarse "tomar" en lugar de "coger"
-!
-! La variable global que elige el dialecto se fija en tiempo de
-! ejecución con el meta-verbo "dialecto". También puede fijarse en
-! Inicializar para que su valor por defecto sea 1.
-!
-[ coge sufijo;
-    if (dialecto_sudamericano)
-	print "toma";
-    else print "coge";
-    print (string) sufijo;
-];
-
-! La siguiente es la versión con la primera letra mayúscula
-
-[ MCoge sufijo;
-    if (dialecto_sudamericano)
-	print "Toma";
-    else print "Coge";
-    print (string) sufijo;
-];
-
-! Y finalmente una versión con todo mayúsculas
-
-[ MMCoge sufijo;
-    if (dialecto_sudamericano)
-	print "TOMA";
-    else print "COGE";
-    print (string) sufijo;
-];
-
-
-[ DigitoEspanol n venti;
-    if (n==1) { print "un"; rfalse; }
-    if (n==2) {
-         if (venti) {print "dós";} else {print "dos"; };
-         rfalse; }
-    if (n==3) {
-         if (venti) {print "trés";} else {print "tres"; };
-         rfalse; }
-    if (n==4) { print "cuatro"; rfalse; }
-    if (n==5) { print "cinco"; rfalse; }
-    if (n==6) {
-         if (venti) {print "séis";} else {print "seis"; };
-         rfalse; }
-    if (n==7) { print "siete"; rfalse; }
-    if (n==8) { print "ocho"; rfalse; }
-    if (n==9) { print "nueve"; rfalse; }
-];
-
-[ CientosEspanol n;
-
-if (n==1) { print "ciento"; rfalse; }
-if (n==2) { print "dos";}
-if (n==3) { print "tres";}
-if (n==4) { print "cuatro";}
-if (n==5) { print "quinientos"; rfalse;}
-if (n==6) { print "seis";}
-if (n==7) { print "sete";}
-if (n==8) { print "ocho";}
-if (n==9) { print "nove";}
-print "cientos"; rfalse;
-];
-
-
-[ ImprimirIrregular v i;
-  ! Imprime los verbos irregulares (es decir, aquellos en los que no basta
-  ! añadir una "r" al imperativo). Por ejemplo, si el jugador teclea "friega"
-  ! la respuesta por defecto sería "¿Qué quieres friegar?"
-  ! Para evitar esto, el programador debe definir un objeto de la clase
-  ! VerboIrregular, con nombre "fregar" y propiedad name = "friega"
-  ! Esta rutina busca entre los verbos así definidos, en el campo name
-  ! y si encuentra una coincidencia imprime el nombre del objeto para
-  ! el cual se halló.
-
-  ! Para mayor flexibilidad aún, se permite que el programador incluya
-  ! una rutina en la propiedad nombre_corto del verbo, por si el nombre
-  ! del verbo a imprimir es variable según el momento en que se llame.
-  ! Si existe nombre_corto para el verbo en cuestión, se ejecuta dicha rutina
-  ! de lo contrario se imprime el nombre de ese verbo sin más.
-
-  ! Ver SpanishG.h para ejemplos de declaración de verbos irregulares.
-
-  objectloop (i ofclass VerboIrregular)
-   if (PalabraEnPropiedad(v, i, imperativo)) {
-     if (i.&nombre_corto~=0) return(ImprimirOEjecutar(i, nombre_corto, 1));
-     else { print (name) i; rtrue;}}
-  rfalse;
-];
-
 
 ! Cuando el usuario teclea un comando incompleto, es necesario que
 ! el parser genere un mensaje preguntando por lo que falta,
@@ -1922,9 +1924,3 @@ print "cientos"; rfalse;
     }
     return prio;
 ];
-
-! ==============================================================================
-
-Constant LIBRERIA_ESPANOL;      ! Para el chequeo de dependencias
-
-! ==============================================================================

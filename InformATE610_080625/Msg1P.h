@@ -1,4 +1,5 @@
-! Mensajes de librería.
+! Mensajes de librería. (versión en primera persona)
+! de El Presi (Enrique D. Bosch) [kifcu@confluencia.net]
 !
 ! Número de Serie: 080625
 !
@@ -10,8 +11,15 @@
 !
 ! Puedes tener diferentes ficheros de mensajes (Mensajes_graciosos.h,
 ! Mensajes_primera_persona.h, etc.) pero el que será incluido en el
-! juego por defecto será el llamado Mensajes.h (si quieres usar otro,
-! inclúyelo en tu código antes de incluir Gramatica.h)
+! juego por defecto será el llamado Mensajes.h
+!
+! Este fichero es la versión Mensajes_primera_persona.h (para abreviar
+! el nombre de fichero es Msg1P.h) es decir los mensajes que muestra
+! la librería son como si los dijera el personaje jugador al que
+! encarnamos, da un estilo autobiográfico a las narraciones.
+!
+! Si quieres compilar con él, incluye en tu código este fichero antes
+! de incluir Gramatica.
 !
 ! --------IMPORTANTE--------------------
 ! Recuerda que si sólo vas a redefinir unos pocos mensajes y no todos,
@@ -19,12 +27,12 @@
 ! consiste en escribir un objeto llamado MensajesLibreria antes de
 ! Include "Acciones", y en la rutina antes de ese objeto capturar las
 ! acciones para las cuales quieres cambiar el mensaje. Por ejemplo,
-! para cambiar el mensaje "Cantas fatal", que se genera por defecto
+! para cambiar el mensaje "Canto fatal", que se genera por defecto
 ! ante la acción cantar, pondrías:
 !
 !  Object MensajesLibreria
 !  with antes [;
-!           Cantar:  "Tío, la música no es lo tuyo.";
+!           Cantar:  "Tío, la música no es lo mío.";
 !       ];
 !
 !  Algunas acciones generan diferentes mensajes según el caso. Por
@@ -45,16 +53,16 @@
 !
 !   Object MensajesLibreria
 !   with  antes [;
-!           Cantar: "Tío, lo tuyo no es la música.";
+!           Cantar: "Tío, lo mío no es la música.";
 !           Coger: switch (ml_n)
 !                  {
 !                    1: print_ret "Vale, pillad", (o) ml_o, ".";
-!                    2: print_ret "¡Pero cómo vas a ", (coge) "rte a ti mismo,
+!                    2: print_ret "¡Pero cómo voy a ", (coge) "rme a mí mismo,
 !                       melón!";
 !                    3: print_ret (_El) ml_o, " no se deja", (n) ml_o,
 !                       ".";
 !                    5: print_ret "¡Pero si ya ", (lo) ml_o, "
-!                       tienes!";
+!                       tengo!";
 !                  }
 !          ];
 !
@@ -75,16 +83,18 @@
 ! La función se halla profusamente comentada para ayudarte a saber
 ! cuándo se genera cada mensaje.
 
+system_file;
+
 ! Movido aquí en [020415]
 
-Constant HAY__TX      = " ves";
-Constant HAYP__TX     = " ves";
-Constant HAY2__TX     = "ves ";
-Constant HAYP2__TX    = "ves ";
+Constant HAY__TX      = " veo";
+Constant HAYP__TX     = " veo";
+Constant HAY2__TX     = "veo ";
+Constant HAYP2__TX    = "veo ";
 
 ! Añadido en [020804]
 
-Constant PARTICULA_TE = "te";
+Constant PARTICULA_TE = "me";
 
 !****************************************************************
 ! DEFINICIÓN DE MENSAJES DE LIBRERÍA
@@ -102,18 +112,20 @@ Constant PARTICULA_TE = "te";
 !  2) Mensajes de las acciones que hacen cosas. En este caso hay
 !  mensajes de éxito o de error, según la acción haya podido
 !  realizarse o no. Ten en cuenta que el mensaje de éxito no se
-!  imprimirá si el objeto lo impide en su rutina "despues".
+!  imprimirá si el objeto lo impide en su rutina "despues"
 !  Son bastante fáciles de modificar, guiándote por los comentarios.
 !
+!
 !  3) Mensajes de los metacomandos (como SAVE, LOAD...) No creo que
-!  merezca la pena cambiarlos.
+!  merezca la pena cambiarlos
 !
 !  4) Mensajes "Miscelanea", donde están todos los errores de parsing
-!  y otros. Algunos son fáciles de cambiar, otros son más complejos.
+!  y otros. Algunos son fáciles de cambiar, otros son mas complejos.
+!
+!
 
-[ MLIdioma ml_n ml_o  aux;
-  Prompt:
-    print "^>";
+[ MLIdioma ml_n ml_o;
+  Prompt:  print "^>";
     ! El prompt aparece justo antes de pedir una nueva línea al
     ! jugador. Puede definirse para que sea una frase, o se genere una
     ! frase aleatoria en cada turno.
@@ -125,120 +137,118 @@ Constant PARTICULA_TE = "te";
 ! Las siguientes acciones generan un texto como respuesta, pero no
 ! cambian el estado del juego. No mueven objetos.
 
-  Quemar:        "Con esa peligrosa acción no lograrías nada.";
-  Rezar:         "No obtienes nada práctico de tus oraciones.";
-  Despertarse:   "La cruda realidad es que esto no es un sueño.";
-  DespertarOtro: "No parece necesario hacer eso.";
-  Besar:         "No creo que debas.";
-  Pensar:        "Vaya. Qué buena idea.";
-  Oler:          "No hueles nada extraño.";
-  Escuchar:      "No escuchas nada fuera de lo común.";
-  Probar:        "No saboreas nada inesperado.";
-  Tocar:
+ Quemar:         "Con esa peligrosa acción no lograría nada.";
+ Rezar:          "No obtengo nada práctico de mis oraciones.";
+ Despertarse:    "La cruda realidad es que esto no es un sueño.";
+ DespertarOtro:  "No parece necesario hacer eso.";
+ Besar:          "No creo que deba.";
+ Pensar:         "Vaya. Qué buena idea.";
+ Oler:           "No huelo nada extraño.";
+ Escuchar:       "No escucho nada fuera de lo común.";
+ Probar:         "No saboreo nada inesperado.";
+ Tocar:
     ! Tocar genera tres mensajes diferentes
     !  1: Si se intenta tocar a un ser animado
     !  2: Tocar un objeto normal del juego
     !  3: Tocarse a si mismo
     switch(ml_n)
     {
-      1: "¡Las manos quietas!";
-      2: "No notas nada extraño al tacto.";
-      3: "Si crees que eso servirá de algo...";
+     1: "No quiero tocarle.";
+     2: "No noto nada extraño al tacto.";
+     3: "No creo que eso sirva de nada...";
     }
-  Excavar:     "Excavar no servirá de nada aquí.";
-  Cortar:      "Cortándo", (lo) ml_o, " no lograrás gran cosa.";
-  Saltar:      "Saltas en el sitio, sin ningún resultado.";
-  SaltarSobre, ! SaltarSobre y Atar generan el mismo mensaje
-  Atar:        "No lograrás nada así.";
-  Beber:       "Eso no parece potable.";
-  Llenar:      "No puedes llenar", (lo) ml_o, ".";
+ Excavar:         "Excavar no me servirá de nada aquí.";
+ Cortar:          "Cortándo", (lo) ml_o, " no lograré gran cosa.";
+ Saltar:          "Salto en el sitio, sin ningún resultado.";
+ SaltarSobre,    ! SaltarSobre y Atar generan el mismo mensaje
+  Atar:          "No lograré nada así.";
+ Beber:          "Eso no parece potable.";
+ Llenar:         "No puedo llenar", (lo) ml_o, ".";
 
-  LoSiento:    "Oh, no es necesario que te disculpes.";
-  ! Esta acción se genera si el jugador pone "LO SIENTO",
-  ! "PERDONA" o cosas similares.
+ LoSiento:       "No es necesario que me disculpe.";
+    ! Esta acción se genera si el jugador pone "LO SIENTO",
+    ! "PERDONA" o cosas similares.
 
-  Tacos:       "Los verdaderos aventureros no usan ese vocabulario.";
-  ! Y esta si usa como primera palabra (verbo) un taco.
+ Tacos:         "Los verdaderos aventureros no usan ese vocabulario.";
+    ! Y esta si usa como primera palabra (verbo) un taco.
 
-  Soso:        "Bastante.";
-  ! Y esta si usa como primera palabra algún insulto más suave
+ Soso:           "Bastante.";
+    ! Y esta si usa como primera palabra algún insulto más suave
 
-  Si, No:      "Sólo era una pregunta retórica.";
-  ! Cuando el jugador pone SI o NO, a secas, se genera esta
-  ! acción. Está pensado por si el juego suelta una frase del estilo
-  ! de "¿Pero tú eres tonto?" y el jugador responde NO.
-  ! De todas formas, hay un problema, y es que NO es normalmente la
-  ! acción Ir al noroeste. Si queremos que NO sea provisionalmente
-  ! la acción No, entonces el juego debe poner un 1 en la variable
-  ! PreguntaSiNo, antes de escribir el texto "¿Pero tú eres tonto?".
-  ! En este caso, el parser interpretará "NO" como la acción No,
-  ! pero sólo en el siguiente turno. Después recuperará su antiguo
-  ! significado de Ir al Noroeste.
+ Si, No:         "Sólo era una pregunta retórica.";
+    ! Cuando el jugador pone SI o NO, a secas, se genera esta
+    ! acción. Está pensado por si el juego suelta una frase del estilo
+    ! de "¿Pero tu eres tonto?" y el jugador responde NO.
+    ! De todas formas, hay un problema, y es que NO es normalmente la
+    ! acción Ir al noroeste. Si queremos que NO sea provisionalmente
+    ! la acción No, entonces el juego debe poner un 1 en la variable
+    ! PreguntaSiNo, antes de escribir el texto "¿Pero tu eres tonto?"
+    ! En este caso, el parser interpretará "NO" como la acción No,
+    ! pero sólo en el siguiente turno. Después recuperará su antiguo
+    ! significado de Ir al Noroeste.
 
-  Atacar:      "La violencia no es la solución.";
-  ! La acción atacar se genera también al intentar "romper" objetos
+ Atacar:         "La violencia no es la solución.";
+    ! La acción atacar se genera también al intentar "romper" objetos
 
-  Nadar:       "No hay agua suficiente en la que nadar.";
-  Columpiar:   "No es adecuad", (o) ml_o, " para columpiarse.";
-  Soplar:      "Tu soplido no produce ningún efecto.";
-  Frotar:      "Ya ", (esta) ml_o, " bastante limpi", (o) ml_o, ".";
+ Nadar:          "No hay agua suficiente en la que nadar.";
+ Columpiar:      "No es adecuad", (o) ml_o, " para columpiarse.";
+ Soplar:         "Mi soplido no produce ningún efecto.";
+ Frotar:         "Ya ", (esta) ml_o, " bastante limpi", (o) ml_o, ".";
 
-  Fijar:       "No, no puedes.";
-  ! Fijar sale ante la frase FIJA OBJETO o AJUSTA OBJETO
+ Fijar:          "No, no puedo.";
+    ! Fijar sale ante la frase FIJA OBJETO o AJUSTA OBJETO
 
-  PonerA:      "Eso no puede regularse a ningún valor.";
-  ! PonerA sale ante la frase AJUSTA DIAL A 23 o FIJA CONTROL EN
-  ! ACTIVADO, o PON REGULADOR A 30
+ PonerA:         "Eso no puede regularse a ningún valor.";
+    ! PonerA sale ante la frase AJUSTA DIAL A 23 o FIJA CONTROL EN
+    ! ACTIVADO, o PON REGULADOR A 30
 
-  Gesticular:  "Te ves ridícul", (o) jugador, " gesticulando así.";
-  ! La acción Gesticular sale ante las frases "gesticula", "agita la
-  ! mano", "sacude la mano", "saluda con la mano"...
+ Gesticular:      "Me veo ridícul", (o) jugador, " gesticulando así.";
+    ! La acción Gesticular sale ante las frases "gesticula", "agita la
+    ! mano", "sacude la mano", "saluda con la mano"...
 
-  Agitar:
-  ! Agitar genera dos mensajes diferentes:
-  !  1: Si se intenta agitar un objeto que no está en el inventario
-  !  2: Si se agita un objeto que sí está en el inventario
-    switch (ml_n)
-    {
-      1: "No l",(o) ml_o, " tienes.";
-      2: "Te sientes ridícul", (o) jugador, " agitando ", (el) ml_o, ".";
-    }
-
-  Tirar, Empujar, Girar:
-  ! Las acciones Tirar, Empujar y Girar generan todas ellas los
-  ! mismos mensajes, pero pueden darse 4 casos:
-  !   1: Que el objeto tenga el atributo 'estatico'
-  !   2: Que el objeto tenga el atributo 'escenario'
-  !   3: El objeto no tiene 'estatico' ni 'escenario'
-  !   4: El objeto es un ser animado
-  ! [Nota, si el objeto tiene ambos 'estatico' y 'escenario' se
-  ! está también en el caso 1]
+ Agitar:
+    ! Agitar genera dos mensajes diferentes:
+    !  1: Si se intenta agitar un objeto que no está en el inventario
+    !  2: Si se agita un objeto que sí está en el inventario
     switch(ml_n)
     {
-      1: "Está", (n)ml_o, " firmemente sujet", (o)ml_o, ".";
-      2: "No eres capaz.";
-      3: "No ocurre nada, aparentemente.";
-      4: "Eso sería, como poco, maleducado.";
+     1: "No l",(o) ml_o, " tengo.";
+     2: "Me siento ridícul", (o) jugador, " agitando ", (el) ml_o, ".";
+    }
+
+ Tirar, Empujar, Girar:
+    ! Las acciones Tirar, Empujar y Girar generan todas ellas los
+    ! mismos mensajes, pero pueden darse 4 casos:
+    !   1: Que el objeto tenga el atributo 'estatico'
+    !   2: Que el objeto tenga el atributo 'escenario'
+    !   3: El objeto no tiene 'estatico' ni 'escenario'
+    !   4: El objeto es un ser animado
+    ! [Nota, si el objeto tiene ambos 'estatico' y 'escenario' se
+    ! está también en el caso 1]
+    switch(ml_n)
+    {
+     1: "Está", (n)ml_o, " firmemente sujet", (o)ml_o, ".";
+     2: "No soy capaz.";
+     3: "No ocurre nada, aparentemente.";
+     4: "Eso sería, como poco, maleducado.";
     }
 
   EmpujarDir:
-  ! La acción EmpujarDir se genera ante frases como EMPUJA EL COCHE
-  ! HACIA EL NORTE. Hay 3 casos posibles:
-  !   1: Si el juego no ha previsto la posibilidad de empujar ese
-  !      objeto hacia una dirección (o sea, no llama a la rutina
-  !      PermitirEmujarDir). Esta es la respuesta por defecto más
-  !      habitual.
-  !   2: Si el jugador pone tras HACIA algo que no es una dirección.
-  !      (respuesta por defecto en este caso)
-  !   3: Si intenta empujar hacia arriba o hacia abajo
+    ! La acción EmpujarDir se genera ante frases como EMPUJA EL COCHE
+    ! HACIA EL NORTE. Hay 3 casos posibles:
+    !   1: Si el juego no ha previsto la posibilidad de empujar ese
+    !      objeto hacia una dirección (o sea, no llama a la rutina
+    !      PermitirEmujarDir). Esta es la respuesta por defecto más
+    !      habitual.
+    !   2: Si el jugador pone tras HACIA algo que no es una dirección.
+    !      (respuesta por defecto en este caso)
+    !   3: Si intenta empujar hacia arriba o hacia abajo
+    !
     switch(ml_n)
     {
-     1: print "No creo que empujar ";
-	if (ml_o has animado) print (al) ml_o;
-	else                  print (el) ml_o;
-	" sirva para nada.";
+     1: "No creo que empujar ", (el) ml_o, " sirva para nada.";
      2: "Eso no es una dirección.";
-     3: "No, no puedes en esa dirección.";
+     3: "No, no puedo en esa dirección.";
     }
 
  Retorcer:
@@ -247,8 +257,8 @@ Constant PARTICULA_TE = "te";
     !  2: Cualquier otro objeto
     switch(ml_n)
     {
-     1: "¡Las manos quietas!";
-     2: "No consigues nada haciendo eso.";
+     1: "Podría lastimarle.";
+     2: "No consigo nada haciendo eso.";
     }
  Lanzar:
     ! Dos casos:
@@ -257,7 +267,7 @@ Constant PARTICULA_TE = "te";
     switch(ml_n)
     {
      1: "No serviría de nada.";
-     2: "En el último momento te echas atrás.";
+     2: "En el último momento me echo atrás.";
     }
 
  MirarDebajo:
@@ -267,12 +277,12 @@ Constant PARTICULA_TE = "te";
     switch(ml_n)
     {
      1: "Está muy oscuro.";
-     2: "No ves nada interesante.";
+     2: "No veo nada interesante.";
     }
 
 ! Añadido en la versión [020423]. Es utilizado por DireccionBrujula.
  MirarHacia:
-   "No observas nada digno de mención al mirar hacia ", (el) ml_o, ".";
+   "No observo nada digno de mención al mirar hacia ", (el) ml_o, ".";
 
  Hablar:
     ! Dos casos:
@@ -284,19 +294,19 @@ Constant PARTICULA_TE = "te";
     ! esta rutina, al final]
     switch(ml_n)
     {
-     1: "Hablas sol", (o) jugador, " durante un rato.";
-     2: "No has provocado ninguna reacción.";
+     1: "¿Es necesario que hable conmigo mism", (o) jugador, "?";
+     2: "No he provocado ninguna reacción.";
     }
  Responder,
  Preguntar:      "No hay respuesta.";
  Orden:
     print_ret (_El) ml_o, " tiene", (n) ml_o, " mejores cosas que hacer.";
  Comprar:        "No hay nada en venta.";
- Cantar:         "Cantas fatal.";
- Trepar:         "No creo que vayas a lograr nada así.";
+ Cantar:         "Canto fatal.";
+ Trepar:         "No creo que vaya a lograr nada así.";
  Esperar:        "Pasa el tiempo...";
- Dormir:         "No estás especialmente somnolient", (o) jugador, ".";
- Consultar:      "No descubres nada interesante en ", (el) ml_o,
+ Dormir:         "No estoy especialmente somnolient", (o)jugador, ".";
+ Consultar:      "No descubro nada interesante en ", (el) ml_o,
      " sobre ese tema.";
 
 !==================================================================
@@ -350,41 +360,38 @@ Constant PARTICULA_TE = "te";
      1: if (dialecto_sudamericano) print "Tomad";
      	else print "Cogid";
 	print_ret (o) ml_o, ".";
-     2: "Siempre te tienes a ti mism", (o) jugador, ".";
+     2: "Siempre me tengo a mi mism", (o)jugador, ".";
      3: "No creo que ", (al) ml_o, " le", (s) ml_o, " gustara.";
-     4: print "Tienes que ";
-	if (ml_o has soporte) print "bajarte "; else print "salirte ";
+     4: print "Tengo que ";
+	if (ml_o has soporte) print "bajarme "; else print "salirme ";
 	print_ret (del) ml_o, " antes.";
-     5: "Ya tienes ", (el) ml_o, ".";
+     5: "Ya tengo ", (el) ml_o, ".";
      6:	"Parece que pertenece", (n) uno, " ", (al) ml_o, ".";
      7: "Parece", (n) ml_o, " formar parte ", (del) ml_o, ".";
      8: "No ", (esta) ml_o, " disponible", (s)ml_o, ".";
      9: print_ret (_El) ml_o, " no ", (esta) ml_o, " abiert", (o) ml_o, ".";
-     10: "Difícilmente podrías llevarte eso.";
+     10: "Difícilmente podría llevarme eso.";
      11: print_ret (_El) ml_o, " está fij", (o) ml_o, " en el sitio.";
-     12: "Ya llevas demasiadas cosas.";
-     13: "(colocas ", (el) ml_o, " en ", (el) OBJETO_SACO,
+     12: "Ya llevo demasiadas cosas.";
+     13: "(coloco ", (el) ml_o, " en ", (el) OBJETO_SACO,
 	 " para hacer sitio)";
     }
 
  Dejar:
     ! 2 mensajes de error, 1 aviso y 1 de éxito:
-    !   1: Error, el objeto dejado no está en poder del jugador, pero
+    !   1: Error, el objeto dejado no está en poder el jugador, pero
     !      está en la localidad.
     !   2: Error, el objeto dejado no está en poder del jugador ni en
-    !      la localidad.
+    !      la localidad
     !   3: Aviso, el objeto era una prenda que el jugador llevaba
     !      puesta y la librería va a quitársela automáticamente para
-    !      poder dejarla.
+    !      poder dejarla
     !   4: Éxito
     switch(ml_n)
     {
-     1: print "Para dejar ";
-	if (ml_o has animado) print (al) ml_o;
-	else                  print (el) ml_o;
-	" deberías tener", (lo) ml_o, ".";
-     2: "No ", (lo) ml_o, " tienes.";
-     3: "(primero te quitas ", (el) ml_o, ")";
+     1: "Para dejar ", (el)ml_o, " debería tener", (lo) ml_o, ".";
+     2: "No ", (lo) ml_o, " tengo.";
+     3: "(primero me quito ", (el) ml_o, ")";
      4: "Dejad", (o) ml_o, ".";
     }
 
@@ -398,31 +405,19 @@ Constant PARTICULA_TE = "te";
     !   3: Éxito
     switch(ml_n)
     {
-     1: aux = parent (ml_o);
-	"Por desgracia ", (el) aux, " ", (esta) aux, " cerrad", (o) aux, ".";
-     2: print "¡Pero si no ";
-	if (otro has animado) print (lo)   ml_o, " tiene", (n) otro;
-	else                  print (esta) ml_o, " ahí ahora";
-	"!";
-     3: if (palabra_verbo == 'quita') print "Quitad";
-	else                          print "Sacad";
-	print_ret (o) ml_o, ".";
-    }
-
-  PonerSobre, Meter:
-    ! 1: Error, el objeto no está en poder del jugador. [Nota,
-    !    conviene mirar en este caso si el objeto es animado o no,
-    !    para generar un mensaje más adecuado]
-    if (ml_n == 1)
-    {
-      if (ml_o has animado)
-	"Antes tendrías que ", (coge) "rl", (o) ml_o, ", y no sé si se dejará",
-	  (n) ml_o, ".";
-      "Necesitas tener ", (el) ml_o, " para poder poner", (lo) ml_o,
-	" donde sea.";
+     1: "Por desgracia ", (el) parent(ml_o), " ",(esta) parent(ml_o),
+	 " cerrad", (o) parent(ml_o), ".";
+     2: if (otro has animado)
+	 "¡Pero si no ", (lo) ml_o, " tiene", (n) otro, "!";
+	"¡Pero si no ", (esta) ml_o, " ahí ahora!";
+     3: if (palabra_verbo=='quita') "Quitad", (o)ml_o, ".";
+	"Sacad", (o) ml_o, ".";
     }
 
  PonerSobre:
+    ! 1: Error, el objeto no está en poder del jugador. [Nota,
+    !    conviene mirar en este caso si el objeto es animado o no,
+    !    para generar un mensaje más adecuado]
     ! 2: Error, el jugador intenta poner un objeto sobre sí mismo
     ! 3: Error, el jugador intenta poner el objeto sobre otro que no
     !    tiene el atributo "soporte"
@@ -440,16 +435,26 @@ Constant PARTICULA_TE = "te";
     !    otro.
     switch(ml_n)
     {
-     2: "No puedes poner un objeto sobre sí mismo.";
+     1: if (ml_o has animado)
+	 "Antes tendría que ", (coge) "rl", (o) ml_o, ", y no sé si se dejará",
+	     (n) ml_o, ".";
+	else
+   	    "Necesito tener ", (el) ml_o,
+	 	" para poder poner", (lo) ml_o,
+	 	" donde sea.";
+     2: "No puedo poner un objeto sobre sí mismo.";
      3: "Poner cosas sobre ", (el) ml_o, " no servirá de nada.";
-     4: "Te falta destreza.";
-     5: "(primero te ", (lo) ml_o, " quitas)^";
+     4: "Me falta destreza.";
+     5: "(primero me ", (lo) ml_o, " quito)^";
      6: "No queda sitio en ", (el) ml_o, " para poner nada más.";
      7: "Hecho.";
-     8: "Colocas ", (el) ml_o, " sobre ", (el) otro, ".";
+     8: "Coloco ", (el) ml_o, " sobre ", (el) otro, ".";
     }
 
   Meter:
+    ! 1: Error, el objeto no está en poder del jugador. [Nota,
+    !    conviene mirar en este caso si el objeto es animado o no,
+    !    para generar un mensaje más adecuado]
     ! 2: Error, el jugador intenta meter el objeto en otro que no
     !    tiene el atributo "recipiente"
     ! 3: Error, el jugador intenta meter el objeto en un recipiente
@@ -469,14 +474,20 @@ Constant PARTICULA_TE = "te";
     !    de otro
     switch(ml_n)
     {
+     1: if (ml_o has animado) "Antes tendría que ", (coge)"rl", (o) ml_o,
+	 " y no sé si se dejará",(n)ml_o,".";
+	else
+	"Necesito tener ", (el) ml_o,
+	 " para poder meter", (lo) ml_o,
+	 " donde sea.";
      2: "No se pueden meter cosas dentro ", (del) ml_o, ".";
      3: print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
-     4: "Tienes que quitarte", (lo) ml_o, " antes.";
-     5: "No puedes poner un objeto dentro de sí mismo.";
-     6: "(primero te ", (lo) ml_o, " quitas)^";
+     4: "Tengo que quitarme", (lo) ml_o, " antes.";
+     5: "No puedo poner un objeto dentro de sí mismo.";
+     6: "(primero me ", (lo) ml_o, " quito)^";
      7: "No queda sitio en ", (el) ml_o, ".";
      8: "Hecho.";
-     9: "Metes ", (el) ml_o, " dentro ", (del) otro, ".";
+     9: "Meto ", (el) ml_o, " dentro ", (del) otro, ".";
     }
 
  Transferir:
@@ -491,14 +502,14 @@ Constant PARTICULA_TE = "te";
     switch(ml_n)
     {
      1: print_ret (_El) ml_o, "no está",(n) ml_o, " a mano.";
-     2: "Debes ", (coge)"r", " antes ", (el) ml_o, ".";
+     2: "Debo ", (coge)"r", " antes ", (el) ml_o, ".";
     }
 
   VaciarEn:
     ! 1: Error, el jugador intenta vaciar un objeto en otro que no es
-    !    un recipiente.
+    !    un recipiente
     ! 2: Error, el jugador intenta vaciar un objeto sobre un
-    !    recipiente cerrado.
+    !    recipiente cerrado
     ! 3: Error, el jugador intenta vaciar un objeto que no tiene nada
     !    dentro.
     ! 4: Error, el jugador intenta vaciar un objeto sobre sí mismo.
@@ -510,14 +521,11 @@ Constant PARTICULA_TE = "te";
     ! acciones PonerSobre o Meter.
     switch(ml_n)
     {
-      1:
-        print_ret (_El) ml_o, " no puede tener cosas dentro.";
-      2:
-        print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
-      3:
-        print_ret (_El) ml_o, " ya ", (esta) ml_o, " vací", (o)ml_o, ".";
-      4:
-        "No puedes vaciar ", (el) ml_o, "sobre sí.";
+     1: print_ret (_El) ml_o, " no puede tener cosas dentro.";
+     2: print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
+     3: print_ret (_El) ml_o, " ya ", (esta) ml_o, " vací", (o)ml_o,
+	 ".";
+     4: "No puedo vaciar ", (el) ml_o, "sobre sí.";
     }
 
   Dar:
@@ -531,9 +539,9 @@ Constant PARTICULA_TE = "te";
     ! como parte de su rutina Vida]
     switch(ml_n)
     {
-     1: "No tienes ", (el) ml_o, ".";
-     2: "Manoseas ", (el) ml_o,
-	 " un ratito, pero no consigues gran cosa.";
+     1: "No tengo ", (el) ml_o, ".";
+     2: "Manoseo ", (el) ml_o,
+	 " un ratito, pero no consigo gran cosa.";
      3: print_ret (_El) ml_o, " no parece", (n) ml_o, " interesad", (o)ml_o,
  ".";
     }
@@ -545,7 +553,7 @@ Constant PARTICULA_TE = "te";
     !    que le hemos mostrado.
     switch(ml_n)
     {
-     1: "No tienes ", (el)ml_o, ".";
+     1: "No tengo ", (el)ml_o, ".";
      2: print_ret (_El) ml_o, " no muestra", (n) ml_o, " interés.";
     }
 
@@ -590,29 +598,24 @@ Constant PARTICULA_TE = "te";
     !     acceder al que el jugador ha indicado.
     switch(ml_n)
     {
-     1: print "Pero si ya estás ";
+     1: print "Pero si ya estoy ";
 	if (ml_o has soporte) print "sobre "; else print "en ";
 	print_ret (el) ml_o, ".";
-     2: print "No es algo donde puedas "; IdiomaVerbo(palabra_verbo); ".";
-     3: "No puedes entrar en ", (el) ml_o, " porque está", (n) ml_o,
+     2: print "No es algo donde pueda "; IdiomaVerbo(palabra_verbo); ".";
+     3: "No puedo entrar en ", (el) ml_o, " porque está", (n) ml_o,
         " cerrad", (o) ml_o, ".";
-     4: print "No puedes "; IdiomaVerbo(palabra_verbo);
-        " ahí mientras no lo sueltes.";
+     4: print "No puedo "; IdiomaVerbo(palabra_verbo);
+        " ahí mientras no lo suelte.";
      5:
-	if (ml_o has soporte) print "Subes ", (al) ml_o;
-	else print "Entras en ", (el) ml_o;
+	if (ml_o has soporte) print "Subo ", (al) ml_o;
+	else print "Entro en ", (el) ml_o;
 	print_ret ".";
      6:
-	if (ml_o has soporte) print "(te bajas "; else print "(sales ";
+	if (ml_o has soporte) print "(me bajo "; else print "(salgo ";
 	print (del) ml_o; ")";
-     7: if (ml_o has soporte)
-	  print "(te subes ", (al) ml_o;
-	else {
-	  if (ml_o has recipiente) print "(te metes en ";
-	  else                     print "(entras en ";
-	  print (el) ml_o;
-	}
-	")^";
+     7: if (ml_o has soporte) "(me subo ", (al) ml_o, ")^";
+	if (ml_o has recipiente) "(me meto en ", (el) ml_o, ")^";
+	"(entro en ", (el) ml_o, ")^";
     }
 
  Salirse:
@@ -621,7 +624,7 @@ Constant PARTICULA_TE = "te";
     ! Si el jugador no está en el objeto indicado, se genera el
     ! siguiente mensaje de error. Si está, la librería generará una
     ! acción Salir, por lo que el mensaje de éxito será el de Salir.
-    "Pero si no estás en ", (el) ml_o, ".";
+    "Pero si no estoy en ", (el) ml_o, ".";
 
  Salir:
     ! 1: Error, el jugador no está subido/sentado/metido en ningún
@@ -632,16 +635,15 @@ Constant PARTICULA_TE = "te";
     ! 3: Éxito, el jugador sale/baja del objeto
     switch(ml_n)
     {
-     1: print "No estás en ningún sitio del que debas ";
+     1: print "No estoy en ningún sitio del que deba ";
 	IdiomaVerbo(palabra_verbo); ".";
-     2: "No puedes salir ", (del) ml_o, " porque está cerrad", (o)ml_o, ".";
-     3: if (ml_o has soporte) print "Bajas ";
-	else print "Sales ";
+     2: "No puedo salir ", (del) ml_o, " porque está cerrad", (o)ml_o, ".";
+     3: if (ml_o has soporte) print "Bajo ";
+	else print "Salgo ";
 	print_ret (del) ml_o, ".";
     }
-
  IrAmbiguo: ! El jugador ha dicho IR sin especificar a dónde
-    "Tienes que especificar en qué dirección ir.";
+    "No sé en qué dirección ir, especifícalo.";
 
  Ir:
     ! La acción Ir se genera si el jugador pone IR NORTE, o si pone
@@ -662,14 +664,14 @@ Constant PARTICULA_TE = "te";
     !      (probablemente un error de programación del juego)
     switch(ml_n)
     {
-     1: print "Tienes que ";
-     	if (ml_o has soporte) print "bajarte "; else print "salir ";
+     1: print "Tengo que ";
+     	if (ml_o has soporte) print "bajarme "; else print "salir ";
      	print_ret (del) ml_o, " antes.";
-     2: "No puedes ir por ahí.";
-     3: "Eres incapaz de trepar por ", (el) ml_o, ".";
-     4: "Eres incapaz de bajar por ", (el) ml_o, ".";
-     5: "No puedes pasar a través ", (del) ml_o, ".";
-     6: "No puedes ir porque ", (el) ml_o, " no lleva", (n) ml_o, " a ningún sitio.";
+     2: "No puedo ir por ahí.";
+     3: "Soy incapaz de trepar por ", (el) ml_o, ".";
+     4: "Soy incapaz de bajar por ", (el) ml_o, ".";
+     5: "No puedo pasar a través ", (del) ml_o, ".";
+     6: "No puedo ir porque ", (el) ml_o, " no lleva", (n) ml_o, " a ningún sitio.";
     }
 
  Mirar:
@@ -709,18 +711,17 @@ Constant PARTICULA_TE = "te";
                       + BREVE_BIT + HAY_BIT + OCULTAR_BIT);
 	".";
      default:
-	if (ml_o ~= localizacion)
-	{
-	  if (ml_o has soporte) print "^Sobre ";
-	  else                  print "^En ";
-	  print (el) ml_o, " p";
+	if (ml_o~=localizacion)
+     	{   if (ml_o has soporte) print "^Sobre "; else print "^En ";
+	    print (el) ml_o;
+	    print " puedo ver ";
 	}
-	else print "^P";
-	print "uedes ver ";
+	else print "^Puedo ver ";
 	if (n==5) print "también ";
 	EscribirListaDesde(child(ml_o),
                       ESPANOL_BIT + BANDERAUX_BIT + RECURSIVO_BIT
                       + INFOPARCIAL_BIT + BREVE_BIT + OCULTAR_BIT);
+	if (ml_o~=localizacion) ".";
 	".";
     }
 
@@ -733,26 +734,25 @@ Constant PARTICULA_TE = "te";
     !     este mensaje para indicar si está apagado o encendido.
     switch(ml_n)
     {
-     1: "Está demasiado oscuro, no puedes ver nada.";
-     2: "No observas nada especial en ", (el) ml_o, ".";
+     1: "Está demasiado oscuro, no puedo ver nada.";
+     2: "No observo nada especial en ", (el) ml_o, ".";
      3: print (_El) ml_o, " ", (esta) ml_o;
-	if (ml_o has encendido) print " encendid";
-	else                    print " apagad";
-	print_ret (o) ml_o, ".";
+	if (ml_o has encendido) " encendid", (o)ml_o, ".";
+	else " apagad", (o)ml_o,".";
     }
 
   BuscarEn:
     ! La acción BuscarEn se genera ante la frase MIRA EN RECIPIENTE,
     ! MIRA EN SOPORTE, REGISTRA OBJETO.
     !
-    !  1: Error, estamos a oscuras.
+    !  1: Error, estamos a oscuras
     !  2: Éxito examinando soporte, pero no hay nada sobre él.
-    !  3: Éxito examinando soporte, listar lo que hay.
+    !  3: Éxito examinando soporte, listar lo que hay
     !  4: El objeto examinado no es soporte ni recipiente, mensaje
-    !     estándar indicando que no se encuentra nada.
+    !     estándar indicando que no se encuentra nada
     !  5: Error, El objeto examinado es recipiente, pero está cerrado.
     !  6: Éxito, el objeto examinado es recipiente abierto, pero no
-    !     tiene nada dentro.
+    !     tiene nada dentro
     !  7: Éxito, el objeto examinado es recipiente abierto y tiene
     !     cosas dentro. Listarlas.
     switch(ml_n)
@@ -763,8 +763,8 @@ Constant PARTICULA_TE = "te";
 	EscribirListaDesde(child(ml_o),
                       BREVE_BIT + ESPANOL_BIT + HAY_BIT + OCULTAR_BIT);
 	".";
-     4: "No encuentras nada interesante.";
-     5: "No puedes ver lo que hay dentro ", (del) ml_o, " porque ",
+     4: "No encuentro nada interesante.";
+     5: "No puedo ver lo que hay dentro ", (del) ml_o, " porque ",
 	 (esta) ml_o, " cerrad", (o)ml_o, ".";
      6: print_ret (_El) ml_o, " ", (esta) ml_o, " vací", (o)ml_o,".";
      7: print "En ", (el) ml_o;
@@ -773,17 +773,13 @@ Constant PARTICULA_TE = "te";
 	".";
     }
 
-  QuitarCerrojo, EcharCerrojo:
-    !  1: Error, el objeto que se intenta abrir, no tiene el atributo
-    !    cerrojo.
-    if (ml_n == 1)
-      "No parece", (n) ml_o, " tener ningún tipo de cerrojo.";
-
   QuitarCerrojo:
     ! QuitarCerrojo se genera ante ABRE <objeto> CON <objeto2>, o también
     ! ante QUITA CERROJO A <objeto> (en este segundo caso no se
     ! especifica la "llave" que abre la puerta).
     !
+    !  1: Error, el objeto que se intenta abrir, no tiene el atributo
+    !    cerrojo.
     !  2: Error, el objeto que se intenta abrir tiene atributo
     !     "cerrojo", pero no tiene atributo "cerrojoechado"
     !  3: Error, el <objeto2> que se intenta usar como llave, no
@@ -793,12 +789,12 @@ Constant PARTICULA_TE = "te";
     !     especificado, el cual podemos encontrarlo en la variable "otro"
     switch(ml_n)
     {
+     1: "No parece", (n) ml_o," tener ningún tipo de cerrojo.";
      2:	print_ret (_El) ml_o, " ya tenía", (n) ml_o, " abierto el cerrojo.";
      3: if (otro) "No parece", (n) ml_o, " encajar en la cerradura.";
-	"Necesitas algún tipo de llave.";
-     4: print "Quitas el cerrojo ", (al) ml_o;
-	if (otro) print " con ", (el) otro;
-	".";
+	"Necesito algún tipo de llave.";
+     4: if (otro) "Quito el cerrojo ", (al) ml_o, " con ", (el) otro, ".";
+	"Quito el cerrojo ", (al) ml_o, ".";
     }
 
  EcharCerrojo:
@@ -806,6 +802,8 @@ Constant PARTICULA_TE = "te";
     ! también ante ECHA CERROJO A <objeto>. (sin especificar un
     ! segundo objeto en este caso)
     !
+    !  1: Error, el objeto que se intenta cerrar no tiene la propiedad
+    !     "cerrojo".
     !  2: Error, el objeto que se intenta cerrar tiene la propiedad
     !     "cerrojo", pero ya tiene también "cerrojoechado
     !  3: Error, el objeto tiene "cerrojo", pero está "abierto". No se
@@ -817,32 +815,17 @@ Constant PARTICULA_TE = "te";
     !     "otro")
     switch(ml_n)
     {
-     2: print (_El) ml_o, " ya ";
-	if (ml_o provides con_llave)
-	  "estaba", (n) ml_o, " cerrad", (o) ml_o, " con llave.";
-	"tiene", (n) ml_o, " echado el cerrojo.";
-     3: "Primero tendrás que cerrar ", (el) ml_o, ".";
-     4: if (otro)
-	  "No parece", (n) ml_o, " encajar en la cerradura.";
-	"Necesitas algún tipo de llave.";
-     5: if (otro)
-	  print "Cierras ", (el) ml_o," con ", (el) otro;
-	else print "Echas el cerrojo ", (al) ml_o;
-	".";
-    }
-
-  Encender, Apagar, Abrir, Cerrar:
-    !  1: Error, el objeto no tiene el atributo "conmutable" (Encender y
-    !     Apagar) o "abrible" (Abrir y Cerrar)
-    !     NOTA con respecto a la acción Encender: este error no aparecerá
-    !     si el jugador pone ENCIENDE OBJETO, ya que en este caso la
-    !     acción generada será Quemar objeto, pero puede aparecer si
-    !     pone CONECTA OBJETO
-    if (ml_n == 1)
-    {
-      print "No es algo que pueda ";
-      IdiomaVerbo (palabra_verbo);
-      "se.";
+      1: "No parece", (n) ml_o, " tener ningún tipo de cerrojo.";
+      2: if (ml_o provides con_llave)
+	  print_ret (_El) ml_o, " ya estaba", (n) ml_o, " cerrad", (o) ml_o,
+	  " con llave.";
+	else
+	  print_ret (_El) ml_o, " ya tiene", (n) ml_o, " echado el cerrojo.";
+      3: "Primero tendré que cerrar ", (el) ml_o, ".";
+      4: if (otro) "No parece", (n) ml_o, " encajar en la cerradura.";
+	"Necesito algún tipo de llave.";
+      5: if (otro) "Cierro ", (el) ml_o," con ", (el) otro, ".";
+	"Echo el cerrojo ", (al) ml_o, ".";
     }
 
  Encender:
@@ -850,25 +833,33 @@ Constant PARTICULA_TE = "te";
     ! atributo "conmutable". Observar que si no lo tiene, la acción
     ! que se genera será sin embargo Quemar.
     !
+    !   1: Error, el objeto no es conmutable (este error no aparecerá
+    !      si el jugador pone ENCIENDE OBJETO, ya que en este caso la
+    !      acción generada será Quemar objeto, pero puede aparecer si
+    !      pone CONECTA OBJETO)
     !   2: Error, el objeto ya tenía el atributo "encendido"
     !   3: Éxito, el objeto tiene ahora activado "encendido".
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda encenderse.";
      2: print_ret "Ya estaba", (n) ml_o, " encendid", (o) ml_o, ".";
-     3: "Enciendes ", (el) ml_o, ".";
+     3: "Enciendo ", (el) ml_o, ".";
     }
 
  Apagar:
+    !  1: Error, el objeto no tiene el atributo "conmutable"
     !  2: Error, el objeto ya tenia desactivado el atributo
     !    "encendido"
     !  3: Éxito, el objeto tiene ahora desactivado "encendido"
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda apagarse.";
      2: print_ret "Ya estaba", (n) ml_o, " apagad", (o) ml_o, ".";
-     3: "Apagas ", (el) ml_o, ".";
+     3: "Apago ", (el) ml_o, ".";
     }
 
   Abrir:
+    !  1: Error, el objeto no tiene el atributo "abrible"
     !  2: Error, el objeto es abrible, pero tiene "cerrojoechado"
     !  3: Error, el objeto es abrible, pero ya tiene el atributo
     !     "abierto"
@@ -879,24 +870,26 @@ Constant PARTICULA_TE = "te";
     !     interior, o no era recipiente).
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda abrirse.";
      2: "Está", (n) ml_o, " cerrad", (o) ml_o, " con llave.";
      3: "Ya estaba", (n) ml_o, " abiert", (o) ml_o, ".";
-     4: print "Abres ", (el) ml_o, ", descubriendo ";
-	if (EscribirListaDesde (child (ml_o),
-	    ESPANOL_BIT + BREVE_BIT + OCULTAR_BIT) == 0)
-	  print "nada";
+     4: print "Abro ", (el) ml_o, ", descubriendo ";
+	if (EscribirListaDesde(child(ml_o),
+                      	  ESPANOL_BIT + BREVE_BIT + OCULTAR_BIT)==0) "nada.";
 	".";
-     5: "Abres ", (el) ml_o, ".";
+     5: "Abro ", (el) ml_o, ".";
     }
 
   Cerrar:
+    !  1: Error, el objeto no tiene el atributo "abrible"
     !  2: Error, el objeto es "abrible" pero ya estaba quitado su
     !     atributo "abierto" (o sea, estaba ya cerrado)
     !  3: Éxito.
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda cerrarse.";
      2: "Ya estaba", (n) ml_o, " cerrad", (o)ml_o, ".";
-     3: "Cierras ", (el) ml_o, ".";
+     3: "Cierro ", (el) ml_o, ".";
     }
 
   Desvestir:
@@ -904,8 +897,8 @@ Constant PARTICULA_TE = "te";
     !  2: Éxito.
     switch(ml_n)
     {
-     1: "No llevas puesto eso.";
-     2: "Te quitas ", (el) ml_o, ".";
+     1: "No llevo puesto eso.";
+     2: "Me quito ", (el) ml_o, ".";
     }
 
   Vestir:
@@ -915,10 +908,10 @@ Constant PARTICULA_TE = "te";
     !  4: Éxito.
     switch(ml_n)
     {
-     1: "¡No puedes ponerte eso!";
-     2: "No ", (lo) ml_o, " tienes.";
-     3: "¡Ya ", (lo) ml_o, " llevas puest", (o) ml_o, "!.";
-     4: "Te pones ", (el) ml_o, ".";
+     1: "¡No puedo ponerme eso!";
+     2: "No ", (lo) ml_o, " tengo.";
+     3: "¡Ya ", (lo) ml_o, " llevo puest", (o) ml_o, "!.";
+     4: "Me pongo ", (el) ml_o, ".";
     }
 
   Comer:
@@ -930,7 +923,7 @@ Constant PARTICULA_TE = "te";
     switch(ml_n)
     {
      1: "Eso es simplemente incomestible.";
-     2: "Te comes ", (el) ml_o, ". No está mal.";
+     2: "Me como ", (el) ml_o, ". No está mal.";
     }
 
 !================================================================
@@ -972,6 +965,7 @@ Constant PARTICULA_TE = "te";
      1: print "¿Seguro que quieres reiniciar el juego? ";
      2: "Error.";
     }
+
  Restaurar:
     ! 1: Si no se pudo cargar la partida con LOAD
     ! 2: Éxito (no llega a mostrarse, porque en caso de éxito el
@@ -1027,11 +1021,8 @@ Constant PARTICULA_TE = "te";
     }
 
 #Ifndef NO_PUNTUACION;
-  ActivarNotificacion:
-    "Notificación de puntuación activada.";
-
-  DesactivarNotificacion:
-    "Notificación de puntuación desactivada.";
+ ActivarNotificacion:       "Notificación de puntuación activada.";
+ DesactivarNotificacion:      "Notificación de puntuación desactivada.";
 #Endif; ! NO_PUNTUACION
 
 #Ifndef NO_LUGARES;
@@ -1039,14 +1030,14 @@ Constant PARTICULA_TE = "te";
     ! El verbo "LUGARES" muestra un listado de los lugares que el
     ! jugador ha visitado. Aquí debemos escribir el texto
     ! introductorio a esa lista.
-    print "Has visitado: ";
+    print "He visitado: ";
 #Endif; ! NO_LUGARES
 
  ModoM1:
     ! La acción ModoM1 se genera ante el comando BREVE (o NORMAL). La
     ! librería imprime la constante Historia y a continuación este
     ! mensaje.
-    " está ahora en su modo normal ~breve~, que da sólo descripciones
+    " está ahora en su modo normal ~breve~, que da solo descripciones
     largas de los lugares la primera vez que son visitadas, y
     descripciones cortas en otro caso.";
 
@@ -1083,10 +1074,10 @@ Constant PARTICULA_TE = "te";
     !     casos anteriores)
     switch(ml_n)
     {
-     1: "Objetos que has manejado:^";
+     1: "Objetos que he manejado:^";
      2: "Ninguno.";
      3: print "   (puest", (o) ml_o, ")";
-     4: print "   (l", (o) ml_o, " llevas)";
+     4: print "   (l", (o) ml_o, " llevo)";
      5: print "   (en poder ", (del) ml_o, ")";
      6: print "   (en ", (name) ml_o, ")";
      7: print "   (en ", (el) ml_o, ")";
@@ -1120,10 +1111,9 @@ Constant PARTICULA_TE = "te";
     !  4: texto final, tras la suma total impresa por la librería
     switch(ml_n)
     {
-     1: print "La puntuación se desglos";
-	if (banderafin) print "ó";
-	else            print "a";
-	" de la siguiente manera:^";
+     1: if (banderafin) print "La puntuación se desglosó ";
+	else          print "La puntuación se desglosa ";
+	"de la siguiente manera:^";
      2: "por encontrar objetos importantes";
      3: "por visitar lugares importantes";
      4: print "total (de ", PUNTUACION_MAX
@@ -1138,8 +1128,8 @@ Constant PARTICULA_TE = "te";
     !     generada por la librería
     switch(ml_n)
     {
-     1: "No llevas nada.";
-     2: print "Llevas";
+     1: "No llevo nada.";
+     2: print "Llevo";
     }
 !================================================================
 ! MISCELANEA
@@ -1165,10 +1155,10 @@ Constant PARTICULA_TE = "te";
 	! El jugador ha usado objetos múltiples, pero por alguna razón
 	! la lista del parser está vacía.
 
-     3: TextoLlamativo(" Has muerto ");
+     3: TextoLlamativo(" Ha muerto ");
 	! Mensaje fin de juego. Has muerto.
 
-     4: TextoLlamativo(" Has ganado ");
+     4: TextoLlamativo(" Hemos ganado ");
 	! Mensaje fin de juego de victoria.
 
      5: ! Mensaje a mostrar tras el fin del juego, para pedir al
@@ -1197,7 +1187,7 @@ Constant PARTICULA_TE = "te";
 	! Si el jugador no responde correctamente a la pregunta del
 	! mensaje [Miscelanea,5]
 
-     9: "^¡Te has quedado a oscuras!";
+     9: "^¡Me he quedado a oscuras!";
 	! Mensaje cuando se detecta, al final del turno, que ya no hay
 	! luz.
 
@@ -1225,16 +1215,16 @@ Constant PARTICULA_TE = "te";
 	!   Sacas la manzana verde de la cesta de mimbre.
 
      15: "No te preocupes.";
-	! Si el jugador pone EEPA sólo (sin especificar la palabra
+	! Si el jugador pone EEPA solo (sin especificar la palabra
 	! corregida)
 
      16: "~eepa~ sólo puede corregir una palabra.";
 	! Si el jugador pone EEPA seguido de dos o más palabras
 
-     17: "Está muy oscuro y no puedes ver nada.";
+     17: "Está muy oscuro y no puedo ver nada.";
 	! Descripción del objeto Oscuridad
 
-     18: print "ti mism", (o) jugador;
+     18: print "mi mism",(o)jugador;
 	! Nombre corto del objeto jugador
 
      19: "Tan buen aspecto como siempre.";
@@ -1251,25 +1241,22 @@ Constant PARTICULA_TE = "te";
      22: "No puedes empezar la frase con una coma.";
 	! Cuando ha empezado la frase con una coma :-)
 
-     23: "Parece que quieres hablar con alguien, pero no veo con
+     23: "Parece que debo hablar con alguien, pero no veo con
 	quién.";
 	! Cuando el jugador pone PEPE, COGE HACHA, pero no hay un
 	! objeto que responda al nombre PEPE.
 
-     24: "No puedes hablar con ", (el) ml_o, ".";
+     24: "No puedo hablar con ", (el) ml_o, ".";
 	! Si el jugador intenta hablar con un objeto que no es
 	! "animado" ni "hablable" ("hablable" debe ponerse a objetos
 	! inanimados con los que se podría hablar, como un micrófono)
 
-     25: "Para hablar con alguien intenta ~alguien, hola~ o algo
+     25: "Para que hable con alguien intenta ~alguien, hola~ o algo
 	así.";
 	! Si hay palabras no comprendidas entre el nombre del PNJ y
 	! la coma, como p. ej.: PEPE XADASDGG, SALTA
 
-    26: print "(primero tratas de ", (coge) "r ";
-	if (ml_o has animado) print (al) ml_o;
-	else                  print (el) ml_o;
-	")";
+     26: "(primero trato de ", (coge)"r ", (el) ml_o, ")";
 	! Si la gramática especifica que una acción debe efectuarse
 	! sobre un objeto en poder del jugador (token "held"), pero el
 	! jugador lo intenta sobre un objeto que no tiene, pero que
@@ -1281,7 +1268,7 @@ Constant PARTICULA_TE = "te";
 ! ERRORES DE PARSING
 ! Estos errores son generados por la librería, a menos que el
 ! programador proporcione su propia función ErrorParser para
-! manejo de errores.
+! manejo de errores
 
      27:! El parser se ha atascado. Es el tipo de error más
 	! genérico. Si el parser puede, dará un error más concreto
@@ -1308,13 +1295,13 @@ Constant PARTICULA_TE = "te";
             ImprimirComando(0); print "?^^>";
             si_pl=SiONo();
           0:
-	    si_pl = false;
-	    "No entendí la última parte de la frase.";  ! [030305]
+            print "No entendí la última parte de la frase.";  ! [030305]
+            si_pl=false;
           2:
             si_pl=true;
         }
 
-     29: ! El parser esperaba un token de tipo número
+     29: ! El parser esperaba un token de tipo numero
 	"No comprendí ese número.";
 
      30: ! El parser no ha comprendido el nombre del objeto al que se
@@ -1328,7 +1315,7 @@ Constant PARTICULA_TE = "te";
      32: ! El objeto que el jugador intenta usar no está en su
 	! poder. El parser ha intentado "cogerlo de forma automática",
 	! pero ha fallado
-	"¡No tienes eso!";
+	"¡No tengo eso!";
 
      33: ! El jugador ha intentado usar objetos múltiples (o "TODO")
 	! con un verbo que en su gramática no lo admite.
@@ -1354,7 +1341,7 @@ Constant PARTICULA_TE = "te";
 	! se actúe sea animado (tiene un token de tipo "creature"),
 	! pero el jugador lo ha intentado sobre un objeto que no es
 	! animado.
-	"Sólo puedes hacer eso con seres animados.";
+	"Sólo puedo hacer eso con seres animados.";
 
      38: ! La primera palabra usada por el jugador es desconocida (o
 	! la primera palabra tras la coma, si se trata de una orden a
@@ -1367,7 +1354,7 @@ Constant PARTICULA_TE = "te";
 
      40: ! El jugador ha usado un pronombre, como EXAMINALO, pero el
 	! pronombre se refiere a un objeto que ya no está visible.
- 	"Ahora mismo no puedes ver lo que representa el pronombre ~",
+ 	"Ahora mismo no puedo ver lo que representa el pronombre ~",
 	  (address) palabra_pronombre,
 	 "~ (", (el) objeto_pronombre, ").";
 
@@ -1382,14 +1369,15 @@ Constant PARTICULA_TE = "te";
 	! encontrar tantos. Por ejemplo: COGE SEIS MONEDAS.
 	! En ml_o se recibe el número de objetos hallados por el
 	! parser.
-	if (ml_o == 0) "No hay suficientes.";
-	if (ml_o == 1) {
-	  print "Aquí sólo hay un";
-	  if (objeto_multiple-->1) print (o) objeto_multiple-->1;
-	  else                     print "o";
-	  " disponible.";
+ 	if (ml_o==0) "No hay suficientes.";
+         else if (ml_o==1){
+	 print "Aquí sólo hay un";
+	 if (objeto_multiple-->1) print (o) objeto_multiple-->1;
+	 else print "o";
+	 " disponible.";
         }
-	"Sólo hay ", (number) ml_o, " disponibles para esa acción.";
+	else
+	   "Sólo hay ", (number) ml_o, " disponibles para esa acción.";
 
      43: ! El jugador ha puesto TODO como objeto múltiple, pero el
 	! parser no ha encontrado ningún objeto. En realidad este
@@ -1403,10 +1391,11 @@ Constant PARTICULA_TE = "te";
          ! Modificado en [020621] para dar un mensaje más coherente
          ! si el jugador tiene algún objeto en su inventario.
        if (accion_que_seria == ##Dejar) {
-         print "¡Pero si no llevas nada";
+         print "¡Pero si no llevo nada";
          if (children (jugador))
-           print " de eso";
-         "!";
+           " de eso!";
+         else
+           "!";
        }
        print "No hay nada para ";
        IdiomaVerbo(palabra_verbo);
@@ -1421,7 +1410,7 @@ Constant PARTICULA_TE = "te";
  	print "¿Quién concretamente, ";
 	PreguntaCualExactamente=1;
 	ImprimirListaDudosos("o");
-	"?";
+	print "?^";
 
      46:! El jugador ha nombrado un objeto ambiguo (hay más de uno con el
 	! mismo nombre cerca). El parser le pide aclaración. Este
@@ -1432,13 +1421,14 @@ Constant PARTICULA_TE = "te";
  	print "¿Cuál concretamente, ";
 	PreguntaCualExactamente=1;
 	ImprimirListaDudosos("o");
-	"?";
+	print "?^";
 
      47: ! El jugador ha respondido "TODOS" o "AMBOS" a una pregunta
 	! aclaratoria como la anterior, pero el verbo no admite
 	! objetos múltiples
-	PreguntaCualExactamente = 1;
-	"Lo siento, sólo puedes referirte a un objeto aquí. ¿Cuál exactamente?";
+	print "Lo siento, sólo puedes referirte a un objeto aquí. ¿Cuál
+	    exactamente?^";
+	PreguntaCualExactamente=1;
 
      48: !El jugador ha escrito una frase u orden a PSI incompleta,
          !como BESA (verbo aplicado sobre PSIs normalmente).
@@ -1446,10 +1436,10 @@ Constant PARTICULA_TE = "te";
  	PreguntaCualExactamente=1;
 	if (IniciarPregunta()==0) print "A quién";
 	if (actor ~= jugador) print " tiene que ";
-	else print " quieres ";
+	else print " tengo que ";
      	IdiomaImprimirComando();
 	if (actor~=jugador) print " ", (el) actor;
-	"?";
+	print "?^";
 
      49: !El jugador ha escrito una frase u orden a PSI incompleta,
          !como COGE (verbo aplicado sobre objetos normalmente).
@@ -1457,10 +1447,10 @@ Constant PARTICULA_TE = "te";
 	PreguntaCualExactamente=1;
 	if (IniciarPregunta()==0) print "Qué";
 	if (actor ~= jugador) print " tiene que ";
-	else print " quieres ";
+	else print " tengo que ";
      	IdiomaImprimirComando();
 	if (actor~=jugador) print " ", (el) actor;
-	"?";
+	print "?^";
 
 #Ifndef NO_PUNTUACION;
      50: ! El jugador acaba de realizar una acción que puntúa (la
@@ -1468,13 +1458,8 @@ Constant PARTICULA_TE = "te";
 	! de valor). Se informa de ello al jugador. El parámetro ml_o
 	! contiene el incremento (o decremento) en la puntuación.
 	print "Tu puntuación ha ";
-	if (ml_o > 0)
-          print "aumenta";
-        else {
-          ml_o = -ml_o;
-          print "disminui";
-        }
-	print "do en ", (number) ml_o, " punto";
+	if (ml_o > 0) print "aumentado"; else { ml_o = -ml_o; print "disminuido"; }
+	print " en ", (number) ml_o, " punto";
 	if (ml_o > 1) print "s";
 #Endif; ! NO_PUNTUACION
 
@@ -1486,7 +1471,7 @@ Constant PARTICULA_TE = "te";
 	! proceso. Este mensaje informa de ello al jugador.
 	!
 	"(Ya que ha ocurrido algo dramático, se ha recortado la lista
-	de objetos sobre los que actuabas)";
+	de objetos sobre los que actuaba)";
 
      52: ! En los menús, se espera a que el jugador escriba un número
 	! para mostrar una entrada del menú. Si pulsa un numero
@@ -1498,16 +1483,6 @@ Constant PARTICULA_TE = "te";
      53: ! Mensaje que muestra el sistema de menús cuando espera una
 	! tecla
  	"^[Por favor, pulsa ESPACIO]";
-
-     54: ! Confirmación de que el comentario del jugador (o probador)
-         ! aparecerá en los ficheros de transcripción y/o grabación de
-         ! comandos
-         "[Comentario grabado.]";
-
-     55: ! Aviso de que el comentario no servirá para mucho, porque
-         ! está desactivada tanto la transcripción como la grabación
-         ! de comandos
-         "[Comentario NO grabado.]";
     }
 
  ListaMiscelanea:
@@ -1547,11 +1522,11 @@ Constant PARTICULA_TE = "te";
 !  NO SE ACONSEJA CAMBIAR ESTOS
 ! ************************************
 
-     8: print " (alumbrando y que llevas puest", (o) ml_o;
+     8: print " (alumbrando y que llevo puest", (o) ml_o;
 	! El objeto tiene "luz" y "puesto"
      9: print " (alumbrando";
 	! El objeto tiene "luz" pero no "puesto"
-     10: print " (que llevas puest", (o) ml_o;
+     10: print " (que llevo puest", (o) ml_o;
 	! El objeto tiene "puesto" pero no "luz"
      11: print " (que ", (esta) ml_o, " ";
 	! Mensaje introductorio para decir "que está
@@ -1591,7 +1566,7 @@ Constant PARTICULA_TE = "te";
 
 [ TextoLlamativo txt;
     ! Imprime un texto rodeado de asteriscos y en negrita. Es usado
-    ! para mostrar el mensaje *** Has muerto *** y *** Has ganado ***
+    ! para mostrar el mensaje *** He muerto *** y *** He ganado ***
     ! Puedes cambiarlo si quieres que aparezcan en otros formatos.
 #Ifdef TARGET_ZCODE;
     #IfV5; style bold; #Endif;
@@ -1604,7 +1579,7 @@ Constant PARTICULA_TE = "te";
 #Ifnot; ! TARGET_GLULX
      glk($0086, 0); ! set normal style
 #Endif; ! TARGET_
-     "^^";
+      print "^^^";
 ];
 
 
@@ -1643,3 +1618,11 @@ Constant PARTICULA_TE = "te";
       }
   }
 ];
+
+! sustituye a coge donde hace falta para primera persona
+[ cojo;
+    if (dialecto_sudamericano)
+	print "tomo";
+    else print "cojo";
+];
+

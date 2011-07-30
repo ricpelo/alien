@@ -1,0 +1,22 @@
+InformATE! 6/10 biplataforma
+----------------------------
+
+Esta es la revisión [080625] de la librería InformATE!. Lee el fichero
+adjunto CAMBIOS.txt para ver qué cambios ha habido respecto a
+revisiones anteriores.
+
+El fichero BUGS.txt lista algunos de los errores que se conoce que
+tiene InformATE!, pero que aún no se ha podido corregir. 
+
+Por favor, si encuentras cualquier respuesta inesperada por parte de
+la librería (que no aparezca en BUGS.txt), toma nota de ella e informa
+a Morgul por correo electrónico (jmfo1982@gmail.com). También se
+agradecerá parches con correcciones ya hechas.
+
+Puedes encontrar más información sobre InformATE! en la web:
+http://www.caad.es/informate
+
+
+                                             |Zak|, 10 de Mayo de 2001
+                  Enrique D. Bosch (Presi, kifcu), 4 de Agosto de 2002
+                José Manuel Ferrer Ortiz (Morgul), 25 de Junio de 2008

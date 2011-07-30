@@ -1,15 +1,17 @@
 !-------------------------------------------------------------------------------
 !  infglk.h - an Inform library to allow easy access to glk functions
 !    under glulx
-!  Dynamically created by glk2inf.pl on 1000802 at 11:17.34.
-!  Send comments or suggestions to: katre@ruf.rice.edu
+!  Dynamically created by glk2inf.pl on 08/31/2006 at 19:20:21.
+!  Send comments or suggestions to: katre@plover.net
 !-------------------------------------------------------------------------------
-System_file;
 #Ifdef TARGET_GLULX;
 #Ifndef infglk_h;
 Constant infglk_h;
 Message "[Including <infglk>]";
+System_file;
 
+#Ifdef infglk_h;  ! remove "Constant declared but not used" warnings
+#Endif;
 
 Constant GLK_NULL 0;
 
@@ -32,6 +34,7 @@ Constant gestalt_Hyperlinks 11;
 Constant gestalt_HyperlinkInput 12;
 Constant gestalt_SoundMusic 13;
 Constant gestalt_GraphicsTransparency 14;
+Constant gestalt_Unicode 15;
 Constant evtype_None 0;
 Constant evtype_Timer 1;
 Constant evtype_CharInput 2;
@@ -129,863 +132,717 @@ Constant imagealign_MarginLeft $04;
 Constant imagealign_MarginRight $05;
 
 ! The actual glk functions.
-[ glk_exit 
-      ret;
-  ! Must push arguments onto the stack in reverse order
+[ glk_exit _vararg_count ret;
+! glk_exit ()
   ! And now the @glk call
-@glk 1 0 ret;
+  @glk 1 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_interrupt_handler func
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy func sp;
+[ glk_set_interrupt_handler _vararg_count ret;
+! glk_set_interrupt_handler (func)
   ! And now the @glk call
-@glk 2 1 ret;
+  @glk 2 _vararg_count ret;
   return ret;
 ];
 
-[ glk_tick 
-      ret;
-  ! Must push arguments onto the stack in reverse order
+[ glk_tick _vararg_count ret;
+! glk_tick ()
   ! And now the @glk call
-@glk 3 0 ret;
+  @glk 3 _vararg_count ret;
   return ret;
 ];
 
-[ glk_gestalt sel val
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy val sp;
-  @copy sel sp;
+[ glk_gestalt _vararg_count ret;
+! glk_gestalt (sel val)
   ! And now the @glk call
-@glk 4 2 ret;
+  @glk 4 _vararg_count ret;
   return ret;
 ];
 
-[ glk_gestalt_ext sel val arr arrlen
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy arrlen sp;
-  @copy arr sp;
-  @copy val sp;
-  @copy sel sp;
+[ glk_gestalt_ext _vararg_count ret;
+! glk_gestalt_ext (sel val arr arrlen)
   ! And now the @glk call
-@glk 5 4 ret;
+  @glk 5 _vararg_count ret;
   return ret;
 ];
 
-[ glk_char_to_lower ch
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy ch sp;
+[ glk_char_to_lower _vararg_count ret;
+! glk_char_to_lower (ch)
   ! And now the @glk call
-@glk 160 1 ret;
+  @glk 160 _vararg_count ret;
   return ret;
 ];
 
-[ glk_char_to_upper ch
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy ch sp;
+[ glk_char_to_upper _vararg_count ret;
+! glk_char_to_upper (ch)
   ! And now the @glk call
-@glk 161 1 ret;
+  @glk 161 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_root 
-      ret;
-  ! Must push arguments onto the stack in reverse order
+[ glk_window_get_root _vararg_count ret;
+! glk_window_get_root ()
   ! And now the @glk call
-@glk 34 0 ret;
+  @glk 34 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_open split method size wintype rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy wintype sp;
-  @copy size sp;
-  @copy method sp;
-  @copy split sp;
+[ glk_window_open _vararg_count ret;
+! glk_window_open (split method size wintype rock)
   ! And now the @glk call
-@glk 35 5 ret;
+  @glk 35 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_close win result
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy result sp;
-  @copy win sp;
+[ glk_window_close _vararg_count ret;
+! glk_window_close (win result)
   ! And now the @glk call
-@glk 36 2 ret;
+  @glk 36 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_size win widthptr heightptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy heightptr sp;
-  @copy widthptr sp;
-  @copy win sp;
+[ glk_window_get_size _vararg_count ret;
+! glk_window_get_size (win widthptr heightptr)
   ! And now the @glk call
-@glk 37 3 ret;
+  @glk 37 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_set_arrangement win method size keywin
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy keywin sp;
-  @copy size sp;
-  @copy method sp;
-  @copy win sp;
+[ glk_window_set_arrangement _vararg_count ret;
+! glk_window_set_arrangement (win method size keywin)
   ! And now the @glk call
-@glk 38 4 ret;
+  @glk 38 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_arrangement win methodptr sizeptr keywinptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy keywinptr sp;
-  @copy sizeptr sp;
-  @copy methodptr sp;
-  @copy win sp;
+[ glk_window_get_arrangement _vararg_count ret;
+! glk_window_get_arrangement (win methodptr sizeptr keywinptr)
   ! And now the @glk call
-@glk 39 4 ret;
+  @glk 39 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_iterate win rockptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rockptr sp;
-  @copy win sp;
+[ glk_window_iterate _vararg_count ret;
+! glk_window_iterate (win rockptr)
   ! And now the @glk call
-@glk 32 2 ret;
+  @glk 32 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_rock win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_rock _vararg_count ret;
+! glk_window_get_rock (win)
   ! And now the @glk call
-@glk 33 1 ret;
+  @glk 33 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_type win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_type _vararg_count ret;
+! glk_window_get_type (win)
   ! And now the @glk call
-@glk 40 1 ret;
+  @glk 40 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_parent win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_parent _vararg_count ret;
+! glk_window_get_parent (win)
   ! And now the @glk call
-@glk 41 1 ret;
+  @glk 41 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_sibling win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_sibling _vararg_count ret;
+! glk_window_get_sibling (win)
   ! And now the @glk call
-@glk 48 1 ret;
+  @glk 48 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_clear win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_clear _vararg_count ret;
+! glk_window_clear (win)
   ! And now the @glk call
-@glk 42 1 ret;
+  @glk 42 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_move_cursor win xpos ypos
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy ypos sp;
-  @copy xpos sp;
-  @copy win sp;
+[ glk_window_move_cursor _vararg_count ret;
+! glk_window_move_cursor (win xpos ypos)
   ! And now the @glk call
-@glk 43 3 ret;
+  @glk 43 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_stream win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_stream _vararg_count ret;
+! glk_window_get_stream (win)
   ! And now the @glk call
-@glk 44 1 ret;
+  @glk 44 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_set_echo_stream win str
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy str sp;
-  @copy win sp;
+[ glk_window_set_echo_stream _vararg_count ret;
+! glk_window_set_echo_stream (win str)
   ! And now the @glk call
-@glk 45 2 ret;
+  @glk 45 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_get_echo_stream win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_get_echo_stream _vararg_count ret;
+! glk_window_get_echo_stream (win)
   ! And now the @glk call
-@glk 46 1 ret;
+  @glk 46 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_window win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_set_window _vararg_count ret;
+! glk_set_window (win)
   ! And now the @glk call
-@glk 47 1 ret;
+  @glk 47 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_open_file fileref fmode rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy fmode sp;
-  @copy fileref sp;
+[ glk_stream_open_file _vararg_count ret;
+! glk_stream_open_file (fileref fmode rock)
   ! And now the @glk call
-@glk 66 3 ret;
+  @glk 66 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_open_memory buf buflen fmode rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy fmode sp;
-  @copy buflen sp;
-  @copy buf sp;
+[ glk_stream_open_memory _vararg_count ret;
+! glk_stream_open_memory (buf buflen fmode rock)
   ! And now the @glk call
-@glk 67 4 ret;
+  @glk 67 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_close str result
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy result sp;
-  @copy str sp;
+[ glk_stream_close _vararg_count ret;
+! glk_stream_close (str result)
   ! And now the @glk call
-@glk 68 2 ret;
+  @glk 68 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_iterate str rockptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rockptr sp;
-  @copy str sp;
+[ glk_stream_iterate _vararg_count ret;
+! glk_stream_iterate (str rockptr)
   ! And now the @glk call
-@glk 64 2 ret;
+  @glk 64 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_get_rock str
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy str sp;
+[ glk_stream_get_rock _vararg_count ret;
+! glk_stream_get_rock (str)
   ! And now the @glk call
-@glk 65 1 ret;
+  @glk 65 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_set_position str pos seekmode
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy seekmode sp;
-  @copy pos sp;
-  @copy str sp;
+[ glk_stream_set_position _vararg_count ret;
+! glk_stream_set_position (str pos seekmode)
   ! And now the @glk call
-@glk 69 3 ret;
+  @glk 69 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_get_position str
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy str sp;
+[ glk_stream_get_position _vararg_count ret;
+! glk_stream_get_position (str)
   ! And now the @glk call
-@glk 70 1 ret;
+  @glk 70 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_set_current str
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy str sp;
+[ glk_stream_set_current _vararg_count ret;
+! glk_stream_set_current (str)
   ! And now the @glk call
-@glk 71 1 ret;
+  @glk 71 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stream_get_current 
-      ret;
-  ! Must push arguments onto the stack in reverse order
+[ glk_stream_get_current _vararg_count ret;
+! glk_stream_get_current ()
   ! And now the @glk call
-@glk 72 0 ret;
+  @glk 72 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_char ch
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy ch sp;
+[ glk_put_char _vararg_count ret;
+! glk_put_char (ch)
   ! And now the @glk call
-@glk 128 1 ret;
+  @glk 128 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_char_stream str ch
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy ch sp;
-  @copy str sp;
+[ glk_put_char_stream _vararg_count ret;
+! glk_put_char_stream (str ch)
   ! And now the @glk call
-@glk 129 2 ret;
+  @glk 129 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_string s
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy s sp;
+[ glk_put_string _vararg_count ret;
+! glk_put_string (s)
   ! And now the @glk call
-@glk 130 1 ret;
+  @glk 130 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_string_stream str s
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy s sp;
-  @copy str sp;
+[ glk_put_string_stream _vararg_count ret;
+! glk_put_string_stream (str s)
   ! And now the @glk call
-@glk 131 2 ret;
+  @glk 131 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_buffer buf len
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy len sp;
-  @copy buf sp;
+[ glk_put_buffer _vararg_count ret;
+! glk_put_buffer (buf len)
   ! And now the @glk call
-@glk 132 2 ret;
+  @glk 132 _vararg_count ret;
   return ret;
 ];
 
-[ glk_put_buffer_stream str buf len
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy len sp;
-  @copy buf sp;
-  @copy str sp;
+[ glk_put_buffer_stream _vararg_count ret;
+! glk_put_buffer_stream (str buf len)
   ! And now the @glk call
-@glk 133 3 ret;
+  @glk 133 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_style styl
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy styl sp;
+[ glk_set_style _vararg_count ret;
+! glk_set_style (styl)
   ! And now the @glk call
-@glk 134 1 ret;
+  @glk 134 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_style_stream str styl
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy styl sp;
-  @copy str sp;
+[ glk_set_style_stream _vararg_count ret;
+! glk_set_style_stream (str styl)
   ! And now the @glk call
-@glk 135 2 ret;
+  @glk 135 _vararg_count ret;
   return ret;
 ];
 
-[ glk_get_char_stream str
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy str sp;
+[ glk_get_char_stream _vararg_count ret;
+! glk_get_char_stream (str)
   ! And now the @glk call
-@glk 144 1 ret;
+  @glk 144 _vararg_count ret;
   return ret;
 ];
 
-[ glk_get_line_stream str buf len
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy len sp;
-  @copy buf sp;
-  @copy str sp;
+[ glk_get_line_stream _vararg_count ret;
+! glk_get_line_stream (str buf len)
   ! And now the @glk call
-@glk 145 3 ret;
+  @glk 145 _vararg_count ret;
   return ret;
 ];
 
-[ glk_get_buffer_stream str buf len
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy len sp;
-  @copy buf sp;
-  @copy str sp;
+[ glk_get_buffer_stream _vararg_count ret;
+! glk_get_buffer_stream (str buf len)
   ! And now the @glk call
-@glk 146 3 ret;
+  @glk 146 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stylehint_set wintype styl hint val
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy val sp;
-  @copy hint sp;
-  @copy styl sp;
-  @copy wintype sp;
+[ glk_stylehint_set _vararg_count ret;
+! glk_stylehint_set (wintype styl hint val)
   ! And now the @glk call
-@glk 176 4 ret;
+  @glk 176 _vararg_count ret;
   return ret;
 ];
 
-[ glk_stylehint_clear wintype styl hint
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy hint sp;
-  @copy styl sp;
-  @copy wintype sp;
+[ glk_stylehint_clear _vararg_count ret;
+! glk_stylehint_clear (wintype styl hint)
   ! And now the @glk call
-@glk 177 3 ret;
+  @glk 177 _vararg_count ret;
   return ret;
 ];
 
-[ glk_style_distinguish win styl1 styl2
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy styl2 sp;
-  @copy styl1 sp;
-  @copy win sp;
+[ glk_style_distinguish _vararg_count ret;
+! glk_style_distinguish (win styl1 styl2)
   ! And now the @glk call
-@glk 178 3 ret;
+  @glk 178 _vararg_count ret;
   return ret;
 ];
 
-[ glk_style_measure win styl hint result
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy result sp;
-  @copy hint sp;
-  @copy styl sp;
-  @copy win sp;
+[ glk_style_measure _vararg_count ret;
+! glk_style_measure (win styl hint result)
   ! And now the @glk call
-@glk 179 4 ret;
+  @glk 179 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_create_temp usage rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy usage sp;
+[ glk_fileref_create_temp _vararg_count ret;
+! glk_fileref_create_temp (usage rock)
   ! And now the @glk call
-@glk 96 2 ret;
+  @glk 96 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_create_by_name usage name rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy name sp;
-  @copy usage sp;
+[ glk_fileref_create_by_name _vararg_count ret;
+! glk_fileref_create_by_name (usage name rock)
   ! And now the @glk call
-@glk 97 3 ret;
+  @glk 97 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_create_by_prompt usage fmode rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy fmode sp;
-  @copy usage sp;
+[ glk_fileref_create_by_prompt _vararg_count ret;
+! glk_fileref_create_by_prompt (usage fmode rock)
   ! And now the @glk call
-@glk 98 3 ret;
+  @glk 98 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_create_from_fileref usage fref rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
-  @copy fref sp;
-  @copy usage sp;
+[ glk_fileref_create_from_fileref _vararg_count ret;
+! glk_fileref_create_from_fileref (usage fref rock)
   ! And now the @glk call
-@glk 104 3 ret;
+  @glk 104 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_destroy fref
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy fref sp;
+[ glk_fileref_destroy _vararg_count ret;
+! glk_fileref_destroy (fref)
   ! And now the @glk call
-@glk 99 1 ret;
+  @glk 99 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_iterate fref rockptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rockptr sp;
-  @copy fref sp;
+[ glk_fileref_iterate _vararg_count ret;
+! glk_fileref_iterate (fref rockptr)
   ! And now the @glk call
-@glk 100 2 ret;
+  @glk 100 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_get_rock fref
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy fref sp;
+[ glk_fileref_get_rock _vararg_count ret;
+! glk_fileref_get_rock (fref)
   ! And now the @glk call
-@glk 101 1 ret;
+  @glk 101 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_delete_file fref
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy fref sp;
+[ glk_fileref_delete_file _vararg_count ret;
+! glk_fileref_delete_file (fref)
   ! And now the @glk call
-@glk 102 1 ret;
+  @glk 102 _vararg_count ret;
   return ret;
 ];
 
-[ glk_fileref_does_file_exist fref
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy fref sp;
+[ glk_fileref_does_file_exist _vararg_count ret;
+! glk_fileref_does_file_exist (fref)
   ! And now the @glk call
-@glk 103 1 ret;
+  @glk 103 _vararg_count ret;
   return ret;
 ];
 
-[ glk_select event
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy event sp;
+[ glk_select _vararg_count ret;
+! glk_select (event)
   ! And now the @glk call
-@glk 192 1 ret;
+  @glk 192 _vararg_count ret;
   return ret;
 ];
 
-[ glk_select_poll event
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy event sp;
+[ glk_select_poll _vararg_count ret;
+! glk_select_poll (event)
   ! And now the @glk call
-@glk 193 1 ret;
+  @glk 193 _vararg_count ret;
   return ret;
 ];
 
-[ glk_request_timer_events millisecs
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy millisecs sp;
+[ glk_request_timer_events _vararg_count ret;
+! glk_request_timer_events (millisecs)
   ! And now the @glk call
-@glk 214 1 ret;
+  @glk 214 _vararg_count ret;
   return ret;
 ];
 
-[ glk_request_line_event win buf maxlen initlen
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy initlen sp;
-  @copy maxlen sp;
-  @copy buf sp;
-  @copy win sp;
+[ glk_request_line_event _vararg_count ret;
+! glk_request_line_event (win buf maxlen initlen)
   ! And now the @glk call
-@glk 208 4 ret;
+  @glk 208 _vararg_count ret;
   return ret;
 ];
 
-[ glk_request_char_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_request_char_event _vararg_count ret;
+! glk_request_char_event (win)
   ! And now the @glk call
-@glk 210 1 ret;
+  @glk 210 _vararg_count ret;
   return ret;
 ];
 
-[ glk_request_mouse_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_request_mouse_event _vararg_count ret;
+! glk_request_mouse_event (win)
   ! And now the @glk call
-@glk 212 1 ret;
+  @glk 212 _vararg_count ret;
   return ret;
 ];
 
-[ glk_cancel_line_event win event
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy event sp;
-  @copy win sp;
+[ glk_cancel_line_event _vararg_count ret;
+! glk_cancel_line_event (win event)
   ! And now the @glk call
-@glk 209 2 ret;
+  @glk 209 _vararg_count ret;
   return ret;
 ];
 
-[ glk_cancel_char_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_cancel_char_event _vararg_count ret;
+! glk_cancel_char_event (win)
   ! And now the @glk call
-@glk 211 1 ret;
+  @glk 211 _vararg_count ret;
   return ret;
 ];
 
-[ glk_cancel_mouse_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_cancel_mouse_event _vararg_count ret;
+! glk_cancel_mouse_event (win)
   ! And now the @glk call
-@glk 213 1 ret;
+  @glk 213 _vararg_count ret;
   return ret;
 ];
 
-[ glk_image_draw win image val1 val2
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy val2 sp;
-  @copy val1 sp;
-  @copy image sp;
-  @copy win sp;
+[ glk_buffer_to_lower_case_uni _vararg_count ret;
+! glk_buffer_to_lower_case_uni (buf len numchars)
   ! And now the @glk call
-@glk 225 4 ret;
+  @glk 288 _vararg_count ret;
   return ret;
 ];
 
-[ glk_image_draw_scaled win image val1 val2 width height
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy height sp;
-  @copy width sp;
-  @copy val2 sp;
-  @copy val1 sp;
-  @copy image sp;
-  @copy win sp;
+[ glk_buffer_to_upper_case_uni _vararg_count ret;
+! glk_buffer_to_upper_case_uni (buf len numchars)
   ! And now the @glk call
-@glk 226 6 ret;
+  @glk 289 _vararg_count ret;
   return ret;
 ];
 
-[ glk_image_get_info image width height
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy height sp;
-  @copy width sp;
-  @copy image sp;
+[ glk_buffer_to_title_case_uni _vararg_count ret;
+! glk_buffer_to_title_case_uni (buf len numchars lowerrest)
   ! And now the @glk call
-@glk 224 3 ret;
+  @glk 290 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_flow_break win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_put_char_uni _vararg_count ret;
+! glk_put_char_uni (ch)
   ! And now the @glk call
-@glk 232 1 ret;
+  @glk 296 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_erase_rect win left top width height
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy height sp;
-  @copy width sp;
-  @copy top sp;
-  @copy left sp;
-  @copy win sp;
+[ glk_put_string_uni _vararg_count ret;
+! glk_put_string_uni (s)
   ! And now the @glk call
-@glk 233 5 ret;
+  @glk 297 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_fill_rect win color left top width height
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy height sp;
-  @copy width sp;
-  @copy top sp;
-  @copy left sp;
-  @copy color sp;
-  @copy win sp;
+[ glk_put_buffer_uni _vararg_count ret;
+! glk_put_buffer_uni (buf len)
   ! And now the @glk call
-@glk 234 6 ret;
+  @glk 298 _vararg_count ret;
   return ret;
 ];
 
-[ glk_window_set_background_color win color
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy color sp;
-  @copy win sp;
+[ glk_put_char_stream_uni _vararg_count ret;
+! glk_put_char_stream_uni (str ch)
   ! And now the @glk call
-@glk 235 2 ret;
+  @glk 299 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_create rock
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rock sp;
+[ glk_put_string_stream_uni _vararg_count ret;
+! glk_put_string_stream_uni (str s)
   ! And now the @glk call
-@glk 242 1 ret;
+  @glk 300 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_destroy chan
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy chan sp;
+[ glk_put_buffer_stream_uni _vararg_count ret;
+! glk_put_buffer_stream_uni (str buf len)
   ! And now the @glk call
-@glk 243 1 ret;
+  @glk 301 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_iterate chan rockptr
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy rockptr sp;
-  @copy chan sp;
+[ glk_get_char_stream_uni _vararg_count ret;
+! glk_get_char_stream_uni (str)
   ! And now the @glk call
-@glk 240 2 ret;
+  @glk 304 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_get_rock chan
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy chan sp;
+[ glk_get_buffer_stream_uni _vararg_count ret;
+! glk_get_buffer_stream_uni (str buf len)
   ! And now the @glk call
-@glk 241 1 ret;
+  @glk 305 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_play chan snd
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy snd sp;
-  @copy chan sp;
+[ glk_get_line_stream_uni _vararg_count ret;
+! glk_get_line_stream_uni (str buf len)
   ! And now the @glk call
-@glk 248 2 ret;
+  @glk 306 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_play_ext chan snd repeats notify
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy notify sp;
-  @copy repeats sp;
-  @copy snd sp;
-  @copy chan sp;
+[ glk_stream_open_file_uni _vararg_count ret;
+! glk_stream_open_file_uni (fileref fmode rock)
   ! And now the @glk call
-@glk 249 4 ret;
+  @glk 312 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_stop chan
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy chan sp;
+[ glk_stream_open_memory_uni _vararg_count ret;
+! glk_stream_open_memory_uni (buf buflen fmode rock)
   ! And now the @glk call
-@glk 250 1 ret;
+  @glk 313 _vararg_count ret;
   return ret;
 ];
 
-[ glk_schannel_set_volume chan vol
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy vol sp;
-  @copy chan sp;
+[ glk_request_char_event_uni _vararg_count ret;
+! glk_request_char_event_uni (win)
   ! And now the @glk call
-@glk 251 2 ret;
+  @glk 320 _vararg_count ret;
   return ret;
 ];
 
-[ glk_sound_load_hint snd flag
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy flag sp;
-  @copy snd sp;
+[ glk_request_line_event_uni _vararg_count ret;
+! glk_request_line_event_uni (win buf maxlen initlen)
   ! And now the @glk call
-@glk 252 2 ret;
+  @glk 321 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_hyperlink linkval
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy linkval sp;
+[ glk_image_draw _vararg_count ret;
+! glk_image_draw (win image val1 val2)
   ! And now the @glk call
-@glk 256 1 ret;
+  @glk 225 _vararg_count ret;
   return ret;
 ];
 
-[ glk_set_hyperlink_stream str linkval
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy linkval sp;
-  @copy str sp;
+[ glk_image_draw_scaled _vararg_count ret;
+! glk_image_draw_scaled (win image val1 val2 width height)
   ! And now the @glk call
-@glk 257 2 ret;
+  @glk 226 _vararg_count ret;
   return ret;
 ];
 
-[ glk_request_hyperlink_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_image_get_info _vararg_count ret;
+! glk_image_get_info (image width height)
   ! And now the @glk call
-@glk 258 1 ret;
+  @glk 224 _vararg_count ret;
   return ret;
 ];
 
-[ glk_cancel_hyperlink_event win
-      ret;
-  ! Must push arguments onto the stack in reverse order
-  @copy win sp;
+[ glk_window_flow_break _vararg_count ret;
+! glk_window_flow_break (win)
   ! And now the @glk call
-@glk 259 1 ret;
+  @glk 232 _vararg_count ret;
+  return ret;
+];
+
+[ glk_window_erase_rect _vararg_count ret;
+! glk_window_erase_rect (win left top width height)
+  ! And now the @glk call
+  @glk 233 _vararg_count ret;
+  return ret;
+];
+
+[ glk_window_fill_rect _vararg_count ret;
+! glk_window_fill_rect (win color left top width height)
+  ! And now the @glk call
+  @glk 234 _vararg_count ret;
+  return ret;
+];
+
+[ glk_window_set_background_color _vararg_count ret;
+! glk_window_set_background_color (win color)
+  ! And now the @glk call
+  @glk 235 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_create _vararg_count ret;
+! glk_schannel_create (rock)
+  ! And now the @glk call
+  @glk 242 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_destroy _vararg_count ret;
+! glk_schannel_destroy (chan)
+  ! And now the @glk call
+  @glk 243 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_iterate _vararg_count ret;
+! glk_schannel_iterate (chan rockptr)
+  ! And now the @glk call
+  @glk 240 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_get_rock _vararg_count ret;
+! glk_schannel_get_rock (chan)
+  ! And now the @glk call
+  @glk 241 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_play _vararg_count ret;
+! glk_schannel_play (chan snd)
+  ! And now the @glk call
+  @glk 248 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_play_ext _vararg_count ret;
+! glk_schannel_play_ext (chan snd repeats notify)
+  ! And now the @glk call
+  @glk 249 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_stop _vararg_count ret;
+! glk_schannel_stop (chan)
+  ! And now the @glk call
+  @glk 250 _vararg_count ret;
+  return ret;
+];
+
+[ glk_schannel_set_volume _vararg_count ret;
+! glk_schannel_set_volume (chan vol)
+  ! And now the @glk call
+  @glk 251 _vararg_count ret;
+  return ret;
+];
+
+[ glk_sound_load_hint _vararg_count ret;
+! glk_sound_load_hint (snd flag)
+  ! And now the @glk call
+  @glk 252 _vararg_count ret;
+  return ret;
+];
+
+[ glk_set_hyperlink _vararg_count ret;
+! glk_set_hyperlink (linkval)
+  ! And now the @glk call
+  @glk 256 _vararg_count ret;
+  return ret;
+];
+
+[ glk_set_hyperlink_stream _vararg_count ret;
+! glk_set_hyperlink_stream (str linkval)
+  ! And now the @glk call
+  @glk 257 _vararg_count ret;
+  return ret;
+];
+
+[ glk_request_hyperlink_event _vararg_count ret;
+! glk_request_hyperlink_event (win)
+  ! And now the @glk call
+  @glk 258 _vararg_count ret;
+  return ret;
+];
+
+[ glk_cancel_hyperlink_event _vararg_count ret;
+! glk_cancel_hyperlink_event (win)
+  ! And now the @glk call
+  @glk 259 _vararg_count ret;
   return ret;
 ];
 

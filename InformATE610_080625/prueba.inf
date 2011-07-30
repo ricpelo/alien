@@ -1,0 +1,482 @@
+Constant Historia "Prueba";
+Constant Titular "^";
+Serial   "080625";
+
+Constant ADMITIR_COMANDO_SALIDAS;
+Constant IMPRIMIR_DEDUCCIONES;
+Constant NO_PUNTUACION;
+
+Constant LLEVAR_MAX  = 5;
+Constant OBJETO_SACO = mochila;
+
+Include "EParser";
+Include "Acciones";
+Include "Facilitar";
+
+!================================================================
+
+Objeto mochila "mochila"
+with
+  descripcion "Es grande y tiene una sonrisa pintada.",
+  nombre 'mochila',
+  adjetivos 'grande',
+  articulo "tu",
+  si_abierta "Tu mochila está abierta en el suelo.",
+  si_cerrada "Tu mochila está tirada en el suelo."
+has
+  abrible femenino prenda puesto recipiente;
+
+!================================================================
+
+Habitacion vacio "Vacío vacuo"
+with
+  descripcion
+    "Un lugar vacío. Al norte hay un lugar con objetos variados, al este
+      un lugar con objetos idénticos (plurales), al oeste un lugar con
+      objetos de escenario y al sur un lugar con objetos ambiguos (nombres
+      parecidos).",
+  al_n variados,
+  al_e plurales,
+  al_o decorados,
+  al_s ambiguos;
+
+!================================================================
+
+Habitacion variados "Lugar de objetos variados"
+with
+  descripcion
+    "Al sur vuelves al lugar vacío. En el suelo hay una trampilla.",
+  al_s vacio,
+  abajo sotano;
+
+Objeto -> raton "ratón de ordenador"
+with
+  descripcion
+    "Es un ratón serie, compatible Microsoft.",
+  nombre 'raton',
+  adjetivos 'ordenador' 'serie';
+
+Objeto -> papel "papel"
+with
+  descripcion "Un folio en blanco.",
+  nombre 'papel' 'folio',
+  nombre_f 'cuartilla' 'hoja',
+  genero G_MASCULINO;
+
+Objeto -> ornitorrinco "ornitorrinco"
+with
+  descripcion
+    "Pico de pato, cubierto de pelo... ya sabes.",
+  nombre 'ornitorrinco' 'animal',
+  describir "Por aquí anda un ornitorrinco."
+has
+  animado;
+
+Objeto -> bombilla "bombilla"
+with
+  descripcion
+    "Una bombilla, con el filamento fundido.",
+  nombre_f 'bombilla',
+  nombre_m 'filamento',
+  genero G_FEMENINO;
+
+Objeto -> mesa "mesa de roble"
+with
+  descripcion
+    "Es una gran mesa de roble.",
+  nombre 'mesa',
+  adjetivos 'roble'
+has
+  soporte femenino estatica entrable;
+
+Objeto -> armario "armario de cedro"
+with
+  descripcion
+    "Es un enorme armario de madera de cedro.",
+  nombre 'armario',
+  adjetivos 'cedro' 'madera'
+has
+  masculino recipiente entrable abrible ~abierto estatico;
+
+Objeto -> trampilla "trampilla"
+with
+  descripcion
+    "Parece que lleva a un sótano.",
+  nombre_f 'trampilla',
+  nombre_m 'agujero',
+  genero G_FEMENINO,
+  puerta_a sotano,
+  direcc_puerta abajo
+has
+  escenario puerta abierto;
+
+Objeto -> coche "cochecito rojo"
+with
+  nombre 'coche' 'cochecito' 'kart',
+  adjetivos 'pequeno' 'magico' 'rojo',
+  descripcion
+    "Es un kart, un coche pequeño rojo pero lo bastante grande como para
+      entrar en él y sentarse dentro. Entre los controles hay un botón
+      gordo verde de encendido. La matrícula es ~KART 1~.",
+  si_encendido "El coche rojo está aquí, con el motor aún encendido.",
+  si_apagado "Aquí hay aparcado un coche rojo.",
+  gasolina 5,
+  antes [;
+    Encender:
+      if ((self hasnt encendido) && (self.gasolina == 0))
+        "El motor hace ¡bruum bruum!, pero en seguida hace ¡cof cof cof!,
+          y se vuelve a parar por falta de energía.";
+    Coger, Meter:
+      "No puedes, pesa mucho y es muy grande para ti.";
+    Empujar:
+      "El coche se mueve un poco sobre sus ruedas.";
+    EmpujarDir:
+      if (parent (jugador) == self)
+        "¡No puedes empujar el coche desde dentro!";
+      PermitirEmpujarDir();
+      rtrue;
+    Ir:
+      if (self has encendido)
+      {
+        if (self.gasolina == 0)
+        {
+          give self ~encendido;
+          print "¡Brumm! ¡Brumm! ¡Cof! ¡Cof! ¡Cof! Vaya, parece que se le
+            acaba la energía (es un coche mágico, así que no va con
+            gasolina sino con 'frobozzina', que es una energía mágica).
+            El coche se detiene y se le para el motor.^";
+          return false;
+        }
+        print "¡Brumm! ¡Brumm! Viajas en el coche rojo.^";
+        self.gasolina--;
+        rtrue;
+      }
+      print "(Ahora mismo el motor está apagado.)^";
+    ],
+    despues [;
+      EmpujarDir: "El coche rueda lentamente mientras lo empujas.";
+      Encender: "Enciendes el coche y el motor ruge: ¡brumm!";
+    ]
+has
+  abierto conmutable entrable recipiente;
+
+Objeto ->-> boton_coche "botón de encendido del coche"
+with
+  nombre 'boton',
+  adjetivos 'encendido' 'gordo' 'redondo' 'verde',
+  descripcion
+    "Redondo, verde y gordo, sirve para arrancar y parar el motor del
+      coche.",
+  antes [;
+    Coger:
+      "Es parte del coche.";
+    Empujar, Tocar:
+      if (coche has encendido)
+        <<Apagar coche>>;
+      else
+        <<Encender coche>>;
+  ]
+has
+  escenario;
+
+Objeto ->-> matricula "matrícula del coche"
+with
+  nombre 'matricula',
+  descripcion "Pone ~KART 1~.",
+  antes [;
+    Coger: "Es parte del coche.";
+  ]
+has
+  escenario;
+
+Objeto ->-> nota_coche "pequeña nota"
+with
+  nombre 'nota',
+  adjetivos 'pequena',
+  descripcion
+    "COCHE MÁGICO MARCA FROBOZZ^^
+
+     ¡Hola, conductor!^^
+
+     Instrucciones de uso:^^
+
+     ¡Enciende el motor, siéntate dentro cómodamente y muévete en cualquier
+     dirección como de costumbre (NORTE, SUR, ESTE, OESTE...)!^^
+
+     Garantía:^^
+
+     Este coche está garantizado contra defectos de fábrica por un periodo
+     de 76 milisegundos desde la fecha de compra, o hasta que sea usado por
+     primera vez, lo que ocurra primero.^^
+
+     ¡Buena suerte!",
+  antes [;
+    Atacar:
+      remove nota_coche;
+      "Rompes la pequeña nota en papelitos más pequeños aún hasta hacerla
+        desaparecer por completo.";
+  ]
+has
+  femenina;
+
+!================================================================
+
+Habitacion plurales "Habitación de los objetos plurales"
+with
+  descripcion "Hacia el oeste vuelves al lugar vacío.",
+  al_o vacio;
+
+Class Letra
+with
+  nombre 'letra' 'letras//p',
+  adjetivos 'un' 'juego' 'scrabble',
+  listar_juntos [;
+    if (etapa_inventario == 1)
+    {
+      print "las letras ";
+      ! Modificamos el estilo temporalmente
+      estilo_ac = estilo_ac | ESPANOL_BIT | SINARTICULO_BIT;
+      estilo_ac = estilo_ac & (~NUEVALINEA_BIT) & (~INDENTAR_BIT);
+    }
+    else
+      print " de un juego de Scrabble";
+  ],
+  nombre_corto [;
+    if (listando_junto ofclass Letra)
+      rfalse;
+    print "letra ", (object) self;
+    if (~~preguntacualexactamente)
+      print " de un juego de Scrabble";
+    rtrue;
+  ],
+  articulo "la"
+has
+  femenino;
+
+Letra -> "X" with nombre 'x//';
+Letra -> "Y" with nombre 'y//';
+Letra -> "Q" with nombre 'q//';
+Letra -> "F" with nombre 'f//';
+
+Class MonedaOro
+with
+  nombre 'moneda' 'monedas//p',
+  adjetivos 'oro',
+  nombre_corto "moneda de oro",
+  plural "monedas de oro"
+has
+  femenino;
+
+Class MonedaPlata
+with
+  nombre 'moneda' 'monedas//p',
+  adjetivos 'plata',
+  nombre_corto "moneda de plata",
+  plural "monedas de plata"
+has
+  femenino;
+
+Class MonedaBronce
+with
+  nombre 'moneda' 'monedas//p',
+  adjetivos 'bronce',
+  nombre_corto "moneda de bronce",
+  plural "monedas de bronce"
+has
+  femenino;
+
+Objeto -> bolsa "bolsa"
+with
+  nombre 'bolsa'
+has
+  recipiente abrible abierta femenino;
+
+MonedaOro ->->;
+MonedaOro ->->;
+MonedaOro ->->;
+MonedaPlata ->->;
+MonedaPlata ->->;
+MonedaBronce ->->;
+MonedaBronce ->-> with adjetivos 'oxidada',
+                       nombre_corto "moneda de bronce oxidada";
+
+!================================================================
+
+Habitacion ambiguos "Lugar de los objetos ambiguos"
+with
+  descripcion "Al norte vuelves al lugar vacío.",
+  al_n vacio;
+
+Objeto -> telefono "teléfono gris"
+with
+  nombre 'telefono' 'aparato' 'telefonico',
+  adjetivos 'gris',
+  descripcion "El cable está cortado."
+has
+  transparente;
+
+Objeto ->-> auricular "auricular del teléfono"
+with
+  nombre 'auricular',
+  adjetivos 'telefono',
+  descripcion "Ya no tiene utilidad.";
+
+Objeto -> factura "factura de teléfono"
+with
+  nombre 'factura',
+  adjetivos 'telefono',
+  descripcion "Es astronómica. Tal vez por eso han cortado el cable."
+has
+  femenino;
+
+Objeto -> telefonorojo "teléfono rojo"
+with
+  nombre 'telefono',
+  adjetivos 'rojo',
+  descripcion "Un teléfono rojo. ¿Con quién comunicará?";
+
+Objeto -> rojo "Rojo"
+with
+  nombre 'rojo' 'diablo',
+  adjetivos 'gordo',
+  descripcion "Un diablo gordo."
+has
+  animado propio;
+
+!================================================================
+
+Habitacion decorados "Lugar de las decoraciones"
+with
+  descripcion "Este lugar está ricamente decorado, a base de
+    tapices, cuadros, candelabros, alfombras y graffiti. Hacia
+    el este vuelves al lugar vacío.",
+  al_e vacio;
+
+Objeto -> tapices "tapices"
+with
+  descripcion "Los tapices muestran imágenes abstractas.",
+  nombre 'tapices'
+has
+  escenario nombreplural;
+
+Objeto -> cuadros "cuadros"
+with
+  descripcion "Son cuadros de Tapies, no muy diferentes de los
+    tapices.",
+  nombre 'cuadros' 'tapies'
+has
+  escenario nombreplural;
+
+Objeto -> alfombras "alfombras"
+with
+  descripcion "Alfombras persas.",
+  nombre 'alfombras',
+  adjetivos 'persas'
+has
+  escenario nombreplural femenino;
+
+Objeto -> candelabros "candelabros"
+with
+  descripcion "Candelabros dorados, pero sin luz.",
+  nombre 'candelabros',
+  adjetivos 'dorados'
+has
+  escenario nombreplural;
+
+Objeto -> graffiti "graffiti"
+with
+  descripcion "Los huecos entre cuadros y tapices dejan ver la
+    pared, decorada con graffiti.",
+  nombre 'graffiti'
+has
+  escenario;
+
+!================================================================
+
+Habitacion sotano "Sótano lúgubre"
+with
+  descripcion "Con luz el sótano informita ya no parace tan
+               lúgubre. Hay una escalera para subir.",
+  arriba variados;
+
+Objeto -> interruptor "interruptor"
+with
+  descripcion "Es un interruptor para encender y apagar la luz.",
+  nombre_m 'interruptor',
+  nombre_f 'luz',
+  genero G_MASCULINO,
+  despues [;
+    encender: give sotano luz;
+    apagar: give sotano ~luz;
+  ]
+has
+  escenario encendido conmutable;
+
+Objeto -> escalera "escalera"
+with
+  descripcion
+    "Puedes subir por ella al lugar de los objetos variados.",
+  nombre 'escalera',
+  puerta_a variados,
+  direcc_puerta arriba
+has
+  escenario puerta abierto;
+
+!================================================================
+
+Include "Gramatica";
+
+Verb meta 'parser'
+  *                                  -> ParserInfo
+  * 'listo'                          -> ParserInfo
+  * 'tonto'                          -> ParserTonto
+  * number                           -> ParserPoner
+  * 'listo' number                   -> ParserPoner;
+
+Verb meta 'listo'
+  *                                  -> ParserInfo
+  * number                           -> ParserPoner;
+
+Extend only 'tonto' replace
+  *                                  -> ParserTonto;
+
+
+VerboIrregular "cambiar el modo de inteligencia del parser" with imperativo
+  'parser' 'listo' 'tonto';
+
+[ ParserInfoSub;
+  print "Actualmente el parser está en modo ";
+  switch (parser_listo)
+   {
+     0:print "tonto";
+     1:print "listo con preguntas";
+     2:print "listo sin preguntas";
+   }
+  ".^Puedes cambiar su inteligencia usando el comando PARSER TONTO (o simplemente TONTO)
+    o bien PARSER <número> (o PARSER LISTO <número> o simplemente LISTO <número>).
+    Donde número es:^
+    0: No intenta ejecutar un acción si no lo ha entendido completamente. (PARSER TONTO).^
+    1: Pregunta si se debe ejecutar la acción hasta donde ha entendido.^
+    2: No pregunta y ejecuta directamente hasta donde ha entendido.";
+];
+
+[ ParserPonerSub;
+  if (uno<0 || uno>2) "El valor del parser listo debe estar entre 0 y 2.";
+  parser_listo = uno;
+  "Puesta la inteligencia del parser al valor ", parser_listo,".";
+];
+
+[ ParserTontoSub;
+  parser_listo = 0;
+  "Desactivada la inteligencia del parser (valor 0).";
+];
+
+[ Inicializar;
+  localizacion = vacio;
+  parser_listo = 1;
+  modomirar    = 2;
+
+  move mochila to jugador;
+
+  "^Bienvenido al banco de pruebas del parser...^";
+];

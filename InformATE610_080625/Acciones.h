@@ -103,16 +103,16 @@ Array tarea_hecha --> NUMERO_TAREAS;
   if (Titular ~= 0)
     print (string) Titular;
   #Ifdef TARGET_ZCODE;
-    print "Revisión ", (HDR_GAMERELEASE --> 0) & $03ff, " / Número de serie ";
-    for (i = 0: i < 6: i++)
-      print (char) HDR_GAMESERIAL -> i;
+    print "Revisión ", (0 --> 1) & $03ff, " / Número de serie ";
+    for (i = 18: i < 24: i++)
+      print (char) 0 -> i;
   #Ifnot; ! TARGET_GLULX;
     print "Revisión ";
-    @aloads ROM_GAMERELEASE 0 i;
+    @aloads 52 0 i;
     print i;
     print " / Número de serie ";
     for (i = 0: i < 6: i++)
-      print (char) ROM_GAMESERIAL -> i;
+      print (char) 54 -> i;
   #Endif; ! TARGET_
   print " / Inform v"; inversion;
   print " Librería ", (string) RevisionLib, " ";
@@ -134,12 +134,11 @@ Array tarea_hecha --> NUMERO_TAREAS;
   #Ifdef TARGET_ZCODE;
     ix = 0; ! shut up compiler warning
     if (interprete_estandar > 0)
-      print "Estándar del intérprete ", interprete_estandar / 256, ".",
-        interprete_estandar % 256, " (", HDR_TERPNUMBER -> 0,
-        (char) HDR_TERPVERSION -> 0, ") / ";
+      print "Estándar del intérprete ",
+        interprete_estandar / 256, ".", interprete_estandar % 256,
+        " (", 0 -> $1e, (char) 0 -> $1f, ") / ";
     else
-      print "Intérprete ", HDR_TERPNUMBER -> 0, " Versión ",
-        (char) HDR_TERPVERSION -> 0, " / ";
+      print "Intérprete ", 0 -> $1e, " Versión ", (char) 0 -> $1f, " / ";
   #Ifnot; ! TARGET_GLULX;
     @gestalt 1 0 ix;
     print "Versión del intérprete ", ix / $10000, ".", (ix & $FF00) / $100,
@@ -813,7 +812,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
       @erase_window $ffff;
       i=lines+7;
       @split_window i;
-      i = HDR_SCREENWCHARS -> 0;
+      i = 0->33;
       if (i==0) i=80;
       @set_window 1;
       @set_cursor 1 1;
@@ -858,7 +857,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 
               @erase_window $ffff;
               @split_window 1;
-              i = HDR_SCREENWCHARS -> 0; if (i == 0) i = 80;
+              i = 0->33; if (i == 0) i = 80;
               @set_window 1; @set_cursor 1 1; style reverse; spaces(i);
               j=i/2-ancho_elemento;
               @set_cursor 1 j;
@@ -1111,39 +1110,21 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 ];
 
 [ ActivarTranscripcionSub;
-  modo_transcripcion = ((HDR_GAMEFLAGS --> 0) & 1);
+  modo_transcripcion = ((0-->8) & 1);
   if (modo_transcripcion) return M__L(##ActivarTranscripcion,1);
   @output_stream 2;
-  if (((HDR_GAMEFLAGS --> 0) & 1) == 0) return M__L (##ActivarTranscripcion, 3);
+  if (((0-->8) & 1) == 0) return M__L(##ActivarTranscripcion,3);
   M__L(##ActivarTranscripcion,2); VersionSub();
   modo_transcripcion = true;
 ];
 
 [ DesactivarTranscripcionSub;
-  modo_transcripcion = ((HDR_GAMEFLAGS --> 0) & 1);
+  modo_transcripcion = ((0-->8) & 1);
   if (modo_transcripcion == false) return M__L(##DesactivarTranscripcion,1);
   M__L(##DesactivarTranscripcion,2);
   @output_stream -2;
-  if ((HDR_GAMEFLAGS --> 0) & 1) return M__L (##DesactivarTranscripcion, 3);
+  if ((0-->8) & 1) return M__L(##DesactivarTranscripcion,3);
   modo_transcripcion = false;
-];
-
-[ ActivarComandosSub;
-  @output_stream 4;
-  xcommsdir = 1;
-  "[Grabación de comandos activada.]";
-];
-
-[ DesactivarComandosSub;
-  if (xcommsdir == 1) @output_stream -4;
-  xcommsdir = 0;
-  "[Grabación de comandos desactivada.]";
-];
-
-[ LeerComandosSub;
-  @input_stream 1;
-  xcommsdir = 2;
-  "[Reproduciendo comandos.]";
 ];
 
 #Ifnot; ! TARGET_GLULX;
@@ -1252,54 +1233,6 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   gg_scriptstr = 0;
 ];
 
-[ ActivarComandosSub fref;
-  if (gg_commandstr ~= 0) {
-    if (gg_command_reading)
-      "[La reproducción de comandos está activa.]";
-    "[La grabación de comandos ya estaba activa.]";
-  }
-  ! fileref_create_by_prompt
-  fref = glk($0062, $103, $01, 0);
-  if (fref == 0)
-    "[La grabación de comandos ha fracasado.]";
-  gg_command_reading = false;
-  ! stream_open_file
-  gg_commandstr = glk($0042, fref, $01, GG_COMMANDWSTR_ROCK);
-  glk($0063, fref); ! fileref_destroy
-  if (gg_commandstr == 0)
-    "[La grabación de comandos ha fracasado.]";
-  "[Grabación de comandos activada.]";
-];
-
-[ DesactivarComandosSub;
-  if (gg_commandstr == 0)
-    "[La grabación de comandos ya estaba desactivada.]";
-  if (gg_command_reading)
-    "[La reproducción de comandos está activa.]";
-  glk($0044, gg_commandstr, 0); ! stream_close
-  gg_commandstr = 0;
-  gg_command_reading = false;
-  "[Grabación de comandos desactivada.]";
-];
-
-[ LeerComandosSub fref;
-  if (gg_commandstr ~= 0) {
-    if (gg_command_reading)
-      "[La reproducción de comandos ya estaba activada.]";
-    "[La grabación de comandos está activa.]";
-  }
-  ! fileref_create_by_prompt
-  fref = glk($0062, $103, $02, 0);
-  if (fref == 0)
-    "[La reproducción de comandos ha fracasado.]";
-  gg_command_reading = true;
-  ! stream_open_file
-  gg_commandstr = glk($0042, fref, $02, GG_COMMANDRSTR_ROCK);
-  glk($0063, fref); ! fileref_destroy
-  if (gg_commandstr == 0)
-    "[La reproducción de comandos ha fracasado.]";
-  "[Reproducción de comandos activada.]";
-];
 #Endif; ! TARGET_;
 
 #Ifndef NO_PUNTUACION;
@@ -2638,16 +2571,67 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 
 #Ifdef TARGET_ZCODE;
 
+[ ActivarComandosSub;
+  @output_stream 4; xcommsdir=1; "[Grabación de comandos activada.]"; ];
+[ DesactivarComandosSub;
+  if (xcommsdir==1) @output_stream -4;
+  xcommsdir=0;
+  "[Grabación de comandos desactivada.]"; ];
+[ LeerComandosSub;
+  @input_stream 1; xcommsdir=2; "[Reproduciendo comandos.]"; ];
 [ PredecibleSub i; i=random(-100);
   "[El generador de números aleatorios es ahora predecible.]"; ];
-
 #Ifnot; ! TARGET_GLULX;
-
+[ ActivarComandosSub fref;
+  if (gg_commandstr ~= 0) {
+    if (gg_command_reading)
+      "[La reproducción de comandos está activa.]";
+    "[La grabación de comandos ya estaba activa.]";
+  }
+  ! fileref_create_by_prompt
+  fref = glk($0062, $103, $01, 0);
+  if (fref == 0)
+    "[La grabación de comandos ha fracasado.]";
+  gg_command_reading = false;
+  ! stream_open_file
+  gg_commandstr = glk($0042, fref, $01, GG_COMMANDWSTR_ROCK);
+  glk($0063, fref); ! fileref_destroy
+  if (gg_commandstr == 0)
+    "[La grabación de comandos ha fracasado.]";
+  "[Grabacion de comandos activada.]";
+];
+[ DesactivarComandosSub;
+  if (gg_commandstr == 0)
+    "[La grabación de comandos ya estaba desactivada.]";
+  if (gg_command_reading)
+    "[La reproducción de comandos está activa.]";
+  glk($0044, gg_commandstr, 0); ! stream_close
+  gg_commandstr = 0;
+  gg_command_reading = false;
+  "[Grabación de comandos desactivada.]";
+];
+[ LeerComandosSub fref;
+  if (gg_commandstr ~= 0) {
+    if (gg_command_reading)
+      "[La reproducción de comandos ya estaba activada.]";
+    "[La grabación de comandos está activa.]";
+  }
+  ! fileref_create_by_prompt
+  fref = glk($0062, $103, $02, 0);
+  if (fref == 0)
+    "[La grabación de comandos ha fracasado.]";
+  gg_command_reading = true;
+  ! stream_open_file
+  gg_commandstr = glk($0042, fref, $02, GG_COMMANDRSTR_ROCK);
+  glk($0063, fref); ! fileref_destroy
+  if (gg_commandstr == 0)
+    "[La grabación de comandos ha fracasado.]";
+  "[Grabación de comandos activada.]";
+];
 [ PredecibleSub;
   @setrandom 100;
   "[El generador de números aleatorios es ahora predecible.]";
 ];
-
 #Endif; ! TARGET_;
 
 [ XCompruebaMover obj dest;
@@ -2773,9 +2757,5 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 
   MLIdioma(n, x1);
 ];
-
-! ==============================================================================
-
-Constant LIBRERIA_ACCIONES;     ! Para el chequeo de dependencias
 
 ! ==============================================================================
