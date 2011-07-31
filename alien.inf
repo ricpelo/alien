@@ -5848,12 +5848,18 @@ Object jason "Jason" nave1
     ],
     habla_en_vaina false,
     tiempo_restante,
-    tiempo_agotado [ o p;
+    tiempo_agotado [ o p sig;
       p = parent(self);
-      ! Se le cae todo antes de quedar inconsciente
-      objectloop (o) {
-        if (o in jason) move o to p;
+      ! Se le cae todo antes de quedar inconsciente:
+      o = child(self);
+      while (o ~= Nothing) {
+        sig = sibling(o);
+        move o to p;
+        o = sig;
       }
+      ! objectloop (o) {
+      !   if (o in jason) move o to p;
+      ! }
       remove self;
       give self ausente;
       move jason_inerte to p;
