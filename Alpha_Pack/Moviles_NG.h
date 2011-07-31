@@ -1,0 +1,732 @@
+! -
+! MOVILES. Una librería que proporciona movimiento aleatorio,
+! dirigido e "inteligente" para PNJs, creada a partir de la
+! librería PNJMóvil de Zak. Se trata de una versión avanzada,
+! y más completa especialmente adaptada para su uso con la
+! librería de autómatas.
+!
+! PNJMovil fue creada y modificada por:
+!
+!  Version 8.01, written by Neil Brown          neil@highmount.demon.co.uk
+!                   and Alan Trewartha      alan@alant.demon.co.uk
+!  Adaptación para InformatE de Zak McKraken spinf@geocities.com
+!  8 Abril 1999
+!
+! Móviles fue creada a partir de la anterior por Mel Hython meliton@arrakis.es
+! en Agosto del 2000
+!
+! Pequeñas variantes y correcciones, (c) 2008 Ricardo Pérez (Alpha Aventuras)
+!
+! -
+
+System_file;
+
+#ifndef WORDSIZE;       ! Para compatibilidad con Inform 6.15
+Constant WORDSIZE = 2;
+Constant TARGET_ZCODE;
+#endif;
+
+!Message "!! Compilando la ampliacion Moviles !!";
+
+!
+! Propiedades y atributos necesarios
+!
+Ifndef en_ruta;
+Attribute en_ruta;
+Endif;
+Ifndef pnj_abrir;
+Property pnj_abrir;
+Endif;
+
+!
+! Maxima profundidad de busqueda
+!
+Ifndef max_longitud_camino;
+Global max_longitud_camino = 10;
+Endif;
+
+!
+! Tabla para guardar los móviles evitando el objectloop y los
+! deamons para moverlos
+!
+Ifndef maximoNumeroMoviles;
+Constant maximoNumeroMoviles = 100; ! Maximo número de móviles
+Endif;
+
+!
+! Tabla que contiene los moviles
+!
+Array tablaMoviles table maximoNumeroMoviles;    ! (c) Alpha
+Global indiceMoviles = 0;
+
+!
+! TIPOS DE MOVIMIENTOS VALIDOS EN MOVILES
+!
+!  ALEATORIO   - Camino en cualquier dirección cada turno, 
+!                puede proporcionarse un % de que se mueva
+!                por defecto este % es del 20%. Se puede 
+!                indicar un tipo de ruta válida y una zona
+!                de movimiento válidos.
+!
+!  POR_META    - El PNJ se encamina hacia una localización
+!                determinada, usando una ruta y una zona válida
+!  
+!  NINGUNO     - El PNJ permanece detenido
+!
+!  PREFIJADO   - Se proporciona un camino FIJO por el que el 
+!                PNJ debe caminar
+!
+!  NO_CAMBIAR  - Valor que simplemente lo deja en el mismo estado
+!                de movimiento, facilita la creación de librerías
+!                con cambio de estado de movimiento por eventos
+!
+!  PERSEGUIR   - El PNJ intenta alcanzar un objeto, si este objeto
+!                pasa a estar en un no-Lugar o fuera de la zona
+!                válida el PNJ se llama a pnj_bloqueado y por
+!                defecto se para a esperar. Cada vez que se alcanza
+!                el objetivo se llama a pnj_ha_llegado
+!
+!  HUIR        - El PNJ sale corriendo en una dirección al azar
+!                cuando está presente el motivo de su huída
+!
+Constant   MOVIMIENTO_ALEATORIO = 0; ! Los tipos de movimiento
+Constant    MOVIMIENTO_POR_META = 1; ! Llegar a un lugar
+Constant     MOVIMIENTO_NINGUNO = 2; ! No moverse
+Constant   MOVIMIENTO_PREFIJADO = 3; ! Una ruta dada
+Constant  MOVIMIENTO_NO_CAMBIAR = 4; ! No cambiar el estado de movimiento
+Constant   MOVIMIENTO_PERSEGUIR = 5; ! Intenta llegar hasta un objeto
+Constant        MOVIMIENTO_HUIR = 6; ! Intenta alejarse de un objeto
+
+!
+! CLASES DE RUTAS VÁLIDAS
+!
+!  CUALQUIERA   - Todas las conexiones son válidas
+!  SIN_CERROJOS - Sólo las puertas NO cerradas con llave
+!  ABIERTO   - Sólo puertas NO cerradas
+!  SIN_PUERTAS  - Sólo caminos SIN puertas
+!
+Constant   CAMINO_CUALQUIERA = $$00000000; ! Los tipos de camino para MOVIMIENTO_POR_METAs
+Constant CAMINO_SIN_CERROJOS = $$00001000; ! En principio pueden
+Constant      CAMINO_ABIERTO = $$00010000; ! combinarse
+Constant  CAMINO_SIN_PUERTAS = $$00100000;
+
+
+!
+! Definición de la clase básica Lugar por 
+! si no está definida
+!
+Ifndef Lugar;
+Class Lugar
+  with cantidad;
+EndIf;
+
+
+Class Movil
+  with
+    tipo_de_movimiento MOVIMIENTO_ALEATORIO, ! Por defecto aleatoriamente
+    capricho 20,                             ! Probabilidad de moverse en un turno
+    ! Las direcciones (calculadas) que el pnj tomará
+    pnj_dirs 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0,
+    nombre_precamino 0,                      ! El nombre del array con el camino prefijado
+    longitud_precamino 0,                    ! La longitud de ese array
+    estado_pnj 0,                            ! Posición en el array de direcciones
+    objetivo_pnj,                            ! El destino deseado o del que huir
+    sentido,                                 ! Sentido del movimiento (c) Alpha
+    lugar_objetivo,                          ! Sitio a donde va (c) Alpha
+    perseguido,                              ! El perseguido
+    tipoRuta,                                ! Ruta valida para este PNJ
+    pnj_bloqueado [; 
+      if (self.tipo_de_movimiento ~= MOVIMIENTO_PERSEGUIR)
+        PNJ_Ruta(self, MOVIMIENTO_ALEATORIO); 
+    ],
+    ! También se podría esperar a que el camino se
+    ! desbloquee, o mejor aún, buscar una ruta
+    ! alternativa 
+    pnj_sibloqueado 0,                       ! No se usa, puede usarla el programador
+    ! ¿Qué ocurre cuando el PNJ llega a su meta?
+    pnj_ha_llegado [; 
+#ifdef DEBUG;
+      if (parser_trace > 1)
+        print "[pnj_ha_llegado por defecto]^";
+#endif; 
+      if (self.tipo_de_movimiento ~= MOVIMIENTO_PERSEGUIR)
+        PNJ_Ruta(self, MOVIMIENTO_ALEATORIO); 
+    ],
+    ! Gancho de estado para 'Puertas.h'
+!   tras_abrir 0,                            (c) Alpha, para que funcione PnjPuertas
+    marcha "se marcha",
+    llega [ dir;
+      print "^", (_El) self, " ";
+      if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR) {
+        if (self.perseguido == jugador) {
+          print "te sigue";
+        } else {
+          print "sigue ", (al) self.perseguido;
+        }
+      } else {
+        print "llega";
+      }
+      if (dir ~= null) {
+        print " desde ", (el) dir;
+        print ".^";
+      }
+    ],
+    zonaValida Lugar,                        ! Cualquier 'Lugar' es válido por defecto
+    seHaMovido false,                        ! Indica si hace hecho algún movimiento este turno
+    accion_antes [; rfalse; ],
+    accion_despues [; return; ],
+    movimiento [ i n k;
+      if (EjecutarRutinas(self, accion_antes))
+        rtrue;
+        
+      ! Si esta rutina retorna true, ya no tendrá lugar el movimiento del PNJ en este turno
+      self.seHaMovido = false;
+     
+      switch (self.tipo_de_movimiento) {
+        0, MOVIMIENTO_ALEATORIO, 6, MOVIMIENTO_HUIR: 
+#ifdef DEBUG;
+          if (parser_trace > 1) {
+            if (self.tipo_de_movimiento == MOVIMIENTO_ALEATORIO)
+              print "[MOVIMIENTO_ALEATORIO movimiento ", (del) self , "]^";
+            else
+              print "[MOVIMIENTO_HUIR movimiento para ", (el) self , "]^";
+          }
+#endif;
+          if ((self.tipo_de_movimiento == MOVIMIENTO_ALEATORIO) &&
+              (random(100) >= self.capricho)) {
+#ifdef DEBUG;
+            if (parser_trace > 1)
+              print "[", (The) self, " decide no moverse.]^";
+#endif;
+            rfalse;
+          }
+      
+          if ((self.tipo_de_movimiento == MOVIMIENTO_HUIR) &&
+              (parent(self.objetivo_pnj) ~= parent(self))) {
+#ifdef DEBUG;
+            if (parser_trace > 1)
+              print "[", (The) self, " no huye ", (del) self.objetivo_pnj, " porque no está",
+                    (n) self.objetivo_pnj, " presente", (s) self.objetivo_pnj, ".]^";
+#endif;
+            rfalse;
+          }
+      
+          objectloop (i in brujula)
+            if (ConduceA(i, parent(self), self.tipoRuta, self.zonaValida)) {
+              n++;
+#ifdef DEBUG;
+              if (parser_trace > 1)
+                print "[Alternativa ", n, ": ", (DirDada) i , "]^";
+
+#endif;
+            }
+            
+          if (n == 0)
+            rfalse;
+            
+          k = random(n);
+          n = 0;
+
+#ifdef DEBUG;
+          if (parser_trace > 1)
+            print "[Elige ", k, "]^";
+#endif;
+          objectloop (i in brujula) {
+            if (ConduceA(i, parent(self), self.tipoRuta, self.zonaValida))
+              n++;
+            if (n == k) {
+              MoverPNJDir(self, i);
+              break;
+            }
+          }
+
+        1, MOVIMIENTO_POR_META, 5, MOVIMIENTO_PERSEGUIR: 
+          if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR) {
+            if (parent(self) == parent(self.perseguido))
+              rfalse;
+
+!            if (parent(self.perseguido) ~= self.objetivo_pnj) {     (c) Alpha - 080810
+              if (PNJ_Ruta(self, MOVIMIENTO_POR_META, parent(self.perseguido), self.tipoRuta,
+                           self.zonaValida)) {
+                self.tipo_de_movimiento = MOVIMIENTO_PERSEGUIR;
+              } else {
+                self.tipo_de_movimiento = MOVIMIENTO_PERSEGUIR;
+                self.objetivo_pnj = 0;
+                self.pnj_bloqueado();
+                rfalse;
+              }
+!            }                                                       (c) Alpha - 080810
+         }
+      
+          i = (self.&pnj_dirs)-->(self.estado_pnj);
+#ifdef DEBUG;
+          if (parser_trace > 1) {
+            if (self.tipo_de_movimiento == MOVIMIENTO_POR_META)
+              print "[MOVIMIENTO_POR_META movimiento ", (del) self, " ", (DirDada) i, "]^";
+           else
+              print "[MOVIMIENTO_PERSEGUIR movimiento ", (del) self, " ", (DirDada) i, "]^";
+          }
+#endif;
+          if (i == 0 || MoverPNJDir(self, i))
+            ! Truco: la rutina solo se llama si i ~= 0
+            self.estado_pnj++;
+  
+          if (parent(self) == self.objetivo_pnj)
+            self.pnj_ha_llegado();
+  
+        2, MOVIMIENTO_NINGUNO, 4, MOVIMIENTO_NO_CAMBIAR: ! No se mueve
+#ifdef DEBUG;
+          if (parser_trace > 1)
+            print "[MOVIMIENTO_NINGUNO movimiento ", (del) self, ".]^";
+#endif;
+
+        3, MOVIMIENTO_PREFIJADO:
+          i = (self.nombre_precamino)-->self.estado_pnj;
+#ifdef DEBUG;
+          if (parser_trace > 1)
+            print "[MOVIMIENTO_PREFIJADO movimiento ", (del) self, " ", (DirDada) i, "]^";
+#endif;
+          if (i == 0 || MoverPNJDir(self, i))
+            ! Truco: la rutina solo se llama si i ~= 0
+            self.estado_pnj++;
+            
+          if (self.estado_pnj >= self.longitud_precamino)
+            self.pnj_ha_llegado();
+
+        default:
+          "** Error Movil: tipo_de_movimiento no válido para", (el) self, " **";
+      }
+    ];
+
+
+[ PNJ_Ruta pnj tipo_movimiento LugarObjetivo tipo_ruta zona
+  pasos i j k encontrado claseVal;
+
+  !
+  ! Si es no cambiar no hacemos nada
+  !
+  if (tipo_movimiento == MOVIMIENTO_NO_CAMBIAR) {
+    rtrue;
+  } 
+    
+  !
+  ! Copiamos los valores necesarios
+  !
+  pnj.tipoRuta = tipo_ruta;
+  pnj.lugar_objetivo = LugarObjetivo;                     ! (c) Alpha
+  
+  if (tipo_movimiento == MOVIMIENTO_PERSEGUIR) {
+    pnj.perseguido = LugarObjetivo;
+    LugarObjetivo = parent(pnj.perseguido);
+    pnj.lugar_objetivo = LugarObjetivo;
+    pnj.zonaValida = zona;
+    pnj.tipo_de_movimiento = MOVIMIENTO_PERSEGUIR;        ! (c) Alpha
+  }
+
+#ifdef DEBUG;
+  if (parser_trace > 1) {
+   print "[PNJ_Ruta pone ", (al) pnj, " ";
+   
+   switch (tipo_movimiento) {
+     MOVIMIENTO_NINGUNO:    print "MOVIMIENTO_NINGUNO";
+     MOVIMIENTO_ALEATORIO:  print "MOVIMIENTO_ALEATORIO";
+     MOVIMIENTO_PREFIJADO:  print "MOVIMIENTO_PREFIJADO";
+     MOVIMIENTO_POR_META:   print "MOVIMIENTO_POR_META";
+     MOVIMIENTO_NO_CAMBIAR: print "MOVIMIENTO_NO_CAMBIAR";
+     MOVIMIENTO_PERSEGUIR:  print "MOVIMIENTO_DE_PERSECUCION HACIA ", (el) pnj.perseguido;
+     MOVIMIENTO_HUIR:       print "MOVIMIENTO_DE_HUIDA";
+     default:               print "**UNDEFINED**";
+   }
+   print "]^";
+  }
+#endif;
+
+  pnj.zonaValida = zona;
+    
+  if (tipo_movimiento == MOVIMIENTO_NINGUNO) {
+    pnj.tipo_de_movimiento = MOVIMIENTO_NINGUNO;
+    rtrue;
+  }
+    
+  if (tipo_movimiento == MOVIMIENTO_ALEATORIO) {
+    pnj.tipo_de_movimiento = MOVIMIENTO_ALEATORIO;
+    
+!    if (LugarObjetivo ~= 0)
+!      pnj.capricho = LugarObjetivo;                       ! ¿¿¿ Esto está bien ??? (c) Alpha
+
+    rtrue;
+  }
+    
+  if (tipo_movimiento == MOVIMIENTO_HUIR) {
+    pnj.tipo_de_movimiento = MOVIMIENTO_HUIR;
+    
+    if (LugarObjetivo ~= 0)
+      pnj.objetivo_pnj = LugarObjetivo;
+
+    rtrue;
+  }
+    
+  if (tipo_movimiento == MOVIMIENTO_PREFIJADO)
+    return PNJpreruta(pnj, LugarObjetivo, tipo_ruta);
+    
+  if ((tipo_movimiento ~= MOVIMIENTO_POR_META) && (tipo_movimiento ~= MOVIMIENTO_PERSEGUIR))
+    rfalse;
+    
+  ! Sólo se pueden calcular rutas desde un lugar de la clase Lugar a
+  ! otro de la misma clase, así que...
+  if (zona == 0)
+    claseVal = Lugar;
+  else
+    claseVal = zona;
+
+  ! Paréntesis que encierran cada término del ||, (c) Alpha
+  if ((~~(parent(pnj) ofclass claseVal)) || (parent(pnj) == LugarObjetivo))
+    rfalse;
+    
+  objectloop (i ofclass claseVal) {
+    i.cantidad = 0;         
+    give i ~en_ruta;      ! Resetear todos los lugares
+  }
+
+  ! Algoritmo: partiendo del lugar inicial, numeramos cada lugar por
+  ! el que pasamos con el número de pasos necesario para alcanzarlo,
+  ! hasta que alcancemos el lugar objetivo
+
+  parent(pnj).cantidad = 1;
+  give parent(pnj) en_ruta;
+
+  for (pasos = 1 : pasos < max_longitud_camino : pasos++) {
+    objectloop (i has en_ruta) {
+      if (i.cantidad == pasos) {
+        objectloop (j in brujula) {
+          k = ConduceA(j, i, tipo_ruta, claseVal);
+          if (k ofclass Lugar) {
+            give k en_ruta;
+            if (k.cantidad == 0) {
+              k.cantidad = pasos + 1;
+#ifdef DEBUG;
+              if (parser_trace > 1)
+                print "[", (name) k, " es ", pasos + 1, "]^";
+#endif;
+            }
+            if (k == LugarObjetivo) {
+              encontrado = true;
+              pnj.sentido = IntercambiarDireccion(j);     ! (c) Alpha
+            }
+          }
+          if (encontrado)
+            break;
+        }
+      }
+      if (encontrado)
+        break;    
+    }
+    if (encontrado)
+      break;
+  }
+    
+  pnj.tipo_de_movimiento = tipo_movimiento;
+
+#ifdef DEBUG;
+  if (parser_trace > 1)
+    print "[Puesto ", (el) pnj, " en estado de movimiento ", pnj.tipo_de_movimiento, "]^";
+#endif;
+
+  pnj.objetivo_pnj = LugarObjetivo;
+    
+  if (encontrado == false) {
+    pnj.longitud_precamino = 0;       ! si no lo encuentra: camino tiene longitud 0, (c) Alpha
+    rfalse;                                               ! hemos alcanzado la máxima longitud
+  }
+    
+  objectloop (i has en_ruta)
+    if (i.cantidad > pasos && i ~= LugarObjetivo) {
+      i.cantidad = 0;                                ! Los lugares que están a igual distancia
+      give i ~en_ruta;                                  ! que el objetivo, no son interesantes
+    }
+    
+  pnj.estado_pnj = 0;
+  pnj.longitud_precamino = pasos;
+    
+#ifdef DEBUG;
+  if (parser_trace > 1)
+    print "[Encontrado un camino de ", pasos, " pasos. Recorriendolo hacia atrás desde ...^",
+          (name) LugarObjetivo;
+#endif;
+
+  for ( : pasos > 0 : pasos--)  {                         ! Retroceder paso a paso
+    encontrado = false;                                   ! buscando un lugar interesante que lleve
+                                                ! hasta el lugar interesante que estaba en 'paso+1' 
+    objectloop (i has en_ruta) {
+      if (i.cantidad == pasos) {
+        objectloop (j in brujula) {
+          k = ConduceA(j, i, tipo_ruta, claseVal);
+          if (k)
+            if (k has en_ruta && k.cantidad == pasos + 1)
+              encontrado = true;
+            if (encontrado)
+              break;
+        }
+      }
+      if (encontrado)
+        break;
+    }
+ 
+#ifdef DEBUG;
+    if (parser_trace > 1)
+      print " está...^", (DirDada) j, " ", (del) i, ", el cual";
+#endif;
+ 
+    pnj.&pnj_dirs-->(k.cantidad - 2) = j;  
+    objectloop (k has en_ruta)                            ! Otros lugares con el mismo número
+      if (k.cantidad == pasos && i ~= k) {                ! no son interesantes
+        k.cantidad = 0;
+        give k ~en_ruta;
+      }
+  }
+    
+#ifdef DEBUG;
+  if (parser_trace > 1)
+    print " es el punto de partida!]^";
+#endif;
+
+  rtrue;
+];
+
+
+[ PNJpreruta pnj array_ruta longitud_ruta fakevar;
+  fakevar = fakevar;                                      ! por si se le llama pasandole un lugar
+
+  if (pnj ofclass Movil) {
+    pnj.estado_pnj = 0;
+    pnj.tipo_de_movimiento = MOVIMIENTO_PREFIJADO;
+    pnj.nombre_precamino = array_ruta;
+    pnj.longitud_precamino = longitud_ruta;
+  } else {
+    "*** Movil Error: PNJpreruta ha sido llamado para el objeto no-Movil '", (el) pnj, "' ***";
+  }
+];
+
+
+[ ConduceA direccion estelugar tipo_ruta zona_valida
+  k tmp tmp2 zona;
+  
+  !    print "-ConduceA: ", (name) direccion, ":";
+  if (~~(estelugar provides direccion.direcc_puerta)) {
+    ! print "NO HAY^";
+    return 0;
+  }
+  
+  k = estelugar.(direccion.direcc_puerta);
+  
+  if (ZRegion(k) == 2) {
+    ! print "Rutina que devuelve ";
+    k = k();
+  }
+  
+  if (ZRegion(k) ~= 1) {
+    ! print " no se puede pasar^";
+    return 0;
+  }
+    
+  if (k)
+    if (k has puerta) {
+      ! print " una puerta ";
+      if (tipo_ruta & CAMINO_SIN_PUERTAS)
+        return 0;
+      if ((tipo_ruta & CAMINO_ABIERTO) && k hasnt abierto) {
+        ! print "cerrada^";
+        return 0;
+      }
+      if ((tipo_ruta & CAMINO_SIN_CERROJOS) && k has cerrojoechado) {
+        ! print "cerrada con llave^";
+        return 0;
+      }
+      tmp = parent(k);
+      move k to estelugar;
+      tmp2 = k.puerta_a();
+      if (tmp ~= 0)
+        move k to tmp;
+      else
+        remove k;
+      k = tmp2;
+      ! print " que lleva a ";
+    }
+
+  ! print (name) k;
+  if (zona_valida == 0)
+    zona = Lugar;
+  else
+    zona = zona_valida;
+
+  if (~~(k ofclass zona)) {
+    ! print " que no es un lugar válido.^";
+    return 0;
+  }
+  
+  ! print ".^";
+  return k;
+];
+
+
+[ MoverPNJDir amover direccion
+  i j p mensaje;
+    
+  ! Un sólo movimiento por turno
+  if (amover.seHaMovido)
+    rfalse;
+    
+  mensaje = 2;
+  p = parent(amover);
+  i = ConduceA(direccion, p, CAMINO_CUALQUIERA);
+
+  if (i == 0) {
+    amover.pnj_bloqueado();
+#ifdef DEBUG;
+    if (parser_trace > 1)
+      print "[MoverPNJDir bloqueado: la dirección no lleva a ningún sitio]^";
+#endif;
+    rfalse;
+  }
+    
+  j = p.(direccion.direcc_puerta);
+
+  if (ZRegion(j) == 2)
+    j = j();
+
+  if (j)
+    if (j has puerta) {
+      ! pnj_abrir retorna: 2 para atravesar la puerta normalmente
+      !                    1 para atravesar la puerta pero impedir
+      !                    que se imprima el texto de
+      !                    "marchar/llegar"
+      !                    0 para impedir al PNJ que use esa puerta
+      if (j provides pnj_abrir) {
+        mensaje = j.pnj_abrir(amover);
+        
+        if (mensaje == false) {
+          amover.pnj_bloqueado();
+#ifdef DEBUG;
+          if (parser_trace > 1)
+            print "[MoverPNJDir bloqueado: ", (el) j, "'s pnj_abrir retornó falso]^";
+#endif;
+          rfalse;
+        }
+      } else if (j hasnt abierto) {
+        amover.pnj_bloqueado();
+#ifdef DEBUG;
+        if (parser_trace > 1)
+          print "[MoverPNJDir bloqueado: ", (el) j, " está cerrad", (o)j, " y no tiene pnj_abrir]^";
+#endif;
+        rfalse;
+      }
+    }
+    
+  MoverPNJ(amover, i, ##Ir, direccion);
+    
+  if (p == localizacion && mensaje == 2) {
+    if (ZRegion(self.marcha) == 3)  ! Imprimir el texto
+      print "^", (The) self, " ", (string) self.marcha, " ", (DirDada) direccion, ".^";
+    else
+      self.marcha(direccion);
+  }
+    
+  if (parent(self) == localizacion && mensaje == 2) {
+    direccion = NULL;
+    
+    objectloop (i in brujula)
+      if (ConduceA(i, localizacion, CAMINO_CUALQUIERA) == p)
+        direccion = i;
+ 
+    if (ZRegion(self.llega) == 3) {
+      print "^", (The) self, " ", (string) self.llega;
+      if (direccion ~= NULL) print " desde ", (el) direccion;
+        print ".^";
+    } else
+      self.llega(direccion);
+  }
+    
+  if (self provides accion_despues)
+    self.accion_despues();
+    
+  amover.seHaMovido = true;
+  rtrue;
+];
+
+
+! (c) Alpha:
+
+[ IntercambiarDireccion d;
+  switch (d) {
+    obj_n: return obj_s;
+    obj_s: return obj_n;
+    obj_e: return obj_o;
+    obj_o: return obj_e;
+    obj_no: return obj_se;
+    obj_ne: return obj_so;
+    obj_so: return obj_ne;
+    obj_se: return obj_no;
+    obj_arriba: return obj_abajo;
+    obj_abajo: return obj_arriba;
+    obj_adentro: return obj_afuera;
+    obj_afuera: return obj_adentro;
+  }
+];
+
+
+Ifndef MoverPNJ; ! Proporciona un MoverPNJ mínimo si no se ha incluido PERSEGUIR.h
+[ MoverPNJ amover dest actn objn;
+  move amover to dest;
+  actn = actn;
+  objn = objn;
+];
+Endif;
+
+
+Ifndef DirDada;
+[ DirDada i;
+  switch(i) {
+    obj_n:       print "hacia el norte";
+    obj_s:       print "hacia el sur";
+    obj_e:       print "hacia el este";
+    obj_o:       print "hacia el oeste";
+    obj_ne:      print "hacia el noreste";
+    obj_no:      print "hacia el noroeste";
+    obj_se:      print "hacia el sureste";
+    obj_so:      print "hacia el suroeste";
+    obj_arriba:  print "hacia arriba";
+    obj_abajo:   print "hacia abajo";
+    obj_adentro: print "al interior";
+    obj_afuera:  print "afuera";
+    default:     print "hacia ", (el) i;
+  }
+];
+Endif;
+
+
+!
+! Objeto que mueve a los móviles
+!
+Object MovedorDeMoviles
+  with
+    daemon [ mov indMov;
+      for (indMov = 1 : indMov <= indiceMoviles : indMov++) {
+        mov = tablaMoviles-->indMov; 
+        ! print (object) mov, mov, " va a moverse^";
+        mov.movimiento();
+      }
+    ];
+
+
+[ IniciarMoviles mov; 
+  objectloop (mov ofclass Movil) {
+    if (indiceMoviles < maximoNumeroMoviles) {
+      indiceMoviles++;
+      tablaMoviles-->indiceMoviles = mov;
+    } else {
+      print "ERROR: superado el límite de moviles, ", (_nombre_)mov, " no será tratado como tal.";
+    }
+  }
+    
+  ArrancarDaemon(MovedorDeMoviles);
+];

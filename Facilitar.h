@@ -1,4 +1,1 @@
-Class Habitacion
-  has luz;
-
-Class Objeto;
+InformATE610_Alpha/Facilitar.h
