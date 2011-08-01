@@ -940,9 +940,11 @@ Object nave "nave"
     escenario;
  
     
-Object descompresion "habitáculo de descompresión"
+Object descompresion "cámara de descompresión"
   with
-    nombre 'habitaculo' 'camara' 'cabina' 'descompresion' 'despresurizacion',
+    nombre_m 'habitaculo',
+    nombre_f 'camara' 'cabina' 'descompresion' 'despresurizacion',
+    genero G_FEMENINO,
     descripcion "Es el recinto intermedio entre la nave y el exterior. Se usa para
                  acomodar la presión y la atmósfera al salir o entrar en la nave.",
     antes [;
