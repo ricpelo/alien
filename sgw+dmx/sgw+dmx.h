@@ -710,7 +710,7 @@ Default CLR_GG_YELLOW    = $ffff30;
 Default CLR_GG_WHITE     = $ffffff;
 
 ! ELIUK: Constantes de color usadas 'por defecto' en SGW+DMX
-Default CLR_GG_PERSBACK  = $110101;
+Default CLR_GG_PERSBACK  = $000000; !$110101;  (c) Alpha
 Default CLR_GG_PERSTEXT  = $DDBB99;
 Default CLR_GG_PERSEMPH  = $FFFFDD;
 Default CLR_GG_PERSHEAD  = $EEDDAA;
