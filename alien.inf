@@ -59,7 +59,7 @@ Constant HAY_CURIOSIDADES;
 Constant MAX_NIVEL_CARGA = 150;
 
 ! Alto de la ventana gráfica
-Constant ALTO_VENTANA_GRAFICA = 315;
+Constant ALTO_VENTANA_GRAFICA = 500; !315;
 
 ! Canales de sonido:
 ! Constant NUM_CANALES = 6;
@@ -7825,7 +7825,7 @@ Object tt_final
   ! PonerAltodeVentanaGrafica(ALTO_VENTANA_GRAFICA);
   ! clearMainWindow();
   ! PintaMarco(true);
-  viewImageCenter(Oscuridad_jpg);
+!  viewImageCenter(Oscuridad_jpg);
   localizacion = laoscuridad;
 
   ! Inicialización sonora
@@ -8450,27 +8450,28 @@ Object tt_final
   control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
   tt_inicial1.visualiza();
   i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(A_jpg);
+!  viewImageCenter(A_png);
   EsperarTecla();
   clearTextWindow();
   tt_inicial2.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(I_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(Al_jpg);
+  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 10); i++; }
+!  viewImageCenter(AI_png);
   EsperarTecla();
   clearTextWindow();
   tt_inicial3.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(N_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(Ali_jpg)2
+  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 10); i++; }
+!  viewImageCenter(AIN_png);
   EsperarTecla();
   clearTextWindow();
   tt_inicial4.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(E_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(Alie_jpg);
+  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 10); i++; }
+!  viewImageCenter(AIEN_png);
   EsperarTecla();
   clearTextWindow();
   tt_inicial5.visualiza();
   EsperarTecla();
-  i = 0; while (i < 15) { viewImageCenter(L_png, true); EsperarTecla(0, 10); i++; }
+  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 10); i++; }
+!  viewImageCenter(ALIEN_png);
 !  viewImageCenter(Logo_Alien_jpg);
   EsperarTecla();
 ];

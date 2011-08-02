@@ -36,6 +36,10 @@ PICTURE L_png res/img/l1.png
 PICTURE I_png res/img/i1.png
 PICTURE E_png res/img/e1.png
 PICTURE N_png res/img/n1.png
+PICTURE AI_png res/img/ai1.png
+PICTURE AIN_png res/img/ain1.png
+PICTURE AIEN_png res/img/aien1.png
+PICTURE ALIEN_png res/img/alien1.png
 PICTURE Fondo_negro_jpg res/img/fondo_negro.jpg
 SOUND Intro_ogg res/snd/intro.ogg
 SOUND Teletipo_ogg res/snd/teletipo.ogg
