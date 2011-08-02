@@ -31,12 +31,10 @@ PICTURE Alien_Mata_jpg res/img/alien_mata.jpg
 PICTURE Sin_Imagen_jpg res/img/logo_alpha_aventuras.jpg
 PICTURE Oscuridad_jpg res/img/oscuridad.jpg
 PICTURE Logo_Alien_jpg res/img/logo_alien.jpg
-PICTURE A_png res/img/a1.png
-PICTURE L_png res/img/l1.png
-PICTURE I_png res/img/i1.png
-PICTURE E_png res/img/e1.png
-PICTURE N_png res/img/n1.png
-PICTURE Fondo_negro_jpg res/img/fondo_negro.jpg
+PICTURE A_jpg res/img/a.jpg
+PICTURE Al_jpg res/img/al.jpg
+PICTURE Ali_jpg res/img/ali.jpg
+PICTURE Alie_jpg res/img/alie.jpg
 SOUND Intro_ogg res/snd/intro.ogg
 SOUND Teletipo_ogg res/snd/teletipo.ogg
 SOUND Detector1_ogg res/snd/detector1.ogg

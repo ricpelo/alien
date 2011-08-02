@@ -1104,11 +1104,11 @@ Default WIN_MAIN    = 2;
 ];
 
 ! Centralized visualization routine - added by Paolo Maroncelli
-[ viewImageSGW ;
+[ viewImageSGW no_clear;
     #ifdef TARGET_GLULX;
       #ifndef SGW_SIN_GRAFICOS;
         if (gg_bigwin) {
-          glk_window_clear(gg_bigwin);
+          if (~~no_clear) glk_window_clear(gg_bigwin);
           drawImageSGW(gg_bigwin,curr_pic,curr_pic_pos,BORDEWIN,BORDEWIN);
           !-----------------------------------------------------------------------
           ! NOTA SOBRE LOS ULTIMOS DOS ARGUMENTO (BORDEWIN,BORDEWIN):
@@ -1126,11 +1126,11 @@ Default WIN_MAIN    = 2;
 ];
 
 ! View an image on the center of the main graphic window
-[ viewImageCenter image;
+[ viewImageCenter image no_clear;
     #ifdef TARGET_GLULX;
       curr_pic = image;
       curr_pic_pos = POS_CENTRADO;
-      viewImageSGW();
+      viewImageSGW(no_clear);
     #ifnot; ! COMPILACION PARA MAQUINA Z
       image = image; ! *** EVITA WARNING ***
     #endif;
