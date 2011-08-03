@@ -695,6 +695,11 @@ Object nave1 "Interior de la nave"
         "No es necesario sentarse para poder operar con los controles de la nave, ni
          para hablar con su computadora.";
 
+      Ir:
+        if (uno == obj_afuera) {
+          <<Salir>>;
+        }
+
       Salir:
         ! Si el procesador atmosférico funciona, no hay que entrar a mirar si llevan trajes
         if (procesador.arreglado()) {
