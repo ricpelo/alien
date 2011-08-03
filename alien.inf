@@ -7048,7 +7048,7 @@ Object tema_jason_robot "el robot" TemasJason
 
 Object rifle "rifle de asalto" jason
   with
-    nombre 'tu' 'rifle' 'asalto' 'arma',
+    nombre 'tu' 'rifle' 'asalto' 'arma' 'kolmogorov',
     descripcion "Un rifle de asalto Kolmogorov 773. Dispara proyectiles con un alto poder
                  de penetración. Lleva acoplado un detector de movimiento.",
 !    inicial "Lo único que queda de Jason es su rifle tirado en el suelo como la huella de
