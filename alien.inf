@@ -142,7 +142,7 @@ Include "EParser";
 
 Replace EsperarTecla;
 Replace InitGlkWindow;
-Include "sgw+dmx";       ! entre EParser y Acciones
+Include "SGW+DMX_NG";    ! entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
