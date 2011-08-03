@@ -59,7 +59,7 @@ Constant HAY_CURIOSIDADES;
 Constant MAX_NIVEL_CARGA = 150;
 
 ! Alto de la ventana gráfica
-Constant ALTO_VENTANA_GRAFICA = 500; !315;
+Constant ALTO_VENTANA_GRAFICA = 350; !500; !315;
 
 ! Canales de sonido:
 ! Constant NUM_CANALES = 6;
