@@ -389,7 +389,13 @@ Object barra_estado
     modo BE_COMPUESTO,
     disposicion
       1  1 true BE_LOCALIDAD
+      40 1 true BE_TEXTO
       67 1 true BE_TURNOS,
+    texto [;
+      if (linterna has encendida && bateria in linterna) {
+        print_ret "Linterna: ", bateria.nivel_carga(), "%";
+      }
+    ],
     lineas_inv
       BE_INV_TOTAL;
 
