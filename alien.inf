@@ -502,7 +502,6 @@ Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
-! Include "Efectos";        ! Efectos de sonido
 Include "Decorado";       ! Objetos de decorado
 Include "Array";          ! Necesario para escr
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
@@ -605,26 +604,21 @@ Class ControlSonido
       self.sonido = efecto;
       if (rep) {
         Damusix.AsignarCanal(efecto, self.canal, self.volumen, rep);
-        ! EfectosSonoros.ActivarEfecto(efecto, rep, self.canal);
       } else {
         Damusix.AsignarCanal(efecto, self.canal, self.volumen, 1);
-        ! EfectosSonoros.ActivarEfecto(efecto, 1, self.canal);
       }
       Damusix.Tocar(efecto);
     ],
     desactivar [;
       Damusix.Parar(self.sonido);
       self.sonido = null;
-      ! EfectosSonoros.DesactivarEfecto(self.canal);
     ],
     cambiar_volumen [ v;
       self.volumen = v;
       Damusix.VolumenCanal(self.canal, v);
-      ! EfectosSonoros.Volumen(v, self.canal);
     ],
     iniciar [;
       Damusix.VolumenCanal(self.canal, self.volumen);
-      ! EfectosSonoros.Volumen(self.volumen, self.canal);
     ];
     
 
@@ -4340,7 +4334,6 @@ Object laberinto28
               control_sonido_varios.activar(Rugido_ogg);
               tt_escape2.visualiza();
               control_sonido_detector.cambiar_volumen($3000);
-!              EfectosSonoros.Volumen($1000, CANAL_DETECTOR);
               move ascensor_arriba to exterior3;
               move jason to exterior3;
               JugadorA(exterior3);
@@ -7652,17 +7645,15 @@ Object tt_inicial1
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 250,
     elementos
       "> Aproximación a planeta 2003 UB313...^"
         POR_LETRA LETRA_FIJA PAUSA_NORMAL
       "^> Atmósfera irrespirable... Posible daño en el procesador atmosférico...^"
-        POR_LETRA LETRA_FIJA PAUSA_NORMAL
+        POR_LETRA LETRA_FIJA PAUSA_DOBLE
       "^El objetivo de la misión está bien claro:^"
         POR_MENSAJE LETRA_CURSIVA PAUSA_NORMAL
       "^~Elaborar un informe completo de la situación.~^"
-        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA
-      "^[...]"
         POR_MENSAJE LETRA_NEGRITA SIN_PAUSA;
 
 
@@ -7683,10 +7674,8 @@ Object tt_inicial2
         tarea, que no debería resultar peligrosa, le acompañará el Mayor Jason, un
         experto marine estelar que llevará consigo su equipo habitual de combate y
         dispondrá de pleno apoyo logístico para que le ayude en su misión.^"
-        POR_MENSAJE LETRA_NEGRITA PAUSA_DOBLE
+        POR_MENSAJE LETRA_NEGRITA 5
       "^Le serán enviados más datos cuando se estime oportuno.~^"
-        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA
-      "^[...]"
         POR_MENSAJE LETRA_NEGRITA SIN_PAUSA;
 
 
@@ -7697,7 +7686,7 @@ Object tt_inicial3
     PausaMensaje 500,
     elementos
       "^(Estupendo: La misión no es peligrosa, pero me asignan a todo un experto marine.)^"
-        POR_MENSAJE LETRA_CURSIVA PAUSA_DOBLE
+        POR_MENSAJE LETRA_CURSIVA PAUSA_NORMAL
       "^> Los sensores biométricos no detectan presencia de"
         POR_LETRA LETRA_FIJA SIN_PAUSA
       "^  vida orgánica evidente en la superficie...^"
@@ -7706,10 +7695,8 @@ Object tt_inicial3
         establecido junto a los edificios principales de la colonia. El primero de ellos
         está destinado a la purificación ambiental, mientras que el otro es el complejo
         principal, construido alrededor de una veta central de mineral.^"
-        POR_MENSAJE LETRA_NEGRITA PAUSA_DOBLE
+        POR_MENSAJE LETRA_NEGRITA 5
       "^Le serán enviados más datos cuando se estime oportuno.~^"
-        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA
-      "^[...]"
         POR_MENSAJE LETRA_NEGRITA SIN_PAUSA;
 
 
@@ -7725,11 +7712,9 @@ Object tt_inicial4
         restablecer las comunicaciones y, en el improbable caso de que no lo consiga,
         traer consigo algún elemento que permita a la cúpula militar evaluar el estado
         actual de la colonia.~^"
-        POR_MENSAJE LETRA_NEGRITA PAUSA_DOBLE
+        POR_MENSAJE LETRA_NEGRITA PAUSA_TRIPLE
       "^(¿Por qué me temo que ese ~improbable caso~ será finalmente el más probable?)^"
-        POR_MENSAJE LETRA_CURSIVA SIN_PAUSA
-      "^[...]"
-        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA;
+        POR_MENSAJE LETRA_CURSIVA SIN_PAUSA;
 
 
 Object tt_inicial5
@@ -7743,9 +7728,7 @@ Object tt_inicial5
       "^La nave se posa suavemente en la superficie, y todo está en silencio.^"
         POR_MENSAJE LETRA_NORMAL PAUSA_DOBLE
       "^Demasiado silencio...^"
-        POR_MENSAJE LETRA_CURSIVA SIN_PAUSA
-      "^[...]"
-        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA;
+        POR_MENSAJE LETRA_CURSIVA SIN_PAUSA;
 
 
 Object tt_escape1
@@ -7846,7 +7829,7 @@ Object tt_final
 
 
 ! Rutina principal y obligatoria de todo juego InformATE
-[ Inicializar;
+[ Inicializar intro i;
 
   if (~~testGraphics()) {
     print "^Lo sentimos, pero este juego necesita un intérprete Glulx
@@ -7858,20 +7841,17 @@ Object tt_final
   ! Inicialización gráfica
   initializeSGW(altoVentanaGrafica);
   clearMainWindow();
-  ! PonerAltodeVentanaGrafica(altoVentanaGrafica);
-  ! clearMainWindow();
-  ! PintaMarco(true);
-!  viewImageCenter(Oscuridad_jpg);
   localizacion = laoscuridad;
 
   ! Inicialización sonora
-  ! EfectosSonoros.InicializarCanales(NUM_CANALES);
   IniciarSonidos();
 
   dibujarEstado = false;
   print "¿Quieres ver la introducción? (S/N): ";
+  intro = false;
 
   if (SiONo() == 1) {
+    intro = true;
     Introduccion();
   } 
 
@@ -7895,9 +7875,8 @@ Object tt_final
 
   ! Localización donde comienza el jugador
   localizacion = nave1;
-  
-  ! BorrarGraficos();
-  clearMainWindow();
+
+  clearTextWindow();
 
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
   PNJ_Ruta(alien, MOVIMIENTO_NINGUNO);
@@ -7908,12 +7887,15 @@ Object tt_final
 
   EncenderMusicaSub(true);
 
-  ! PintaMarco(true);
-  viewImageCenter(Logo_Alien_jpg);
+  if (~~intro) {
+    i = 0; while (i < 15) {
+      viewImageCenter(ALIEN_png, true); EsperarTecla(0, 10); i++;
+    }
+  }
+
   print "Copyright (c) 2008-2011 Alpha Aventuras";
   EsperarTecla();
   clearMainWindow();
-  ! PintaMarco(true);
   viewImageCenter(Nave1_jpg);
 ];
 
@@ -8494,31 +8476,21 @@ Object tt_final
   viewImageCenter(Fondo_negro_jpg);
   control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
   tt_inicial1.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(A_png);
-  EsperarTecla();
-  clearTextWindow();
+  i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 40); i++; }
+  EsperarTecla(0, 300);
   tt_inicial2.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(AI_png);
-  EsperarTecla();
-  clearTextWindow();
+  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 40); i++; }
+  EsperarTecla(0, 900);
   tt_inicial3.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(AIN_png);
-  EsperarTecla();
-  clearTextWindow();
+  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 40); i++; }
+  EsperarTecla(0, 900);
   tt_inicial4.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(AIEN_png);
-  EsperarTecla();
-  clearTextWindow();
+  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 40); i++; }
+  EsperarTecla(0, 800);
   tt_inicial5.visualiza();
-  EsperarTecla();
-  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 10); i++; }
-!  viewImageCenter(ALIEN_png);
-!  viewImageCenter(Logo_Alien_jpg);
-  EsperarTecla();
+  EsperarTecla(0, 600);
+  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 40); i++; }
+  Damusix.SimpleFadeOut(Intro_ogg, 1000);
 ];
 
 
@@ -9211,7 +9183,6 @@ Extend 'di' first
   hayGraficos = true;
   openGraphicWindow(altoVentanaGrafica);
   clearGraphicWindow();
-  ! PintaMarco(true);
   if (LugarReal() provides sgw_img) {
     viewImageCenter(LugarReal().sgw_img);
   } else {
@@ -9234,7 +9205,6 @@ Extend 'di' first
 [ ApagarGraficosSub t;
   hayGraficos = false;
   closeGraphicWindow();
-  ! BorrarGraficos();
   if (~~t) {
     glk($0086, style_Emphasized);
     print "[Desactivados los gráficos.]^";
@@ -9429,7 +9399,6 @@ Endif;
 
 [ EncenderSonidoSub;
   Damusix.ActivarAudio();
-  ! EfectosSonoros.ActivarSonidos();
   EncenderMusicaSub(true);
   if (control_sonido_detector.sonido ~= null) {
     control_sonido_detector.activar(control_sonido_detector.sonido, SONIDO_BUCLE_INFINITO);
@@ -9442,7 +9411,6 @@ Endif;
 
 [ ApagarSonidoSub;
   Damusix.DesactivarAudio();
-  ! EfectosSonoros.DesactivarSonidos();
   control_sonido_fondo.hay_sonido = false;
   glk($0086, style_Emphasized);
   print "[Desactivados todos los efectos sonoros.]^";
@@ -9528,14 +9496,14 @@ Endif;
   print "Desarrollado usando el lenguaje Inform, de Graham Nelson,^";
   print "con la ayuda de las siguientes librerías:^^";
   print "- InformATE 6/10+, de Zak et al.^";
-  print "- Six y Grafdemo, de Zak^";
+  print "- Adaptación de SGW+DMX, de Eliuk Blau^";
+  print "- Damusix, de Eliuk Blau^";
   print "- PNJactor_NG y PNJacciones_NG (adaptaciones de los originales de Zak y Carlos)^";
   print "- Rastros_NG (adaptación de Rastros, de Mel Hython)^";
   print "- Moviles_NG (adaptación de Moviles, de Mel Hython)^";
   print "- PnjPuertas_NG (Adaptación de PnjPuertas, de Jaevius)^";
   print "- Decir, de Zak^";
   print "- Etemas, de Zak^";
-  print "- Efectos, de Zak^";
   print "- Decorado_NG (adaptación de Decorado, de Zak y Mel Hython)^";
   print "- Escr_NG (adaptación de Escr, de Baltasarq)^";
   print "- Adaptación de Barra, de Presi^";
@@ -9564,9 +9532,6 @@ Endif;
   } else {
     "No puedes teclear nada ahí.";
   }
-!  TeclearMalSub();
-!  rtrue;
-!  "Eso no sirve para nada.";
 ];
 
 
