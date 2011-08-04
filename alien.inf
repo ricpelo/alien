@@ -70,7 +70,6 @@ Constant CANAL_FONDO = 9;
 Constant CANAL_VARIOS = 1;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 2;
-Constant CANAL_TRANSMISOR = 3;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -644,11 +643,6 @@ Object control_sonido_detector
     hay_detector true,
     canal CANAL_DETECTOR,
     volumen 70; ! $7000;
-
-Object control_sonido_transmisor
-  class ControlSonido
-  with
-    canal CANAL_TRANSMISOR;
 
 
 
@@ -7904,7 +7898,6 @@ Object tt_final
   control_sonido_fondo.iniciar();
   control_sonido_varios.iniciar();
   control_sonido_detector.iniciar();
-  control_sonido_transmisor.iniciar();
 ];
 
 
@@ -8565,7 +8558,7 @@ Object tt_final
   style bold;
 
   if (jason notin LugarReal()) {
-    control_sonido_transmisor.activar(Transmisor_ogg);
+    Damusix.TocarV(Transmisor_ogg);
     print "^JASON (por el comunicador): ";
   } else {
     print "^JASON: ";
@@ -8627,7 +8620,7 @@ Object tt_computadora
   style bold;
     
   if (LugarReal() ~= nave1 or nave2) {
-    control_sonido_transmisor.activar(Transmisor_ogg);
+    Damusix.TocarV(Transmisor_ogg);
     print "^MADRE (por el comunicador): ";
   } else {
     print "^MADRE: ";
