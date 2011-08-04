@@ -70,7 +70,6 @@ Constant CANAL_FONDO = 9;
 Constant CANAL_VARIOS = 1;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 2;
-!Constant CANAL_TRUENO = 3;
 Constant CANAL_COMPUTADORA = 3;
 Constant CANAL_TRANSMISOR = 4;
 
@@ -147,6 +146,7 @@ Include "EParser";
 
 Replace EsperarTecla;
 Replace InitGlkWindow;
+Replace HandleGlkEvent;
 Include "SGW+DMX_NG";    ! entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
@@ -488,10 +488,11 @@ Class Lugar
       }
       
       ! En el exterior, de vez en cuando suena un trueno:
-      if (EsExterior(self) && random(100) < 8) {
-        Damusix.TocarV(Trueno_ogg);
-!        control_sonido_varios.activar(Trueno_ogg);
-      }
+      if (EsExterior(self)) {
+        glk_request_timer_events(4000);
+      } else {
+        glk_request_timer_events(0);
+     }
     ],
   has
     luz;
@@ -650,11 +651,6 @@ Object control_sonido_detector
     hay_detector true,
     canal CANAL_DETECTOR,
     volumen 70; ! $7000;
-
-!Object control_sonido_trueno
-!  class ControlSonido
-!  with
-!    canal CANAL_TRUENO;
 
 Object control_sonido_computadora
   class ControlSonido
@@ -1496,6 +1492,7 @@ Object exterior1 "Junto a la nave"
                  Pese a todo, la temperatura es elevada.",
     sgw_img Exterior1_jpg,
     sgw_mus Lluvia_ogg,
+    sgw_vol 50,
     adentro puerta_nave,
     al_s exterior3,
     al_n junto_procesador,
@@ -1548,6 +1545,7 @@ Object junto_procesador "Frente al procesador atmosférico"
                  lloviendo, y el calor es asfixiante.",
     sgw_img Junto_Procesador_jpg,
     sgw_mus Junto_Procesador_ogg,
+    sgw_vol 50,
     al_s exterior1,
     adentro puerta_procesador,
     antes [;
@@ -2084,6 +2082,7 @@ Object exterior3 "Exterior de la colonia"
                  el suelo.",
     sgw_img Exterior3_jpg,
     sgw_mus Lluvia_ogg,
+    sgw_vol 50,
     al_n exterior1,
     al_e junto_puerta,
     antes [;
@@ -7913,7 +7912,6 @@ Object tt_final
   control_sonido_fondo.iniciar();
   control_sonido_varios.iniciar();
   control_sonido_detector.iniciar();
-!  control_sonido_trueno.iniciar();
   control_sonido_computadora.iniciar();
   control_sonido_transmisor.iniciar();
 ];
@@ -8151,6 +8149,17 @@ Object tt_final
   }
 
   rfalse; ! si te olvidas esta linea, el juego no funcionará bien
+];
+
+
+[ HandleGlkEvent ev;
+  SGW_HandleGlk(ev);
+  switch (ev-->0) {
+    evtype_Timer:
+      if (EsExterior(LugarReal()) && random(100) < 20) {
+        Damusix.TocarV(Trueno_ogg);
+      }
+  }
 ];
 
 
