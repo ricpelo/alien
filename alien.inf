@@ -59,7 +59,10 @@ Constant HAY_CURIOSIDADES;
 Constant MAX_NIVEL_CARGA = 150;
 
 ! Alto de la ventana gráfica
-Constant ALTO_VENTANA_GRAFICA = 350; !500; !315;
+!Constant ALTO_VENTANA_GRAFICA = 350; !500; !315;
+Constant GRAFICOS_PEQUENOS = 300;
+Constant GRAFICOS_MEDIANOS = 400;
+Constant GRAFICOS_GRANDES  = 500;
 
 ! Canales de sonido:
 ! Constant NUM_CANALES = 6;
@@ -83,6 +86,8 @@ Constant SONIDO_BUCLE_INFINITO = -1;
 ! ====================================================================
 
 
+! Alto de la ventana gráfica:
+Global altoVentanaGrafica = 400;
 
 ! Hay gráficos o no:
 Global hayGraficos = true;
@@ -7825,9 +7830,9 @@ Object tt_final
   }
 
   ! Inicialización gráfica
-  initializeSGW(ALTO_VENTANA_GRAFICA);
+  initializeSGW(altoVentanaGrafica);
   clearMainWindow();
-  ! PonerAltodeVentanaGrafica(ALTO_VENTANA_GRAFICA);
+  ! PonerAltodeVentanaGrafica(altoVentanaGrafica);
   ! clearMainWindow();
   ! PintaMarco(true);
 !  viewImageCenter(Oscuridad_jpg);
@@ -8931,7 +8936,10 @@ Extend 'rompe' first
 Verb meta 'graficos'
   *                           -> Graficos
   * 'on' / 'encendido' / 'si' -> EncenderGraficos
-  * 'off' / 'apagado' / 'no'  -> ApagarGraficos;
+  * 'off' / 'apagado' / 'no'  -> ApagarGraficos
+  * 'pequenos'                -> GraficosPequenos
+  * 'medianos'                -> GraficosMedianos
+  * 'grandes'                 -> GraficosGrandes;
  
 Extend 'sal' last
   * 'por' noun      -> Meterse;
@@ -9025,67 +9033,107 @@ Extend 'di' first
 
 
 [ GraficosSub;
+  glk($0086, style_Emphasized);
   print "[Por favor, usa la forma ~";
   style bold;
   print "GRAFICOS SI";
-  style roman;
+  glk($0086, style_Emphasized);
   print "~ o ~";
   style bold;
   print "GRAFICOS NO";
+  glk($0086, style_Emphasized);
+  print "~ para activar o desactivar, respectivamente, el uso de gráficos.
+         También puedes cambiar el tamaño de la ventana gráfica usando ~";
+  style bold;
+  print "GRAFICOS PEQUEÑOS";
+  glk($0086, style_Emphasized);
+  print "~, ~";
+  style bold;
+  print "GRAFICOS MEDIANOS";
+  glk($0086, style_Emphasized);
+  print "~ o ~";
+  style bold;
+  print "GRAFICOS GRANDES";
+  glk($0086, style_Emphasized);
+  print "~.]^";
   style roman;
-  "~ para activar o desactivar, respectivamente, el uso de gráficos.]";
+];
+
+
+[ GraficosPequenosSub;
+  altoVentanaGrafica = GRAFICOS_PEQUENOS;
+  EncenderGraficosSub();
+];
+
+[ GraficosMedianosSub;
+  altoVentanaGrafica = GRAFICOS_MEDIANOS;
+  EncenderGraficosSub();
+];
+
+
+[ GraficosGrandesSub;
+  altoVentanaGrafica = GRAFICOS_GRANDES;
+  EncenderGraficosSub();
 ];
 
 
 [ SonidoSub;
+  glk($0086, style_Emphasized);
   print "[Por favor, usa la forma ~";
   style bold;
   print "SONIDO SI";
-  style roman;
+  glk($0086, style_Emphasized);
   print "~ o ~";
   style bold;
   print "SONIDO NO";
+  glk($0086, style_Emphasized);
+  print "~ para activar o desactivar, respectivamente, todos los efectos sonoros.]^";
   style roman;
-  "~ para activar o desactivar, respectivamente, todos los efectos sonoros.]";
 ];
 
 
 [ MusicaSub;
+  glk($0086, style_Emphasized);
   print "[Por favor, usa la forma ~";
   style bold;
   print "SONIDO FONDO SI";
-  style roman;
+  glk($0086, style_Emphasized);
   print "~ o ~";
   style bold;
   print "SONIDO FONDO NO";
+  glk($0086, style_Emphasized);
+  print "~ para activar o desactivar, respectivamente, el sonido de fondo.]^";
   style roman;
-  "~ para activar o desactivar, respectivamente, el sonido de fondo.]";
 ];
 
 
 [ SonidoDetectorSub;
+  glk($0086, style_Emphasized);
   print "[Por favor, usa la forma ~";
   style bold;
   print "SONIDO DETECTOR SI";
-  style roman;
+  glk($0086, style_Emphasized);
   print "~ o ~";
   style bold;
   print "SONIDO DETECTOR NO";
+  glk($0086, style_Emphasized);
+  print "~ para activar o desactivar, respectivamente, el sonido del detector de movimiento.]^";
   style roman;
-  "~ para activar o desactivar, respectivamente, el sonido del detector de movimiento.]";
 ];
 
 
 [ TeclearMalSub;
+  glk($0086, style_Emphasized);
   print "[Por favor, usa la forma ~";
   style bold;
   print "TECLEA tal EN cual";
-  style roman;
+  glk($0086, style_Emphasized);
   print "~. Por ejemplo: ~";
   style bold;
   print "TECLEA HOLA EN EL TECLADO";
+  glk($0086, style_Emphasized);
+  print "~.]^";
   style roman;
-  "~.]";
 ];
 
 
@@ -9126,8 +9174,8 @@ Extend 'di' first
 
 [ EncenderGraficosSub t;
   hayGraficos = true;
-  openGraphicWindow(ALTO_VENTANA_GRAFICA);
-  clearMainWindow();
+  openGraphicWindow(altoVentanaGrafica);
+  clearGraphicWindow();
   ! PintaMarco(true);
   if (LugarReal() provides sgw_img) {
     viewImageCenter(LugarReal().sgw_img);
@@ -9135,7 +9183,15 @@ Extend 'di' first
     viewImageCenter(Sin_Imagen_jpg);
   }
   if (~~t) {
-    "[Activados los gráficos.]";
+    glk($0086, style_Emphasized);
+    print "[Activados los gráficos (tamaño ";
+    switch (altoVentanaGrafica) {
+      GRAFICOS_PEQUENOS: print "pequeño";
+      GRAFICOS_MEDIANOS: print "mediano";
+      GRAFICOS_GRANDES:  print "grande";
+    }
+    print ").]^";
+    style roman;
   }
 ];
 
@@ -9145,7 +9201,9 @@ Extend 'di' first
   closeGraphicWindow();
   ! BorrarGraficos();
   if (~~t) {
-    "[Desactivados los gráficos.]";
+    glk($0086, style_Emphasized);
+    print "[Desactivados los gráficos.]^";
+    style roman;
   }
 ];
 
@@ -9238,14 +9296,18 @@ Extend 'di' first
 [ ActivarSalidasSub;
   mostrarSalidas = true;
 !  give mostrar_salidas ~oculto;
-  "[Activado el listado automático de salidas.]";
+  glk($0086, style_Emphasized);
+  print "[Activado el listado automático de salidas.]^";
+  style roman;
 ];
 
 
 [ DesactivarSalidasSub;
   mostrarSalidas = false;
 !  give mostrar_salidas oculto;
-  "[Desactivado el listado automático de salidas.]";
+  glk($0086, style_Emphasized);
+  print "[Desactivado el listado automático de salidas.]^";
+  style roman;
 ];
 
 
@@ -9337,7 +9399,9 @@ Endif;
   if (control_sonido_detector.sonido ~= null) {
     control_sonido_detector.activar(control_sonido_detector.sonido, SONIDO_BUCLE_INFINITO);
   }
-  "[Activados todos los efectos sonoros.]";
+  glk($0086, style_Emphasized);
+  print "[Activados todos los efectos sonoros.]^";
+  style roman;
 ];
 
 
@@ -9345,7 +9409,9 @@ Endif;
   Damusix.DesactivarAudio();
   ! EfectosSonoros.DesactivarSonidos();
   control_sonido_fondo.hay_sonido = false;
-  "[Desactivados todos los efectos sonoros.]";
+  glk($0086, style_Emphasized);
+  print "[Desactivados todos los efectos sonoros.]^";
+  style roman;
 ];
 
 
@@ -9365,7 +9431,9 @@ Endif;
   control_sonido_fondo.hay_sonido = true;
     
   if (~~i) {
-    "[Activado el sonido de fondo.]";
+    glk($0086, style_Emphasized);
+    print "[Activado el sonido de fondo.]^";
+    style roman;
   }
 ];
 
@@ -9373,13 +9441,17 @@ Endif;
 [ ApagarMusicaSub;
   control_sonido_fondo.hay_sonido = false;
   control_sonido_fondo.desactivar();
-  "[Desactivado el sonido de fondo.]";
+  glk($0086, style_Emphasized);
+  print "[Desactivado el sonido de fondo.]^";
+  style roman;
 ];
 
 
 [ EncenderSonidoDetectorSub;
   control_sonido_detector.hay_detector = true;
-  "[Activado el sonido del detector de movimiento.]";  
+  glk($0086, style_Emphasized);
+  print "[Activado el sonido del detector de movimiento.]^";
+  style roman;
 ];
 
 
@@ -9388,7 +9460,9 @@ Endif;
   if (control_sonido_detector.sonido ~= Sirena_ogg) {
     control_sonido_detector.desactivar();
   }
-  "[Desactivado el sonido del detector de movimiento.]";
+  glk($0086, style_Emphasized);
+  print "[Desactivado el sonido del detector de movimiento.]^";
+  style roman;
 ];
 
 
@@ -9473,21 +9547,25 @@ Endif;
   if (hayPistas == 0) {
     hayPistas = 1;
     jason.hablar = computadora.hablar = robot.hablar = false;
+    glk($0086, style_Emphasized);
     print "[Advertencia: Es sabido que la tentación de la ayuda es a veces tan fuerte que
            se suelen obtener pistas prematuramente. Por tanto, en cualquier momento durante
            el juego puedes poner ";
     style bold;
     print "PISTAS NO";
-    style roman;
+    glk($0086, style_Emphasized);
     print ", y eso te impedirá obtener ayuda en la sesión de juego actual. Si sigues
            queriendo una pista, pon ";
     style bold;
     print "PISTAS";
+    glk($0086, style_Emphasized);
+    print " otra vez.]^";
     style roman;
-    " otra vez.]";
   }
   if (hayPistas == 2) {
-    "Las pistas han sido desactivadas.";
+    glk($0086, style_Emphasized);
+    print "[Las pistas han sido desactivadas.]^";
+    style roman;
   }
   ApagarGraficosSub(true);
   barra_estado.numero_lineas = 26;
@@ -9502,9 +9580,13 @@ Endif;
 
 [ PistasNoSub;
   if (hayPistas == 2) {
-    "Las pistas ya han sido desactivadas.";
+    glk($0086, style_Emphasized);
+    print "[Las pistas ya han sido desactivadas.]^";
+    style roman;
   }
   hayPistas = 2;
-  "[PISTAS desactivadas.]";
+  glk($0086, style_Emphasized);
+  print "[PISTAS desactivadas.]^";
+  style roman;
 ];
 
