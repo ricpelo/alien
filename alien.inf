@@ -890,23 +890,25 @@ Object decorado_nave1 nave1
         }
     ],
     describir
-      'paneles' [; return self.desc_instrumentos; ] G_PLURAL
-      'panel' [; return self.desc_instrumentos; ] 0
+      'paneles'      [; return self.desc_instrumentos; ] G_PLURAL
+      'panel'        [; return self.desc_instrumentos; ] 0
       'instrumentos' [; return self.desc_instrumentos; ] G_PLURAL
-      'instrumento' [; return self.desc_instrumentos; ] 0
-      'indicadores' [; return self.desc_instrumentos; ] G_PLURAL
-      'indicador' [; return self.desc_instrumentos; ] 0
-      'ventanales' [; return self.desc_ventanales; ] G_PLURAL 
-      'ventanal' [; return self.desc_ventanales; ] 0
-      'ventanas' [; return self.desc_ventanales; ] G_FEMENINO + G_PLURAL
-      'ventana' [; return self.desc_ventanales; ] G_FEMENINO
-      'cristales' [; return self.desc_ventanales; ] G_PLURAL
-      'cristal' [; return self.desc_ventanales; ] 0
-      'lluvia' [; return self.desc_ventanales; ] G_FEMENINO
-      'asientos' [; return self.desc_asientos; ] G_PLURAL
-      'asiento' [; return self.desc_asientos; ] 0
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO;
+      'instrumento'  [; return self.desc_instrumentos; ] 0
+      'indicadores'  [; return self.desc_instrumentos; ] G_PLURAL
+      'indicador'    [; return self.desc_instrumentos; ] 0
+      'botones'      [; return self.desc_instrumentos; ] G_PLURAL
+      'boton'        [; return self.desc_instrumentos; ] 0
+      'ventanales'   [; return self.desc_ventanales; ] G_PLURAL 
+      'ventanal'     [; return self.desc_ventanales; ] 0
+      'ventanas'     [; return self.desc_ventanales; ] G_FEMENINO + G_PLURAL
+      'ventana'      [; return self.desc_ventanales; ] G_FEMENINO
+      'cristales'    [; return self.desc_ventanales; ] G_PLURAL
+      'cristal'      [; return self.desc_ventanales; ] 0
+      'lluvia'       [; return self.desc_ventanales; ] G_FEMENINO
+      'asientos'     [; return self.desc_asientos; ] G_PLURAL
+      'asiento'      [; return self.desc_asientos; ] 0
+      'paredes'      [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'        [; return self.desc_paredes; ] G_FEMENINO;
 
 
 Object nave "nave"
@@ -1232,9 +1234,9 @@ Object decorado_traje
     ],
     describir
       'guantes' [; return self.desc_guantes; ] G_PLURAL
-      'guante' [; return self.desc_guantes; ] 0
-      'botas' [; return self.desc_botas; ] G_FEMENINO + G_PLURAL
-      'bota' [; return self.desc_botas; ] G_FEMENINO
+      'guante'  [; return self.desc_guantes; ] 0
+      'botas'   [; return self.desc_botas; ] G_FEMENINO + G_PLURAL
+      'bota'    [; return self.desc_botas; ] G_FEMENINO
       'casco' "Un casco herméticamente cerrado que te permite respirar en este nocivo
                ambiente, y provisto de un enorme visor." 0;
 
@@ -1273,10 +1275,10 @@ Object decorado_traje_inutil
     ],
     describir
       'guantes' [; return self.desc_guantes; ] G_PLURAL
-      'guante' [; return self.desc_guantes; ] 0
-      'botas' [; return self.desc_botas; ] G_FEMENINO + G_PLURAL
-      'bota' [; return self.desc_botas; ] G_FEMENINO
-      'casco' "El casco está roto por la parte lateral del visor." 0;
+      'guante'  [; return self.desc_guantes; ] 0
+      'botas'   [; return self.desc_botas; ] G_FEMENINO + G_PLURAL
+      'bota'    [; return self.desc_botas; ] G_FEMENINO
+      'casco'   "El casco está roto por la parte lateral del visor." 0;
 
 
 Object nave2 "Parte posterior de la nave"
@@ -1301,9 +1303,9 @@ Object decorado_nave2 nave2
       }
     ],
     describir
-      'nave' [; return nave2.descripcion; ] G_FEMENINO
+      'nave'    [; return nave2.descripcion; ] G_FEMENINO
       'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO;
+      'pared'   [; return self.desc_paredes; ] G_FEMENINO;
 
 
 Object armario "armario" nave2
@@ -1499,21 +1501,11 @@ Object decorado_exterior1 exterior1
     desc_niebla "Es un efecto provocado por la intensa lluvia, que te impide ver con
                  claridad los límites exteriores de la colonia.",
     describir
-      'luz' "Es un halo inmaterial que lo envuelve todo con un manto azulado." G_FEMENINO
-      'lluvia' "Las gotas de lluvia caen con fuerza, casi con intención." G_FEMENINO
+      'luz'     "Es un halo inmaterial que lo envuelve todo con un manto azulado." G_FEMENINO
+      'lluvia'  "Las gotas de lluvia caen con fuerza, casi con intención." G_FEMENINO
       'neblina' [; return self.desc_niebla; ] G_FEMENINO
-      'niebla' [; return self.desc_niebla; ] G_FEMENINO
+      'niebla'  [; return self.desc_niebla; ] G_FEMENINO
       'colonia' "La colonia minera se alza no muy lejos, esperando." G_FEMENINO;
-
-
-!Object "nave" exterior1
-!  with
-!    nombre_f 'nave',
-!    nombre_m 'vehiculo',
-!    genero G_FEMENINO,
-!    descripcion "Parece más grande por fuera...",
-!  has
-!    escenario;
 
 
 Object junto_procesador "Frente al procesador atmosférico"
@@ -1586,17 +1578,17 @@ Object decorado_junto_procesador junto_procesador
     desc_paredes "La lluvia y otros fenómenos atmosféricos han hecho mella en la otrora
                   superficie lisa y pulida de la pared del complejo.",
     describir
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'fachada' [; return self.desc_paredes; ] G_FEMENINO
+      'paredes'  [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'    [; return self.desc_paredes; ] G_FEMENINO
+      'fachada'  [; return self.desc_paredes; ] G_FEMENINO
       'edificio' "La construcción tiene una amplia base cilíndrica que se prolonga con
                   forma semicónica elevándose muy alto hacia el cielo." 0
-      'luz' "Es un halo inmaterial que lo envuelve todo con un manto azulado."
-        G_FEMENINO
-      'lluvia' "Las gotas de lluvia caen con fuerza, casi con intención."
-        G_FEMENINO
-      'entrada' "Sobria y, en cierta forma, intimidante..."
-        G_FEMENINO;
+      'luz'      "Es un halo inmaterial que lo envuelve todo con un manto azulado."
+                 G_FEMENINO
+      'lluvia'   "Las gotas de lluvia caen con fuerza, casi con intención."
+                 G_FEMENINO
+      'entrada'  "Sobria y, en cierta forma, intimidante..."
+                 G_FEMENINO;
 
 
 Object cables "cables" junto_procesador
@@ -1929,15 +1921,15 @@ Object decorado_procesador procesador
     desc_charcos "El agua estancada se forma a base de paciencia y gotas de agua que se
                   filtran por el techo.",
     describir
-      'cables' [; return self.desc_cables; ] G_PLURAL
-      'cable' [; return self.desc_cables; ] 0
-      'tubos' [; return self.desc_tubos; ] G_PLURAL
+      'cables'   [; return self.desc_cables; ] G_PLURAL
+      'cable'    [; return self.desc_cables; ] 0
+      'tubos'    [; return self.desc_tubos; ] G_PLURAL
       'tuberias' [; return self.desc_tubos; ] G_FEMENINO + G_PLURAL
-      'tuberia' [; return self.desc_tubos; ] G_FEMENINO
-      'tubo' [; return self.desc_tubos; ] 0
-      'charcos' [; return self.desc_charcos; ] G_PLURAL
-      'charco' [; return self.desc_charcos; ] 0
-      'agua' [; return self.desc_charcos; ] G_FEMENINO;
+      'tuberia'  [; return self.desc_tubos; ] G_FEMENINO
+      'tubo'     [; return self.desc_tubos; ] 0
+      'charcos'  [; return self.desc_charcos; ] G_PLURAL
+      'charco'   [; return self.desc_charcos; ] 0
+      'agua'     [; return self.desc_charcos; ] G_FEMENINO;
 
       
 Object conexiones "caja de conexiones" procesador
@@ -2085,14 +2077,14 @@ Object decorado_exterior3 exterior3
     desc_charcos "Agua de lluvia estancada aquí y allá, difícil de filtrar en este terreno
                   tan duro.",
     describir
-      'lodo' [; return self.desc_lodo; ] 0
-      'barro' [; return self.desc_lodo; ] 0
+      'lodo'    [; return self.desc_lodo; ] 0
+      'barro'   [; return self.desc_lodo; ] 0
       'terreno' [; return self.desc_lodo; ] 0
       'charcos' [; return self.desc_charcos; ] G_PLURAL
-      'charco' [; return self.desc_charcos; ] 0
-      'lluvia' "Aquí es ligeramente más débil por la cercanía con el edificio del
-                complejo." G_FEMENINO
-      'sombra' "¿Qué fuente de luz la provocará?" G_FEMENINO;
+      'charco'  [; return self.desc_charcos; ] 0
+      'lluvia'  "Aquí es ligeramente más débil por la cercanía con el edificio del
+                 complejo." G_FEMENINO
+      'sombra'  "¿Qué fuente de luz la provocará?" G_FEMENINO;
 
 
 Object "piezas metálicas" exterior3
@@ -2153,9 +2145,9 @@ Object decorado_junto_puerta junto_puerta
     describir
       'edificio' [; return self.desc_edificio; ] 0
       'complejo' [; return self.desc_edificio; ] 0
-      'colonia' [; return self.desc_edificio; ] G_FEMENINO
-      'neblina' [; return self.desc_niebla; ] G_FEMENINO
-      'niebla' [; return self.desc_niebla; ] G_FEMENINO;
+      'colonia'  [; return self.desc_edificio; ] G_FEMENINO
+      'neblina'  [; return self.desc_niebla; ] G_FEMENINO
+      'niebla'   [; return self.desc_niebla; ] G_FEMENINO;
 
 
 Class Laberinto
@@ -2265,17 +2257,17 @@ Object decorado_laberinto
                 transportando quién sabe qué.",
     describir
       'tuberias' [; return self.desc_tubos; ] G_FEMENINO + G_PLURAL
-      'tuberia' [; return self.desc_tubos; ] G_FEMENINO
-      'tubos' [; return self.desc_tubos; ] G_PLURAL
-      'tubo' [; return self.desc_tubos; ] 0
-      'charcos' [; return self.desc_charcos; ] G_PLURAL
-      'charco' [; return self.desc_charcos; ] 0
-      'agua' [; return self.desc_charcos; ] 0
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'sangre' "Sólo eso: sangre salpicada (o proyectada) contra la pared. No hay ninguna
-                pista sobre qué ser (persona o animal) la contenía." G_FEMENINO;
+      'tuberia'  [; return self.desc_tubos; ] G_FEMENINO
+      'tubos'    [; return self.desc_tubos; ] G_PLURAL
+      'tubo'     [; return self.desc_tubos; ] 0
+      'charcos'  [; return self.desc_charcos; ] G_PLURAL
+      'charco'   [; return self.desc_charcos; ] 0
+      'agua'     [; return self.desc_charcos; ] 0
+      'paredes'  [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'    [; return self.desc_paredes; ] G_FEMENINO
+      'pared'    [; return self.desc_paredes; ] G_FEMENINO
+      'sangre'   "Sólo eso: sangre salpicada (o proyectada) contra la pared. No hay ninguna
+                  pista sobre qué ser (persona o animal) la contenía." G_FEMENINO;
 
 
 Class Balcon
@@ -2331,11 +2323,11 @@ Object decorado_balcon
         "No alcanzas a tocarl", (o) self.cantidad, " desde el balcón.";
     ],
     describir
-      'veta' [; return self.desc_mineral; ] G_FEMENINO
-      'mineral' [; return self.desc_mineral; ] 0
+      'veta'       [; return self.desc_mineral; ] G_FEMENINO
+      'mineral'    [; return self.desc_mineral; ] 0
       'vibrantium' [; return self.desc_mineral; ] 0
       'plataforma' [; return self.desc_balcon; ] G_FEMENINO
-      'balcon' [; return self.desc_balcon; ] 0;
+      'balcon'     [; return self.desc_balcon; ] 0;
 
 
 Object montacargas "montacargas"
@@ -2543,8 +2535,6 @@ Object decorado_oficina oficina
     desc_archivadores "Son inmensos muebles metálicos firmemente sujetos al suelo y a la
                        pared sobre la que descansan. Todos están cerrados, y no parece
                        que haya una forma fácil de abrirlos.",
-!    desc_ordenadores "Estos equipos tan potentes no son fáciles de encontrar... Todos
-!                      están apagados.",
     desc_iluminacion "En contraste con el resto del complejo, parece que el sol mismo
                       se filtra por las paredes de esta habitación. La iluminación
                       proviene directamente del techo.",
@@ -2567,48 +2557,30 @@ Object decorado_oficina oficina
         }
       Abrir, Tirar, Empujar:
         "Tiras y tiras, pero es imposible... No hay forma de abrir esos archivadores.";
-!      Encender, Quemar:
-!        if (self.cantidad == 'ordenadores' or 'ordenador' or 'computadoras' or
-!                             'computadora' or 'computadores' or 'computador') {
-!          "Pulsas todos los botones de encendido, sin éxito.";
-!        }
       Examinar:
         rfalse;
-!      default:
-!        if (self.cantidad == 'ordenadores' or 'ordenador' or 'computadoras' or
-!                             'computadora' or 'computadores' or 'computador') {
-!          "Olvida los equipos informáticos... Está claro que no podrás usarlos, y además
-!           no hay ningún motivo para ello.";
-!        } 
     ],
     describir
-      'oficina' [; oficina.descripcion(); return ""; ] G_FEMENINO
+      'oficina'      [; oficina.descripcion(); return ""; ] G_FEMENINO
       'archivadores' [; return self.desc_archivadores; ] G_PLURAL
-      'archivador' [; return self.desc_archivadores; ] 0
-      'cuadros' [; return self.desc_cuadros; ] G_PLURAL
-      'cuadro' [; return self.desc_cuadros; ] 0
-      'puestos' [; return self.desc_puestos; ] G_PLURAL
-      'puesto' [; return self.desc_puestos; ] 0
-      'mesas' [; return self.desc_puestos; ] G_FEMENINO + G_PLURAL
-      'escritorios' [; return self.desc_puestos; ] G_FEMENINO + G_PLURAL
-!      'computadoras' [; return self.desc_ordenadores; ] G_PLURAL
-!      'computadora' [; return self.desc_ordenadores; ] 0
-!      'computadores' [; return self.desc_ordenadores; ] G_PLURAL
-!      'computador' [; return self.desc_ordenadores; ] 0
-!      'ordenador' [; return self.desc_ordenadores; ] 0
-!      'equipos' [; return self.desc_ordenadores; ] 0
-!      'equipo' [; return self.desc_ordenadores; ] 0
-      'papeles' [; return self.desc_papeles; ] G_PLURAL
-      'papel' [; return self.desc_papeles; ] 0
-      'folios' [; return self.desc_papeles; ] G_PLURAL
-      'folio' [; return self.desc_papeles; ] 0
-      'documentos' [; return self.desc_papeles; ] G_PLURAL
-      'documento' [; return self.desc_papeles; ] 0
-      'iluminacion' [; return self.desc_iluminacion; ] G_FEMENINO
-      'luces' [; return self.desc_iluminacion; ] G_PLURAL
-      'luz' [; return self.desc_iluminacion; ] 0
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO;
+      'archivador'   [; return self.desc_archivadores; ] 0
+      'cuadros'      [; return self.desc_cuadros; ] G_PLURAL
+      'cuadro'       [; return self.desc_cuadros; ] 0
+      'puestos'      [; return self.desc_puestos; ] G_PLURAL
+      'puesto'       [; return self.desc_puestos; ] 0
+      'mesas'        [; return self.desc_puestos; ] G_FEMENINO + G_PLURAL
+      'escritorios'  [; return self.desc_puestos; ] G_FEMENINO + G_PLURAL
+      'papeles'      [; return self.desc_papeles; ] G_PLURAL
+      'papel'        [; return self.desc_papeles; ] 0
+      'folios'       [; return self.desc_papeles; ] G_PLURAL
+      'folio'        [; return self.desc_papeles; ] 0
+      'documentos'   [; return self.desc_papeles; ] G_PLURAL
+      'documento'    [; return self.desc_papeles; ] 0
+      'iluminacion'  [; return self.desc_iluminacion; ] G_FEMENINO
+      'luces'        [; return self.desc_iluminacion; ] G_PLURAL
+      'luz'          [; return self.desc_iluminacion; ] 0
+      'paredes'      [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'        [; return self.desc_paredes; ] G_FEMENINO;
 
 
 Object "ordenadores de la oficina" oficina
@@ -2776,8 +2748,6 @@ Object decorado_enfermeria enfermeria
            abrir ninguna de las puertas.";
         } else if (self.cantidad == 'cajones') {
           "Hay muchos, pero sólo uno tiene pinta de poder abrirse.";
-!          "Tiras fuertemente de todos los cajones, pero ninguno cede. Concluyes que
-!           no hay ninguna forma de abrirlos.";
         }
       Empujar, Tirar, EmpujarDir:
         if (self.cantidad == 'camillas' or 'camilla') {
@@ -2789,19 +2759,18 @@ Object decorado_enfermeria enfermeria
         }
     ],
     describir
-      'armarios' [; return self.desc_armarios; ] G_PLURAL
-      'armario' [; return self.desc_armarios; ] 0
-      'puertas' [; return self.desc_puertas; ] G_FEMENINO + G_PLURAL
-      'puerta' [; return self.desc_puertas; ] G_FEMENINO
-      'cajones' [; return self.desc_cajones; ] G_PLURAL
-!      'cajon' [; return self.desc_cajones; ] 0
-      'camillas' [; return self.desc_camillas; ] G_FEMENINO + G_PLURAL
-      'camilla' [; return self.desc_camillas; ] G_FEMENINO
-      'sabanas' [; return self.desc_sabanas; ] G_FEMENINO + G_PLURAL
-      'sabana' [; return self.desc_sabanas; ] G_FEMENINO
+      'armarios'    [; return self.desc_armarios; ] G_PLURAL
+      'armario'     [; return self.desc_armarios; ] 0
+      'puertas'     [; return self.desc_puertas; ] G_FEMENINO + G_PLURAL
+      'puerta'      [; return self.desc_puertas; ] G_FEMENINO
+      'cajones'     [; return self.desc_cajones; ] G_PLURAL
+      'camillas'    [; return self.desc_camillas; ] G_FEMENINO + G_PLURAL
+      'camilla'     [; return self.desc_camillas; ] G_FEMENINO
+      'sabanas'     [; return self.desc_sabanas; ] G_FEMENINO + G_PLURAL
+      'sabana'      [; return self.desc_sabanas; ] G_FEMENINO
       'iluminacion' [; return self.desc_iluminacion; ] G_FEMENINO
-      'luces' [; return self.desc_iluminacion; ] G_PLURAL
-      'luz' [; return self.desc_iluminacion; ] 0;
+      'luces'       [; return self.desc_iluminacion; ] G_PLURAL
+      'luz'         [; return self.desc_iluminacion; ] 0;
 
 
 Object cajon "cajón" enfermeria
@@ -2943,23 +2912,23 @@ Object decorado_laboratorio laboratorio
       }
     ],
     describir
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'tubos' [; return self.desc_tubos; ] G_PLURAL
-      'tubo' [; return self.desc_tubos; ] 0
-      'probetas' [; return self.desc_tubos; ] G_FEMENINO + G_PLURAL
-      'probeta' [; return self.desc_tubos; ] G_FEMENINO
-      'botes' [; return self.desc_mesas; ] G_PLURAL
-      'bote' [; return self.desc_mesas; ] 0
-      'mesas' [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
-      'mesa' [; return self.desc_mesas; ] G_FEMENINO
-      'fetos' [; return self.desc_mesas; ] G_PLURAL
-      'feto' [; return self.desc_mesas; ] 0
-      'embriones' [; return self.desc_mesas; ] G_PLURAL
-      'embrion' [; return self.desc_mesas; ] 0
+      'paredes'     [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'       [; return self.desc_paredes; ] G_FEMENINO
+      'tubos'       [; return self.desc_tubos; ] G_PLURAL
+      'tubo'        [; return self.desc_tubos; ] 0
+      'probetas'    [; return self.desc_tubos; ] G_FEMENINO + G_PLURAL
+      'probeta'     [; return self.desc_tubos; ] G_FEMENINO
+      'botes'       [; return self.desc_mesas; ] G_PLURAL
+      'bote'        [; return self.desc_mesas; ] 0
+      'mesas'       [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
+      'mesa'        [; return self.desc_mesas; ] G_FEMENINO
+      'fetos'       [; return self.desc_mesas; ] G_PLURAL
+      'feto'        [; return self.desc_mesas; ] 0
+      'embriones'   [; return self.desc_mesas; ] G_PLURAL
+      'embrion'     [; return self.desc_mesas; ] 0
       'estanterias' [; return self.desc_estanterias(); ] G_FEMENINO + G_PLURAL
-      'estanteria' [; return self.desc_estanterias(); ] G_FEMENINO
-      'sangre' [; return self.desc_sangre; ] G_FEMENINO;
+      'estanteria'  [; return self.desc_estanterias(); ] G_FEMENINO
+      'sangre'      [; return self.desc_sangre; ] G_FEMENINO;
 
 
 Object "sangre" laboratorio
@@ -3194,25 +3163,25 @@ Object decorado_despensa despensa
                      herméticamente cerrado.",
     describir
       'frigorifico' [; return self.desc_frigorifico; ] 0
-      'armario' [; return self.desc_frigorifico; ] 0
-      'congelador' [; return self.desc_frigorifico; ] 0
-      'carne' [; return self.desc_carne; ] 0
-      'trozos' [; return self.desc_carne; ] G_PLURAL
-      'cerdo' [; return self.desc_carne; ] 0
-      'frutas' [; return self.desc_frutas; ] G_FEMENINO + G_PLURAL
-      'fruta' [; return self.desc_frutas; ] G_FEMENINO
-      'manzanas' [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
-      'manzana' [; return self.desc_m_p_m; ] G_FEMENINO
-      'peras' [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
-      'pera' [; return self.desc_m_p_m; ] G_FEMENINO      
+      'armario'     [; return self.desc_frigorifico; ] 0
+      'congelador'  [; return self.desc_frigorifico; ] 0
+      'carne'       [; return self.desc_carne; ] 0
+      'trozos'      [; return self.desc_carne; ] G_PLURAL
+      'cerdo'       [; return self.desc_carne; ] 0
+      'frutas'      [; return self.desc_frutas; ] G_FEMENINO + G_PLURAL
+      'fruta'       [; return self.desc_frutas; ] G_FEMENINO
+      'manzanas'    [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
+      'manzana'     [; return self.desc_m_p_m; ] G_FEMENINO
+      'peras'       [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
+      'pera'        [; return self.desc_m_p_m; ] G_FEMENINO      
       'melocotones' [; return self.desc_m_p_m; ] G_PLURAL
-      'melocoton' [; return self.desc_m_p_m; ] 0
+      'melocoton'   [; return self.desc_m_p_m; ] 0
       'expositores' [; return self.desc_expositores; ] G_PLURAL
-      'expositor' [; return self.desc_expositores; ] 0
-      'comidas' [; return self.desc_comida; ] G_FEMENINO + G_PLURAL
-      'comida' [; return self.desc_comida; ] G_FEMENINO
-      'alimentos' [; return self.desc_comida; ] G_PLURAL
-      'alimento' [; return self.desc_comida; ] 0;
+      'expositor'   [; return self.desc_expositores; ] 0
+      'comidas'     [; return self.desc_comida; ] G_FEMENINO + G_PLURAL
+      'comida'      [; return self.desc_comida; ] G_FEMENINO
+      'alimentos'   [; return self.desc_comida; ] G_PLURAL
+      'alimento'    [; return self.desc_comida; ] 0;
 
 
 Object "zona frigorífica" despensa
@@ -3266,15 +3235,15 @@ Object decorado_comedor comedor1
         }
     ],
     describir
-      'mesas' [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
-      'mesa' [; return self.desc_comida; ] G_FEMENINO
-      'barra' "Es una superficie rectangular, lisa y alargada, que tiene como finalidad
-               servir de soporte a las bandejas de comida." G_FEMENINO
-      'bandejas' [; return self.desc_bandejas; ] G_FEMENINO + G_PLURAL
-      'bandeja' [; return self.desc_comida; ] G_FEMENINO
-      'comida' [; return self.desc_comida; ] G_FEMENINO
+      'mesas'     [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
+      'mesa'      [; return self.desc_comida; ] G_FEMENINO
+      'barra'     "Es una superficie rectangular, lisa y alargada, que tiene como finalidad
+                   servir de soporte a las bandejas de comida." G_FEMENINO
+      'bandejas'  [; return self.desc_bandejas; ] G_FEMENINO + G_PLURAL
+      'bandeja'   [; return self.desc_comida; ] G_FEMENINO
+      'comida'    [; return self.desc_comida; ] G_FEMENINO
       'alimentos' [; return self.desc_comida; ] G_PLURAL
-      'alimento' [; return self.desc_comida; ] 0;
+      'alimento'  [; return self.desc_comida; ] 0;
 
 
 Object cocina "Cocina"
@@ -3310,20 +3279,20 @@ Object decorado_cocina cocina
                   desprende calor al poner algo encima, aunque estos de aquí no parecen
                   funcionar.",
     describir
-      'barras' [; return self.desc_barras; ] G_FEMENINO + G_PLURAL
-      'barra' [; return self.desc_barras; ] G_FEMENINO
-      'cacharros' [; return self.desc_cacharros; ] G_PLURAL
-      'cacharro' [; return self.desc_cacharros; ] 0
-      'pucheros' [; return self.desc_cacharros; ] G_PLURAL
-      'puchero' [; return self.desc_cacharros; ] 0
-      'mesas' [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
-      'mesa' [; return self.desc_mesas; ] G_FEMENINO
-      'campanas' [; return self.desc_campanas; ] G_FEMENINO + G_PLURAL
-      'campana' [; return self.desc_campanas; ] G_FEMENINO
+      'barras'      [; return self.desc_barras; ] G_FEMENINO + G_PLURAL
+      'barra'       [; return self.desc_barras; ] G_FEMENINO
+      'cacharros'   [; return self.desc_cacharros; ] G_PLURAL
+      'cacharro'    [; return self.desc_cacharros; ] 0
+      'pucheros'    [; return self.desc_cacharros; ] G_PLURAL
+      'puchero'     [; return self.desc_cacharros; ] 0
+      'mesas'       [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
+      'mesa'        [; return self.desc_mesas; ] G_FEMENINO
+      'campanas'    [; return self.desc_campanas; ] G_FEMENINO + G_PLURAL
+      'campana'     [; return self.desc_campanas; ] G_FEMENINO
       'extractores' [; return self.desc_campanas; ] G_PLURAL
-      'extractor' [; return self.desc_campanas; ] 0
-      'fogones' [; return self.desc_fogones; ] G_PLURAL
-      'fogon' [; return self.desc_fogones; ] 0;
+      'extractor'   [; return self.desc_campanas; ] 0
+      'fogones'     [; return self.desc_fogones; ] G_PLURAL
+      'fogon'       [; return self.desc_fogones; ] 0;
 
 
 Object balcon1
@@ -3553,7 +3522,7 @@ Object decorado_pasillo emergencia_pasillo
                   recordándote que estás en la zona de emergencia.",
     describir
       'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
+      'pared'   [; return self.desc_paredes; ] G_FEMENINO
       'pasillo' [; return emergencia_pasillo.descripcion; ] 0;
 
 
@@ -3833,7 +3802,7 @@ Object decorado_aula aula
     desc_patas "Son, sencillamente, las patas que sujetan la mesa del docente.",
     describir
       'patas' [; return self.desc_patas; ] G_FEMENINO + G_PLURAL
-      'pata' [; return self.desc_patas; ] G_FEMENINO;
+      'pata'  [; return self.desc_patas; ] G_FEMENINO;
 
 
 Object "mesas de los alumnos" aula
@@ -4053,14 +4022,14 @@ Object decorado_seguridad seguridad
     ],
     describir
       'hendidura' [; return self.desc_agujero; ] G_FEMENINO
-      'agujero'  [; return self.desc_agujero; ] 0
-      'orificio' [; return self.desc_agujero; ] 0
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'tubos' [; return self.desc_tubos; ] G_PLURAL
-      'tubo' [; return self.desc_tubos; ] 0
-      'cables' [; return self.desc_cables(); ] G_PLURAL
-      'cable' [; return self.desc_cables(); ] 0;
+      'agujero'   [; return self.desc_agujero; ] 0
+      'orificio'  [; return self.desc_agujero; ] 0
+      'paredes'   [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'     [; return self.desc_paredes; ] G_FEMENINO
+      'tubos'     [; return self.desc_tubos; ] G_PLURAL
+      'tubo'      [; return self.desc_tubos; ] 0
+      'cables'    [; return self.desc_cables(); ] G_PLURAL
+      'cable'     [; return self.desc_cables(); ] 0;
 
 
 ! posicion_actual:
@@ -4468,12 +4437,12 @@ Object decorado_ventilacion1 ventilacion1
                        del exterior y expulsándolo al interior del complejo.",
     desc_paredes "Las paredes son metálicas y lisas, sin ningún adorno.",
     describir
-      'paredes' [; return self.desc_paredes; ] G_PLURAL
-      'pared' [; return self.desc_paredes; ] 0
+      'paredes'      [; return self.desc_paredes; ] G_PLURAL
+      'pared'        [; return self.desc_paredes; ] 0
       'ventiladores' [; return self.desc_ventiladores; ] G_PLURAL
-      'ventilador' [; return self.desc_ventiladores; ] 0
-      'aspas' [; return self.desc_ventiladores; ] G_FEMENINO + G_PLURAL
-      'aspa' [; return self.desc_ventiladores; ] G_FEMENINO;
+      'ventilador'   [; return self.desc_ventiladores; ] 0
+      'aspas'        [; return self.desc_ventiladores; ] G_FEMENINO + G_PLURAL
+      'aspa'         [; return self.desc_ventiladores; ] G_FEMENINO;
 
 
 Object hueco_techo "Sala este de ventilación"
@@ -4615,23 +4584,23 @@ Object decorado_hueco hueco_techo
     ],
     describir
       'ventiladores' [; return self.desc_ventiladores; ] G_PLURAL
-      'ventilador' [; return self.desc_ventiladores; ] 0
-      'aspas' [; return self.desc_ventiladores; ] G_FEMENINO + G_PLURAL
-      'aspa' [; return self.desc_ventiladores; ] G_FEMENINO
-      'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared' [; return self.desc_paredes; ] G_FEMENINO
-      'cola' "Es un apéndice muy largo y robusto que sobresale de la parte posterior
-              del animal." G_FEMENINO
-      'sustancia' "Es una sustancia muy pegajosa, unas veces muy blanda y otras muy
-                   sólida y rígida." G_FEMENINO
-      'luz' "Es una luminiscencia débil de un color verde muy apagado, única hasta ahora
-             en todo el complejo." G_FEMENINO
-      'huevo' "El huevo está abierto por la parte superior, merced a cuatro membranas que
-               se pliegan hacia fuera mostrando el interior. Al acercarte, observas que
-               está vacío, y que las paredes están compuestas de algún tipo de proteína
-               traslúcida que deja pasar algo de luz. Por lo demás, está completamente
-               cubierto (por dentro y por fuera) de la sustancia viscosa que inunda la
-               sala." 0;
+      'ventilador'   [; return self.desc_ventiladores; ] 0
+      'aspas'        [; return self.desc_ventiladores; ] G_FEMENINO + G_PLURAL
+      'aspa'         [; return self.desc_ventiladores; ] G_FEMENINO
+      'paredes'      [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
+      'pared'        [; return self.desc_paredes; ] G_FEMENINO
+      'cola'         "Es un apéndice muy largo y robusto que sobresale de la parte posterior
+                      del animal." G_FEMENINO
+      'sustancia'    "Es una sustancia muy pegajosa, unas veces muy blanda y otras muy
+                      sólida y rígida." G_FEMENINO
+      'luz'          "Es una luminiscencia débil de un color verde muy apagado, única hasta ahora
+                      en todo el complejo." G_FEMENINO
+      'huevo'        "El huevo está abierto por la parte superior, merced a cuatro membranas que
+                      se pliegan hacia fuera mostrando el interior. Al acercarte, observas que
+                      está vacío, y que las paredes están compuestas de algún tipo de proteína
+                      traslúcida que deja pasar algo de luz. Por lo demás, está completamente
+                      cubierto (por dentro y por fuera) de la sustancia viscosa que inunda la
+                      sala." 0;
 
 
 Object "patas" hueco_techo
