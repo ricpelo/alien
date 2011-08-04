@@ -5053,6 +5053,18 @@ Object jason "Jason" nave1
 
         tema = AveriguarTema(TemasJason);
         switch (tema) {
+          tema_jason_donde_estas:
+            if (parent(self) == LugarReal()) {
+              HablaJason("Con usted, amigo... Qué remedio...");
+            } else if (EsExterior(parent(self))) {
+              HablaJason("Bajo una lluvia de mil demonios.");
+            } else {
+              switch(random(2)) {
+                1: HablaJason("No tengo ni idea, pero le aseguro que no es un lugar
+                               agradable.");
+                2: HablaJason("En cualquier sitio menos donde quisiera estar.");
+              }
+            }
           tema_jason_alien:
             if (alien.primera_vez) {
               HablaJason("¿A qué se refiere? No sé de qué me está hablando...");
@@ -7007,6 +7019,10 @@ Object tema_madre_energia "la energía" TemasComputadora
 ! Temas de Jason
 
 Object TemasJason;
+
+Object tema_jason_donde_estas "dónde estas" TemasJason
+  with
+    nombre 'donde' 'estas' 'esta';
 
 Object tema_jason_detector "el detector" TemasJason
   with
