@@ -708,90 +708,87 @@ Object nave1 "Interior de la nave"
 
       Ir:
         if (uno == obj_afuera) {
-          <<Salir>>;
-        }
-
-      Salir:
-        ! Si el procesador atmosférico funciona, no hay que entrar a mirar si llevan trajes
-        if (procesador.arreglado()) {
-!          self.mostrar_quien_sale(jason in self &&
-!                                  jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
-!                                  jason.perseguido == jugador);
-          rfalse;
-        }
-            
-        if (puerta_nave hasnt abierta) {
-          rfalse;
-        }
-        
-        k = 0;
-        ! Comprueba si el jugador lleva puesto el traje. Para ello, recorre todos los
-        ! objetos del jugador en busca de uno que sea de la clase TrajeAtmosferico y
-        ! que además lo lleve puesto encima.
-        objectloop (i in jugador) {
-          if (i ofclass TrajeAtmosferico && i has puesto)
-            k++;
-        }
-        if (k == 0) {
-          HablaMadre("No debería salir sin llevar puesto su traje atmosférico.");
-          "^Decides seguir sus sabios consejos.";
-        }
-        ! Comprobar si Jason está aquí, y sigue al jugador, y lleva puesto el traje.
-        ! Si no lo lleva puesto, se lo pone antes de salir.
-        if (jason in self && jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
-            jason.perseguido == jugador) {
-          t = 0;
-          objectloop (i in jason) {
-            if (i ofclass TrajeAtmosferico)
-              t = i;
+          ! Si el procesador atmosférico funciona, no hay que entrar a mirar si llevan trajes
+          if (procesador.arreglado()) {
+  !          self.mostrar_quien_sale(jason in self &&
+  !                                  jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
+  !                                  jason.perseguido == jugador);
+            rfalse;
+          }
+              
+          if (puerta_nave hasnt abierta) {
+            rfalse;
           }
           
-          ! Si no lleva ningún traje atmosférico, intenta cogerlo:
-          if (t == 0) {
-!            PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
-            if (traje_jason notin jason) {
-              if (PuedeVer(jason, traje_jason)) {
-                HablaJason("De acuerdo, pero antes cogeré el traje atmosférico.");
-                if (~~(jason.intentar_coger(traje_jason))) {
-                  PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
-!                  rfalse;
+          k = 0;
+          ! Comprueba si el jugador lleva puesto el traje. Para ello, recorre todos los
+          ! objetos del jugador en busca de uno que sea de la clase TrajeAtmosferico y
+          ! que además lo lleve puesto encima.
+          objectloop (i in jugador) {
+            if (i ofclass TrajeAtmosferico && i has puesto)
+              k++;
+          }
+          if (k == 0) {
+            HablaMadre("No debería salir sin llevar puesto su traje atmosférico.");
+            "^Decides seguir sus sabios consejos.";
+          }
+          ! Comprobar si Jason está aquí, y sigue al jugador, y lleva puesto el traje.
+          ! Si no lo lleva puesto, se lo pone antes de salir.
+          if (jason in self && jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
+              jason.perseguido == jugador) {
+            t = 0;
+            objectloop (i in jason) {
+              if (i ofclass TrajeAtmosferico)
+                t = i;
+            }
+            
+            ! Si no lleva ningún traje atmosférico, intenta cogerlo:
+            if (t == 0) {
+  !            PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
+              if (traje_jason notin jason) {
+                if (PuedeVer(jason, traje_jason)) {
+                  HablaJason("De acuerdo, pero antes cogeré el traje atmosférico.");
+                  if (~~(jason.intentar_coger(traje_jason))) {
+                    PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
+  !                  rfalse;
+                  } else {
+                    give traje_jason puesto;
+                    move jason to exterior1;
+                  }
+                  print "^";
                 } else {
+                  HablaJason("No puedo salir de la nave. No llevo puesto mi traje, y
+                              no lo veo por aquí.");
+  !                rfalse;
+                }
+              } else {
+                if (traje_jason hasnt puesto) {
                   give traje_jason puesto;
+                  HablaJason("De acuerdo, pero antes me pondré el traje atmosférico.");
+                  print "^";
                   move jason to exterior1;
                 }
-                print "^";
+              }
+  !            print "[Jason se queda dentro, al no disponer de protección vital para
+  !                    el exterior.]^^";
+            } else {
+              ! Si lo tiene, sale o se lo pone antes.
+              if (t hasnt puesto) {
+                give t puesto;
+  !              jason.precamino = RUTA_SEGUIR_JUGADOR;
+                PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
+                print "[Jason se pone el traje antes de salir.]^^";
               } else {
-                HablaJason("No puedo salir de la nave. No llevo puesto mi traje, y
-                            no lo veo por aquí.");
-!                rfalse;
+                print "[Jason sale de la nave con su traje puesto.]^^";
               }
-            } else {
-              if (traje_jason hasnt puesto) {
-                give traje_jason puesto;
-                HablaJason("De acuerdo, pero antes me pondré el traje atmosférico.");
-                print "^";
-                move jason to exterior1;
-              }
+              move jason to exterior1;
             }
-!            print "[Jason se queda dentro, al no disponer de protección vital para
-!                    el exterior.]^^";
-          } else {
-            ! Si lo tiene, sale o se lo pone antes.
-            if (t hasnt puesto) {
-              give t puesto;
-!              jason.precamino = RUTA_SEGUIR_JUGADOR;
-              PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
-              print "[Jason se pone el traje antes de salir.]^^";
-            } else {
-              print "[Jason sale de la nave con su traje puesto.]^^";
-            }
-            move jason to exterior1;
+            self.mostrar_quien_sale(traje_jason in jason && traje_jason has puesto); ! t ~= 0
+            rfalse;
           }
-          self.mostrar_quien_sale(traje_jason in jason && traje_jason has puesto); ! t ~= 0
+          self.mostrar_quien_sale(0);
           rfalse;
         }
-        self.mostrar_quien_sale(0);
-        rfalse;
     ],
     mostrar_quien_sale [ c;
       ! El parámetro c indica si el jugador sale solo de la nave, o Jason va con él
