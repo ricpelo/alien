@@ -8156,8 +8156,8 @@ Object tt_final
   SGW_HandleGlk(ev);
   switch (ev-->0) {
     evtype_Timer:
-      if (EsExterior(LugarReal()) && random(100) < 20) {
-        Damusix.TocarV(Trueno_ogg);
+      if (EsExterior(LugarReal()) && random(100) < 10) {
+        Damusix.TocarV(Trueno_ogg, 20 * random(5));
       }
   }
 ];
