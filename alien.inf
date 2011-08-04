@@ -5184,7 +5184,11 @@ Object jason "Jason" nave1
         if (puerta_nave has abierta) {
           move self to nave1;
           puerta_nave.cerrar();
-          PNJ_Ruta(self, MOVIMIENTO_NINGUNO);
+          if (jugador in nave1 or nave2) {
+            PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
+          } else {
+            PNJ_Ruta(self, MOVIMIENTO_NINGUNO);
+          }
           "Jason entra en la nave. A continuación, Madre cierra la compuerta exterior.";
         } else {
           HablaJason("La compuerta de la nave está cerrada.");
@@ -5518,6 +5522,10 @@ Object jason "Jason" nave1
         }
         if (uno ~= jugador) {
           HablaJason("No entiendo a quién quiere que siga.");
+          rtrue;
+        }
+        if (jugador in nave1 or nave2 && self in exterior1 && puerta_nave hasnt abierta) {
+          HablaJason("La compuerta de la nave está cerrada.");
           rtrue;
         }
         if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
