@@ -27,10 +27,11 @@ Constant POR_MENSAJE = 1;
 
 ! Tipos de pausa:
 
+Constant SIN_PAUSA = -1;
 Constant PAUSA_NORMAL = 0;
-Constant SIN_PAUSA = 1;
-Constant ESPERAR_TECLA = 2;
-Constant PAUSA_DOBLE = 3;
+Constant ESPERAR_TECLA = 1;
+Constant PAUSA_DOBLE = 2;
+Constant PAUSA_TRIPLE = 3;
 
 ! Tipos de letra:
 
@@ -51,14 +52,9 @@ class Escritura
         EsperarTecla(0, self.pausaLetra);
       }
     ],
-    hazPausaMensaje [;
+    hazPausaMensaje [ multi;
       if ( self.pausaMensaje > -1 ) {
-        EsperarTecla(0, self.pausaMensaje);
-      }
-    ],
-    hazPausaDobleMensaje [;
-      if ( self.pausaMensaje > -1 ) {
-        EsperarTecla(0, self.pausaMensaje * 2);
+        EsperarTecla(0, self.pausaMensaje * multi);
       }
     ],
     pausaLetra 1,
@@ -105,9 +101,12 @@ class Escritura
           }
         }          
         switch (tipo_pausa) {
+          SIN_PAUSA:     break;
           ESPERAR_TECLA: EsperarTecla();
-          PAUSA_NORMAL: self.hazPausaMensaje();
-          PAUSA_DOBLE: self.hazPausaDobleMensaje();
+          PAUSA_NORMAL:  self.hazPausaMensaje(1);
+          PAUSA_DOBLE:   self.hazPausaMensaje(2);
+          PAUSA_TRIPLE:  self.hazPausaMensaje(3);
+          default:       self.hazPausaMensaje(tipo_pausa);
         }
         style roman;
         n = n + 3;
