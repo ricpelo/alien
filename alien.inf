@@ -70,9 +70,9 @@ Constant CANAL_FONDO = 9;
 Constant CANAL_VARIOS = 1;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 2;
-Constant CANAL_TRUENO = 3;
-Constant CANAL_COMPUTADORA = 4;
-Constant CANAL_TRANSMISOR = 5;
+!Constant CANAL_TRUENO = 3;
+Constant CANAL_COMPUTADORA = 3;
+Constant CANAL_TRANSMISOR = 4;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -489,7 +489,8 @@ Class Lugar
       
       ! En el exterior, de vez en cuando suena un trueno:
       if (EsExterior(self) && random(100) < 8) {
-        control_sonido_varios.activar(Trueno_ogg);
+        Damusix.TocarV(Trueno_ogg);
+!        control_sonido_varios.activar(Trueno_ogg);
       }
     ],
   has
@@ -650,10 +651,10 @@ Object control_sonido_detector
     canal CANAL_DETECTOR,
     volumen 70; ! $7000;
 
-Object control_sonido_trueno
-  class ControlSonido
-  with
-    canal CANAL_TRUENO;
+!Object control_sonido_trueno
+!  class ControlSonido
+!  with
+!    canal CANAL_TRUENO;
 
 Object control_sonido_computadora
   class ControlSonido
@@ -7912,7 +7913,7 @@ Object tt_final
   control_sonido_fondo.iniciar();
   control_sonido_varios.iniciar();
   control_sonido_detector.iniciar();
-  control_sonido_trueno.iniciar();
+!  control_sonido_trueno.iniciar();
   control_sonido_computadora.iniciar();
   control_sonido_transmisor.iniciar();
 ];
