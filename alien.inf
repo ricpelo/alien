@@ -5180,11 +5180,16 @@ Object jason "Jason" nave1
 !        rtrue;
 !    ],
     orden_entrar [;
-      if (self in exterior1 && puerta_nave has abierta) {
-        move self to nave1;
-        puerta_nave.cerrar();
-        PNJ_Ruta(self, MOVIMIENTO_NINGUNO);
-        "Jason entra en la nave. A continuación, Madre cierra la compuerta exterior.";
+      if (self in exterior1) {
+        if (puerta_nave has abierta) {
+          move self to nave1;
+          puerta_nave.cerrar();
+          PNJ_Ruta(self, MOVIMIENTO_NINGUNO);
+          "Jason entra en la nave. A continuación, Madre cierra la compuerta exterior.";
+        } else {
+          HablaJason("La compuerta de la nave está cerrada.");
+          rfalse;
+        }
       }
 
       self.orden_ir(obj_adentro);
