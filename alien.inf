@@ -8483,7 +8483,7 @@ Object tt_final
   tt_inicial5.visualiza();
   EsperarTecla(0, 600);
   i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 20); i++; }
-  Damusix.SimpleFadeOut(Intro_ogg, 1000);
+  Damusix.SimpleFadeOut(Intro_ogg, 3000);
 ];
 
 
