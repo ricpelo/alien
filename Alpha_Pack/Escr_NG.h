@@ -94,9 +94,8 @@ class Escritura
             #ifdef TARGET_GLULX;
               ! Tocar un sonido, esperar a pulsar una tecla o que pase un tiempo
               if ( self.sonido ~= 0 ) {
-                Damusix.AsignarCanal(Teletipo_ogg, CANAL_COMPUTADORA, -1, 1);
-                Damusix.Tocar(Teletipo_ogg);
-                ! EfectosSonoros.ActivarEfecto(Teletipo_ogg, 1, CANAL_COMPUTADORA);
+                !Damusix.AsignarCanal(Teletipo_ogg, CANAL_COMPUTADORA, -1, 1);
+                Damusix.TocarV(Teletipo_ogg);
               }
               self.hazPausaLetra();
             #endif;
