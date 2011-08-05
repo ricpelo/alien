@@ -1,5 +1,6 @@
 !% -~S
 !% -G
+!% -D
 !% $MAX_STATIC_DATA=20000
 !% $MAX_PROP_TABLE_SIZE=58000
 !% $MAX_VERBS=153
@@ -387,15 +388,32 @@ Object barra_estado
     modo BE_COMPUESTO,
     disposicion
       1  1 true BE_LOCALIDAD
-      40 1 true BE_TEXTO
-      67 1 true BE_TURNOS,
-    texto [;
-      if (linterna has encendida && bateria in linterna) {
-        print_ret "Linterna: ", bateria.nivel_carga(), "%";
+      30 1 true BE_TEXTO
+      50 1 true BE_TEXTO
+      70 1 true BE_TURNOS,
+    texto [ x;
+      switch (x) {
+        1: if (linterna has encendida && bateria in linterna) {
+             print_ret "Linterna: ", bateria.nivel_carga(), "%";
+           }
+        2: if (rifle in jugador && detector_movimiento has encendido &&
+               alien.distancia > 0 && alien.distancia < 6) {
+             print "Detector: ", 10 * alien.distancia, " m. ";
+             switch (alien.sentido) {
+               obj_n:      "N";
+               obj_s:      "S";
+               obj_e:      "E";
+               obj_o:      "O";
+               obj_arriba: "AR";
+               obj_abajo:  "AB";
+             }
+             rtrue;
+           } 
       }
     ],
     lineas_inv
       BE_INV_TOTAL;
+
 
 [ DibujarLineaEstado;
   if (dibujarEstado) {
