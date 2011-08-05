@@ -397,15 +397,19 @@ Object barra_estado
              print_ret "Linterna: ", bateria.nivel_carga(), "%";
            }
         2: if (rifle in jugador && detector_movimiento has encendido &&
-               alien.distancia > 0 && alien.distancia < 6) {
-             print "Detector: ", 10 * alien.distancia, " m. ";
-             switch (alien.sentido) {
-               obj_n:      "N";
-               obj_s:      "S";
-               obj_e:      "E";
-               obj_o:      "O";
-               obj_arriba: "AR";
-               obj_abajo:  "AB";
+               alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
+             if (parent(alien) == LugarReal()) {
+               print_ret "Detector: 0 m.";
+             } else {
+               print "Detector: ", 10 * alien.distancia, " m. ";
+               switch (alien.sentido) {
+                 obj_n:      "N";
+                 obj_s:      "S";
+                 obj_e:      "E";
+                 obj_o:      "O";
+                 obj_arriba: "AR";
+                 obj_abajo:  "AB";
+               }
              }
              rtrue;
            } 
@@ -506,6 +510,8 @@ Class Lugar
       ! En el exterior, de vez en cuando suena un trueno:
       if (EsExterior(self)) {
         glk_request_timer_events(4000);
+!      } else if (self ofclass Laberinto) {
+!        glk_request_timer_events(2000);
       } else {
         glk_request_timer_events(0);
      }
@@ -8129,6 +8135,9 @@ Object tt_final
     evtype_Timer:
       if (EsExterior(LugarReal()) && random(100) < 10) {
         Damusix.TocarV(Trueno_ogg, 20 * random(5));
+!      } else if (LugarReal() ofclass Laberinto) {
+!        alien.movimiento();
+!        DibujarLineaEstado();
       }
   }
 ];
