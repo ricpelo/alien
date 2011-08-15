@@ -9533,37 +9533,35 @@ Endif;
 
 
 [ PistasSub;
-  if (hayPistas == 0) {
-    hayPistas = 1;
-    jason.hablar = computadora.hablar = robot.hablar = false;
-    glk($0086, style_Emphasized);
-    print "[Advertencia: Es sabido que la tentación de la ayuda es a veces tan fuerte que
-           se suelen obtener pistas prematuramente. Por tanto, en cualquier momento durante
-           el juego puedes poner ";
-    style bold;
-    print "PISTAS NO";
-    glk($0086, style_Emphasized);
-    print ", y eso te impedirá obtener ayuda en la sesión de juego actual. Si sigues
-           queriendo una pista, pon ";
-    style bold;
-    print "PISTAS";
-    glk($0086, style_Emphasized);
-    print " otra vez.]^";
-    style roman;
+  switch (hayPistas) {
+    0: hayPistas = 1;
+       jason.hablar = computadora.hablar = robot.hablar = false;
+       glk($0086, style_Emphasized);
+       print "[Advertencia: Es sabido que la tentación de la ayuda es a veces
+              tan fuerte que se suelen obtener pistas prematuramente. Por tanto,
+              en cualquier momento durante el juego puedes poner ";
+       style bold;
+       print "PISTAS NO";
+       glk($0086, style_Emphasized);
+       print ", y eso te impedirá obtener ayuda en la sesión de juego actual.
+              Si sigues queriendo una pista, pon ";
+       style bold;
+       print "PISTAS";
+       glk($0086, style_Emphasized);
+       print " otra vez.]^";
+       style roman;
+    1: ApagarGraficosSub(true);
+       barra_estado.numero_lineas = 26;
+       barra_estado.dibujar();
+       ZIPI_Empezar();
+       barra_estado.numero_lineas = 1;
+       barra_estado.dibujar();
+       EncenderGraficosSub(true);
+       <<Mirar>>;
+    2: glk($0086, style_Emphasized);
+       print "[Las pistas han sido desactivadas.]^";
+       style roman;
   }
-  if (hayPistas == 2) {
-    glk($0086, style_Emphasized);
-    print "[Las pistas han sido desactivadas.]^";
-    style roman;
-  }
-  ApagarGraficosSub(true);
-  barra_estado.numero_lineas = 26;
-  barra_estado.dibujar();
-  ZIPI_Empezar();
-  barra_estado.numero_lineas = 1;
-  barra_estado.dibujar();
-  EncenderGraficosSub(true);
-  <<Mirar>>;
 ];
 
 
