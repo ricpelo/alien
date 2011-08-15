@@ -9566,14 +9566,14 @@ Endif;
 
 
 [ PistasNoSub;
-  if (hayPistas == 2) {
-    glk($0086, style_Emphasized);
-    print "[Las pistas ya han sido desactivadas.]^";
-    style roman;
+  switch (hayPistas) {
+    2:       glk($0086, style_Emphasized);
+             print "[Las pistas ya han sido desactivadas.]^";
+             style roman;
+    default: hayPistas = 2;
+             glk($0086, style_Emphasized);
+             print "[PISTAS desactivadas.]^";
+             style roman;
   }
-  hayPistas = 2;
-  glk($0086, style_Emphasized);
-  print "[PISTAS desactivadas.]^";
-  style roman;
 ];
 
