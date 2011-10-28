@@ -887,11 +887,12 @@ Object decorado_nave1 nave1
   class DecoradoAmpliado
   with
     desc_instrumentos "Los paneles de instrumentación están llenos de indicadores y
-                       botones por todas partes. Además, en un lateral se aprecia
+                       botones por todas partes. En un lateral también se aprecia
                        un cargador de baterías.",
     desc_ventanales "A través de las ventanas que dan al exterior sólo se aprecia una
                      oscuridad tan sólo rota por el tintinear de la lluvia
-                     impactando en el cristal.",
+                     impactando en el cristal y por la potencia de los focos que
+                     iluminan el lugar de aterrizajecon un fulgor fantasmagórico.",
     desc_asientos "Son unos asientos mullidos y cómodos. Algo que contrasta mucho con
                    la deshumanización del resto del decorado.",
     desc_paredes "En una de las paredes puedes observar un compartimento destinado a
@@ -906,11 +907,11 @@ Object decorado_nave1 nave1
           'paneles', 'panel',
           'instrumentos', 'instrumento',
           'indicadores', 'indicador': "La mayoría de las funciones de la nave están
-                                       gobernadas por Madre, así que es mejo no tocar
-                                       nada.";
+                                       gobernadas por Madre, así que lo mejor será
+                                       tocar lo menos posible.";
           'asientos', 'asiento': "Son mullidos y confortables, pero ahora no es el
                                   momento de sentarse.";
-          'paredes', 'pared': "Son frías y duras al tacto.";
+          'paredes', 'pared': "Son frías y sólidas al tacto.";
         }
     ],
     describir
@@ -1496,11 +1497,11 @@ Object bateria "batería" linterna
 Object exterior1 "Junto a la nave"
   class Lugar
   with
-    descripcion "Estás en el exterior, junto a tu nave. La tenue luz azul que flota en el
-                 ambiente apenas te deja discernir las enormes y majestuosas formas de la
-                 colonia minera. A causa de la lluvia, una neblina fantasmagórica lo
+    descripcion "Estás en el exterior, junto a tu nave. La tenue luz blanquecina que flota
+                 en el ambiente apenas te deja discernir las enormes y majestuosas formas
+                 de la colonia minera. A causa de la lluvia, una neblina fantasmagórica lo
                  envuelve todo, lo que hace que las siluetas de la colonia se difuminen.
-                 Pese a todo, la temperatura es elevada.",
+                 La temperatura es elevada, y la sensación de agobio, palpable.",
     sgw_img Exterior1_jpg,
     sgw_mus Lluvia_ogg,
     sgw_vol 50,
@@ -1538,7 +1539,7 @@ Object decorado_exterior1 exterior1
 Object junto_procesador "Frente al procesador atmosférico"
   class Lugar
   with
-    descripcion "Te encuentras junto a la entrada al complejo de la maquinaria de
+    descripcion "Te encuentras junto a la entrada al recinto de la maquinaria de
                  purificación ambiental. En el interior es donde se produce y se renueva
                  el aire para la colonia. Una puerta metálica da acceso al procesador, y
                  junto a ella se ha situado un panel de control. El edificio es altísimo,
@@ -1606,14 +1607,14 @@ Object decorado_junto_procesador junto_procesador
   class DecoradoAmpliado
   with
     desc_paredes "La lluvia y otros fenómenos atmosféricos han hecho mella en la otrora
-                  superficie lisa y pulida de la pared del complejo.",
+                  lisa y pulida superficie de la pared del complejo.",
     describir
       'paredes'  [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
       'pared'    [; return self.desc_paredes; ] G_FEMENINO
       'fachada'  [; return self.desc_paredes; ] G_FEMENINO
       'edificio' "La construcción tiene una amplia base cilíndrica que se prolonga con
                   forma semicónica elevándose muy alto hacia el cielo." 0
-      'luz'      "Es un halo inmaterial que lo envuelve todo con un manto azulado."
+      'luz'      "Es un halo inmaterial que lo envuelve todo con un manto blanco-azulado."
                  G_FEMENINO
       'lluvia'   "Las gotas de lluvia caen con fuerza, casi con intención."
                  G_FEMENINO
@@ -1626,10 +1627,10 @@ Object cables "cables" junto_procesador
     nombre 'cable' 'cables//p',
     descripcion [;
       if (bateria notin panel_control) {
-        "Son unos siete u ocho cables, de colores variados. Sobresalen, inertes, del
-         panel de control. Por ellos no circula nada de energía...";
+        "Son unos siete u ocho cables de varios colores. Sobresalen, inertes, del
+         panel de control.";
       } else {
-        "Dos de los cables están temporalmente unidos a los bornes de una batería.";
+        "Dos de los cables están temporalmente unidos a los bornes de la batería.";
       }
     ],
     antes [;
@@ -1637,7 +1638,8 @@ Object cables "cables" junto_procesador
         if (panel_control has general) {
           "Ahora parece que los cables dan algo de calambre.";
         } else {
-          "Incluso mojados como están, no transmiten nada de corriente.";
+          "Incluso mojados como están, no te provocan ni siquiera un ligero
+           calambre, lo que te hace pensar que por ellos no circula energía.";
         }
         
       Encender:
@@ -1908,8 +1910,8 @@ Object procesador "Procesador atmosférico"
             Bandera_Fin(1);
             "Cuando despiertas, notas que sólo puedes mover los ojos. Estás completamente
              inmóvil, atrapado dentro de una especie de capullo gelatinoso de una enorme
-             dureza. Y es cuando te das cuenta de que lo terrible no es eso, sino saber que
-             nadie podrá oir tus gritos...^";
+             dureza. Y es cuando te das cuenta de que lo más terrible no es eso, sino la
+             certeza de saber que nadie podrá oir tus gritos...^";
           } else {
             SegundaParte();
             ! En un par de turnos se oye a alien rompiendo la puerta del complejo
@@ -1923,8 +1925,8 @@ Object procesador "Procesador atmosférico"
                    a disparar su rifle contra la criatura, que eleva su grito sobre el del
                    soldado. Rápidamente, el ser se dirige hasta donde se encuentra Jason, y
                    de un sólo movimiento lo atrapa por el cuello y sale corriendo por la
-                   puerta del procesador atmosférico. Comienzas a respirar en cuanto te das
-                   cuenta de que estás solo...^";
+                   puerta del procesador atmosférico. Comienzas a respirar de nuevo cuando
+                   te das cuenta de que estás solo...^";
             EsperarTecla();
             viewImageCenter(procesador.sgw_img);
           }
@@ -2830,7 +2832,7 @@ Object "sangre" enfermeria
                  reciente.",
     antes [;
       Tocar:
-        "Mejor no tocar eso... Podrías coger una infección...";
+        "Mejor no tocar eso... Podrías pillar una infección...";
       Examinar:
         rfalse;
       default:
@@ -2875,7 +2877,7 @@ Object jeringa "jeringa" cajon
           print "Clavas la aguja justo en el corazón de Jason, y le inyectas toda la
                  adrenalina que había en la jeringa. El Mayor abre los ojos y lanza un
                  grito desgarrador... Retiras la aguja rápidamente de su pecho, y
-                 comienza a toser fuertemente mientras se aprieta el pecho con las
+                 comienza a toser fuertemente mientras se aprieta el tórax con las
                  manos... ¡Está vivo y despierto! ¡Ha funcionado!^";
           print "Jason mira la interminable aguja de la jeringa, y exclama:^";
           HablaJason("Dios mío... ¿Ha tenido que ensartarme con ESO?");
@@ -2895,9 +2897,9 @@ Object laboratorio "Laboratorio"
                  de las mesas, descansan lo que parecen ser embriones de seres
                  irreconocibles, embutidos en grandes botes transparentes. La zona este
                  tiene el aspecto de haber sido un área de contención, pero sea lo que sea
-                 lo que hubiera estado dentro, contenido, ya no lo está. Manchas y charcos
+                 lo que hubiera estado confinado dentro, ya no lo está. Manchas y charcos
                  de sangre cubren ciertas partes de la estancia, y una cámara situada
-                 cerca del techo barre la sala de izquierda a derecha.",
+                 cerca del techo barre la sala de lado a lado.",
     sgw_img Laboratorio_jpg,
     al_n laberinto19,
     antes [;
@@ -2926,7 +2928,7 @@ Object decorado_laboratorio laboratorio
       if (bisturi has oculto && bisturi hasnt movido) {
         give bisturi ~oculto;
         return ", pero buscando bien en una de ellas, encuentras una especie
-                de objeto cortante... Al mirarlo de cerca, compruebas que se trata de
+                de objeto afilado... Al mirarlo de cerca, compruebas que se trata de
                 un bisturí láser.";
       } else {
         return ".";
@@ -2992,7 +2994,7 @@ Object area_contencion "área de contención" laboratorio
                  o corroída.",
     antes [;
       Coger, Tocar, Probar:
-        "Intuyes que el daño de la puerta puede haberse debido a la fuga de algún tipo de
+        "Intuyes que el daño de la puerta pudo haberse debido a la fuga de algún tipo de
          ácido.";
     ],
   has
@@ -3114,7 +3116,8 @@ Class ZonaNorte
           print "Una araña idéntica a la que habías visto muerta en la sala de
                  ventilación, ";
         } else {
-          print "Una especie de araña con unas patas anormalmente largas y delgadas, ";
+          print "Una especie de araña, provista de unas patas anormalmente largas y delgadas
+                 y de una poderosa y serpenteante cola, ";
         }
         print "sale rápidamente de entre los expositores y salta como una exhalación hacia
                ti. Te tapa completamente la cara, no puedes respirar, sus patas se cierran
@@ -3161,8 +3164,8 @@ Object despensa "Despensa"
                  elementos perecederos. Desde aquí alcanzas a ver trozos de carne
                  (probablemente cerdo) y frutas. A tu alrededor, cientos de expositores
                  soportan los distintos tipos de comida prefabricada o enlatada de la que
-                 disponen los colonos. Algunos expositores están rotos y la comida
-                 desperdigada.",
+                 disponen los colonos. Algunos de los expositores están rotos y con la
+                 comida desperdigada por los alrededores.",
     sgw_img Despensa_jpg,
     al_o comedor1,
     al_e cocina;
@@ -3174,7 +3177,8 @@ Object decorado_despensa despensa
     desc_frigorifico "Los alimentos se congelan en esa especie de gigantesco armario
                       congelador. Está cerrado, y no parece abrirse.",
     desc_carne "Enormes trozos de carne sin procesar. Incomestibles, desde luego.",
-    desc_frutas "Alcanzas a distinguir manzanas, peras y algunos melocotones.",
+    desc_frutas "Alcanzas a distinguir manzanas y algunas naranjas. El resto no lo habías
+                 visto en tu vida.",
     desc_m_p_m "Todo parece bastante jugoso. Aún así, no te fías...",
     desc_expositores "Muestran al posible consumidor la oferta de alimentos disponibles.
                       Algunos están rotos, exponiendo la comida al aire.",
@@ -3182,8 +3186,8 @@ Object decorado_despensa despensa
     antes [;
       Coger, Tocar, Probar, Comer:
         if (self.cantidad == 'carne' or 'trozos' or 'cerdo' or 'frutas' or 'fruta' or
-            'manzanas' or 'manzana' or 'peras' or 'pera' or 'melocotones' or
-            'melocoton' or 'comidas' or 'comida' or 'alimentos' or 'alimento') {
+            'manzanas' or 'manzana' or 'naranjas' or 'naranja' or
+            'comidas' or 'comida' or 'alimentos' or 'alimento') {
           "Será mejor que no pruebes nada. Ni toque siquiera. Nunca se sabe...";
         }
       Abrir, Tirar, Empujar:
@@ -3192,7 +3196,7 @@ Object decorado_despensa despensa
           rtrue;
         }
     ],
-    no_puedes_abrir "Lo intentas con todas tus fueras, pero te resulta imposible; está
+    no_puedes_abrir "Lo intentas con todas tus fuerzas, pero te resulta imposible: está
                      herméticamente cerrado.",
     describir
       'frigorifico' [; return self.desc_frigorifico; ] 0
@@ -3238,12 +3242,12 @@ Object comedor1 "Comedor"
   with
     nombre_localidad "comedor",
     descripcion "Estás en el comedor de la colonia. Docenas de mesas se extienden a derecha
-                 e izquierda de este a oeste, dejando únicamente un gran pasillo central por
-                 donde pasar cómodamente. Tras unos rápidos cálculos mentales dirías que tiene
-                 una capacidad para cien personas aproximadamente. Una gran barra, por donde
-                 pasar las bandejas y servirte la comida, se extiende hacia la habitación
+                 e izquierda, de este a oeste, dejando únicamente un gran pasillo central por
+                 donde pasar cómodamente. Un sencillo cálculo mental tras un rápido vistazo
+                 arrojan una capacidad aproximada de cien personas. Una gran barra, por donde
+                 pasar las bandejas y servir la comida, se extiende hacia la habitación
                  contigua hasta penetrar en ella. En una mesa cercana hay algunas bandejas
-                 de comida sin empezar.",
+                 de comida sin consumir.",
     sgw_img Comedor_jpg,
     al_e despensa,
     al_s balcon6;
@@ -3253,7 +3257,7 @@ Object decorado_comedor comedor1
   class DecoradoAmpliado
   with
     desc_mesas "Las mesas se alinean ordenadamente, fijas como están al suelo y, salvo una,
-                todas están bastante limpias.",
+                todas se encuentran bastante limpias.",
     desc_bandejas "Algunas bandejas se alinean en la barra como soldados en formación,
                    mientras que otras reposan toscamente en una de las mesas.",
     desc_comida "Es sólo comida putrefacta.", 
@@ -3304,7 +3308,7 @@ Object decorado_cocina cocina
                  la de servir de soporte a las bandejas de comida. Se pierde por el
                  oeste hacia el comedor situado junto a la cocina.",
     desc_cacharros "Ollas, cacerolas y todo tipo de utensilios de cocina, colgando del
-                    techo de manera laxa.",
+                    techo de forma laxa.",
     desc_mesas "Amplias e impolutas. Esta cocina parece no haberse usado en siglos.",
     desc_campanas "Potentes extractores de aire que expulsan el humo y el vapor. Ahora
                    mismo se encuentran apagados, y no ves forma de hacerlos funcionar.",
@@ -3339,14 +3343,14 @@ Object balcon1
     despues [;
       Ir:
         if (self hasnt visitado) {
-          print "Llegas a una especie de balcón, desde donde se puede observar claramente
+          print "Llegas a una especie de balcón desde donde se puede observar claramente
                  la forma y la estructura del complejo. Todo está construido alrededor de
-                 la veta de mineral (situado en el centro del edificio), y hay balcones
+                 la veta de mineral (situado en el centro del edificio) y hay balcones
                  como éste al norte, sur, este y oeste de la veta. Además, es evidente
                  que éste no es el único nivel del complejo, pues éste sigue hacia abajo
                  siempre rodeando el mineral. Las distancias son difíciles de calcular
                  desde esta perspectiva, pero la sensación que transmite es que te
-                 encuentras ante algo grande...^";
+                 encuentras ante algo grande.^";
         }
     ];
 
@@ -3507,7 +3511,7 @@ Class SalaEmergencia
       "Te encuentras en la sala ", (string) self.situacion, " del área de emergencia.
        Está absolutamente vacía, a excepción de un gran botón pulsador situado en el
        centro de la pared opuesta a la puerta. Todo, desde sus pequeñas dimensiones a
-       la total falta de decoración, favorece la claustrofobia.";
+       la total falta de decoración, favorece la sensación de total asfixia.";
     ];
 
 
