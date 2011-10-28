@@ -8154,18 +8154,22 @@ Object tt_final
   SGW_HandleGlk(ev);
   switch (ev-->0) {
     evtype_Timer:
-      if (EsExterior(LugarReal()) && random(100) < 35) {
+      if (EsExterior(LugarReal()) && random(100) < 55) {
         r = 20 * random(5);
         if (r >= 80) {
           viewImageCenter(Fondo_blanco_jpg);
         }
         Damusix.TocarV(Trueno_ogg, r);
         if (r >= 80) {
-          EsperarTecla(0, 20);
+          glk($00D6, 100);                    ! request_timer_events
+          while (1) {
+            glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
+            if ((gg_arguments-->0) == 1) {
+              glk($00D6, 4000);               ! request_timer_events
+              break;
+            }
+          }
           viewImageCenter(localizacion.sgw_img);
-          ! Hay que volver a activar el contador de eventos porque
-          ! EsperarTecla() lo resetea a cero:
-          glk_request_timer_events(4000);
         }
 !      } else if (LugarReal() ofclass Laberinto) {
 !        alien.movimiento();
