@@ -68,10 +68,9 @@ Constant GRAFICOS_GRANDES  = 500;
 ! Canales de sonido:
 ! Constant NUM_CANALES = 6;
 Constant CANAL_FONDO = 9;
-Constant CANAL_VARIOS = 1;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
-Constant CANAL_DETECTOR = 2;
-Constant CANAL_TELETIPO = 3;
+Constant CANAL_DETECTOR = 1;
+Constant CANAL_TELETIPO = 2;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -657,11 +656,6 @@ Object control_sonido_fondo
     canal CANAL_FONDO,
     volumen 50; ! $5000;
 
-Object control_sonido_varios
-  class ControlSonido
-  with
-    canal CANAL_VARIOS;
-
 Object control_sonido_detector
   class ControlSonido
   with
@@ -883,7 +877,7 @@ Object nave1 "Interior de la nave"
         EsperarTecla();
         clearMainWindow();
         tt_final.visualiza();
-        control_sonido_varios.activar(Grito_Jason_ogg);
+        Damusix.TocarV(Grito_Jason_ogg);
         if (t) {
           EncenderGraficosSub(true);
           viewImageCenter(Oscuridad_jpg);
@@ -1927,7 +1921,7 @@ Object procesador "Procesador atmosférico"
             ! En un par de turnos se oye a alien rompiendo la puerta del complejo
             ! (ver rutina ruido_puerta_rota.tiempo_agotado)
             ArrancarReloj(ruido_puerta_rota, 2);
-            control_sonido_varios.activar(Grito_Jason_ogg);
+            Damusix.TocarV(Grito_Jason_ogg);
             viewImageCenter(Alien_Rapta_Jason_jpg);
             print "^El monstruo gira la cabeza hacia vosotros, y emite un chillido
                    insoportable, agudo, que os hiela la sangre nada más oirlo. Tú te quedas
@@ -4341,7 +4335,7 @@ Object laberinto28
               }
               clearMainWindow();
               tt_escape1.visualiza();
-              control_sonido_varios.activar(Rugido_ogg);
+              Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
               control_sonido_detector.cambiar_volumen($3000);
               move ascensor_arriba to exterior3;
@@ -6548,7 +6542,7 @@ Object alien procesador
 !                   print "^¡El monstruo te está siguiendo! ¡Corre!^";
                    self.oportunidad = self.oportunidad + 2;
                    if (random(3) == 1) {
-                     control_sonido_varios.activar(Rugido_ogg);
+                     Damusix.TocarV(Rugido_ogg);
                    }
                  } else {
                    if (self.tiempo_restante ~= -1) {
@@ -6564,7 +6558,7 @@ Object alien procesador
 !              1: print "^¡El monstruo gira su cabeza y te observa amenazador!^";
 !              2: print "^¡El monstruo comienza a caminar hacia ti!^";
               1: print "^¡El monstruo gira la cabeza y, al verte, salta sobre ti!^";
-                 control_sonido_varios.activar(Rugido_ogg);
+                 Damusix.TocarV(Rugido_ogg);
             }
             if (self.tiempo_restante >= 0) {
               if (self.oportunidad > 0) {
@@ -6583,7 +6577,7 @@ Object alien procesador
             switch (self.oportunidad) {
               0: print "^¡El monstruo te observa amenazador!^";
               1, 2: print "^¡El monstruo salta sobre ti!^";
-                    control_sonido_varios.activar(Rugido_ogg);
+                    Damusix.TocarV(Rugido_ogg);
             }
             self.oportunidad = self.oportunidad + 3;
             rtrue;
@@ -7912,7 +7906,6 @@ Object tt_final
 
 [ IniciarSonidos;
   control_sonido_fondo.iniciar();
-  control_sonido_varios.iniciar();
   control_sonido_detector.iniciar();
   control_sonido_teletipo.iniciar();
 ];
@@ -8666,7 +8659,7 @@ Object tt_computadora
   control_sonido_detector.desactivar();
   
   if (bf == 1) {
-    control_sonido_varios.activar(Grito_Jugador_ogg);
+    Damusix.TocarV(Grito_Jugador_ogg);
   }
   
   banderafin = bf;
