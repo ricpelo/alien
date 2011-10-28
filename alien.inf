@@ -8160,7 +8160,7 @@ Object tt_final
           viewImageCenter(Fondo_blanco_jpg);
         }
         Damusix.TocarV(Trueno_ogg, r);
-        if (r >= 80 {
+        if (r >= 80) {
           EsperarTecla(0, 20);
           viewImageCenter(localizacion.sgw_img);
           ! Hay que volver a activar el contador de eventos porque
