@@ -1546,10 +1546,13 @@ Object junto_procesador "Frente al procesador atmosférico"
     sgw_vol 50,
     al_s exterior1,
     adentro puerta_procesador,
+    tenga_cuidado false,
     antes [;
       Ir:
         if (uno == obj_adentro && (~~(procesador.arreglado())) &&
-            jason in LugarReal() && puerta_procesador has abierta) {
+            jason in LugarReal() && puerta_procesador has abierta &&
+            ~~(self.tenga_cuidado)) {
+          self.tenga_cuidado = true;
           print "Jason apoya una mano en tu hombro y mirándote fijamente te dice...^";
           HablaJason("Tenga cuidado...");
           EsperarTecla();
