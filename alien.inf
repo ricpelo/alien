@@ -71,6 +71,7 @@ Constant CANAL_FONDO = 9;
 Constant CANAL_VARIOS = 1;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 2;
+Constant CANAL_TELETIPO = 3;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -667,6 +668,15 @@ Object control_sonido_detector
     hay_detector true,
     canal CANAL_DETECTOR,
     volumen 70; ! $7000;
+
+Object control_sonido_teletipo
+  class ControlSonido
+  with
+    canal CANAL_TELETIPO,
+    iniciar [;
+      Damusix.VolumenCanal(self.canal, self.volumen);
+      Damusix.AsignarCanal(Teletipo_ogg, self.canal, self.volumen, 1);
+    ];
 
 
 
@@ -7904,6 +7914,7 @@ Object tt_final
   control_sonido_fondo.iniciar();
   control_sonido_varios.iniciar();
   control_sonido_detector.iniciar();
+  control_sonido_teletipo.iniciar();
 ];
 
 
@@ -8142,12 +8153,16 @@ Object tt_final
 ];
 
 
-[ HandleGlkEvent ev;
+[ HandleGlkEvent ev r;
   SGW_HandleGlk(ev);
   switch (ev-->0) {
     evtype_Timer:
-      if (EsExterior(LugarReal()) && random(100) < 10) {
-        Damusix.TocarV(Trueno_ogg, 20 * random(5));
+      if (EsExterior(LugarReal()) && random(100) < 20) {
+        r = 20 * random(5);
+        if (r >= 80) viewImageCenter(Fondo_blanco_jpg);
+        Damusix.TocarV(Trueno_ogg, r);
+        EsperarTecla(0, 20);
+        if (r >= 80) viewImageCenter(localizacion.sgw_img);
 !      } else if (LugarReal() ofclass Laberinto) {
 !        alien.movimiento();
 !        DibujarLineaEstado();
