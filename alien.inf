@@ -2019,8 +2019,8 @@ Object conexiones "caja de conexiones" procesador
                ya.^";
         remove tornillo;
         give tornillo ausente;
-        tate_callao = 1;  ! Para que no diga que abres la vaina a continuación
-        <Abrir self>;     ! Abres la vaina (pero el intérprete no dice nada)
+        tate_callao = 1;  ! Para que no diga que abres la caja a continuación
+        <Abrir self>;     ! Abres la caja (pero el intérprete no dice nada)
         tate_callao = 0;  ! Vuelves a la situación normal
         rtrue;    
     ],
