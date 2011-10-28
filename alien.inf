@@ -388,10 +388,10 @@ Object barra_estado
     modo BE_COMPUESTO,
     disposicion
       1  1 true BE_LOCALIDAD
-      28 1 true BE_TEXTO
-      47 1 true BE_TEXTO
-      68 1 true BE_TEXTO
-      70 1 true BE_TURNOS,
+      29 1 true BE_TEXTO
+      45 1 true BE_TEXTO
+      65 1 true BE_TEXTO
+      68 1 true BE_TURNOS,
     texto [ x;
       switch (x) {
         1: if (linterna has encendida && bateria in linterna) {
