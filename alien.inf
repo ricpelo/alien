@@ -3179,7 +3179,7 @@ Object decorado_despensa despensa
   class DecoradoAmpliado
   with
     desc_frigorifico "Los alimentos se congelan en esa especie de gigantesco armario
-                      congelador. Está cerrado, y no parece abrirse.",
+                      frigorífico. Está cerrado, y no parece abrirse.",
     desc_carne "Enormes trozos de carne sin procesar. Incomestibles, desde luego.",
     desc_frutas "Alcanzas a distinguir manzanas y algunas naranjas. El resto no lo habías
                  visto en tu vida.",
