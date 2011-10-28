@@ -2187,8 +2187,9 @@ Class Laberinto
     nombre_corto "Túneles",
     descripcion [ o k ns;
       print "Estás en los pasillos interiores del complejo. Metros y metros de estructura
-             metálica recorren estos pasillos, que parecen no acabar nunca. Incluso aquí,
-             hay charcos de agua por según qué zonas.";
+             metálica recorren estos túneles, que parecen no acabar nunca. Las filtraciones
+             en las paredes y el techo forman irregulares charcos de agua aquí y allá, y
+             dotan al ambiente de una humedad malsana y asfixiante.";
       ns = 0;
 !      nb = 0;
       objectloop (o in brujula) {
@@ -2298,7 +2299,7 @@ Object decorado_laberinto
       'pared'    [; return self.desc_paredes; ] G_FEMENINO
       'pared'    [; return self.desc_paredes; ] G_FEMENINO
       'sangre'   "Sólo eso: sangre salpicada (o proyectada) contra la pared. No hay ninguna
-                  pista sobre qué ser (persona o animal) la contenía." G_FEMENINO;
+                  pista sobre a qué ser (persona o animal) pertenecía." G_FEMENINO;
 
 
 Class Balcon
@@ -2363,7 +2364,7 @@ Object decorado_balcon
 
 Object montacargas "montacargas"
   with
-    descripcion "Es una plataforma situada al borde del balcón, y que permite el
+    descripcion "Es una plataforma situada al borde del balcón y que permite el
                  transporte vertical de objetos.",
     nombre 'montacargas' 'ascensor' 'elevador',
     esta_en balcon4 balcon8 balcon12,
@@ -2440,7 +2441,7 @@ Object entrada "Entrada al complejo"
   with
     descripcion "Estás en la entrada que da acceso al complejo de la colonia minera.
                  Nada de decoración lujosa ni elementos ornamentales, sino más bien un
-                 sencillo y amplio pasillo, semejante a un recibidor, y totalmente
+                 sencillo y amplio pasillo, semejante a un recibidor, totalmente
                  vacío y sin vida.",
     sgw_img Entrada_jpg,
     afuera puerta_rara,
@@ -2521,7 +2522,7 @@ Object puerta_viscosa "puerta del complejo"
         <<Abrir self>>;
       Abrir:
         "Intentas romper la sustancia viscosa que tapona el agujero, pero en seguida te
-         das cuenta de lo imposible que resulta. Tendrás que buscar otra salida por otra
+         das cuenta de que resulta imposible. Tendrás que buscar una salida por otra
          parte.";
       Cerrar:
         "La puerta ya está suficientemente taponada.";
@@ -2538,13 +2539,13 @@ Object oficina "Oficina"
   class Lugar
   with
     descripcion "Has llegado a lo que parece ser una oficina. Todas los puestos están
-                 perfectamente delimitados e impolutamente ordenados, cada uno con su
-                 moderno computador de última generación. Al fondo, una mesa que da la
+                 perfectamente delimitados e impolutamente ordenados, equipados cada uno
+                 con una moderna consola de trabajo. Al fondo, una mesa que da la
                  impresión de ser la de algún pez gordo. La iluminación en esta sala es
-                 excelente, así como la decoración, demasiado lujosa para un complejo
-                 como este. Una serie de archivadores se alinean perfectamente bajo
-                 decenas de cuadros que prácticamente ocultan por completo la pared con
-                 escenas marciales y bélicas. En una esquina, cerca del techo,
+                 excelente, así como la decoración, sorprendentemente lujosa para un
+                 complejo como este. Una serie de archivadores se alinean perfectamente
+                 bajo decenas de cuadros que prácticamente ocultan por completo la pared
+                 con escenas marciales y bélicas. En una esquina, cerca del techo,
                  una cámara de seguridad lo observa todo con su único ojo.",
     sgw_img Oficina_jpg,
     al_e balcon2,
@@ -2561,7 +2562,7 @@ Object decorado_oficina oficina
   with
     desc_cuadros "Todos muy oscuros y, al mismo tiempo, alegóricos.",
     desc_puestos "Típicos escritorios de despacho, salvo la mesa del fondo.",
-    desc_papeles "Cientos y cientos de folios con información que no te resultan para
+    desc_papeles "Cientos y cientos de documentos con información que no te resultan para
                   nada interesantes.",
     desc_archivadores "Son inmensos muebles metálicos firmemente sujetos al suelo y a la
                        pared sobre la que descansan. Todos están cerrados, y no parece
@@ -2617,9 +2618,9 @@ Object decorado_oficina oficina
 Object "ordenadores de la oficina" oficina
   with
     nombre_m 'ordenador' 'computador' 'equipo',
-    nombre_f 'computadora',
+    nombre_f 'computadora' 'consola',
     nombre_mp 'ordenadores' 'computadores' 'equipos',
-    nombre_fp 'computadoras',
+    nombre_fp 'computadoras' 'consolas',
     adjetivos 'oficina',
     genero G_MASCULINO + G_PLURAL,
     descripcion "Estos equipos tan potentes no son fáciles de encontrar... Todos
@@ -2639,13 +2640,14 @@ Object "mesa" oficina
   with
     nombre 'mesa' 'escritorio',
     adjetivos 'fondo',
-    descripcion "Ese sí que es un escritorio grande y con clase. Te recuerda el estilo
-                 de las antiguas mesas de abogado (de no ser por la falta de madera,
-                 naturalmente). Por lo demás, nada que destacar, salvo pilas de
-                 documentos garabateados y mecanoimpresos.",
+    descripcion "Esto sí que es un escritorio amplio y con clase. Te recuerda el estilo
+                 clásico de las antiguas mesas de abogado propias del S. XX (salvo por               
+                 la falta de madera, naturalmente). Más allá de su recargado estilo
+                 decorativo, tan sólo destacar las pilas de documentos garabateados y
+                 mecanoimpresos que descansan sobre su superficie.",
     antes [;
       Coger, Empujar, Tirar:
-        "Debe pesar una barbaridad... Ni siquiera se ha desplazado un centímetro.";
+        "Debe pesar una barbaridad... No se ha desplazado ni un centímetro.";
       Abrir, Cerrar:
         print "No hay nada que puedas ";
         IdiomaVerbo(palabra_verbo);
