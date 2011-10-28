@@ -5815,7 +5815,9 @@ Object jason "Jason" nave1
                                       este.");
                      }
                   7: HablaJason("Acabemos de una vez con esto y larguémonos de aquí.");
-                  8: print "^Jason se lleva la mano al oído y dice:^";
+                  8: if (jason notin nave1 && jason notin nave2) {
+                       print "^Jason se lleva la mano al oído y dice:^";
+                     }
                      HablaJason("¿Sabes, nena? Tienes una voz muy dulce... No tendrás
                                  por casualidad una hermana soltera, ¿verdad?");
                      HablaMadre("Mi pariente más cercano es un procesador de cámaras
