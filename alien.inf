@@ -2884,7 +2884,7 @@ Object jeringa "jeringa" cajon
                  comienza a toser fuertemente mientras se aprieta el tórax con las
                  manos... ¡Está vivo y despierto! ¡Ha funcionado!^";
           print "Jason mira la interminable aguja de la jeringa, y exclama:^";
-          HablaJason("Dios mío... ¿Ha tenido que ensartarme con ESO?");
+          HablaJason("Dios mío... ¿Ha tenido que ensartarme con ESO?"); PreguntaSiNo = 1;
           rtrue;
         }
     ];
@@ -6123,7 +6123,7 @@ Object computadora "Madre"
               HablaMadre("El procesador atmosférico es el mecanismo utilizado para
                           transformar artificialmente el aire y hacerlo respirable
                           para el ser humano. Toda instalación colonial enclavada en
-                          una atmósfera venenosa requiere al menos uno. El estado
+                          una atmósfera venenosa requiere de al menos uno. El estado
                           actual del procesador atmosférico es: INOPERANTE.
                           Atmósfera irrespirable.");
             } else {
