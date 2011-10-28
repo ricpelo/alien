@@ -8156,10 +8156,17 @@ Object tt_final
     evtype_Timer:
       if (EsExterior(LugarReal()) && random(100) < 35) {
         r = 20 * random(5);
-        if (r >= 80) viewImageCenter(Fondo_blanco_jpg);
+        if (r >= 80) {
+          viewImageCenter(Fondo_blanco_jpg);
+        }
         Damusix.TocarV(Trueno_ogg, r);
-        EsperarTecla(0, 20);
-        if (r >= 80) viewImageCenter(localizacion.sgw_img);
+        if (r >= 80 {
+          EsperarTecla(0, 20);
+          viewImageCenter(localizacion.sgw_img);
+          ! Hay que volver a activar el contador de eventos porque
+          ! EsperarTecla() lo resetea a cero:
+          glk_request_timer_events(4000);
+        }
 !      } else if (LugarReal() ofclass Laberinto) {
 !        alien.movimiento();
 !        DibujarLineaEstado();
