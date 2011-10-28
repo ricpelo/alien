@@ -1275,7 +1275,10 @@ Object traje_inutil "restos del traje de Jason"
                  del todo inservible.",
     inicial "El traje de Jason reposa inservible en el suelo de la sala.", 
     antes [;
-      "No merece la pena. No sirve para nada ya.";
+      Examinar:
+        rfalse;
+      default:
+        "No merece la pena. No sirve para nada ya.";
     ],
   has
     nombreplural transparente;
