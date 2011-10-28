@@ -1752,6 +1752,7 @@ Object panel_control "panel de control" junto_procesador
           ! Código nuevo: 268741
           puerta_procesador.abrir();
           junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
+          viewImageCenter(junto_procesador.sgw_img);
           give self ~general;
           bateria.energia = 0;
           print "El display dice: ~";
