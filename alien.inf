@@ -388,20 +388,21 @@ Object barra_estado
     modo BE_COMPUESTO,
     disposicion
       1  1 true BE_LOCALIDAD
-      30 1 true BE_TEXTO
-      50 1 true BE_TEXTO
+      28 1 true BE_TEXTO
+      47 1 true BE_TEXTO
+      68 1 true BE_TEXTO
       70 1 true BE_TURNOS,
     texto [ x;
       switch (x) {
         1: if (linterna has encendida && bateria in linterna) {
-             print_ret "Linterna: ", bateria.nivel_carga(), "%";
+             print_ret " | Linterna: ", bateria.nivel_carga(), "%";
            }
         2: if (rifle in jugador && detector_movimiento has encendido &&
                alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
              if (parent(alien) == LugarReal()) {
-               print_ret "Detector: 0 m.";
+               print_ret " | Detector: 0 m.";
              } else {
-               print "Detector: ", 10 * alien.distancia, " m. ";
+               print " | Detector: ", 10 * alien.distancia, " m. ";
                switch (alien.sentido) {
                  obj_n:      "N";
                  obj_s:      "S";
@@ -412,7 +413,8 @@ Object barra_estado
                }
              }
              rtrue;
-           } 
+           }
+        3: print " |";
       }
     ],
     lineas_inv
