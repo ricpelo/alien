@@ -132,7 +132,7 @@ Replace ReiniciarSub;
 Replace RestaurarSub;
 Replace Teclado;
 
-! Con el siguiente Replaces conseguimos que el objeto empujado hacia una dirección
+! Con el siguiente Replace conseguimos que el objeto empujado hacia una dirección
 ! aparezca en la descripción de la localidad de destino del "empuje":
 
 Replace PermitirEmpujarDir;
