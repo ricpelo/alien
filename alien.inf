@@ -2443,6 +2443,7 @@ Object montacargas "montacargas"
     reaccionar_despues [;
       Ir:
         if (uno == obj_arriba or obj_abajo) {
+          Damusix.TocarV(Ascensor_ogg, 100);
           self.nivel = parent(self).nivel;
         }
         if (uno == obj_arriba) {
@@ -3178,13 +3179,17 @@ Class ZonaNorte
       }
 
       switch (self.ZonaNorte::contador_muerte) {
-        10,11: "^Oyes ruidos procedentes de alguna parte de ",
-           (string) self.donde_estoy(), ".";
-        12,13: "^Los ruidos se hacen más fuertes, y siguen viniendo de ",
-           (string) self.donde_estoy(), "... Esto no te gusta nada...";
-        14,15: "^Es un chillido... Claramente es un chillido... ¡Hay algo en la despensa!
-            ¡Corre!";
-        16: "^¡Corre! ¡Sal de aquí! ¡Pero no pases por la despensa!";
+        10,11: Damusix.TocarV(Arana_Corto_ogg, 50);
+               "^Oyes ruidos procedentes de alguna parte de ",
+               (string) self.donde_estoy(), ".";
+        12,13: Damusix.TocarV(Arana_Largo_ogg, 100);
+               "^Los ruidos se hacen más fuertes, y siguen viniendo de ",
+               (string) self.donde_estoy(), "... Esto no te gusta nada...";
+        14,15: Damusix.TocarV(Arana_Chillido_ogg, 100);
+               "^Es un chillido... Claramente es un chillido... ¡Hay algo en la despensa!
+               ¡Corre!";
+        16:    Damusix.TocarV(Arana_Chillido_ogg, 100);
+               "^¡Corre! ¡Sal de aquí! ¡Pero no pases por la despensa!";
       }
     ];
 
@@ -3419,7 +3424,7 @@ Object balcon4
     antes [;
       Ir:
         if (uno == obj_abajo && balcon8 hasnt visitado) {
-          print "Te subes al montacargas, y comienzas a bajar lentamente hacia el nivel
+          print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
                  -1...^";
           EsperarTecla();
           rfalse;

@@ -55,11 +55,15 @@ SOUND Junto_Procesador_ogg res/snd/junto_procesador.ogg
 SOUND Pasillo_ogg res/snd/pasillo.ogg
 SOUND Balcon_ogg res/snd/balcon.ogg
 SOUND Estancia_ogg res/snd/estancia.ogg
+SOUND Ascensor_ogg res/snd/ascensor.ogg
 SOUND Ventilacion_ogg res/snd/ventilacion.ogg
 SOUND Vaina_ogg res/snd/vaina.ogg
 SOUND Grito_Jason_ogg res/snd/grito_jason.ogg
 SOUND Grito_Jugador_ogg res/snd/grito_jugador.ogg
 SOUND Rugido_ogg res/snd/rugido.ogg
+SOUND Arana_Corto_ogg res/snd/arana_corto.ogg
+SOUND Arana_Largo_ogg res/snd/arana_largo.ogg
+SOUND Arana_Chillido_ogg res/snd/arana_chillido.ogg
 SOUND Trueno_ogg res/snd/trueno.ogg
 SOUND Explosion_ogg res/snd/explosion.ogg
 SOUND Gota_Oscura_ogg res/snd/gota_oscura.ogg
