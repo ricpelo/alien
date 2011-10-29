@@ -2593,7 +2593,9 @@ Object oficina "Oficina"
         if (uno == obj_arriba) {
           "Hay una cámara girando lentamente cerca del techo de la sala.";
         }
-    ];
+    ],
+  has
+    ~luz;
 
 
 Object decorado_oficina oficina
@@ -2786,7 +2788,7 @@ Object enfermeria "Enfermería"
     al_s laberinto16,
     al_o balcon7,
   has
-    femenino;
+    femenino ~luz;
 
 
 Object decorado_enfermeria enfermeria
@@ -2944,7 +2946,9 @@ Object laboratorio "Laboratorio"
         if (uno == obj_arriba) {
           "Hay una cámara girando lentamente cerca del techo de la sala.";
         }
-    ];
+    ],
+  has
+    ~luz;
 
 
 Object decorado_laboratorio laboratorio
@@ -3209,7 +3213,9 @@ Object despensa "Despensa"
                  los alrededores.",
     sgw_img Despensa_jpg,
     al_o comedor1,
-    al_e cocina;
+    al_e cocina,
+  has
+    ~luz;
 
 
 Object decorado_despensa despensa
@@ -3291,7 +3297,9 @@ Object comedor1 "Comedor"
                  de comida sin consumir.",
     sgw_img Comedor_jpg,
     al_e despensa,
-    al_s balcon6;
+    al_s balcon6,
+  has
+    ~luz;
 
 
 Object decorado_comedor comedor1
@@ -3339,7 +3347,7 @@ Object cocina "Cocina"
     al_s balcon7,
     al_o despensa,
   has
-    femenino;
+    femenino ~luz;
 
 
 Object decorado_cocina cocina
@@ -3884,7 +3892,9 @@ Object aula "Aula"
                  hacia una enorme pantalla blanca, situada al fondo.",
     sgw_img Aula_jpg,
     al_o laberinto3,
-    al_s laberinto7;
+    al_s laberinto7,
+  has
+    ~luz;
 
 
 Object decorado_aula aula
@@ -4077,7 +4087,7 @@ Object seguridad "Sala de seguridad"
     sgw_img Seguridad_jpg,
     al_n laberinto18,
   has
-    femenino;
+    femenino ~luz;
 
 
 Object decorado_seguridad seguridad
@@ -4534,7 +4544,7 @@ Object ventilacion1
         }
     ],
   has
-    femenino;
+    femenino ~luz;
 
 
 Object decorado_ventilacion1 ventilacion1
@@ -4591,7 +4601,9 @@ Object hueco_techo "Sala este de ventilación"
           style bold;
           EsperarTecla();
         }
-    ];
+    ],
+  has
+    ~luz;
 
 
 Object techo "techo" hueco_techo
