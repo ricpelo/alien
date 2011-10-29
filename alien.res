@@ -60,4 +60,7 @@ SOUND Grito_Jugador_ogg res/snd/grito_jugador.ogg
 SOUND Rugido_ogg res/snd/rugido.ogg
 SOUND Trueno_ogg res/snd/trueno.ogg
 SOUND Explosion_ogg res/snd/explosion.ogg
+SOUND Gota_Oscura_ogg res/snd/gota_oscura.ogg
+SOUND Gotas_Agua_ogg res/snd/gotas_agua.ogg
+SOUND Cueva_Oscura_ogg res/snd/cueva_oscura.ogg
 
