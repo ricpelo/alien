@@ -2221,10 +2221,10 @@ Class Laberinto
   with
     nombre_corto "Túneles",
     descripcion [ o k ns;
-      print "Estás en los pasillos interiores del complejo. Metros y metros de estructura
-             metálica recorren estos túneles, que parecen no acabar nunca. Las filtraciones
-             en las paredes y el techo forman irregulares charcos de agua aquí y allá, y
-             dotan al ambiente de una humedad malsana y asfixiante.";
+      print "Estás en uno de los pasillos interiores del complejo. Metros y metros de
+             estructura metálica recorren estos túneles, que parecen no acabar nunca.
+             Las filtraciones en las paredes y el techo forman irregulares charcos de
+             agua aquí y allá, y dotan al ambiente de una humedad malsana y asfixiante.";
       ns = 0;
 !      nb = 0;
       objectloop (o in brujula) {
@@ -3195,10 +3195,10 @@ Object despensa "Despensa"
   with
     descripcion "La despensa. En la zona frigorífica, frente a tí, es donde guardan los
                  elementos perecederos. Desde aquí alcanzas a ver trozos de carne
-                 (probablemente cerdo) y frutas. A tu alrededor, cientos de expositores
-                 soportan los distintos tipos de comida prefabricada o enlatada de la que
-                 disponen los colonos. Algunos de los expositores están rotos y con la
-                 comida desperdigada por los alrededores.",
+                 y frutas. A tu alrededor, cientos de expositores soportan los distintos
+                 tipos de comida prefabricada o enlatada de la que disponen los colonos.
+                 Algunos de los expositores están rotos y con la comida desperdigada por
+                 los alrededores.",
     sgw_img Despensa_jpg,
     al_o comedor1,
     al_e cocina;
@@ -3378,10 +3378,10 @@ Object balcon1
         if (self hasnt visitado) {
           print "Llegas a una especie de balcón desde donde se puede observar claramente
                  la forma y la estructura del complejo. Todo está construido alrededor de
-                 la veta de mineral (situado en el centro del edificio) y hay balcones
-                 como éste al norte, sur, este y oeste de la veta. Además, es evidente
-                 que éste no es el único nivel del complejo, pues éste sigue hacia abajo
-                 siempre rodeando el mineral. Las distancias son difíciles de calcular
+                 la veta de mineral, situada en el centro del edificio, y hay balcones
+                 como éste al norte, sur, este y oeste de dicha veta. Además, es evidente
+                 que éste no es el único nivel del complejo, ya que continúa hacia abajo
+                 rodeando siempre al mineral. Las distancias son difíciles de calcular
                  desde esta perspectiva, pero la sensación que transmite es que te
                  encuentras ante algo grande.^";
         }
@@ -3544,7 +3544,7 @@ Class SalaEmergencia
       "Te encuentras en la sala ", (string) self.situacion, " del área de emergencia.
        Está absolutamente vacía, a excepción de un gran botón pulsador situado en el
        centro de la pared opuesta a la puerta. Todo, desde sus pequeñas dimensiones a
-       la total falta de decoración, favorece la sensación de total asfixia.";
+       la total falta de decoración, favorece la sensación de asfixia.";
     ];
 
 
@@ -3856,11 +3856,12 @@ Object aula "Aula"
   class Lugar
   with
     nombre_localidad "aula",
-    descripcion "Te encuentras en un aula de enseñanza. Los distintos puestos para los
-                 alumnos están perfectamente alineados a tu izquierda. A tu derecha, la
-                 mesa del docente, pulcramente ordenada. En el centro de la sala hay un
-                 proyector orientado hacia una enorme pantalla blanca, situada al
-                 fondo.",
+    descripcion "Una sala de mediano tamaño, con el aspecto propio de un salón de reuniones
+                 o aula de formación, se extiende ante tus ojos iluminada uniformemente
+                 desde el techo. La mesa que parece destinada al docente domina la estancia
+                 desde un lateral de la habitación, enfrentada a las demás mesas o pupitres,
+                 más pequeñas y sencillas. En el centro de la sala hay un proyector orientado
+                 hacia una enorme pantalla blanca, situada al fondo.",
     sgw_img Aula_jpg,
     al_o laberinto3,
     al_s laberinto7;
@@ -3879,9 +3880,10 @@ Object "mesas de los alumnos" aula
   with
     nombre 'mesa' 'mesas//p' 'pupitre' 'pupitres//p' 'puesto' 'puestos//p',
     adjetivos 'alumno' 'alumnos//p',
-    descripcion "Cada puesto es una especie de pupitre pequeño y rectangular frente a una
-                  cómoda silla acolchada. La mesa del profesor es algo más grande, y la
-                  silla parece más cómoda.",
+    descripcion "Cada mesa tiene el aspecto de un pupitre no muy grande, rectangular,
+                 emparejado con su correspondiente silla, sencilla y acolchada. La mesa
+                 del profesor es bastante más grande y dispone de un sillón que resulta
+                 de entrada mucho más confortable a la vista.",
   has
     femenino nombreplural escenario;
 
@@ -3889,7 +3891,8 @@ Object "sillas de los alumnos" aula
   with
     nombre 'silla' 'sillas//p',
     adjetivs 'alumno' 'alumnos//p',
-    descripcion "Son pequeñas y mullidas sillas de color gris. Parecen cómodas.",
+    descripcion "Son pequeñas y escuetas sillas de color gris. No parecen demasiado
+                 incómodas, pero desde luego no invitan a descansar en ellas.",
   has
     femenino nombreplural escenario;
 
@@ -3898,9 +3901,9 @@ Object "mesa del profesor" aula
   with
     nombre 'mesa',
     adjetivos 'profesor' 'docente',
-    descripcion "Una mesa algo de un tamaño más grande que el resto de los puestos.
-                 Es tan sencilla, que sólo se compone de una superficie sujeta por
-                 cuatro patas metálicas.",
+    descripcion "Una mesa de mayor tamaño que el resto de los pupitres de la sala,
+                 compuesta, al igual que las demás, de una superficie rectangular
+                 apoyada en cuatro patas metálicas.",
   has
     femenino escenario;
 
@@ -3984,8 +3987,8 @@ Object proyector "proyector" aula
 Object pantalla "pantalla" aula
   with
     nombre 'pantalla',
-    descripcion "Una superficie blanca y rectangular anclada en el techo y ocupando la
-                 mayor parte de la pared norte.",
+    descripcion "Una amplia superficie blanca y rectangular, de textura fibrosa, anclada
+                 en el techo de la sala y ocupando la mayor parte de la pared norte.",
     antes [;
       Examinar:
         if (proyector has encendido) {
@@ -4043,12 +4046,14 @@ Object seguridad "Sala de seguridad"
   class Lugar
   with
     nombre_localidad "sala",
-    descripcion "Esta es la sala de seguridad. Tan fría y estéril como el restro del
-                 complejo, siendo lo más destacable la consola de control situada al
-                 fondo. Un cable blanco y otro negro entran en la sala por medio de una
-                 hendidura en la pared, para acabar conectados a la parte posterior de la
-                 consola. Aquí la luz es más apagada y por las paredes fluyen tubos de
-                 distinto grosor.",
+    descripcion "En la sala de seguridad, tan fría y estéril como el restro del
+                 complejo, llama principalmente la atención la consola de control, un
+                 dispositivo pantalla-teclado que abarca en extensión casi todo el
+                 ancho de la estancia. Un cable blanco y otro negro entran en la sala
+                 por medio de una hendidura en la pared, para acabar conectados a la
+                 parte posterior de la consola. La luz, lúgubre y tenue, proyecta
+                 sombras en los paneles laterales de la habitación, por los que fluyen
+                 tubos de varios grosores.",
     sgw_img Seguridad_jpg,
     al_n laberinto18,
   has
@@ -4127,6 +4132,16 @@ Object consola "consola de control" seguridad
 !    descripcion "Es un botón que sirve para poder volver a visualizar la grabación desde
 !                 el principio.";
 
+Object teclado_consola "teclado de la consola" consola
+  with
+    nombre 'teclado',
+    descripcion "Una sencilla formación de diversos botones entre los que
+                 llama la atención uno etiquetado con la palabra ~Reproducir~.",
+    antes [;
+      Empujar:
+        "Pulsar botones al azar no serviría de nada.";
+    ];
+
 Object monitor "monitor de televisión" consola
   with
     nombre 'monitor' 'pantalla' 'aparato' 'television',
@@ -4146,7 +4161,8 @@ Object monitor "monitor de televisión" consola
 
 Object boton_reproducir "botón Reproducir" consola
   with
-    nombre 'boton' 'reproducir',
+    nombre_m 'boton' 'reproducir',
+    nombre_f 'tecla',
 !    adjetivos 'reproducir',
     descripcion "Es un botón que sirve para poder visualizar la grabación desde su
                  posición actual.",
@@ -4256,7 +4272,7 @@ Object habitat "hábitat"
                colono o familia.",
     antes [;
       Abrir, QuitarCerrojo:
-        "No hay forma de abrir esa puerta. En realidad, no deberías tenerla en cuenta.";
+        "No hay forma de abrir esa puerta. En realidad, no deberías molestarte en ella.";
       Cerrar:
         "Ya está bastante cerrada.";
     ],
@@ -4406,11 +4422,11 @@ Object laberinto30
 Object laberinto36
   class Laberinto,
   with
-    descripcion "Estás en unos pasillos interiores del complejo. Metros y metros de
-                 estructura metálica recorren estos pasillos, que parecen no acabar nunca.
+    descripcion "Estás en uno de los pasillos interiores del complejo. Metros y metros de
+                 estructura metálica recorren estos túneles, que parecen no acabar nunca.
                  Puedes apreciar que las paredes en esta sección son más curvadas, y los
-                 techos bastante más bajos; tanto que, en esta sala, casi hay que pasar
-                 agachado. El túnel continúa por el oeste, y hacia arriba hay acceso a
+                 techos bastante más bajos: tanto que, en esta sala, casi hay que pasar
+                 agachado. El corredor continúa por el oeste, y hacia arriba hay acceso a
                  través de una trampilla en el techo.",
     arriba ventilacion1,
     al_o balcon12,
@@ -4477,9 +4493,10 @@ Object ventilacion1
     nombre_corto "Sala oeste de ventilación",
     nombre_localidad "sala destinada a la ventilación",
     descripcion "Estás en una de las salas de ventilación en los pasillos interiores del
-                 complejo. En el techo anormalmente bajo de la estancia puedes ver varios
-                 de los muchos ventiladores que se encargan de suministrar aire por toda
-                 la subterránea del complejo. El zumbido que producen es casi hipnótico.",
+                 complejo. Situados en el techo anormalmente bajo de la estancia puedes
+                 observar varios de los muchos ventiladores que se encargan de suministrar
+                 aire a todo el nivel subterráneo del complejo. El zumbido que producen es
+                 casi hipnótico.",
     sgw_mus Ventilacion_ogg,
     sgw_img Ventilacion1_jpg,
     abajo laberinto36,
