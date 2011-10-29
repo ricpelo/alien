@@ -108,8 +108,10 @@ Global hayPistas = 0;
 ! (ver rutina Inicializar):
 Global dibujarEstado = false;
 
-
+! La imagen que representa la oscuridad:
 Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
+
+
 
 ! ====================================================================
 !
@@ -1450,11 +1452,13 @@ Object linterna "linterna" armario
       give self encendida;
       give self luz;
       ArrancarDaemon(self);
+      viewImageCenter(LugarReal().sgw_img);
     ],
     apagar [;
       give self ~encendida;
       give self ~luz;
       PararDaemon(self);
+      viewImageCenter(SGW_IMAGEN_OSCURIDAD);
     ],
     despues [;
       Abrir:
@@ -9492,7 +9496,7 @@ Ifdef DEBUG;
   puerta_procesador.abrir();
   move bisturi to jugador;
   give circuito general;
-!  give jugador luz;
+  give jugador luz;
   give vaina abierta;
   AlienBloqueaPuerta();
   move tarjeta to jugador;
