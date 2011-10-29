@@ -55,7 +55,7 @@ SOUND Junto_Procesador_ogg res/snd/junto_procesador.ogg
 SOUND Pasillo_ogg res/snd/pasillo.ogg
 SOUND Balcon_ogg res/snd/balcon.ogg
 SOUND Estancia_ogg res/snd/estancia.ogg
-SOUND Ascensor_ogg res/snd/ascensor.ogg
+SOUND Montacargas_ogg res/snd/montacargas.ogg
 SOUND Ventilacion_ogg res/snd/ventilacion.ogg
 SOUND Vaina_ogg res/snd/vaina.ogg
 SOUND Grito_Jason_ogg res/snd/grito_jason.ogg

@@ -2443,7 +2443,7 @@ Object montacargas "montacargas"
     reaccionar_despues [;
       Ir:
         if (uno == obj_arriba or obj_abajo) {
-          Damusix.TocarV(Ascensor_ogg, 100);
+          Damusix.TocarV(Montacargas_ogg, 100);
           self.nivel = parent(self).nivel;
         }
         if (uno == obj_arriba) {
