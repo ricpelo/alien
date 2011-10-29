@@ -4527,7 +4527,7 @@ Object hueco_techo "Sala este de ventilación"
                  paredes y el techo. Un techo tan bajo que casi te impide permanecer
                  totalmente de pie, y en el que, además, se aprecia un enorme
                  hueco, cubierto también por la misma desagradable viscosidad.",
-    sgw_mus Ventilacion_ogg,
+    sgw_mus Vaina_ogg,
     sgw_img Hueco_Techo_jpg,
     al_o ventilacion1,
     antes [;
