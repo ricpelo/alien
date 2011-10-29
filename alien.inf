@@ -8238,7 +8238,7 @@ Object tt_final
   SGW_HandleGlk(ev);
   switch (ev-->0) {
     evtype_Timer:
-      if (EsExterior(LugarReal()) && random(100) < 55) {
+      if (EsExterior(LugarReal()) && random(100) < 35) {
         r = 20 * random(5);
         if (r >= 80) {
           viewImageCenter(Fondo_blanco_jpg);
