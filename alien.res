@@ -36,7 +36,6 @@ PICTURE AI_png res/img/ai.png
 PICTURE AIN_png res/img/ain.png
 PICTURE AIEN_png res/img/aien.png
 PICTURE ALIEN_png res/img/alien.png
-PICTURE Fondo_negro_jpg res/img/fondo_negro.jpg
 PICTURE Fondo_blanco_jpg res/img/fondo_blanco.jpg
 SOUND Intro_ogg res/snd/intro.ogg
 SOUND Teletipo_ogg res/snd/teletipo.ogg

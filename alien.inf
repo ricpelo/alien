@@ -109,6 +109,7 @@ Global hayPistas = 0;
 Global dibujarEstado = false;
 
 
+Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 
 ! ====================================================================
 !
@@ -8584,7 +8585,7 @@ Object tt_final
 
 [ Introduccion i;
   clearMainWindow();
-  viewImageCenter(Fondo_negro_jpg);
+  viewImageCenter(Oscuridad_jpg);
   control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
   tt_inicial1.visualiza();
   i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 20); i++; }
@@ -9491,7 +9492,7 @@ Ifdef DEBUG;
   puerta_procesador.abrir();
   move bisturi to jugador;
   give circuito general;
-  give jugador luz;
+!  give jugador luz;
   give vaina abierta;
   AlienBloqueaPuerta();
   move tarjeta to jugador;
