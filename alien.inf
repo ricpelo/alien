@@ -2367,7 +2367,11 @@ Class Balcon
     antes [;
       Ir, Examinar:
         if (uno == IntercambiarDireccion(self.posicion)) {
-          "Te acercas a asomarte a la veta de mineral. Es enorme...";
+          if (localizacion ~= laoscuridad) {
+            "Te acercas a asomarte a la veta de mineral. Es enorme...";
+          } else {
+            "La oscuridad te impide apreciar nada con claridad.";
+          }
         } else {
           rfalse;
         }
@@ -3379,12 +3383,12 @@ Object balcon1
     al_o laberinto1,
     despues [;
       Ir:
-        if (self hasnt visitado) {
+        if (self hasnt visitado && localizacion ~= laoscuridad) {
           print "Llegas a una especie de balcón desde donde se puede observar claramente
                  la forma y la estructura del complejo. Todo está construido alrededor de
                  la veta de mineral, situada en el centro del edificio, y hay balcones
-                 como éste al norte, sur, este y oeste de dicha veta. Además, es evidente
-                 que éste no es el único nivel del complejo, ya que continúa hacia abajo
+                 como este al norte, sur, este y oeste de dicha veta. Además, es evidente
+                 que este no es el único nivel del complejo, ya que continúa hacia abajo
                  rodeando siempre al mineral. Las distancias son difíciles de calcular
                  desde esta perspectiva, pero la sensación que transmite es que te
                  encuentras ante algo grande.^";

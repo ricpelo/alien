@@ -64,6 +64,9 @@ System_file;
 
 Ifdef ADMITIR_COMANDO_SALIDAS;
   [ SalidasSub i flag flag2 j loc;
+    if (localizacion == laoscuridad) {                       ! (c) Alpha
+      "Está muy oscuro para ver las salidas disponibles.";   ! (c) Alpha
+    }                                                        ! (c) Alpha
     print "Salidas visibles:";
     if (localizacion == LaOscuridad)
       loc = localizacion_real;
