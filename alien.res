@@ -46,6 +46,7 @@ SOUND Detector3_ogg res/snd/detector3.ogg
 SOUND Detector4_ogg res/snd/detector4.ogg
 SOUND Detector5_ogg res/snd/detector5.ogg
 SOUND Sirena_ogg res/snd/sirena.ogg
+SOUND Bisturi_ogg res/snd/bisturi.ogg
 SOUND Transmisor_ogg res/snd/transmisor.ogg
 SOUND Nave_ogg res/snd/nave.ogg
 SOUND Lluvia_ogg res/snd/lluvia.ogg

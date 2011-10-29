@@ -4821,6 +4821,7 @@ Object vaina "vaina mucosa" hueco_techo
         give self ~escenario;
         give self estatico;
       QuitarCerrojo:
+        Damusix.TocarV(Bisturi_ogg);
         print "Desgarras cuidadosamente la vaina usando el bisturí, procurando no dañar
                a Jason. Cuando terminas, la vaina presenta un amplio corte longitudinal.
                Justo a tiempo, ya que el bisturí ha dejado de funcionar por agotamiento
