@@ -832,7 +832,9 @@ Object nave1 "Interior de la nave"
     mostrar_quien_sale [ c;
       ! El parámetro c indica si el jugador sale solo de la nave, o Jason va con él
       ! c = true: Salen juntos ; c = false: El jugador sale solo
-      
+
+      Damusix.TocarV(Descompresion_ogg, 100);
+
       ! Si es la primera vez que se sale:
       if (self hasnt general) {
         give self general;
@@ -878,6 +880,7 @@ Object nave1 "Interior de la nave"
           jason_viene = jason in exterior1 &&
                         jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
                         jason.perseguido == jugador;
+          Damusix.TocarV(Descompresion_ogg);
           if (jason_viene) {
             print "Entráis ";
           } else {
