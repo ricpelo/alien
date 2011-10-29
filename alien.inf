@@ -2443,7 +2443,6 @@ Object montacargas "montacargas"
     reaccionar_despues [;
       Ir:
         if (uno == obj_arriba or obj_abajo) {
-          Damusix.TocarV(Montacargas_ogg, 100);
           self.nivel = parent(self).nivel;
         }
         if (uno == obj_arriba) {
@@ -3423,11 +3422,14 @@ Object balcon4
     abajo balcon8,
     antes [;
       Ir:
-        if (uno == obj_abajo && balcon8 hasnt visitado) {
-          print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
-                 -1...^";
-          EsperarTecla();
-          rfalse;
+        if (uno == obj_abajo) {
+          Damusix.TocarV(Montacargas_ogg, 100);
+          if (balcon8 hasnt visitado) {
+            print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
+                   -1...^";
+            EsperarTecla();
+            rfalse;
+          }
         }
     ];
 
@@ -3487,6 +3489,9 @@ Object balcon8
     abajo balcon12,
     antes [;
       Ir:
+        if (uno == obj_abajo or obj_arriba) {
+          Damusix.TocarV(Montacargas_ogg, 100);
+        }
         if (uno == obj_abajo && balcon12 hasnt visitado) {
           print "Lentamente, el montacargas va descendiendo aún más hacia las profundidades
                  del complejo. Es evidente que estás entrando en un nivel aún inacabado
@@ -3539,7 +3544,13 @@ Object balcon12
     no_puedes_ir "Este nivel aún está sin terminar. No hay más salidas.",    
     al_e laberinto36,
     al_o laberinto28,
-    arriba balcon8;
+    arriba balcon8,
+    antes [;
+      Ir:
+        if (uno == obj_arriba) {
+          Damusix.TocarV(Montacargas_ogg, 100);
+        }
+    ];
 
 
 Class SalaEmergencia
