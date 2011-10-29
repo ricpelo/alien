@@ -76,6 +76,8 @@ Constant CANAL_TELETIPO = 2;
 Constant SGW_CON_DAMUSIX;
 Constant SONIDO_BUCLE_INFINITO = -1;
 
+! El timer a aplicar para el trueno:
+Constant TIMER_TRUENO = 4000;
 
 ! ====================================================================
 !
@@ -509,13 +511,16 @@ Class Lugar
         }
       }
       
-      ! En el exterior, de vez en cuando suena un trueno:
+      ! En el exterior, de vez en cuando suena un trueno. Usamos control_timer.activar()
+      ! porque ese método comprueba previamente si ya se había activado previamente el
+      ! mismo timer, con lo cual el timer no se reactiva si se vuelve a este punto antes
+      ! de que expire el timer anterior:
       if (EsExterior(self)) {
-        glk_request_timer_events(4000);
+        control_timer.activar(TIMER_TRUENO);
 !      } else if (self ofclass Laberinto) {
 !        glk_request_timer_events(2000);
       } else {
-        glk_request_timer_events(0);
+        control_timer.desactivar();
      }
     ],
   has
@@ -672,6 +677,25 @@ Object control_sonido_teletipo
     iniciar [;
       Damusix.VolumenCanal(self.canal, self.volumen);
       Damusix.AsignarCanal(Teletipo_ogg, self.canal, self.volumen, 1);
+    ];
+
+
+! Controla el timer. Se usa sobre todo para el efecto del relámpago en el exterior,
+! pero también porque la rutina EsperarTecla desactiva el timer actual cuando
+! sale, así que aquí guardaremos el timer actual para que EsperarTecla pueda
+! restaurarlo:
+
+Object control_timer
+  with
+    timer_actual 0,
+    activar [ t;
+      if (t ~= self.timer_actual) {
+        self.timer_actual = t;
+        glk_request_timer_events(t);
+      }
+    ],
+    desactivar [;
+      self.activar(0);
     ];
 
 
@@ -8165,7 +8189,7 @@ Object tt_final
           while (1) {
             glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
             if ((gg_arguments-->0) == 1) {
-              glk($00D6, 4000);               ! request_timer_events
+              glk($00D6, TIMER_TRUENO);       ! request_timer_events
               break;
             }
           }
@@ -8479,8 +8503,9 @@ Object tt_final
 ];
 
 
-[ EsperarTecla s delay;
+[ EsperarTecla s delay timer;
   if (s) print (string) s;
+  timer = control_timer.timer_actual;   ! Guardamos timer actual (0 si no hay)
   glk($00D6, delay * 5);                ! request_timer_events
   glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
   while (1) {
@@ -8488,10 +8513,11 @@ Object tt_final
     if ((gg_arguments-->0) == 2) break; ! 2=evType_CharInput
     if ((gg_arguments-->0) == 1) {
       glk($00D3, gg_mainwin);           ! cancel_char_event
-      glk($00D6, 0);                    ! request_timer_events (cancelados)
+      glk($00D6, timer);                ! request_timer_events
       return 0;
     }
   }
+  glk($00D6, timer);                    ! request_timer_events
   return gg_arguments-->2;
 ];
 
