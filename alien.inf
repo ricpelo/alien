@@ -519,7 +519,8 @@ Class Lugar
       ! de que expire el timer anterior:
       if (EsExterior(self)) {
         control_timer.activar(TIMER_TRUENO);
-      } else if (self ofclass Laberinto && alien.comportamiento == 1 or 2) {
+      } else if ((self ofclass Laberinto || self ofclass Balcon) &&
+                 alien.comportamiento == 1 or 2) {
         control_timer.activar(TIMER_LABERINTO);
       } else {
         control_timer.desactivar();
@@ -8176,7 +8177,7 @@ Object tt_final
 ];
 
 
-[ HandleGlkEvent ev r;
+[ HandleGlkEvent ev snd r;
   SGW_HandleGlk(ev);
   switch (ev-->0) {
     evtype_Timer:
@@ -8197,13 +8198,16 @@ Object tt_final
           }
           viewImageCenter(localizacion.sgw_img);
         }
-      } else if (LugarReal() ofclass Laberinto && random(100) < 75) {
-        switch (random(3)) {
-          1: r = Gota_Oscura_ogg;
-          2: r = Gotas_Agua_ogg;
-          3: r = Cueva_Oscura_ogg;
+      } else if ((LugarReal() ofclass Laberinto || LugarReal() ofclass Balcon)
+                  && random(100) < 75) {
+        r = 20 * random(3) + 40;
+        switch (random(4)) {
+          1: snd = Gota_Oscura_ogg;
+          2: snd = Gotas_Agua_ogg;
+          3: snd = Cueva_Oscura_ogg;
+          4: snd = Monstruo_ogg; r = 100 / alien.distancia;
         }
-        Damusix.TocarV(r, 20 * random(3) + 40);
+        Damusix.TocarV(snd, r);
       }
   }
 ];
