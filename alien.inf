@@ -922,10 +922,10 @@ Object decorado_nave1 nave1
     desc_instrumentos "Los paneles de instrumentación están llenos de indicadores y
                        botones por todas partes. En un lateral también se aprecia
                        un cargador de baterías.",
-    desc_ventanales "A través de las ventanas que dan al exterior sólo se aprecia una
-                     oscuridad tan sólo rota por el tintinear de la lluvia
+    desc_ventanales "A través de las ventanas que dan al exterior únicamente se aprecia
+                     una densa oscuridad, tan sólo rota por el tintinear de la lluvia
                      impactando en el cristal y por la potencia de los focos que
-                     iluminan el lugar de aterrizajecon un fulgor fantasmagórico.",
+                     iluminan el lugar de aterrizaje con un fulgor fantasmagórico.",
     desc_asientos "Son unos asientos mullidos y cómodos. Algo que contrasta mucho con
                    la deshumanización del resto del decorado.",
     desc_paredes "En una de las paredes puedes observar un compartimento destinado a
