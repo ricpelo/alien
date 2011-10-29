@@ -915,7 +915,6 @@ Object nave1 "Interior de la nave"
         Damusix.TocarV(Grito_Jason_ogg);
         if (t) {
           EncenderGraficosSub(true);
-          viewImageCenter(Oscuridad_jpg);
           viewImageCenter(Logo_Alien_jpg);
         }
       }
