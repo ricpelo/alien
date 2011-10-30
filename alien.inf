@@ -575,14 +575,27 @@ Class EscenarioAbrible
     ! propiedad si_cerrado no se usa, porque cuando está cerrado es un escenario, y por
     ! tanto no se describe.
     abrir [;
+      self.sonido_abrir_cerrar();
       give self abierto;
       give self ~escenario;
       give self estatico;
     ],
     cerrar [;
+      self.sonido_abrir_cerrar();
       give self ~abierto;
       give self escenario;
       give self ~estatico;
+    ],
+    sonido_abrir_cerrar [ snd;
+      if (self notin LugarReal()) return;
+      snd = 0;
+      switch (self) {
+        puerta_nave:          snd = Puerta2_ogg;
+        puerta_procesador:    snd = Puerta2_ogg;
+        puerta_emergencia:    snd = Puerta2_ogg;
+        compartimento_trajes: snd = Puerta1_ogg;
+      }
+      if (snd ~= 0) Damusix.TocarV(snd);
     ],
     despues [;
       Abrir:
@@ -2757,6 +2770,7 @@ Object caja_fuerte "caja fuerte"
           "No pasa nada. Parece ser que la combinación no es la correcta...";
         } else {
           give self general;
+          Damusix.TocarV(Puerta1_ogg);
           "Se oye un ligero chasquido y unos motores internos accionan el desbloqueo
            de la caja fuerte.";
         }

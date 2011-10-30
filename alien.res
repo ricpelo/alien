@@ -70,4 +70,6 @@ SOUND Gotas_Agua_ogg res/snd/gotas_agua.ogg
 SOUND Cueva_Oscura_ogg res/snd/cueva_oscura.ogg
 SOUND Monstruo_ogg res/snd/monstruo.ogg
 SOUND Descompresion_ogg res/snd/descompresion.ogg
+SOUND Puerta1_ogg res/snd/puerta1.ogg
+SOUND Puerta2_ogg res/snd/puerta2.ogg
 
