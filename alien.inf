@@ -3462,7 +3462,7 @@ Object balcon4
     antes [;
       Ir:
         if (uno == obj_abajo) {
-          Damusix.TocarV(Montacargas_ogg, 100);
+          Damusix.TocarV(Montacargas_ogg, 50);
           if (balcon8 hasnt visitado) {
             print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
                    -1...^";
@@ -3529,7 +3529,7 @@ Object balcon8
     antes [;
       Ir:
         if (uno == obj_abajo or obj_arriba) {
-          Damusix.TocarV(Montacargas_ogg, 100);
+          Damusix.TocarV(Montacargas_ogg, 50);
         }
         if (uno == obj_abajo && balcon12 hasnt visitado) {
           print "Lentamente, el montacargas va descendiendo aún más hacia las profundidades
@@ -3587,7 +3587,7 @@ Object balcon12
     antes [;
       Ir:
         if (uno == obj_arriba) {
-          Damusix.TocarV(Montacargas_ogg, 100);
+          Damusix.TocarV(Montacargas_ogg, 50);
         }
     ];
 
