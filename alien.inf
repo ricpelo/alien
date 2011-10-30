@@ -3824,6 +3824,18 @@ Class BotonEmergencia
         rtrue;
     ],
     alguien_pulsa [ vol;
+      ! Si el botón ya está pulsado, no se puede volver a pulsar:
+      if (self has general) {
+        switch (actor) {
+          objjugador:
+            "El botón ya está pulsado, sigue hundido y no se puede pulsar más.";
+          jason:
+            HablaJason("¿Cómo voy a volver a pulsarlo si sigue pulsado? ¡Ya no
+                        entra más!");
+            rtrue;
+        }
+      }
+      give self general;
       if (LugarReal() == parent(self)) {
         vol = 100;
       } else {
@@ -3877,7 +3889,6 @@ Object boton_este "botón rojo" emergencia_este
     pulsar [;
       if (self hasnt general) {
         ArrancarReloj(self, 2);
-        give self general;
         self.alguien_pulsa();
       } else {
         switch (actor) {
@@ -3902,7 +3913,6 @@ Object boton_oeste "botón azul" emergencia_oeste
     pulsar [;
       if (boton_este hasnt general) {
         ArrancarReloj(self, 2);
-        give self general;
         self.alguien_pulsa();
       } else {
         PararReloj(self);
