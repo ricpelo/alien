@@ -71,6 +71,7 @@ Constant CANAL_FONDO = 9;
 ! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 1;
 Constant CANAL_TELETIPO = 2;
+Constant CANAL_TICTAC = 3;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -698,6 +699,11 @@ Object control_sonido_teletipo
       Damusix.AsignarCanal(Teletipo_ogg, self.canal, self.volumen, 1);
     ];
 
+Object control_sonido_tictac
+  class ControlSonido
+  with
+    canal CANAL_TICTAC,
+    volumen 100;
 
 ! Controla el timer. Se usa sobre todo para el efecto del relámpago en el exterior,
 ! pero también porque la rutina EsperarTecla desactiva el timer actual cuando
@@ -3622,6 +3628,13 @@ Object emergencia_pasillo "Pasillo de emergencia"
     al_e emergencia_este,
     al_o emergencia_oeste,
     sgw_img Emergencia_Pasillo_jpg,
+    cada_turno [;
+      ! Cuando pasamos por el pasillo y hay algún botón pulsado, éste se escucha más
+      ! bajito:
+      if (boton_este has general || boton_oeste has general) {
+        control_sonido_tictac.cambiar_volumen(60);
+      }
+    ],
     despues [;
       Ir:
         if (self hasnt visitado) {
@@ -3797,6 +3810,11 @@ Class BotonEmergencia
       "";
     ],
     tiempo_restante,
+    cada_turno [;
+      if (self has general) {
+        control_sonido_tictac.cambiar_volumen(100);
+      }
+    ],
     antes [;
       Empujar:
         if (puerta_emergencia has abierta) {
@@ -3805,7 +3823,17 @@ Class BotonEmergencia
         self.pulsar();
         rtrue;
     ],
-    alguien_pulsa [;
+    alguien_pulsa [ vol;
+      if (LugarReal() == parent(self)) {
+        vol = 100;
+      } else {
+        switch (LugarReal()) {
+          emergencia_pasillo: vol = 60;
+          default:            vol = 30;
+        }
+      }
+      control_sonido_tictac.cambiar_volumen(vol);
+      control_sonido_tictac.activar(Tic_ogg, SONIDO_BUCLE_INFINITO);
       switch (actor) {
         objjugador:
           "Al pulsar el botón, este se queda hundido y se oye un tic tac...";
@@ -3817,6 +3845,7 @@ Class BotonEmergencia
     ],
     liberar_boton [;
       give self ~general;
+      control_sonido_tictac.desactivar();
       if (LugarReal() == parent(self)) {
         "^El botón salta a su posición inicial y el tic tac se detiene.";
       } else {
@@ -8010,6 +8039,7 @@ Object tt_final
   control_sonido_fondo.iniciar();
   control_sonido_detector.iniciar();
   control_sonido_teletipo.iniciar();
+  control_sonido_tictac.iniciar();
 ];
 
 
