@@ -9,7 +9,8 @@ PICTURE Junto_Puerta_jpg res/img/junto_puerta.jpg
 PICTURE Junto_Puerta_Abierta_jpg res/img/junto_puerta_abierta.jpg
 PICTURE Procesador_jpg res/img/procesador.jpg
 PICTURE Entrada_jpg, res/img/entrada.jpg
-PICTURE Laberinto_jpg res/img/laberinto.jpg
+PICTURE Laberinto_Oeste_jpg res/img/laberinto_oeste.jpg
+PICTURE Laberinto_Este_jpg res/img/laberinto_este.jpg
 PICTURE Aula_jpg res/img/aula.jpg
 PICTURE Balcon_jpg res/img/balcon.jpg
 PICTURE Seguridad_jpg res/img/seguridad.jpg

@@ -2322,7 +2322,7 @@ Class Laberinto
       }
       "";
     ],
-    sgw_img Laberinto_jpg,
+    sgw_img Laberinto_Este_jpg,
     sgw_mus Pasillo_ogg,
     antes [;
       Examinar:
@@ -4333,6 +4333,7 @@ Object boton_reproducir "botón Reproducir" consola
 Object laberinto1
   class Laberinto,
   with
+    sgw_img Laberinto_Oeste_jpg,
     al_s balcon2,
     al_e balcon1,
     ! Al oeste hay un hábitat
@@ -4395,6 +4396,7 @@ Object laberinto7
 Object laberinto11
   class Laberinto,
   with
+    sgw_img Laberinto_Oeste_jpg,
     al_n balcon2,
     al_e balcon4,
     ! Al oeste hay un hábitat
@@ -4423,6 +4425,7 @@ Object laberinto16
 Object laberinto18
   class Laberinto,
   with
+    sgw_img Laberinto_Oeste_jpg,
     al_n balcon6,
     al_e balcon8,
     al_s seguridad,
