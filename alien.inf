@@ -7795,7 +7795,7 @@ Object tt_inicial1
   class Escritura
   private
     sonido 1,
-    PausaMensaje 250,
+    PausaMensaje 600,
     elementos
       "> Aproximación a planeta 2003 UB313...^"
         POR_LETRA LETRA_FIJA PAUSA_NORMAL
@@ -7811,7 +7811,7 @@ Object tt_inicial2
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^~Desde hace casi tres años, el Gobierno ha estado utilizando una rica mina
         de Vibrantium en el planeta 2003 UB313, pero llevamos quince días sin tener
@@ -7833,7 +7833,7 @@ Object tt_inicial3
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^(Estupendo: La misión no es peligrosa, pero me asignan a todo un experto marine.)^"
         POR_MENSAJE LETRA_CURSIVA PAUSA_NORMAL
@@ -7854,7 +7854,7 @@ Object tt_inicial4
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^(El mineral, no hay duda. Nada les corrompe más que el dinero, salvo el poder.)^"
         POR_MENSAJE LETRA_CURSIVA PAUSA_DOBLE
@@ -7871,7 +7871,7 @@ Object tt_inicial5
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^> Confirmado contacto con la superficie... Maniobra correcta...^"
         POR_LETRA LETRA_FIJA PAUSA_NORMAL
@@ -7885,7 +7885,7 @@ Object tt_escape1
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "Rápidamente, Jason y tú entráis en el ascensor. El marine no pierde un segundo en
        pulsar el botón del lateral, tras lo cual las puertas del ascensor se cierran y
@@ -7926,7 +7926,7 @@ Object tt_escape2
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^No hay vuelta atrás, ni segundas oportunidades. Das la vuelta al rifle...
        ¡y golpeas la mano del monstruo con la culata! Un grito desgarrador sale de su
@@ -7946,7 +7946,7 @@ Object tt_final
   class Escritura
   private
     sonido 1,
-    PausaMensaje 500,
+    PausaMensaje 1200,
     elementos
       "^Ordenas a Madre, jadeando y casi sin aliento, que despegue inmediatamente la
        aeronave. El rugido de sus potentes motores suena a música en tus oídos, y casi
@@ -8632,7 +8632,7 @@ Object tt_final
 [ EsperarTecla s delay timer;
   if (s) print (string) s;
   timer = control_timer.timer_actual;   ! Guardamos timer actual (0 si no hay)
-  glk($00D6, delay * 5);                ! request_timer_events
+  glk($00D6, delay * 2);                ! request_timer_events
   glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
   while (1) {
     glk($00C0, gg_arguments);           ! glk_select(gg_arguments);
@@ -8651,22 +8651,22 @@ Object tt_final
 [ Introduccion i;
   clearMainWindow();
   viewImageCenter(Oscuridad_jpg);
-  control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
+  control_sonido_fondo.activar(Intro_ogg);
   tt_inicial1.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 20); i++; }
-  EsperarTecla(0, 300);
+  i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 60); i++; }
+  EsperarTecla(0, 900);
   tt_inicial2.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 20); i++; }
-  EsperarTecla(0, 900);
+  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 60); i++; }
+  EsperarTecla(0, 2700);
   tt_inicial3.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 20); i++; }
-  EsperarTecla(0, 900);
+  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 60); i++; }
+  EsperarTecla(0, 2700);
   tt_inicial4.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 20); i++; }
-  EsperarTecla(0, 800);
+  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 60); i++; }
+  EsperarTecla(0, 2700);
   tt_inicial5.visualiza();
-  EsperarTecla(0, 600);
-  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 20); i++; }
+  EsperarTecla(0, 1800);
+  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 60); i++; }
   Damusix.SimpleFadeOut(Intro_ogg, 3000);
 ];
 

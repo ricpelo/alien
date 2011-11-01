@@ -58,7 +58,7 @@ class Escritura
       }
     ],
     pausaLetra 1,
-    pausaMensaje 150,
+    pausaMensaje 450,
     visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa;
       escr_buffer_lib-->0 = MAX_TAM_BUFFER - ESCR_PRIMERA_LETRA;
 
