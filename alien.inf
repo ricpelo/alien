@@ -8651,7 +8651,7 @@ Object tt_final
 [ Introduccion i;
   clearMainWindow();
   viewImageCenter(Oscuridad_jpg);
-  control_sonido_fondo.activar(Intro_ogg, SONIDO_BUCLE_INFINITO);
+  control_sonido_fondo.activar(Intro_ogg);
   tt_inicial1.visualiza();
   i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 20); i++; }
   EsperarTecla(0, 300);
