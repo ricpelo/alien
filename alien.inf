@@ -924,6 +924,7 @@ Object nave1 "Interior de la nave"
     cada_turno [ t;
       if (jason in self && vaina has abierta) {
         Bandera_Fin(2);
+        t = false;
         if (hayGraficos) {
           t = true;
           ApagarGraficosSub(true);
@@ -4467,6 +4468,7 @@ Object laberinto28
           if (ascensor has abierto) {
             if (jason in self && jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
                 jason.perseguido == jugador) {
+              t = false;
               if (hayGraficos) {
                 t = true;
                 ApagarGraficosSub(true);
@@ -9646,9 +9648,7 @@ Endif;
 
 
 [ CreditosSub;
-  if (hayGraficos) {
-    viewImageCenter(Sin_Imagen_jpg);
-  }
+  viewImageCenter(Sin_Imagen_jpg);
   print "A·L·I·E·N : LA AVENTURA - EDICIÓN ESPECIAL^";
   print "(c) 2008-2011 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
@@ -9695,9 +9695,7 @@ Endif;
   print "http://www.gnu.org/licenses/gpl.txt^";
   style roman;
   EsperarTecla();
-  if (hayGraficos) {
-    viewImageCenter(LugarReal().sgw_img);
-  }
+  viewImageCenter(LugarReal().sgw_img);
 ];
 
 
@@ -9719,7 +9717,7 @@ Endif;
 ];
 
 
-[ PistasSub;
+[ PistasSub t;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
@@ -9737,13 +9735,20 @@ Endif;
        glk($0086, style_Emphasized);
        print " otra vez.]^";
        style roman;
-    1: ApagarGraficosSub(true);
+    1: t = false;
+       if (hayGraficos) {
+         t = true;
+         ApagarGraficosSub(true);
+       }
        barra_estado.numero_lineas = 26;
        barra_estado.dibujar();
        ZIPI_Empezar();
        barra_estado.numero_lineas = 1;
        barra_estado.dibujar();
-       EncenderGraficosSub(true);
+       if (t) {
+         EncenderGraficosSub(true);
+       }
+       clearTextWindow();
        <<Mirar>>;
     2: glk($0086, style_Emphasized);
        print "[Las pistas han sido desactivadas.]^";
