@@ -7979,7 +7979,7 @@ Object tt_final
 
 
 ! Rutina principal y obligatoria de todo juego InformATE
-[ Inicializar intro i;
+[ Inicializar intro;
 
   if (~~testGraphics()) {
     print "^Lo sentimos, pero este juego necesita un intérprete Glulx
@@ -8038,15 +8038,19 @@ Object tt_final
   EncenderMusicaSub(true);
 
   if (~~intro) {
-    i = 0; while (i < 15) {
-      viewImageCenter(ALIEN_png, true); EsperarTecla(0, 10); i++;
-    }
+    DibujaLogoAlien();
   }
 
   print "Copyright (c) 2008-2011 Alpha Aventuras";
   EsperarTecla();
   clearMainWindow();
   viewImageCenter(Nave1_jpg);
+];
+
+
+[ DibujaLogoAlien i;
+  i = 0; while (i < 15) { viewImageCenter(ALIEN_Sin_Puntos_png, true); EsperarTecla(0, 20); i++; }
+  i = 0; while (i < 15) { viewImageCenter(Puntos_png, true); EsperarTecla(0, 20); i++; }
 ];
 
 
@@ -8300,7 +8304,7 @@ Object tt_final
       if (EsExterior(LugarReal()) && random(100) < 38) {
         r = 20 * random(5);
         if (r >= 80) {
-          viewImageCenter(Fondo_blanco_jpg);
+          viewImageCenter(Fondo_Blanco_jpg);
         }
         Damusix.TocarV(Trueno_ogg, r);
         if (r >= 80) {
@@ -8666,7 +8670,7 @@ Object tt_final
   EsperarTecla(0, 800);
   tt_inicial5.visualiza();
   EsperarTecla(0, 600);
-  i = 0; while (i < 15) { viewImageCenter(ALIEN_png, true); EsperarTecla(0, 20); i++; }
+  DibujaLogoAlien();
   Damusix.SimpleFadeOut(Intro_ogg, 3000);
 ];
 
