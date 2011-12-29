@@ -170,7 +170,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
   print "  el proceso decidimos ampliar bastante más la historia.^^";
   EsperarTecla();
   print "- Hay una segunda parte de la versión original en Spectrum perdida en una casette^";
-  print "  olvidada dentro de alguna caja extriaviada en casa de Manolo.^^";
+  print "  olvidada dentro de alguna caja extraviada en casa de Manolo.^^";
   EsperarTecla();
   print "- El ~laberinto~ inicial estaba formado sólo por cinco localidades, para después^";
   print "  pasar a tener más de 70, y finalmente acabar teniendo alrededor de 30.^^";
