@@ -4483,7 +4483,7 @@ Object laberinto28
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
-              control_sonido_detector.cambiar_volumen($3000);
+              control_sonido_detector.cambiar_volumen(7);
               move ascensor_arriba to exterior3;
               move jason to exterior3;
               JugadorA(exterior3);
