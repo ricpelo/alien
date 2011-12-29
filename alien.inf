@@ -82,11 +82,14 @@ Constant TIMER_TRUENO = 4000;
 ! El timer para el laberinto es más largo:
 Constant TIMER_LABERINTO = 8000;
 
+
+
 ! ====================================================================
 !
 ! VARIABLES GLOBALES
 !
 ! ====================================================================
+
 
 
 ! Alto de la ventana gráfica:
@@ -154,7 +157,7 @@ Include "EParser";
 Replace EsperarTecla;
 Replace InitGlkWindow;
 Replace HandleGlkEvent;
-Include "SGW+DMX_NG";    ! entre EParser y Acciones
+Include "SGW+DMX_NG";    ! Entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
