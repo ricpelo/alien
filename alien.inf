@@ -7992,8 +7992,8 @@ Object tt_final
     PausaMensaje 500,
     elementos
       "^Ordenas a Madre, jadeando y casi sin aliento, que despegue inmediatamente la
-       aeronave. El rugido de sus potentes motores suena a música en tus oídos, y casi
-       puedes decir que percibes en tu piel el momento exacto en el que el tren de
+       aeronave. El rugido de sus potentes motores suena a música en tus oídos, y
+       podrías decir que percibes en tu piel el momento exacto en el que el tren de
        aterrizaje deja de tener contacto con la superficie del planeta.^"
         POR_MENSAJE LETRA_NORMAL PAUSA_DOBLE
       "^Desde el aire, ya a salvo, ves y oyes la explosión que destruye por completo el
