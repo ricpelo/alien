@@ -1665,6 +1665,8 @@ Object junto_procesador "Frente al procesador atmosférico"
                      la linterna varias veces en distintas direcciones, y concluye:^";
               HablaJason("Parece que todo está tranquilo. Puede pasar, pero tenga
                           cuidado.");
+              move linterna to jugador;
+              "^Jason te devuelve la interna con gesto inexpresivo.";
             } else {
               if (linterna in jugador) {
                 HablaJason("Está demasiado oscuro para ver nada. Páseme su linterna.");
@@ -5336,6 +5338,7 @@ Object jason "Jason" nave1
             if (uno in jugador) {
               move uno to self;
               print "Le das ", (el) o, " a Jason.^";
+              HablaJason("Muy amable...");
             }
           PNJ_OBJETO_ESCENARIO_O_ESTATICO:
             HablaJason("No puedo coger eso.");
