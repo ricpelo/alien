@@ -11,6 +11,7 @@ cp Redist/holocubo.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien
 cp Redist/instrucciones.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/plan_ejecucion.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
+cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/debian/
 cp alien.blb /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/games/alphaaventuras-alien/
 cp garglk.ini /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/games/alphaaventuras-alien/
 
