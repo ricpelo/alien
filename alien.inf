@@ -1473,17 +1473,31 @@ Object linterna "linterna" armario
           "Desgraciadamente, parece que se ha agotado la batería.";
         }
     ],
-    encender [;
+    encender [ l;
       give self encendida;
       give self luz;
       ArrancarDaemon(self);
-      viewImageCenter(LugarReal().sgw_img);
+      l = LugarReal();
+      ! Si estamos en el laberinto y el procesador no está arreglado,
+      ! se hace la luz (gráficamente hablando):
+      if (~~(EsExterior(l) || l == nave1 || l == nave2)) {
+        if (~~(procesador.arreglado())) {
+          viewImageCenter(l.sgw_img);
+        }
+      }
     ],
-    apagar [;
+    apagar [ l;
       give self ~encendida;
       give self ~luz;
       PararDaemon(self);
-      viewImageCenter(SGW_IMAGEN_OSCURIDAD);
+      l = LugarReal();
+      ! Si estamos en el laberinto y el procesador no está arreglado,
+      ! se hace la oscuridad (gráficamente hablando):
+      if (~~(EsExterior(l) || l == nave1 || l == nave2)) {
+        if (~~(procesador.arreglado())) {
+          viewImageCenter(SGW_IMAGEN_OSCURIDAD);
+        }
+      }
     ],
     despues [;
       Abrir:
@@ -1827,6 +1841,7 @@ Object panel_control "panel de control" junto_procesador
           style bold;
           print "Código correcto. Acceso permitido.";
           style roman;
+          Damusix.TocarV(Chispazo_ogg, 100);
           "~^^La puerta se abre y, a continuación, una enorme chispa salta de los bornes de
           conexión de la batería. Finalmente, el panel de control se apaga por falta de
           energía.";
@@ -1900,6 +1915,7 @@ Object panel_control "panel de control" junto_procesador
            energía.";
         } else {
           give self general;
+          Damusix.TocarV(Chispazo_ogg, 100);
           print "provocando una lluvia de chispas. El display se enciende y suena un
                  zumbido. En la pantalla aparecen símbolos y caracteres que indican
                  que el sistema de control del panel se está reiniciando. Finalmente,
@@ -6852,6 +6868,7 @@ Object robot "robot de mantenimiento" exterior3,
           give robot ausente;
           move robot_inutil to procesador;
           give jugador luz;
+          Damusix.TocarV(Chispazo_ogg, 100);
           print "^El robot mueve su brazo soldador hasta situarlo justo delante del circuito
                  dañado. Se ven y oyen ráfagas de chispas eléctricas saliendo del punto de
                  unión entre el circuito y la punta del soldador. Finalmente, retira
