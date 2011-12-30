@@ -926,6 +926,7 @@ Object nave1 "Interior de la nave"
     ! que hemos acabado la aventura:
     cada_turno [ t;
       if (jason in self && vaina has abierta) {
+        Damusix.Parar(Sirena_ogg);
         Bandera_Fin(2);
         t = false;
         if (hayGraficos) {
