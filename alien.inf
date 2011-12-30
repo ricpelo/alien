@@ -1637,6 +1637,11 @@ Object junto_procesador "Frente al procesador atmosférico"
           self.tenga_cuidado = true;
           print "Jason apoya una mano en tu hombro y mirándote fijamente te dice...^";
           HablaJason("Tenga cuidado...");
+          if (linterna in jason) {
+            move linterna to jugador;
+            print "^Y devolviéndote la linterna, concluye...^";
+            HablaJason("Y tome su linterna. Está muy oscuro ahí dentro.");
+          }
           EsperarTecla();
         }
     ],
