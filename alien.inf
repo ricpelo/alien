@@ -8812,6 +8812,7 @@ Object tt_final
 
 [ HablaRobot msg;
   robot.ha_hablado = true;
+  Damusix.TocarV(Robot_ogg);
   style bold;
   print "^ROBOT: ";
   style roman;

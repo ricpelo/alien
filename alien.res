@@ -76,4 +76,5 @@ SOUND Puerta1_ogg res/snd/puerta1.ogg
 SOUND Puerta2_ogg res/snd/puerta2.ogg
 SOUND Tic_ogg res/snd/tic.ogg
 SOUND Chispazo_ogg res/snd/chispazo.ogg
+SOUND Robot_ogg res/snd/robot.ogg
 
