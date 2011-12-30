@@ -1862,12 +1862,12 @@ Object panel_control "panel de control" junto_procesador
                 print "Jason se dirige al androide:^";
                 jason.hablar = false;
                 robot.hablar = false;
-                HablaJason("759812... 759812... ¡Esa no es la clave, saco de tuercas!");
+                HablaJason("¿759812? ¡¿759812?! ¡Esa no es la clave, saco de tuercas!");
                 HablaRobot("Código... cambiado... cambiado...");
                 HablaJason("A ti sí que te voy a cambiar la cara como no te calles...");
               } else {
                 jason.hablar = false;
-                HablaJason("¡Ey! ¿Es que alguien está mintiendo aquí?");
+                HablaJason("¡Ey! ¿Es que alguien está mintiendo por aquí?");
               }
             }
             rtrue; 
@@ -2538,7 +2538,7 @@ Object entrada "Entrada al complejo"
         print "^Jason observa la puerta sellada con esa sustancia, y exclama:^";
         jason.hablar = false;
         HablaJason("¡Maldita sea! Tendremos que buscar otra forma de salir de aquí.
-                      Y de paso... ¡mandar todo esto al infierno!");
+                     Y de paso... ¡mandar todo esto al infierno!");
       }
     ];
 
