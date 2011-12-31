@@ -1,5 +1,6 @@
 CODE alien.ulx
 PICTURE Nave1_jpg res/img/nave1.jpg
+PICTURE Nave1_Trueno_jpg res/img/nave1_trueno.jpg
 PICTURE Nave2_jpg res/img/nave2.jpg
 PICTURE Exterior1_jpg res/img/exterior1.jpg
 PICTURE Exterior3_jpg res/img/exterior3.jpg

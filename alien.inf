@@ -524,7 +524,7 @@ Class Lugar
       ! porque ese método comprueba previamente si ya se había activado previamente el
       ! mismo timer, con lo cual el timer no se reactiva si se vuelve a este punto antes
       ! de que expire el timer anterior:
-      if (EsExterior(self)) {
+      if (EsExterior(self) || self == nave1) {
         control_timer.activar(TIMER_TRUENO);
       } else if ((self ofclass Laberinto || self ofclass Balcon) &&
                  alien.comportamiento == 1 or 2) {
@@ -8340,17 +8340,30 @@ Object tt_final
 ];
 
 
-[ HandleGlkEvent ev snd r;
+[ HandleGlkEvent ev snd r l p;
   SGW_HandleGlk(ev);
+  l = LugarReal();
   switch (ev-->0) {
     evtype_Timer:
-      if (EsExterior(LugarReal()) && random(100) < 38) {
+      if ((EsExterior(l) || l == nave1) && random(100) < 38) {
         r = 20 * random(5);
-        if (r >= 80) {
-          viewImageCenter(Fondo_Blanco_jpg);
+        if (l == nave1) {
+          p = 40;
+        } else {
+          p = 80;
         }
-        Damusix.TocarV(Trueno_ogg, r);
-        if (r >= 80) {
+        if (r >= p) {
+          if (l == nave1) {
+            viewImageCenter(Nave1_Trueno_jpg);
+            Damusix.TocarV(Trueno_ogg, 5);
+          } else {
+            viewImageCenter(Fondo_Blanco_jpg);
+          }
+        }
+        if (l ~= nave1) {
+          Damusix.TocarV(Trueno_ogg, r);
+        }
+        if (r >= p) {
           glk($00D6, 100);                    ! request_timer_events
           while (1) {
             glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
@@ -8359,9 +8372,9 @@ Object tt_final
               break;
             }
           }
-          viewImageCenter(localizacion.sgw_img);
+          viewImageCenter(l.sgw_img);
         }
-      } else if ((LugarReal() ofclass Laberinto || LugarReal() ofclass Balcon)
+      } else if ((l ofclass Laberinto || l ofclass Balcon)
                   && random(100) < 75) {
         r = 20 * random(3) + 40;
         switch (random(4)) {
