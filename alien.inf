@@ -2961,7 +2961,7 @@ Object jeringa "jeringa" cajon
           "La jeringa ya está vacía. No puede inyectar nada.";
         }
         if (otro == jason) {
-          HablaJason("¿De qué va? ¡Ni se le ocurra!");
+          HablaJason("¿De qué va, amigo? ¡Ni se le ocurra!");
           rtrue;
         } else if (otro == jason_inerte) {
           remove jason_inerte;
@@ -5216,6 +5216,10 @@ Object jason "Jason" nave1
         HablaJason("Conozco ciento cincuenta formas de matar a un hombre. Sólo necesito
                     la mitad de una de ellas para acabar con usted.");
         rtrue;
+
+      Tocar:
+        HablaJason("Yo que usted no lo haría...");
+        rtrue;
     ],
 !    precamino RUTA_NINGUNA,    ! En realidad no sé si hace falta
     tras_abrir NO_PUEDE_ABRIR,   ! Comportamiento después de pasar por una puerta
@@ -5858,7 +5862,7 @@ Object jason "Jason" nave1
           }
         }
         rtrue;
-        
+
       NoComprendido, Hablar:
         <<Preguntar self>>;
 !        accion = ##Preguntar;
@@ -5889,7 +5893,6 @@ Object jason "Jason" nave1
         rtrue;
     ],
     cada_turno [;
-      
       if (banderafin ~= 0) {
         rtrue;
       }
