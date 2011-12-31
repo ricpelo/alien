@@ -6,7 +6,7 @@
 !% $MAX_VERBS=153
 
 !
-! "A·L·I·E·N" - Edición especial
+! "A·L·I·E·N" - Edición Especial
 !
 ! Copyright (c) 2008-2011 Ricardo Pérez López (Alpha Aventuras)
 !
@@ -34,7 +34,7 @@
 
 
 
-Constant Historia "~A·L·I·E·N~ - Edición especial";
+Constant Historia "~A·L·I·E·N~ - Edición Especial";
 Constant Titular "^(c) 2008-2011 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
@@ -9755,11 +9755,15 @@ Endif;
   EsperarTecla();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
          directa o indirectamente, en el desarrollo de esta aventura.^^
-         (c) 2008-2011 Alpha Aventuras.^^
+         (c) 2008-2011 Alpha Aventuras^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
   style fixed;
   print "http://www.gnu.org/licenses/gpl.txt^";
+  style roman;
+  print "^El código fuente del programa está disponible en Github:^^";
+  style fixed;
+  print "https://github.com/ricpelo/alien/tree/deluxe^";
   style roman;
   EsperarTecla();
   viewImageCenter(LugarReal().sgw_img);
