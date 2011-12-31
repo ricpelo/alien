@@ -8,7 +8,7 @@
 !
 ! "A·L·I·E·N" - Edición Especial
 !
-! Copyright (c) 2008-2011 Ricardo Pérez López (Alpha Aventuras)
+! Copyright (c) 2008-2012 Ricardo Pérez López (Alpha Aventuras)
 !
 
 ! This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 
 
 Constant Historia "~A·L·I·E·N~ - Edición Especial";
-Constant Titular "^(c) 2008-2011 Alpha Aventuras^^
+Constant Titular "^(c) 2008-2012 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
 Release 1;
@@ -8084,7 +8084,7 @@ Object tt_final
     DibujaLogoAlien();
   }
 
-  print "Copyright (c) 2008-2011 Alpha Aventuras";
+  print "Copyright (c) 2008-2012 Alpha Aventuras";
   EsperarTecla();
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
@@ -9717,7 +9717,7 @@ Endif;
 [ CreditosSub;
   viewImageCenter(Sin_Imagen_jpg);
   print "A·L·I·E·N : LA AVENTURA - EDICIÓN ESPECIAL^";
-  print "(c) 2008-2011 Alpha Aventuras^^";
+  print "(c) 2008-2012 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
   print "    Ricardo Pérez López^^";
   print "- GRÁFICOS E IDEA ORIGINAL:^";
@@ -9755,7 +9755,7 @@ Endif;
   EsperarTecla();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
          directa o indirectamente, en el desarrollo de esta aventura.^^
-         (c) 2008-2011 Alpha Aventuras^^
+         (c) 2008-2012 Alpha Aventuras^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
   style fixed;
