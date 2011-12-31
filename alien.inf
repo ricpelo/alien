@@ -1,6 +1,5 @@
 !% -~S
 !% -G
-!% -D
 !% $MAX_STATIC_DATA=20000
 !% $MAX_PROP_TABLE_SIZE=58000
 !% $MAX_VERBS=153
