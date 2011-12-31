@@ -8087,7 +8087,9 @@ Object tt_final
   print "Copyright (c) 2008-2011 Alpha Aventuras";
   EsperarTecla();
   clearMainWindow();
+  ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
+  ImprimirOEjecutar(nave1, cada_turno);
 ];
 
 
@@ -8340,42 +8342,46 @@ Object tt_final
 ];
 
 
+! Rutina usada en la siguiente HandleGlkEvent:
+[ EsperaTimer espera timer;
+  glk($00D6, espera);                    ! request_timer_events
+  while (1) {
+    glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
+    if ((gg_arguments-->0) == 1) {
+      glk($00D6, timer);       ! request_timer_events
+      break;
+    }
+  }
+];
+
+
 [ HandleGlkEvent ev snd r l p;
   SGW_HandleGlk(ev);
   l = LugarReal();
+  r = random(100);
+
   switch (ev-->0) {
     evtype_Timer:
-      if ((EsExterior(l) || l == nave1) && random(100) < 38) {
+      if (l == nave1 && r < 35) {
         r = 20 * random(5);
-        if (l == nave1) {
-          p = 40;
-        } else {
-          p = 80;
-        }
-        if (r >= p) {
-          if (l == nave1) {
-            viewImageCenter(Nave1_Trueno_jpg);
-            Damusix.TocarV(Trueno_ogg, 5);
-          } else {
-            viewImageCenter(Fondo_Blanco_jpg);
-          }
-        }
-        if (l ~= nave1) {
-          Damusix.TocarV(Trueno_ogg, r);
-        }
-        if (r >= p) {
-          glk($00D6, 100);                    ! request_timer_events
-          while (1) {
-            glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
-            if ((gg_arguments-->0) == 1) {
-              glk($00D6, TIMER_TRUENO);       ! request_timer_events
-              break;
-            }
-          }
+        if (r >= 65) {
+          viewImageCenter(Nave1_Trueno_jpg);
+          Damusix.TocarV(Trueno_ogg, random(4));
+          EsperaTimer(200, TIMER_TRUENO);
           viewImageCenter(l.sgw_img);
         }
-      } else if ((l ofclass Laberinto || l ofclass Balcon)
-                  && random(100) < 75) {
+      } else if (EsExterior(l) && r < 38) {
+        r = 20 * random(5);
+        p = 80;
+        if (r >= p) {
+          viewImageCenter(Fondo_Blanco_jpg);
+        }
+        Damusix.TocarV(Trueno_ogg, r);
+        if (r >= p) {
+          EsperaTimer(100, TIMER_TRUENO);
+          viewImageCenter(l.sgw_img);
+        }
+      } else if ((l ofclass Laberinto || l ofclass Balcon) && r < 75) {
         r = 20 * random(3) + 40;
         switch (random(4)) {
           1: snd = Gota_Oscura_ogg;
