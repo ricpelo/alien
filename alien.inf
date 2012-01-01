@@ -721,6 +721,9 @@ Object control_timer
         glk_request_timer_events(t);
       }
     ],
+    reactivar [;
+      self.activar(self.timer_actual);
+    ],
     desactivar [;
       self.activar(0);
     ];
