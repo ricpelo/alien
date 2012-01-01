@@ -8352,11 +8352,7 @@ Object tt_final
     control_timer.activar(TIMER_TRUENO);
   } else if ((self ofclass Laberinto || self ofclass Balcon) &&
              alien.comportamiento == 1 or 3) {
-    if (alien in LugarReal()) {
-      control_timer.activar(TIMER_ALIEN);
-    } else {
-      control_timer.activar(TIMER_LABERINTO);
-    }
+    control_timer.activar(TIMER_LABERINTO);
   } else {
     control_timer.desactivar();
   }
