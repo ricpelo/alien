@@ -6803,8 +6803,26 @@ Object alien procesador
           if (self.oportunidad < 4) {
             switch (self.oportunidad) {
               0: control_timer.activar(TIMER_ALIEN);
-                 print "^¡El monstruo te observa amenazador!^";
-              1, 2, 3, 4: print "^¡El monstruo salta sobre ti!^";
+                 print "^¡El monstruo ";
+                 if (jason in LugarReal()) {
+                   print "os";
+                 } else {
+                   print "te";
+                 }
+                 print " observa amenazador!^";
+              1, 2, 3, 4: print "^¡El monstruo salta sobre ";
+                          if (jason in LugarReal()) {
+                            print "vosotros!^";
+                            switch (random(2)) {
+                              1: HablaJason("¡No puedo más! ¡Nooooooooo!");
+                              2: HablaJason("¡Aléjate de mí! ¡Déjameeeeeeeee!");
+                            }
+                            jason.capricho = 100;
+                            PNJ_Ruta(jason, MOVIMIENTO_ALEATORIO);
+                            jason.movimiento();
+                          } else {
+                            print "ti!^";
+                          }
                           Damusix.TocarV(Rugido_ogg);
             }
             self.oportunidad = self.oportunidad + 3;
