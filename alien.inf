@@ -523,14 +523,7 @@ Class Lugar
       ! porque ese método comprueba previamente si ya se había activado previamente el
       ! mismo timer, con lo cual el timer no se reactiva si se vuelve a este punto antes
       ! de que expire el timer anterior:
-      if (EsExterior(self) || self == nave1) {
-        control_timer.activar(TIMER_TRUENO);
-      } else if ((self ofclass Laberinto || self ofclass Balcon) &&
-                 alien.comportamiento == 1 or 2) {
-        control_timer.activar(TIMER_LABERINTO);
-      } else {
-        control_timer.desactivar();
-     }
+      ActivarTimer();
     ],
   has
     luz;
@@ -8343,6 +8336,18 @@ Object tt_final
   }
 
   rfalse; ! si te olvidas esta linea, el juego no funcionará bien
+];
+
+
+[ ActivarTimer;
+  if (EsExterior(self) || self == nave1) {
+    control_timer.activar(TIMER_TRUENO);
+  } else if ((self ofclass Laberinto || self ofclass Balcon) &&
+             alien.comportamiento == 1 or 2) {
+    control_timer.activar(TIMER_LABERINTO);
+  } else {
+    control_timer.desactivar();
+  }
 ];
 
 

@@ -41,6 +41,20 @@ Constant LETRA_CURSIVA = $$00100;
 Constant LETRA_FIJA    = $$01000;
 Constant LETRA_INVERSA = $$10000;
 
+! Hace lo mismo que EsperarTimer pero no guarda ni restaura
+! el timer anterior:
+[ EsperarTimerSimple espera;
+  glk($00D6, espera * 5);            ! request_timer_events
+  while (1) {
+    glk($00C0, gg_arguments);        ! glk_select(gg_arguments);
+    if ((gg_arguments-->0) == 1) {
+      glk($00D6, 0);                 ! request_timer_events
+      break;
+    }
+  }
+];
+
+
 class Escritura
   class Vector
   private
@@ -49,7 +63,7 @@ class Escritura
   with
     hazPausaLetra [;
       if ( self.pausaLetra > -1 ) {
-        EsperarTecla(0, self.pausaLetra);
+        EsperarTimerSimple(self.pausaLetra);
       }
     ],
     hazPausaMensaje [ multi;
@@ -98,7 +112,10 @@ class Escritura
               self.hazPausaLetra();
             #endif;
           }
-          if (timer ~= 0) control_timer.activar(timer);
+          if (timer ~= 0) {
+            control_timer.desactivar();
+            ActivarTimer();
+          }
         }          
         switch (tipo_pausa) {
           SIN_PAUSA:     break;
