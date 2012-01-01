@@ -133,6 +133,7 @@ Class Movil
     objetivo_pnj,                            ! El destino deseado o del que huir
     sentido,                                 ! Sentido del movimiento (c) Alpha
     lugar_objetivo,                          ! Sitio a donde va (c) Alpha
+    condicion_movimiento [; rtrue; ],        ! Se mueve si la condición es true (c) Alpha
     perseguido,                              ! El perseguido
     tipoRuta,                                ! Ruta valida para este PNJ
     pnj_bloqueado [; 
@@ -713,7 +714,7 @@ Object MovedorDeMoviles
       for (indMov = 1 : indMov <= indiceMoviles : indMov++) {
         mov = tablaMoviles-->indMov; 
         ! print (object) mov, mov, " va a moverse^";
-        mov.movimiento();
+        if (mov.condicion_movimiento()) mov.movimiento();
       }
     ];
 

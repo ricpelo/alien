@@ -6710,6 +6710,15 @@ Object alien procesador
          self.muerte_final();
          rtrue;
     ],
+    condicion_movimiento [;
+      if (self.comportamiento == 1 or 3 && self in LugarReal()) {
+        self.capricho = 0;
+        rfalse;
+      } else {
+        self.capricho = 50;
+        rtrue;
+      }
+    ],
     cada_turno [;
       ! Cambia aleatoriamente el nombre del alien:
       switch (random(3)) {
@@ -6717,12 +6726,8 @@ Object alien procesador
         2: self.nombre_corto = "monstruo"; self.genero = G_MASCULINO;
         3: self.nombre_corto = "ser"; self.genero = G_MASCULINO;
       }
-      
-      if (self.comportamiento == 1 or 3 && self in LugarReal()) {
-        self.capricho = 0;
-      } else {
-        self.capricho = 50;
-      }
+
+      self.condicion_movimiento();      
 
       if (self in LugarReal()) {
         if (self.callado) {
