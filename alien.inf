@@ -6604,6 +6604,7 @@ Object alien procesador
       "";
     ],
     llega [ dir;
+      control_timer.activar(TIMER_ALIEN);
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
         print "^¡", (_El) self, " te sigue desde ", (el) dir, "! ¡Corre!^";
@@ -6674,6 +6675,7 @@ Object alien procesador
       if (alien.comportamiento == 1) {
         self.tiempo_restante = -1;
         PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
+        control_timer.activar(TIMER_ALIEN);
         "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
       }
     ],
@@ -8418,6 +8420,7 @@ Object tt_final
         ImprimirOEjecutar(alien, cada_turno);
 
         if (banderafin == 1) {
+          print "^^";
           M__L(##Miscelanea, 3);
           ActualizarEstatus();
           AfterGameOver();
