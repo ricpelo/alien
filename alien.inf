@@ -8416,8 +8416,15 @@ Object tt_final
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         ImprimirOEjecutar(alien, cada_turno);
+
+        if (banderafin == 1) {
+          M__L(##Miscelanea, 3);
+          ActualizarEstatus();
+          AfterGameOver();
+        }
+
         print "^> ";
-        
+
         buffer-->0 = gg_event-->2;
         glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                                INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
