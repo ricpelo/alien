@@ -6710,6 +6710,8 @@ Object alien procesador
          self.muerte_final();
          rtrue;
     ],
+    ! Esta propiedad la usa el MovedorDeMoviles (en Moviles_NG.h) como condición previa
+    ! a mover un móvil. Si se devuelve false no se moverá:
     condicion_movimiento [;
       if (self.comportamiento == 1 or 3 && self in LugarReal()) {
         self.capricho = 0;
