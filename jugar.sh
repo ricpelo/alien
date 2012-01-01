@@ -1,4 +1,4 @@
 #!/bin/sh
 
-gargoyle-free alien.blb
+gargoyle alien.blb
 
