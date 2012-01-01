@@ -78,13 +78,14 @@ Constant SGW_CON_DAMUSIX;
 Constant SONIDO_BUCLE_INFINITO = -1;
 
 ! Es importante que todos los timers tengan duración distinta, porque
-! esa es la forma que tengo de distinguirlos (un poco cutre, pero va)
+! esa es la forma que tengo de distinguirlos (es cutre, pero va):
+
 ! El timer a aplicar para el trueno:
 Constant TIMER_TRUENO = 4000;
 ! El timer para el laberinto es más largo:
 Constant TIMER_LABERINTO = 8000;
 ! El timer para cuando el alien está en la misma localidad:
-Constant TIMER_ALIEN = 10000;
+Constant TIMER_ALIEN = 6000;
 
 
 
@@ -6728,7 +6729,7 @@ Object alien procesador
         }
         if (self.comportamiento == 1) {
           ! Se le da dos oportunidades. Después lo mata.
-          if (self.oportunidad < 2) {
+          if (self.oportunidad < 4) {
             switch (self.oportunidad) {
               0: if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR) {
 !                   print "^¡El monstruo te está siguiendo! ¡Corre!^";
@@ -6748,9 +6749,27 @@ Object alien procesador
                      print " ha visto...^";
                    }
                  }
-!              1: print "^¡El monstruo gira su cabeza y te observa amenazador!^";
-!              2: print "^¡El monstruo comienza a caminar hacia ti!^";
-              1: print "^¡El monstruo gira la cabeza y, al verte, salta sobre ti!^";
+              1: print "^¡El monstruo gira su cabeza y ";
+                 if (jason in LugarReal()) {
+                   print "os";
+                 } else {
+                   print "te";
+                 }
+                 print " observa amenazador!^";
+              2: print "^¡El monstruo comienza a caminar hacia ";
+                 if (jason in LugarReal()) {
+                   print "vosotros";
+                 } else {
+                   print "ti";
+                 }
+                 print "!^";
+                 Damusix.TocarV(Monstruo_ogg);
+              3: print "^¡El monstruo salta sobre ";
+                 if (jason in LugarReal()) {
+                   print "vosotros! ¡Corred!";
+                 } else {
+                   print "ti! ¡Corre!^";
+                 }
                  Damusix.TocarV(Rugido_ogg);
             }
             if (self.tiempo_restante >= 0) {
