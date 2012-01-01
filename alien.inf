@@ -8347,7 +8347,7 @@ Object tt_final
 
 
 ! Rutina usada en la siguiente HandleGlkEvent:
-[ EsperaTimer espera timer;
+[ EsperarTimer espera timer;
   glk($00D6, espera);               ! request_timer_events
   while (1) {
     glk($00C0, gg_arguments);       ! glk_select(gg_arguments);
@@ -8372,7 +8372,7 @@ Object tt_final
           if (r >= 65) {
             viewImageCenter(Nave1_Trueno_jpg);
             Damusix.TocarV(Trueno_ogg, random(4));
-            EsperaTimer(200, TIMER_TRUENO);
+            EsperarTimer(200, TIMER_TRUENO);
             viewImageCenter(l.sgw_img);
           }
         } else if (EsExterior(l) && r < 38) {
@@ -8383,7 +8383,7 @@ Object tt_final
           }
           Damusix.TocarV(Trueno_ogg, r);
           if (r >= p) {
-            EsperaTimer(100, TIMER_TRUENO);
+            EsperarTimer(100, TIMER_TRUENO);
             viewImageCenter(l.sgw_img);
           }
         }
