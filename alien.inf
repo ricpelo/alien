@@ -34,7 +34,7 @@
 
 
 
-Constant Historia "~A·L·I·E·N~ - Edición Especial";
+Constant Historia "~A·L·I·E·N~: La aventura - Edición Especial";
 Constant Titular "^(c) 2008-2012 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
@@ -8081,12 +8081,22 @@ Object tt_final
 
 ! Rutina principal y obligatoria de todo juego InformATE
 [ Inicializar intro;
-
   if (~~testGraphics()) {
     print "^Lo sentimos, pero este juego necesita un intérprete Glulx
             con capacidades gráficas.^^";
-    EsperarTecla();
-    quit;
+    RecomiendaGargoyle();
+  }
+
+  if (Damusix.TestAudio() == 0) {
+    print "^Lo sentimos, pero este juego necesita un intérprete Glulx
+            que pueda reproducir sonido.^^";
+    RecomiendaGargoyle();
+  }
+
+  if (glk_gestalt(gestalt_Timer,0) == 0) {
+    print "^Lo sentimos, pero este juego necesita un intérprete Glulx
+            que tenga soporte para eventos temporizados.^^";
+    RecomiendaGargoyle();
   }
 
   ! Inicialización gráfica
@@ -8148,6 +8158,18 @@ Object tt_final
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
   ImprimirOEjecutar(nave1, cada_turno);
+];
+
+
+[ RecomiendaGargoyle;
+  print "~A·L·I·E·N: La aventura - Edición Especial~ ha sido diseñada
+         para funcionar con el intérprete Gargoyle, que puedes
+         descargar de la siguiente dirección:^^";
+  style fixed;
+  print "http://code.google.com/p/garglk/downloads^";
+  style roman;
+  EsperarTecla();
+  quit;
 ];
 
 
