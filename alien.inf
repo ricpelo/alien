@@ -1,5 +1,6 @@
 !% -~S
 !% -G
+!% -D
 !% $MAX_STATIC_DATA=20000
 !% $MAX_PROP_TABLE_SIZE=58000
 !% $MAX_VERBS=153
@@ -76,10 +77,14 @@ Constant CANAL_TICTAC = 3;
 Constant SGW_CON_DAMUSIX;
 Constant SONIDO_BUCLE_INFINITO = -1;
 
+! Es importante que todos los timers tengan duración distinta, porque
+! esa es la forma que tengo de distinguirlos (un poco cutre, pero va)
 ! El timer a aplicar para el trueno:
 Constant TIMER_TRUENO = 4000;
 ! El timer para el laberinto es más largo:
 Constant TIMER_LABERINTO = 8000;
+! El timer para cuando el alien está en la misma localidad:
+Constant TIMER_ALIEN = 10000;
 
 
 
@@ -6731,6 +6736,7 @@ Object alien procesador
                    }
                  } else {
                    if (self.tiempo_restante ~= -1) {
+                     control_timer.activar(TIMER_ALIEN);
                      print "^¡El monstruo está aquí! Por suerte, parece que no ";
                      if (jason in LugarReal()) {
                        print "os";
@@ -8343,8 +8349,12 @@ Object tt_final
   if (EsExterior(self) || self == nave1) {
     control_timer.activar(TIMER_TRUENO);
   } else if ((self ofclass Laberinto || self ofclass Balcon) &&
-             alien.comportamiento == 1 or 2) {
-    control_timer.activar(TIMER_LABERINTO);
+             alien.comportamiento == 1 or 3) {
+    if (alien in LugarReal()) {
+      control_timer.activar(TIMER_ALIEN);
+    } else {
+      control_timer.activar(TIMER_LABERINTO);
+    }
   } else {
     control_timer.desactivar();
   }
@@ -8364,8 +8374,9 @@ Object tt_final
 ];
 
 
-[ HandleGlkEvent ev snd r l p;
+[ HandleGlkEvent ev context buffer snd r l p;
   SGW_HandleGlk(ev);
+  context = context;  ! Para evitar el warning
   l = LugarReal();
   r = random(100);
 
@@ -8402,6 +8413,15 @@ Object tt_final
           4: snd = Monstruo_ogg; r = 100 / alien.distancia;
         }
         Damusix.TocarV(snd, r);
+      } else if (control_timer.timer_actual == TIMER_ALIEN) {
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        ImprimirOEjecutar(alien, cada_turno);
+        print "^> ";
+        
+        buffer-->0 = gg_event-->2;
+        glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
+                               INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
+        return 2;
       }
   }
 ];
@@ -8903,6 +8923,7 @@ Object tt_computadora
 [ Bandera_Fin bf;
   control_sonido_fondo.desactivar();
   control_sonido_detector.desactivar();
+  control_timer.desactivar();
   
   if (bf == 1) {
     Damusix.TocarV(Grito_Jugador_ogg);
