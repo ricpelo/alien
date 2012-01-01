@@ -6675,7 +6675,9 @@ Object alien procesador
     tiempo_agotado [;
       if (alien.comportamiento == 1) {
         self.tiempo_restante = -1;
+        self.oportunidad = 0;
         PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
+        control_timer.desactivar();
         control_timer.activar(TIMER_ALIEN);
         "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
       }
@@ -6742,31 +6744,44 @@ Object alien procesador
                      control_timer.activar(TIMER_ALIEN);
                      print "^¡El monstruo está aquí! Por suerte, parece que no ";
                      if (jason in LugarReal()) {
-                       print "os";
+                       print "os ha visto...^";
+                       switch (random(2)) {
+                         1: HablaJason("(en voz baja) Está ahí... Está ahí...");
+                         2: HablaJason("(susurrando) Vámonos ahora que aún podemos...");
+                       }
                      } else {
-                       print "te";
+                       print "te ha visto...^";
                      }
-                     print " ha visto...^";
                    }
                  }
               1: print "^¡El monstruo gira su cabeza y ";
                  if (jason in LugarReal()) {
-                   print "os";
+                   print "os observa amenazador!^";
+                   switch (random(2)) {
+                     1: HablaJason("¿Qué coño está haciendo? ¡Vamonos YA!");
+                     2: HablaJason("¡¡Vámonos de una puta vez!!");
+                   }
                  } else {
-                   print "te";
+                   print "te observa amenazador!^";
                  }
-                 print " observa amenazador!^";
               2: print "^¡El monstruo comienza a caminar hacia ";
                  if (jason in LugarReal()) {
-                   print "vosotros";
+                   print "vosotros!^";
+                   switch (random(2)) {
+                     1: HablaJason("¡No puedo más! ¡Nooooooooo!");
+                     2: HablaJason("¡Aléjate de mí! ¡Déjameeeeeeeee!");
+                   }
+                   jason.capricho = 100;
+                   PNJ_Ruta(jason, MOVIMIENTO_ALEATORIO);
+                   jason.movimiento();
                  } else {
-                   print "ti";
+                   print "ti!^";
                  }
-                 print "!^";
                  Damusix.TocarV(Monstruo_ogg);
               3: print "^¡El monstruo salta sobre ";
                  if (jason in LugarReal()) {
-                   print "vosotros! ¡Corred!";
+                   print "vosotros! ¡Corred!^";
+                   HablaJason("¡¡¡AAAAAAAAAAAAAAGH!!!");
                  } else {
                    print "ti! ¡Corre!^";
                  }
@@ -6785,11 +6800,11 @@ Object alien procesador
             rtrue;
           }
         } else if (self.comportamiento == 3) {
-          if (self.oportunidad < 2) {
+          if (self.oportunidad < 4) {
             switch (self.oportunidad) {
               0: print "^¡El monstruo te observa amenazador!^";
-              1, 2: print "^¡El monstruo salta sobre ti!^";
-                    Damusix.TocarV(Rugido_ogg);
+              1, 2, 3, 4: print "^¡El monstruo salta sobre ti!^";
+                          Damusix.TocarV(Rugido_ogg);
             }
             self.oportunidad = self.oportunidad + 3;
             rtrue;
@@ -6797,7 +6812,7 @@ Object alien procesador
         }   
       }
       
-      if (self.oportunidad >= 2) {
+      if (self.oportunidad >= 4) {
         print "^";
         self.muerte_final();
       }
@@ -8370,9 +8385,9 @@ Object tt_final
   if (EsExterior(self) || self == nave1) {
     control_timer.activar(TIMER_TRUENO);
   } else if ((self ofclass Laberinto || self ofclass Balcon) &&
-             alien.comportamiento == 1 or 3) {
+             alien notin LugarReal() && alien.comportamiento == 1 or 3) {
     control_timer.activar(TIMER_LABERINTO);
-  } else {
+  } else if (alien notin LugarReal()) {
     control_timer.desactivar();
   }
 ];
@@ -8427,7 +8442,12 @@ Object tt_final
           1: snd = Gota_Oscura_ogg;
           2: snd = Gotas_Agua_ogg;
           3: snd = Cueva_Oscura_ogg;
-          4: snd = Monstruo_ogg; r = 100 / alien.distancia;
+          4: if (alien notin LugarReal()) {
+               snd = Monstruo_ogg;
+               r = 100 / alien.distancia;
+             } else {
+               snd = Cueva_Oscura_ogg;
+             }
         }
         Damusix.TocarV(snd, r);
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
