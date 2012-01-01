@@ -41,20 +41,6 @@ Constant LETRA_CURSIVA = $$00100;
 Constant LETRA_FIJA    = $$01000;
 Constant LETRA_INVERSA = $$10000;
 
-! Hace lo mismo que EsperarTimer pero no guarda ni restaura
-! el timer anterior:
-[ EsperarTimerSimple espera;
-  glk($00D6, espera * 5);             ! request_timer_events
-  while (1) {
-    glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
-    if ((gg_arguments-->0) == 1) {
-!     glk($00D6, 0);                  ! request_timer_events
-      break;
-    }
-  }
-];
-
-
 class Escritura
   class Vector
   private
@@ -63,7 +49,7 @@ class Escritura
   with
     hazPausaLetra [;
       if ( self.pausaLetra > -1 ) {
-        EsperarTimerSimple(self.pausaLetra);
+        EsperarTecla(0, self.pausaLetra);
       }
     ],
     hazPausaMensaje [ multi;
@@ -73,7 +59,7 @@ class Escritura
     ],
     pausaLetra 1,
     pausaMensaje 150,
-    visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa;
+    visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa timer;
       escr_buffer_lib-->0 = MAX_TAM_BUFFER - ESCR_PRIMERA_LETRA;
 
       ! Para cada cadena a visualizar
@@ -96,7 +82,7 @@ class Escritura
         if (tipo_mensaje == POR_MENSAJE) {
           print (string) self.elemento(n);          
         } else {
-          
+          timer = control_timer.timer_actual; 
           ! Visualizar las letras una a una
           for (p = ESCR_PRIMERA_LETRA : p < (lon + ESCR_PRIMERA_LETRA) : p++) {
             print (char) escr_buffer_lib->p;
@@ -112,7 +98,7 @@ class Escritura
               self.hazPausaLetra();
             #endif;
           }
-          control_timer.reactivar();
+          if (timer ~= 0) control_timer.activar(timer);
         }          
         switch (tipo_pausa) {
           SIN_PAUSA:     break;

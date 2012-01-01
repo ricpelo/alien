@@ -721,9 +721,6 @@ Object control_timer
         glk_request_timer_events(t);
       }
     ],
-    reactivar [;
-      self.activar(self.timer_actual);
-    ],
     desactivar [;
       self.activar(0);
     ];
@@ -8350,13 +8347,12 @@ Object tt_final
 
 
 ! Rutina usada en la siguiente HandleGlkEvent:
-[ EsperarTimer espera timer;
-  timer = control_timer.timer_actual;
-  glk($00D6, espera);                 ! request_timer_events
+[ EsperaTimer espera timer;
+  glk($00D6, espera);               ! request_timer_events
   while (1) {
-    glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
+    glk($00C0, gg_arguments);       ! glk_select(gg_arguments);
     if ((gg_arguments-->0) == 1) {
-      glk($00D6, timer);              ! request_timer_events
+      glk($00D6, timer);            ! request_timer_events
       break;
     }
   }
@@ -8370,26 +8366,29 @@ Object tt_final
 
   switch (ev-->0) {
     evtype_Timer:
-      if (l == nave1 && r < 35) {
-        r = 20 * random(5);
-        if (r >= 65) {
-          viewImageCenter(Nave1_Trueno_jpg);
-          Damusix.TocarV(Trueno_ogg, random(4));
-          EsperarTimer(200);
-          viewImageCenter(l.sgw_img);
+      if (control_timer.timer_actual == TIMER_TRUENO) {
+        if (l == nave1 && r < 35) {
+          r = 20 * random(5);
+          if (r >= 65) {
+            viewImageCenter(Nave1_Trueno_jpg);
+            Damusix.TocarV(Trueno_ogg, random(4));
+            EsperaTimer(200, TIMER_TRUENO);
+            viewImageCenter(l.sgw_img);
+          }
+        } else if (EsExterior(l) && r < 38) {
+          r = 20 * random(5);
+          p = 80;
+          if (r >= p) {
+            viewImageCenter(Fondo_Blanco_jpg);
+          }
+          Damusix.TocarV(Trueno_ogg, r);
+          if (r >= p) {
+            EsperaTimer(100, TIMER_TRUENO);
+            viewImageCenter(l.sgw_img);
+          }
         }
-      } else if (EsExterior(l) && r < 38) {
-        r = 20 * random(5);
-        p = 80;
-        if (r >= p) {
-          viewImageCenter(Fondo_Blanco_jpg);
-        }
-        Damusix.TocarV(Trueno_ogg, r);
-        if (r >= p) {
-          EsperarTimer(100);
-          viewImageCenter(l.sgw_img);
-        }
-      } else if ((l ofclass Laberinto || l ofclass Balcon) && r < 75) {
+      } else if (control_timer.timer_actual == TIMER_LABERINTO &&
+                 (l ofclass Laberinto || l ofclass Balcon) && r < 75) {
         r = 20 * random(3) + 40;
         switch (random(4)) {
           1: snd = Gota_Oscura_ogg;
