@@ -7444,7 +7444,8 @@ Object detector_movimiento "detector de movimiento" rifle
       }
       self.ha_imprimido_algo = true;
     ],
-    presencia [; 
+    primera_vez true,
+    presencia [ t; 
       if (banderafin ~= 0) {
         rtrue;
       }
@@ -7471,6 +7472,13 @@ Object detector_movimiento "detector de movimiento" rifle
       alien.sentido = testigo.sentido;
       PNJ_Ruta(testigo, MOVIMIENTO_NINGUNO);
       remove testigo;
+      t = false;
+
+      if ((~~(self.primera_vez)) && alien.comportamiento == 3 &&
+          alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
+        self.preparaHandleGlkEvent();
+        print_ret"¡", (_El) alien, " se está acercando! ¡Corre!";
+      }
 
       ! El detector empieza a funcionar después de que el alien se haya llevado a Jason
       if (alien.comportamiento > 0) {
@@ -7478,30 +7486,50 @@ Object detector_movimiento "detector de movimiento" rifle
         if (alien in LugarReal()) {
           if (localizacion == laoscuridad) {
             self.preparaHandleGlkEvent();
+            t = true;
             style bold;
             print "^¡El detector capta movimiento aquí mismo!^";
             style roman;
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
-            self.preparaHandleGlkEvent();
-            print "^El detector capta movimiento a una distancia de ",
-                   (number) 10 * alien.distancia, " metros hacia ", (el) alien.sentido;
-            
-            if (alien.comportamiento == 3) {
-              ", ¡Y ACERCÁNDOSE!";
-            } else {
-              ".";
-            }
-          } else {
-            if (alien has ausente) {
+            if (self.primera_vez) {
               self.preparaHandleGlkEvent();
+              t = true;
+              print "^El detector capta movimiento a una distancia de ",
+                     (number) 10 * alien.distancia, " metros hacia ", (el) alien.sentido;
+
+              if (alien.comportamiento == 3) {
+                t = true;
+                print ", ¡Y ACERCÁNDOSE!";
+              } else {
+                t = true;
+                print ".";
+              }
             }
-            print "";
+!          } else {
+!            if (alien has ausente) {
+!              self.preparaHandleGlkEvent();
+!            }
+!            print "";
           }
         }
-      } else {
-        print "";
+        if (t) {
+          self.primera_vez = false;
+          control_timer.desactivar();
+          glk($0086, style_Emphasized);
+          print " [ A partir de ahora, el detector de movimiento informará de la ";
+          print "presencia de la criatura a través de la barra de estado, en la ";
+          print "parte superior derecha, junto al contador de turnos. Por tanto, ";
+          print "no volverás a ver mensajes de este tipo en lo sucesivo. ]^";
+          style roman;
+          viewImageCenter(LugarReal().sgw_img);
+          barra_estado.dibujar();
+          EsperarTecla();
+          ActivarTimer();
+        }
+!      } else {
+!        print "";
       }
     ],
     despues [;
@@ -8559,6 +8587,7 @@ Object tt_final
           alien.movimiento();
           if (alien.seHaMovido) {
             ImprimirOEjecutar(detector_movimiento, cada_turno);
+            barra_estado.dibujar();
             if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
               alien.ha_imprimido_algo = false;
               detector_movimiento.ha_imprimido_algo = false;
