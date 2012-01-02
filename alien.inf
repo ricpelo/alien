@@ -7475,9 +7475,10 @@ Object detector_movimiento "detector de movimiento" rifle
       t = false;
 
       if ((~~(self.primera_vez)) && alien.comportamiento == 3 &&
-          alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
+          alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente &&
+          alien notin LugarReal()) {
         self.preparaHandleGlkEvent();
-        print_ret"¡", (_El) alien, " se está acercando! ¡Corre!";
+        print "^¡", (_El) alien, " se está acercando! ¡Corre!^";
       }
 
       ! El detector empieza a funcionar después de que el alien se haya llevado a Jason
@@ -8570,7 +8571,7 @@ Object tt_final
           }
         }
       } else if (control_timer.timer_actual == TIMER_LABERINTO &&
-                 l ofclass Complejo && r < 75) {
+                 l ofclass Complejo) { ! && r < 75) {
         if (l ofclass Laberinto || l ofclass Balcon) {
           r = 20 * random(3) + 40;
           switch (random(4)) {
