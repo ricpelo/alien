@@ -7529,7 +7529,7 @@ Object detector_movimiento "detector de movimiento" rifle
           print "presencia de la criatura a través de la barra de estado, en la ";
           print "parte superior derecha, junto al contador de turnos. Por tanto, ";
           print "no volverás a ver mensajes de este tipo en lo sucesivo. Un ";
-          print "consejo: consulta frecuentemente la barra de estado para intentar ";
+          print "consejo: consulta frecuentemente dicha información para intentar ";
           print "evitar a la criatura. ]^";
           style roman;
           style bold;
@@ -10015,7 +10015,7 @@ Endif;
   print "https://github.com/ricpelo/alien/tree/deluxe^";
   style roman;
   EsperarTecla();
-  print "^Visítanos en:^";
+  print "^Visítanos en:^^";
   style fixed;
   print "http://wiki.caad.es/Alpha_Aventuras^";
   print "http://sites.google.com/site/alphaaventuras^";
