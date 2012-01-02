@@ -6640,7 +6640,11 @@ Object alien procesador
       self.ha_imprimido_algo = true;
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
-        print "^¡", (_El) self, " te sigue desde ", (el) dir, "! ¡Corre!^";
+        if (jason in LugarReal()) {
+          print "^¡", (_El) self, " os sigue desde ", (el) dir, "! ¡Corred!^";
+        } else {
+          print "^¡", (_El) self, " te sigue desde ", (el) dir, "! ¡Corre!^";
+        }
       } else {
         print "^", (_El) self, " aparece";
         if (dir ~= null) {
