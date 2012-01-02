@@ -8479,7 +8479,7 @@ Object tt_final
 
 [ ActivarTimer l;
   l = LugarReal();
-  if (EsExterior(l) || l == nave1) {
+  if (EsExterior(l) || l == nave1 or nave2) {
     control_timer.activar(TIMER_TRUENO);
   } else if (l ofclass Complejo && alien notin l &&
              alien.comportamiento == 1 or 3) {
@@ -8512,10 +8512,14 @@ Object tt_final
   switch (ev-->0) {
     evtype_Timer:
       if (control_timer.timer_actual == TIMER_TRUENO) {
-        if (l == nave1 && r < 35) {
+        if (l == nave1 or nave2 && r < 35) {
           r = 20 * random(5);
           if (r >= 65) {
-            viewImageCenter(Nave1_Trueno_jpg);
+            if (l == nave1) {
+              viewImageCenter(Nave1_Trueno_jpg);
+            } else {
+              viewImageCenter(Nave2_Trueno_jpg);
+            }
             Damusix.TocarV(Trueno_ogg, random(4));
             EsperarTimer(200, TIMER_TRUENO);
             viewImageCenter(l.sgw_img);
