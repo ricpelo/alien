@@ -8513,6 +8513,22 @@ Object tt_final
 ];
 
 
+[ RestaurarLineaOrdenes buffer;
+  if (banderafin == 1) {
+    print "^^";
+    M__L(##Miscelanea, 3);
+    ActualizarEstatus();
+    AfterGameOver();
+  }
+  print "^> ";
+  buffer-->0 = gg_event-->2;
+  glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
+                         INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
+  contextoHandleGlkEvent = false;
+  return 1;
+];
+
+
 [ HandleGlkEvent ev context buffer snd r l p;
   SGW_HandleGlk(ev);
   context = context;  ! Para evitar el warning
@@ -8567,18 +8583,7 @@ Object tt_final
           ImprimirOEjecutar(l, cada_turno);
           if (l.ha_imprimido_algo) {
             l.ha_imprimido_algo = false;
-            if (banderafin == 1) {
-              print "^^";
-              M__L(##Miscelanea, 3);
-              ActualizarEstatus();
-              AfterGameOver();
-            }
-            print "^> ";
-            buffer-->0 = gg_event-->2;
-            glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
-                                   INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-            contextoHandleGlkEvent = false;
-            return 1;
+            return RestaurarLineaOrdenes(buffer);
           }
           contextoHandleGlkEvent = false;
         }
@@ -8592,18 +8597,7 @@ Object tt_final
             if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
               alien.ha_imprimido_algo = false;
               detector_movimiento.ha_imprimido_algo = false;
-              if (banderafin == 1) {
-                print "^^";
-                M__L(##Miscelanea, 3);
-                ActualizarEstatus();
-                AfterGameOver();
-              }
-              print "^> ";
-              buffer-->0 = gg_event-->2;
-              glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
-                                     INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-              contextoHandleGlkEvent = false;
-              return 1;
+              return RestaurarLineaOrdenes(buffer);
             }
           }
           contextoHandleGlkEvent = false;
@@ -8611,17 +8605,7 @@ Object tt_final
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         ImprimirOEjecutar(alien, cada_turno);
-        if (banderafin == 1) {
-          print "^^";
-          M__L(##Miscelanea, 3);
-          ActualizarEstatus();
-          AfterGameOver();
-        }
-        print "^> ";
-        buffer-->0 = gg_event-->2;
-        glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
-                               INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-        return 1;
+        return RestaurarLineaOrdenes(buffer);
       }
   }
 ];
