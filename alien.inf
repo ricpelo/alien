@@ -4150,6 +4150,7 @@ Object pantalla "pantalla" aula
           if (self hasnt general) {
             if (jason.sacado()) {
               give self general;
+              Damusix.TocarV(Tension_ogg);
               sacador_de_aliens.meter_alien();
               alien.comportamiento = 3;
               PNJ_Ruta(alien, MOVIMIENTO_PERSEGUIR, jugador);
@@ -6692,6 +6693,7 @@ Object alien procesador
       if (self.primera_vez) {
         self.primera_vez = false;
         viewImageCenter(procesador.sgw_img);
+        Damusix.TocarV(Rugido_ogg);
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
                terrorífico comienza a sobresalir entre un conglomerado de tuberías.
                Conforme se va incorporando, lo tienes más fácil para comprobar su enorme

@@ -79,4 +79,5 @@ SOUND Puerta2_ogg res/snd/puerta2.ogg
 SOUND Tic_ogg res/snd/tic.ogg
 SOUND Chispazo_ogg res/snd/chispazo.ogg
 SOUND Robot_ogg res/snd/robot.ogg
+SOUND Tension_ogg res/snd/tension.ogg
 
