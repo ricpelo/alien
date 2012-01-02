@@ -157,18 +157,12 @@ ZIPI_Otro Otro_vacio;
 #endif;
     ZIPI_setwindow();
     ZIPI_setcursor(1, 1);
-    ZIPI_reverse();
+    ZIPI_bold();
     j = ZIPI_getwidth();
     if (j == 0) j = 80;
     ZIPI_spaces(j);
     ZIPI_setcursor(2,1);
-#ifdef TARGET_GLULX;
-    glk(256, 1);     ! hiperenlace 1
-#endif;
     print (string)titulo;
-#ifdef TARGET_GLULX;
-    glk(256, 0);     ! hiperenlace 0 (fin del tag)
-#endif;
     ZIPI_roman();
 ];
 
