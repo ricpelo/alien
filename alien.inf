@@ -8552,7 +8552,7 @@ Object tt_final
               glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                                      INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
               contextoHandleGlkEvent = false;
-              return 2;
+              return 1;
             }
           }
           contextoHandleGlkEvent = false;
@@ -8572,7 +8572,7 @@ Object tt_final
         buffer-->0 = gg_event-->2;
         glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                                INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-        return 2;
+        return 1;
       }
   }
 ];
