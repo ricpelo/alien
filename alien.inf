@@ -6788,7 +6788,7 @@ Object alien procesador
                  } else {
                    if (self.tiempo_restante ~= -1) {
                      control_timer.activar(TIMER_ALIEN);
-                     print "^¡El monstruo está aquí! Por suerte, parece que no ";
+                     print "^¡El monstruo está aquí! Por suerte, parece que aún no ";
                      if (jason in LugarReal()) {
                        print "os ha visto...^";
                        switch (random(2)) {
