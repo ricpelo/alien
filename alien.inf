@@ -83,7 +83,7 @@ Constant SONIDO_BUCLE_INFINITO = -1;
 ! El timer a aplicar para el trueno:
 Constant TIMER_TRUENO = 4000;
 ! El timer para el laberinto es más largo:
-Constant TIMER_LABERINTO = 5500;
+Constant TIMER_LABERINTO = 7000;
 ! El timer para cuando el alien está en la misma localidad:
 Constant TIMER_ALIEN = 6000;
 
