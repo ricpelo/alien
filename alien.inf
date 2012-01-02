@@ -8539,6 +8539,14 @@ Object tt_final
             if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
               alien.ha_imprimido_algo = false;
               detector_movimiento.ha_imprimido_algo = false;
+
+              if (banderafin == 1) {
+                print "^^";
+                M__L(##Miscelanea, 3);
+                ActualizarEstatus();
+                AfterGameOver();
+              }
+
               print "^> ";
               buffer-->0 = gg_event-->2;
               glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
