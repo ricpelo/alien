@@ -472,7 +472,6 @@ Class Lugar
       ImprimirOEjecutar(self, descripcion);
       if (mostrarSalidas) {
         print "^";
-!        style reverse;
         glk($0086, style_Emphasized);
         <Salidas>;
         style roman;
@@ -2303,7 +2302,6 @@ Class Laberinto
              Las filtraciones en las paredes y el techo forman irregulares charcos de
              agua aquí y allá, y dotan al ambiente de una humedad malsana y asfixiante.";
       ns = 0;
-!      nb = 0;
       objectloop (o in brujula) {
         if (~~(self provides o.direcc_puerta)) {
           ! No hay salida en esa dirección
@@ -2360,9 +2358,6 @@ Class Laberinto
               } else {
                 print "el balcón que da al ", (_nombre_) k.posicion, " de la veta.";
               }
-!              if (k ofclass Balcon && nb == 0) {
-!                nb++;
-!              }
             }
           }
         }
@@ -3524,16 +3519,6 @@ Object balcon4
     ];
 
 
-!Object balcon5
-!  class Lugar
-!  class Balcon,
-!  with
-!    nivel -1,
-!    posicion obj_n,
-!    al_e laberinto14,
-!    al_o laberinto13;
-
-
 Object balcon6
   class Balcon,
   with
@@ -3594,36 +3579,6 @@ Object balcon8
           rfalse;
         }
     ];
-
-
-!Object balcon9
-!  class Lugar
-!  class Balcon,
-!  with
-!    nivel -2,
-!    posicion obj_n,
-!    al_e laberinto23,
-!    al_o laberinto21;
-
-
-!Object balcon10
-!  class Lugar
-!  class Balcon,
-!  with
-!    nivel -2,
-!    posicion obj_o,
-!    al_n laberinto21,
-!    al_s laberinto28;
-
-
-!Object balcon11
-!  class Lugar
-!  class Balcon,
-!  with
-!    nivel -2,
-!    posicion obj_e,
-!    al_n laberinto23,
-!    al_s laberinto30;
 
 
 Object balcon12
