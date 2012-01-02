@@ -3222,9 +3222,14 @@ Class ZonaNorte
           }
           self.ZonaNorte::contador_muerte = 0;
         }
-    ],    
+    ],
+    ha_imprimido_algo false,
     cada_turno [;
       if (self.ZonaNorte::contador_muerte >= 15 && self == despensa) {
+        if (contextoHandleGlkEvent) {
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        }
+        self.ha_imprimido_algo = true;
         print "^Y entonces la ves. ";
         if (hueco_techo has visitado) {
           print "Una araña idéntica a la que habías visto muerta en la sala de
@@ -3258,18 +3263,27 @@ Class ZonaNorte
         self.ya_has_oido = true;
       }
 
+      if (self.ZonaNorte::contador_muerte == 10 or 12 or 14 or 16) {
+        if (contextoHandleGlkEvent) {
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        }
+        self.ha_imprimido_algo = true;
+      }
       switch (self.ZonaNorte::contador_muerte) {
-        10,11: Damusix.TocarV(Arana_Corto_ogg, 50);
-               "^Oyes ruidos procedentes de alguna parte de ",
-               (string) self.donde_estoy(), ".";
-        12,13: Damusix.TocarV(Arana_Largo_ogg, 100);
-               "^Los ruidos se hacen más fuertes, y siguen viniendo de ",
-               (string) self.donde_estoy(), "... Esto no te gusta nada...";
-        14,15: Damusix.TocarV(Arana_Chillido_ogg, 100);
-               "^Es un chillido... Claramente es un chillido... ¡Hay algo en la despensa!
-               ¡Corre!";
-        16:    Damusix.TocarV(Arana_Chillido_ogg, 100);
-               "^¡Corre! ¡Sal de aquí! ¡Pero no pases por la despensa!";
+        10: Damusix.TocarV(Arana_Corto_ogg, 50);
+            "^Oyes ruidos procedentes de alguna parte de ",
+             (string) self.donde_estoy(), ".";
+        11: Damusix.TocarV(Arana_Corto_ogg, 50);
+        12: Damusix.TocarV(Arana_Largo_ogg, 100);
+            "^Los ruidos se hacen más fuertes, y siguen viniendo de ",
+             (string) self.donde_estoy(), "... Esto no te gusta nada...";
+        13: Damusix.TocarV(Arana_Largo_ogg, 100);
+        14: Damusix.TocarV(Arana_Chillido_ogg, 100);
+            "^Es un chillido... Claramente es un chillido... ¡Hay algo en la despensa!
+             ¡Corre!";
+        15: Damusix.TocarV(Arana_Chillido_ogg, 100);
+        16: Damusix.TocarV(Arana_Chillido_ogg, 100);
+            "^¡Corre! ¡Sal de aquí! ¡Pero no pases por la despensa!";
       }
     ];
 
@@ -8548,6 +8562,25 @@ Object tt_final
                }
           }
           Damusix.TocarV(snd, r);
+        } else if (l ofclass ZonaNorte) {
+          contextoHandleGlkEvent = true;
+          ImprimirOEjecutar(l, cada_turno);
+          if (l.ha_imprimido_algo) {
+            l.ha_imprimido_algo = false;
+            if (banderafin == 1) {
+              print "^^";
+              M__L(##Miscelanea, 3);
+              ActualizarEstatus();
+              AfterGameOver();
+            }
+            print "^> ";
+            buffer-->0 = gg_event-->2;
+            glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
+                                   INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
+            contextoHandleGlkEvent = false;
+            return 1;
+          }
+          contextoHandleGlkEvent = false;
         }
         if (alien notin LugarReal()) {
           contextoHandleGlkEvent = true;
@@ -8559,14 +8592,12 @@ Object tt_final
             if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
               alien.ha_imprimido_algo = false;
               detector_movimiento.ha_imprimido_algo = false;
-
               if (banderafin == 1) {
                 print "^^";
                 M__L(##Miscelanea, 3);
                 ActualizarEstatus();
                 AfterGameOver();
               }
-
               print "^> ";
               buffer-->0 = gg_event-->2;
               glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
@@ -8580,14 +8611,12 @@ Object tt_final
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         ImprimirOEjecutar(alien, cada_turno);
-
         if (banderafin == 1) {
           print "^^";
           M__L(##Miscelanea, 3);
           ActualizarEstatus();
           AfterGameOver();
         }
-
         print "^> ";
         buffer-->0 = gg_event-->2;
         glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
