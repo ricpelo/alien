@@ -80,4 +80,5 @@ SOUND Tic_ogg res/snd/tic.ogg
 SOUND Chispazo_ogg res/snd/chispazo.ogg
 SOUND Robot_ogg res/snd/robot.ogg
 SOUND Tension_ogg res/snd/tension.ogg
+SOUND Rotura_ogg res/snd/rotura.ogg
 

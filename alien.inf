@@ -7982,6 +7982,7 @@ Object ruido_puerta_rota
   with
     tiempo_restante,
     tiempo_agotado [;
+      Damusix.TocarV(Rotura_ogg);
       "^¡Se oye un ruido terrible! Un estruendoso crujir y chirriar de metales rompiéndose
        y doblándose. El sonido proviene de la puerta del complejo.";
     ];
