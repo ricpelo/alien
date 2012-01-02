@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58000
+!% $MAX_PROP_TABLE_SIZE=58482
 !% $MAX_VERBS=153
 
 !
@@ -78,12 +78,12 @@ Constant SGW_CON_DAMUSIX;
 Constant SONIDO_BUCLE_INFINITO = -1;
 
 ! Es importante que todos los timers tengan duración distinta, porque
-! esa es la forma que tengo de distinguirlos (es cutre, pero va):
+! esa es la forma que tengo de distinguirlos (es muy cutre, pero va):
 
 ! El timer a aplicar para el trueno:
 Constant TIMER_TRUENO = 4000;
 ! El timer para el laberinto es más largo:
-Constant TIMER_LABERINTO = 8000;
+Constant TIMER_LABERINTO = 5500;
 ! El timer para cuando el alien está en la misma localidad:
 Constant TIMER_ALIEN = 6000;
 
@@ -120,6 +120,9 @@ Global dibujarEstado = false;
 ! La imagen que representa la oscuridad:
 Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 
+! Si vengo de HandleGlkEvent (ver detector_movimiento.presencia y
+! alien.llega):
+Global contextoHandleGlkEvent = false;
 
 
 ! ====================================================================
@@ -2270,8 +2273,13 @@ Object decorado_junto_puerta junto_puerta
       'niebla'   [; return self.desc_niebla; ] G_FEMENINO;
 
 
-Class Laberinto
+Class Complejo
   class Lugar
+  has ~luz;
+
+
+Class Laberinto
+  class Complejo
   with
     nombre_corto "Túneles",
     descripcion [ o k ns;
@@ -2392,7 +2400,7 @@ Object decorado_laberinto
 
 
 Class Balcon
-  class Lugar
+  class Complejo
   with
     nombre_corto [;
       print "Balcón ", (_nombre_) self.posicion, " a la veta";
@@ -2530,7 +2538,7 @@ Object montacargas "montacargas"
 ! viscosa
 
 Object entrada "Entrada al complejo"
-  class Lugar
+  class Complejo
   with
     descripcion "Estás en la entrada que da acceso al complejo de la colonia minera.
                  Nada de decoración lujosa ni elementos ornamentales, sino más bien un
@@ -2629,7 +2637,7 @@ Object puerta_viscosa "puerta del complejo"
 
 
 Object oficina "Oficina"
-  class Lugar
+  class Complejo
   with
     descripcion "Has llegado a lo que parece ser una oficina. Todas los puestos están
                  perfectamente delimitados e impolutamente ordenados, equipados cada uno
@@ -2831,7 +2839,7 @@ Object tarjeta "tarjeta" caja_fuerte
 
 
 Object enfermeria "Enfermería"
-  class Lugar
+  class Complejo
   with
     nombre_localidad "enfermería",
     descripcion "Te encuentras en la enfermería del complejo. Por lo que puedes observar,
@@ -2981,7 +2989,7 @@ Object jeringa "jeringa" cajon
 
 
 Object laboratorio "Laboratorio"
-  class Lugar
+  class Complejo
   with
     nombre_localidad "laboratorio",
     descripcion "El laboratorio de la colonia es bastante grande, y se encuentra dividido
@@ -3257,7 +3265,7 @@ Class ZonaNorte
 
 
 Object despensa "Despensa"
-  class Lugar
+  class Complejo
   class ZonaNorte
   with
     descripcion "La despensa. En la zona frigorífica, frente a tí, es donde guardan los
@@ -3339,7 +3347,7 @@ Object "zona frigorífica" despensa
         
     
 Object comedor1 "Comedor"
-  class Lugar
+  class Complejo
   class ZonaNorte
   with
     nombre_localidad "comedor",
@@ -3388,7 +3396,7 @@ Object decorado_comedor comedor1
 
 
 Object cocina "Cocina"
-  class Lugar
+  class Complejo
   class ZonaNorte
   with
     descripcion "Esta enorme cocina está unida al comedor por medio de
@@ -3621,7 +3629,7 @@ Object balcon12
 
 
 Class SalaEmergencia
-  class Lugar
+  class Complejo
   with
     descripcion [;
       "Te encuentras en la sala ", (string) self.situacion, " del área de emergencia.
@@ -3644,7 +3652,7 @@ Object emergencia_este "Sala este de emergencia"
 
 
 Object emergencia_pasillo "Pasillo de emergencia"
-  class Lugar
+  class Complejo
   class ZonaEmergencia
   with
     descripcion "Estás en el pasillo central del área de emergencia. El pasillo discurre
@@ -3983,7 +3991,7 @@ Object boton_oeste "botón azul" emergencia_oeste
 
 
 Object aula "Aula"
-  class Lugar
+  class Complejo
   with
     nombre_localidad "aula",
     descripcion "Una sala de mediano tamaño, con el aspecto propio de un salón de reuniones
@@ -4175,7 +4183,7 @@ Object pantalla "pantalla" aula
 
 
 Object seguridad "Sala de seguridad"
-  class Lugar
+  class Complejo
   with
     nombre_localidad "sala",
     descripcion "En la sala de seguridad, tan fría y estéril como el restro del
@@ -4624,7 +4632,7 @@ Object ascensor "ascensor de emergencia" laberinto28
 
 
 Object ventilacion1
-  class Lugar,
+  class Complejo
   with
     nombre_corto "Sala oeste de ventilación",
     nombre_localidad "sala destinada a la ventilación",
@@ -4669,7 +4677,7 @@ Object decorado_ventilacion1 ventilacion1
 
 
 Object hueco_techo "Sala este de ventilación"
-  class Lugar
+  class Complejo
   with
     descripcion "Estás en una sala de ventilación en los pasillos interiores del
                  complejo. Todos los ventiladores que deberían estar girando en
@@ -6604,8 +6612,13 @@ Object alien procesador
       }
       "";
     ],
+    ha_imprimido_algo false,
     llega [ dir;
       control_timer.activar(TIMER_ALIEN);
+      if (contextoHandleGlkEvent) {
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+      }
+      self.ha_imprimido_algo = true;
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
         print "^¡", (_El) self, " te sigue desde ", (el) dir, "! ¡Corre!^";
@@ -6615,6 +6628,9 @@ Object alien procesador
           print " por ", (el) dir;
           print ".^";
         }
+      }
+      if (contextoHandleGlkEvent) {
+        ImprimirOEjecutar(self, cada_turno);
       }
     ],
     pnj_ha_llegado_default [;
@@ -7401,13 +7417,21 @@ Object detector_movimiento "detector de movimiento" rifle
           }
         }
     ],
-    presencia [;
-    
+    ha_imprimido_algo false,
+    preparaHandleGlkEvent [;
+      if (contextoHandleGlkEvent && ~~alien.ha_imprimido_algo &&
+          ~~self.ha_imprimido_algo) {
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+      }
+      self.ha_imprimido_algo = true;
+    ],
+    presencia [; 
       if (banderafin ~= 0) {
         rtrue;
       }
 
       if (self hasnt encendido) {
+        self.preparaHandleGlkEvent();
         print "Está apagado.";
         rtrue;
       }
@@ -7434,12 +7458,14 @@ Object detector_movimiento "detector de movimiento" rifle
         self.sonar();
         if (alien in LugarReal()) {
           if (localizacion == laoscuridad) {
+            self.preparaHandleGlkEvent();
             style bold;
             print "^¡El detector capta movimiento aquí mismo!^";
             style roman;
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
+            self.preparaHandleGlkEvent();
             print "^El detector capta movimiento a una distancia de ",
                    (number) 10 * alien.distancia, " metros hacia ", (el) alien.sentido;
             
@@ -7449,6 +7475,9 @@ Object detector_movimiento "detector de movimiento" rifle
               ".";
             }
           } else {
+            if (alien has ausente) {
+              self.preparaHandleGlkEvent();
+            }
             print "";
           }
         }
@@ -8432,8 +8461,8 @@ Object tt_final
 [ ActivarTimer;
   if (EsExterior(self) || self == nave1) {
     control_timer.activar(TIMER_TRUENO);
-  } else if ((self ofclass Laberinto || self ofclass Balcon) &&
-             alien notin LugarReal() && alien.comportamiento == 1 or 3) {
+  } else if (self ofclass Complejo && alien notin LugarReal() &&
+             alien.comportamiento == 1 or 3) {
     control_timer.activar(TIMER_LABERINTO);
   } else if (alien notin LugarReal()) {
     control_timer.desactivar();
@@ -8484,20 +8513,41 @@ Object tt_final
           }
         }
       } else if (control_timer.timer_actual == TIMER_LABERINTO &&
-                 (l ofclass Laberinto || l ofclass Balcon) && r < 75) {
-        r = 20 * random(3) + 40;
-        switch (random(4)) {
-          1: snd = Gota_Oscura_ogg;
-          2: snd = Gotas_Agua_ogg;
-          3: snd = Cueva_Oscura_ogg;
-          4: if (alien notin LugarReal()) {
-               snd = Monstruo_ogg;
-               r = 100 / alien.distancia;
-             } else {
-               snd = Cueva_Oscura_ogg;
-             }
+                 l ofclass Complejo && r < 75) {
+        if (l ofclass Laberinto || l ofclass Balcon) {
+          r = 20 * random(3) + 40;
+          switch (random(4)) {
+            1: snd = Gota_Oscura_ogg;
+            2: snd = Gotas_Agua_ogg;
+            3: snd = Cueva_Oscura_ogg;
+            4: if (alien notin LugarReal()) {
+                 snd = Monstruo_ogg;
+                 r = 100 / alien.distancia;
+               } else {
+                 snd = Cueva_Oscura_ogg;
+               }
+          }
+          Damusix.TocarV(snd, r);
         }
-        Damusix.TocarV(snd, r);
+        if (alien notin LugarReal()) {
+          contextoHandleGlkEvent = true;
+          alien.seHaMovido = false;
+          alien.movimiento();
+          if (alien.seHaMovido) {
+            ImprimirOEjecutar(detector_movimiento, cada_turno);
+            if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
+              alien.ha_imprimido_algo = false;
+              detector_movimiento.ha_imprimido_algo = false;
+              print "^> ";
+              buffer-->0 = gg_event-->2;
+              glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
+                                     INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
+              contextoHandleGlkEvent = false;
+              return 2;
+            }
+          }
+          contextoHandleGlkEvent = false;
+        }
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         ImprimirOEjecutar(alien, cada_turno);
@@ -8510,7 +8560,6 @@ Object tt_final
         }
 
         print "^> ";
-
         buffer-->0 = gg_event-->2;
         glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                                INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
