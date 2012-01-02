@@ -3254,7 +3254,7 @@ Class ZonaNorte
          tu pecho estalla en sangre, carne y vísceras... Pero vives lo suficiente para
          ver esa pequeña y redonda cabeza llena de dientes saliendo de tu cuerpo...^";
       } else {
-        if (self.ZonaNorte::contador_muerte < 17) {
+        if (self.ZonaNorte::contador_muerte < 16) {
           self.ZonaNorte::contador_muerte++;
         }
       }
@@ -8581,26 +8581,28 @@ Object tt_final
         } else if (l ofclass ZonaNorte) {
           contextoHandleGlkEvent = true;
           ImprimirOEjecutar(l, cada_turno);
-          if (l.ha_imprimido_algo) {
-            l.ha_imprimido_algo = false;
-            return RestaurarLineaOrdenes(buffer);
-          }
           contextoHandleGlkEvent = false;
         }
         if (alien notin LugarReal()) {
           contextoHandleGlkEvent = true;
           alien.seHaMovido = false;
-          alien.movimiento();
+          if (alien.condicion_movimiento()) {
+            alien.movimiento();
+          }
           if (alien.seHaMovido) {
             ImprimirOEjecutar(detector_movimiento, cada_turno);
             barra_estado.dibujar();
-            if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo) {
-              alien.ha_imprimido_algo = false;
-              detector_movimiento.ha_imprimido_algo = false;
-              return RestaurarLineaOrdenes(buffer);
-            }
           }
-          contextoHandleGlkEvent = false;
+        }
+        contextoHandleGlkEvent = false;
+        if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
+            (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
+          alien.ha_imprimido_algo = false;
+          detector_movimiento.ha_imprimido_algo = false;
+          if (l ofclass ZonaNorte) {
+            l.ha_imprimido_algo = false;
+          }
+          return RestaurarLineaOrdenes(buffer);
         }
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
