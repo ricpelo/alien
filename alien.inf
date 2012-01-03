@@ -9142,7 +9142,7 @@ Object tt_computadora
 ];
 
 
-[ SegundaParte o;
+[ SegundaParte o sig;
   alien.primera_vez = false;
   ! Jason ya no lleva el traje:
   remove traje_jason;
