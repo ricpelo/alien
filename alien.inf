@@ -7494,12 +7494,12 @@ Object detector_movimiento "detector de movimiento" rifle
           self.primera_vez = false;
           control_timer.desactivar();
           glk($0086, style_Emphasized);
-          print " [ A partir de ahora, el detector de movimiento informará de la ";
+          print " [A partir de ahora, el detector de movimiento informará de la ";
           print "presencia de la criatura a través de la barra de estado, en la ";
           print "parte superior derecha, junto al contador de turnos. Por tanto, ";
           print "no volverás a ver mensajes de este tipo en lo sucesivo. Un ";
           print "consejo: consulta frecuentemente dicha información para intentar ";
-          print "evitar a la criatura. ]^";
+          print "evitar a la criatura.]^";
           style roman;
           style bold;
           print "^[ Pulsa una tecla para continuar. ]^";
