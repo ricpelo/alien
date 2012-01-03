@@ -6095,9 +6095,6 @@ Object jason "Jason" nave1
         move o to p;
         o = sig;
       }
-      ! objectloop (o) {
-      !   if (o in jason) move o to p;
-      ! }
       remove self;
       give self ausente;
       move jason_inerte to p;
@@ -9151,8 +9148,11 @@ Object tt_computadora
   remove traje_jason;
   give traje_jason ausente;
   ! A Jason se le cae todo cuando se lo lleva el alien:
-  objectloop (o) {
-    if (o in jason) move o to procesador;
+  o = child(jason);
+  while (o ~= Nothing) {
+    sig = sibling(o);
+    move o to procesador;
+    o = sig;
   }
   move jason to vaina;
   PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
