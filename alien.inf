@@ -8258,8 +8258,14 @@ Object tt_final
 
 
 [ DibujaLogoAlien i;
-  i = 0; while (i < 15) { viewImageCenter(ALIEN_Sin_Puntos_png, true); EsperarTecla(0, 20); i++; }
-  i = 0; while (i < 15) { viewImageCenter(Puntos_png, true); EsperarTecla(0, 20); i++; }
+  for (i = 0 : i < 15 : i++) {
+    viewImageCenter(ALIEN_Sin_Puntos_png, true);
+    EsperarTecla(0, 20);
+  }
+  for (i = 0 : i < 15 : i++) {
+    viewImageCenter(Puntos_png, true);
+    EsperarTecla(0, 20);
+  }
 ];
 
 
@@ -8962,16 +8968,16 @@ Object tt_final
   viewImageCenter(Oscuridad_jpg);
   control_sonido_fondo.activar(Intro_ogg);
   tt_inicial1.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(A_png, true); EsperarTecla(0, 20); i++; }
+  for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 300);
   tt_inicial2.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AI_png, true); EsperarTecla(0, 20); i++; }
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AI_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 900);
   tt_inicial3.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIN_png, true); EsperarTecla(0, 20); i++; }
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AIN_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 900);
   tt_inicial4.visualiza();
-  i = 0; while (i < 15) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 20); i++; }
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 800);
   tt_inicial5.visualiza();
   EsperarTecla(0, 600);
