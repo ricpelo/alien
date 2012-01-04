@@ -31,7 +31,7 @@ PICTURE Emergencia_Este_jpg res/img/emergencia_este.jpg
 PICTURE Robot_jpg res/img/robot.jpg
 PICTURE Alien_Rapta_Jason_jpg res/img/alien_rapta_jason.jpg
 PICTURE Alien_Mata_jpg res/img/alien_mata.jpg
-PICTURE Sin_Imagen_jpg res/img/logo_alpha_aventuras.jpg
+PICTURE Logo_Alpha_Aventuras_jpg res/img/logo_alpha_aventuras.jpg
 PICTURE Oscuridad_jpg res/img/oscuridad.jpg
 PICTURE Logo_Alien_jpg res/img/logo_alien.jpg
 PICTURE A_png res/img/a.png

@@ -8183,6 +8183,7 @@ Object tt_final
   ! Inicialización gráfica
   initializeSGW(altoVentanaGrafica);
   clearMainWindow();
+  viewImageCenter(Logo_Alpha_Aventuras_jpg);
   localizacion = laoscuridad;
 
   ! Inicialización sonora
@@ -8195,7 +8196,9 @@ Object tt_final
   if (SiONo() == 1) {
     intro = true;
     Introduccion();
-  } 
+  } else {
+    clearMainWindow(); 
+  }
 
   dibujarEstado = true;
 
@@ -9675,7 +9678,7 @@ Extend 'di' first
   if (LugarReal() provides sgw_img) {
     viewImageCenter(LugarReal().sgw_img);
   } else {
-    viewImageCenter(Sin_Imagen_jpg);
+    viewImageCenter(Logo_Alpha_Aventuras_jpg);
   }
   if (~~t) {
     glk($0086, style_Emphasized);
@@ -9960,7 +9963,7 @@ Endif;
 
 
 [ CreditosSub;
-  viewImageCenter(Sin_Imagen_jpg);
+  viewImageCenter(Logo_Alpha_Aventuras_jpg);
   print "A·L·I·E·N : LA AVENTURA - EDICIÓN ESPECIAL^";
   print "(c) 2008-2012 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
