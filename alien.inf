@@ -8640,7 +8640,7 @@ Object tt_final
         return RestaurarLineaOrdenes(buffer);
       }
   }
-  return 2;
+  return 1;
 ];
 
 
