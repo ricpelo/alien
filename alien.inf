@@ -7469,7 +7469,10 @@ Object detector_movimiento "detector de movimiento" rifle
           alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente &&
           alien notin LugarReal()) {
         self.preparaHandleGlkEvent();
-        print "^¡", (_El) alien, " se está acercando! ¡Corre!^";
+        switch (random(2)) {
+          1: print "^¡", (_El) alien, " se está acercando! ¡Corre!^";
+          2: print "^¡", (_El) alien, " se acerca!^";
+        }
       }
 
       ! El detector empieza a funcionar después de que el alien se haya llevado a Jason
