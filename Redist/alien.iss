@@ -46,7 +46,6 @@ Source: libvorbisfile-3.dll; DestDir: {app}
 Source: "LUXI License.txt"; DestDir: {app}
 Source: mikmod.dll; DestDir: {app}
 Source: "MIT License.txt"; DestDir: {app}
-Source: plan_ejecucion.pdf; DestDir: {app};
 Source: SDL.dll; DestDir: {app}
 Source: SDL_mixer.dll; DestDir: {app}
 Source: SDL_sound.dll; DestDir: {app}
@@ -57,7 +56,6 @@ Source: zlib1.dll; DestDir: {app}
 [Icons]
 Name: {group}\Jugar a A·L·I·E·N: La aventura - Edición Especial; Filename: {app}\glulxe.exe; IconFilename: {app}\alien.ico; Parameters: alien.blb; WorkingDir: {app}\; IconIndex: 0; Comment: Juega a A·L·I·E·N: La aventura - Edición Especial
 Name: {group}\Instrucciones - Cómo jugar; Filename: {app}\instrucciones.pdf; Comment: Cómo jugar una aventura conversacional; IconFilename: {app}\Leame.ico; IconIndex: 0
-Name: {group}\Plan de ejecución; Filename: {app}\plan_ejecucion.pdf; Comment: Documento informativo; IconFilename: {app}\alien.ico; IconIndex: 0
 Name: {group}\Holocubo (requiere contraseña); Filename: {app}\holocubo.pdf; Comment: Documento informativo (sólo puede abrirse con la contraseña correcta); IconFilename: {app}\alien.ico; IconIndex: 0
 Name: {group}\Vídeo introductorio; Filename: {app}\Video.url; Comment: Vídeo de introducción a la aventura, en YouTube; IconFilename: {app}\alien.ico; IconIndex: 0
 Name: {group}\Visita la web del CAAD; Filename: {app}\CAAD Club de Aventuras AD.url; Comment: Visita la web del CAAD para participar en el mundo aventurero y resolver las dudas del juego en los foros; IconFilename: {app}\CAAD.ico; IconIndex: 0

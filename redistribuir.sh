@@ -9,7 +9,6 @@ cp Redist/* /media/sda1/Documents\ and\ Settings/Ricardo/Mis\ documentos/Redistr
 cp Redist/cover.jpg /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/holocubo.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/instrucciones.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
-cp Redist/plan_ejecucion.pdf /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/doc/alphaaventuras-alien/
 cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/debian/
 cp alien.blb /home/ricardo/IF/Empaquetar/Alien_EE/alphaaventuras-alien_081124/usr/share/games/alphaaventuras-alien/
