@@ -7867,7 +7867,7 @@ Object rastro_acido "rastro de ácido"
         }
       }
     ],
-    multDisipacion 1,
+    multDisipacion 0,  ! Un rastro de ácido no se debería disipar nunca
     antes [;
       Tocar, Probar, Comer, Coger:
         "Yo que tú no lo haría... Es evidente que esa sustancia es altamente corrosiva.";
