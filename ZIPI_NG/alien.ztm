@@ -281,54 +281,68 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
     
       <PREG>Generalidades
         <PISTA>El complejo contiene todo lo necesario para vivir en un paraje tan inhóspito como éste.
-        <PISTA>Si sigues leyendo, sabrás cosas que puedes descubrir tú mismo, simplemente moviéndote por el mapa.
+        <PISTA>Si sigues leyendo, sabrás cosas que puedes descubrir fácilmente por ti mismo, simplemente moviéndote por el mapa.
         <PISTA>En el nivel 0 encuentras la la oficina y el aula.
         <PISTA>En el nivel -1 está el comedor, la despensa, la cocina, la enfermería, la sala de seguridad y el laboratorio.
         <PISTA>La zona de emergencia se encuentra aislada por una puerta en el nivel -1, hacia el sur.
         <PISTA>En el nivel -2 encuentras las salas de ventilación y el ascensor de emergencia.
         <PISTA>Jason queda atrapado en una vaina viscosa situada en una sala de ventilación.
 
-      <PREG>La sala de seguridad
-        <PISTA>¿De qué son esos dos cables que salen de la consola de control?
-        <PISTA>Transmiten imágenes captadas por cámaras de seguridad.
-        <PISTA>Las cámaras están en la oficina y el laboratorio.
-        <PISTA>La consola de control registra y graba esas imágenes. Las puedes reproducir.
-        <PISTA>Pulsa el botón que pone ~Reproducir~...
-        <PISTA>... al menos DOS veces.
+      <MENU>Zonas del complejo
 
-      <PREG>La oficina
-        <PISTA>Examínalo todo.
-        <PISTA>¿Has estado ya en la sala de seguridad?
-        <PISTA>Si es así, verás que hay un cuadro que oculta algo.
-        <PISTA>Quítalo de la pared.
-        <PISTA>¿Anotaste el código de la caja fuerte cuando viste la grabación de seguridad?
-        <PISTA>El código es 111582.
+          <TEXTO>¡Cuidado!
+           ^Si sigues adelante, sabrás qué estancias tiene el complejo. Te recomendamos que
+           ^intentes descubrirlo por ti mismo, moviéndote por su interior, pero si aún así
+           ^quieres continuar con las pistas, entra en la siguiente opción del menú.
+          </TEXTO>
+
+        <MENU>Zonas del complejo (¿has leído la advertencia anterior?)
+
+          <PREG>La sala de seguridad
+            <PISTA>¿De qué son esos dos cables que salen de la consola de control?
+            <PISTA>Transmiten imágenes captadas por cámaras de seguridad.
+            <PISTA>Las cámaras están en la oficina y el laboratorio.
+            <PISTA>La consola de control registra y graba esas imágenes. Las puedes reproducir.
+            <PISTA>Pulsa el botón que pone ~Reproducir~...
+            <PISTA>... al menos DOS veces.
+
+          <PREG>La oficina
+            <PISTA>Examínalo todo.
+            <PISTA>¿Has estado ya en la sala de seguridad?
+            <PISTA>Si es así, verás que hay un cuadro que oculta algo.
+            <PISTA>Quítalo de la pared.
+            <PISTA>¿Anotaste el código de la caja fuerte cuando viste la grabación de seguridad?
+            <PISTA>El código es 111582.
       
-      <PREG>El aula
-        <PISTA>Ese proyector tiene que servir para algo...
-        <PISTA>¿Has estado ya en la oficina?
-        <PISTA>Si es así, tal vez tengas algo que proyectar.
-        <PISTA>Proyecta el holocubo y examina la pantalla.
+          <PREG>El aula
+            <PISTA>Ese proyector tiene que servir para algo...
+            <PISTA>¿Has estado ya en la oficina?
+            <PISTA>Si es así, tal vez tengas algo que proyectar.
+            <PISTA>Proyecta el holocubo y examina la pantalla.
 
-      <PREG>El laboratorio
-        <PISTA>Examínalo todo.
-        <PISTA>¿Has mirado en las estanterías?
-        <PISTA>En una de ellas hay algo.
-        <PISTA>Es un bisturí láser. Cógelo.
-        <PISTA>La necesitarás para cortar la vaina donde se encuentra atrapado Jason.
+          <PREG>El laboratorio
+            <PISTA>Examínalo todo.
+            <PISTA>¿Has mirado en las estanterías?
+            <PISTA>En una de ellas hay algo.
+            <PISTA>Es un bisturí láser. Cógelo.
+            <PISTA>La necesitarás para cortar la vaina donde se encuentra atrapado Jason.
 
-      <PREG>La enfermería
-        <PISTA>Examínalo todo.
-        <PISTA>¿Has mirado en los armarios?
-        <PISTA>En concreto: ¿has mirado en los cajones?
-        <PISTA>En uno de los cajones hay algo.
-        <PISTA>Es una jeringa de adrenalina. Cógela.
-        <PISTA>La necesitarás para reanimar a Jason cuando caiga inconsciente.
+          <PREG>La enfermería
+            <PISTA>Examínalo todo.
+            <PISTA>¿Has mirado en los armarios?
+            <PISTA>En concreto: ¿has mirado en los cajones?
+            <PISTA>En uno de los cajones hay algo.
+            <PISTA>Es una jeringa de adrenalina. Cógela.
+            <PISTA>La necesitarás para reanimar a Jason cuando caiga inconsciente.
 
-      <PREG>La despensa, la cocina y el comedor
-        <PISTA>A veces se oyen ruidos raros por esa zona, procedentes de la despensa.
-        <PISTA>Lo mejor es que estés allí el menor tiempo posible.
-        <PISTA>Mejor aún: evita esas tres estancias en todo lo posible.
+          <PREG>La despensa, la cocina y el comedor
+            <PISTA>A veces se oyen ruidos raros por esa zona, procedentes de la despensa.
+            <PISTA>Lo mejor es que estés allí el menor tiempo posible.
+            <PISTA>Mejor aún: evita esas tres estancias en todo lo posible.
+
+        </MENU>
+  
+      </MENU>
 
     </MENU>
 
