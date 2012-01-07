@@ -550,7 +550,7 @@ Class Lugar
       ActivarTimer();
     ],
   has
-    luz;
+    ~luz;
 
 
 Include "Moviles_NG";     ! La librería Moviles retocada por mí
@@ -961,7 +961,9 @@ Object nave1 "Interior de la nave"
       if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
         viewImageCenter(self.sgw_img);
       }
-    ];
+    ],
+  has
+    luz;
 
 
 Object decorado_nave1 nave1
@@ -1406,7 +1408,9 @@ Object nave2 "Parte posterior de la nave"
       if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) { 
         viewImageCenter(self.sgw_img);
       }
-    ];
+    ],
+  has
+    luz;
 
 
 Object decorado_nave2 nave2
@@ -1500,31 +1504,22 @@ Object linterna "linterna" armario
           "Desgraciadamente, parece que se ha agotado la batería.";
         }
     ],
-    encender [ l;
+    encender [;
+      if (jugador hasnt luz && localizacion == laoscuridad &&
+          localizacion_real hasnt luz) {
+        viewImageCenter(localizacion_real.sgw_img);
+      }
       give self encendida;
       give self luz;
       ArrancarDaemon(self);
-      l = LugarReal();
-      ! Si estamos en el laberinto y el procesador no está arreglado,
-      ! se hace la luz (gráficamente hablando):
-      if (~~(EsExterior(l) || l == nave1 || l == nave2)) {
-        if (~~(procesador.arreglado())) {
-          viewImageCenter(l.sgw_img);
-        }
-      }
     ],
-    apagar [ l;
+    apagar [;
+      if (jugador hasnt luz && localizacion hasnt luz) {
+        viewImageCenter(SGW_IMAGEN_OSCURIDAD);
+      }
       give self ~encendida;
       give self ~luz;
       PararDaemon(self);
-      l = LugarReal();
-      ! Si estamos en el laberinto y el procesador no está arreglado,
-      ! se hace la oscuridad (gráficamente hablando):
-      if (~~(EsExterior(l) || l == nave1 || l == nave2)) {
-        if (~~(procesador.arreglado())) {
-          viewImageCenter(SGW_IMAGEN_OSCURIDAD);
-        }
-      }
     ],
     despues [;
       Abrir:
@@ -1605,7 +1600,9 @@ Class LugarExterior
       if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
         viewImageCenter(self.sgw_img);
       }
-    ];
+    ],
+  has
+    luz;
 
 
 Object exterior1 "Junto a la nave"
@@ -2055,8 +2052,7 @@ Object procesador "Procesador atmosférico"
           }
         }
       }
-    ],
-  has ~luz;
+    ];
 
 
 Object unidad_central "unidad central" procesador
@@ -2308,7 +2304,8 @@ Object decorado_junto_puerta junto_puerta
 
 Class Complejo
   class Lugar
-  has ~luz;
+  has
+    ~luz;
 
 
 Class Laberinto
@@ -2395,9 +2392,7 @@ Class Laberinto
           ImprimirOEjecutar(decorado_laberinto, desc_charcos);
           rtrue;
         }
-    ],
-  has
-    ~luz;
+    ];
 
 
 Object decorado_laberinto
@@ -2466,9 +2461,7 @@ Class Balcon
         } else {
           rfalse;
         }
-    ],
-  has
-    ~luz;
+    ];
 
 
 Object decorado_balcon
@@ -2684,9 +2677,7 @@ Object oficina "Oficina"
         if (uno == obj_arriba) {
           "Hay una cámara girando lentamente cerca del techo de la sala.";
         }
-    ],
-  has
-    ~luz;
+    ];
 
 
 Object decorado_oficina oficina
@@ -2880,7 +2871,7 @@ Object enfermeria "Enfermería"
     al_s laberinto16,
     al_o balcon7,
   has
-    femenino ~luz;
+    femenino;
 
 
 Object decorado_enfermeria enfermeria
@@ -3038,9 +3029,7 @@ Object laboratorio "Laboratorio"
         if (uno == obj_arriba) {
           "Hay una cámara girando lentamente cerca del techo de la sala.";
         }
-    ],
-  has
-    ~luz;
+    ];
 
 
 Object decorado_laboratorio laboratorio
@@ -3319,9 +3308,7 @@ Object despensa "Despensa"
                  los alrededores.",
     sgw_img Despensa_jpg,
     al_o comedor1,
-    al_e cocina,
-  has
-    ~luz;
+    al_e cocina;
 
 
 Object decorado_despensa despensa
@@ -3403,9 +3390,7 @@ Object comedor1 "Comedor"
                  de comida sin consumir.",
     sgw_img Comedor_jpg,
     al_e despensa,
-    al_s balcon6,
-  has
-    ~luz;
+    al_s balcon6;
 
 
 Object decorado_comedor comedor1
@@ -3453,7 +3438,7 @@ Object cocina "Cocina"
     al_s balcon7,
     al_o despensa,
   has
-    femenino ~luz;
+    femenino;
 
 
 Object decorado_cocina cocina
@@ -4005,9 +3990,7 @@ Object aula "Aula"
                  hacia una enorme pantalla blanca, situada al fondo.",
     sgw_img Aula_jpg,
     al_o laberinto3,
-    al_s laberinto7,
-  has
-    ~luz;
+    al_s laberinto7;
 
 
 Object decorado_aula aula
@@ -4205,7 +4188,7 @@ Object seguridad "Sala de seguridad"
     sgw_img Seguridad_jpg,
     al_n laberinto18,
   has
-    femenino ~luz;
+    femenino;
 
 
 Object decorado_seguridad seguridad
@@ -4666,7 +4649,7 @@ Object ventilacion1
         }
     ],
   has
-    femenino ~luz;
+    femenino;
 
 
 Object decorado_ventilacion1 ventilacion1
@@ -4723,9 +4706,7 @@ Object hueco_techo "Sala este de ventilación"
           style bold;
           EsperarTecla();
         }
-    ],
-  has
-    ~luz;
+    ];
 
 
 Object techo "techo" hueco_techo
