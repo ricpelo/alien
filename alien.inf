@@ -3233,6 +3233,18 @@ Object camara_seguridad "cámara de seguridad"
     femenino escenario;
 
 
+! El abrazacaras en la oscuridad:
+Object abrazacaras_oscuridad laoscuridad
+  with
+    cada_turno [;
+      if (localizacion_real ofclass ZonaNorte) {
+        ImprimirOEjecutar(localizacion_real, cada_turno);
+      } 
+    ],
+  has
+    escenario;
+
+
 Class ZonaNorte
   with
     contador_muerte 0,
@@ -3291,29 +3303,39 @@ Class ZonaNorte
           glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         }
         self.ha_imprimido_algo = true;
-        print "^Y entonces la ves. ";
-        if (hueco_techo has visitado) {
-          print "Una araña idéntica a la que habías visto muerta en la sala de
-                 ventilación, ";
+        if (localizacion == laoscuridad) {
+          print "^Sin apenas darte tiempo a reaccionar, algo blando, húmedo, frío y
+                 repulsivo al tacto ";
         } else {
-          print "Una especie de araña, provista de unas patas anormalmente largas y delgadas
-                 y de una poderosa y serpenteante cola, ";
+          print "^Y entonces la ves. ";
+          if (hueco_techo has visitado) {
+            print "Una araña idéntica a la que habías visto muerta en la sala de
+                   ventilación, ";
+          } else {
+            print "Una especie de araña, provista de unas patas anormalmente largas y delgadas
+                   y de una poderosa y serpenteante cola, ";
+          }
+          print "sale rápidamente de entre los expositores y ";
         }
-        print "sale rápidamente de entre los expositores y salta como una exhalación hacia
-               ti. Te tapa completamente la cara, no puedes respirar, sus patas se cierran
-               alrededor de tu cabeza en una suerte de abrazo terrible, y su larga cola se
-               enrosca rodeando tu cuello. La hinchazón que provoca en tu laringe te hace
-               sentir con dolorosa precisión que algo desciende por tu esófago, justo antes
-               de perder el conocimiento...^";
+        print "salta como una exhalación hacia ti. Te tapa completamente la cara, no puedes
+               respirar, sus patas se cierran alrededor de tu cabeza en una suerte de abrazo
+               terrible, y su larga cola se enrosca rodeando tu cuello. La hinchazón que
+               provoca en tu laringe te hace sentir con dolorosa precisión que algo desciende
+               por tu esófago, justo antes de perder el conocimiento...^";
         EsperarTecla();
         Bandera_Fin(1);
-        "^Cuando despiertas, notas un regusto amargo en la boca, y la garganta te duele
-         horrores. Pero lo peor no es eso... Algo se mueve dentro de ti... Algo que
-         lucha por salir, que te presiona el pecho, que te deja casi sin respiración...
-         No puedes soportar el dolor y gritas... gritas como nunca antes lo habías hecho,
-         y tu grito coincide con el momento en que tus costillas se rompen hacia afuera y
-         tu pecho estalla en sangre, carne y vísceras... Pero vives lo suficiente para
-         ver esa pequeña y redonda cabeza llena de dientes saliendo de tu cuerpo...^";
+        print "^Cuando despiertas, notas un regusto amargo en la boca, y la garganta te duele
+               horrores. Pero lo peor no es eso... Algo se mueve dentro de ti... Algo que
+               lucha por salir, que te presiona el pecho, que te deja casi sin respiración...
+               No puedes soportar el dolor y gritas... gritas como nunca antes lo habías hecho,
+               y tu grito coincide con el momento en que tus costillas se rompen hacia afuera y
+               tu pecho estalla en sangre, carne y vísceras...";
+        if (localizacion ~= laoscuridad) {
+          " Pero vives lo suficiente para ver esa pequeña y redonda cabeza llena de dientes
+           saliendo de tu cuerpo...^";
+        } else {
+          "^";
+        }
       } else {
         if (self.ZonaNorte::contador_muerte < 16) {
           self.ZonaNorte::contador_muerte++;
