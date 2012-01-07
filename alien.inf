@@ -6682,10 +6682,9 @@ Object alien_oscuridad laoscuridad
         if (alien.comportamiento == 1 or 3) {
           if (alien.oportunidad < 4) {
             control_timer.activar(TIMER_ALIEN);
-            switch (alien.oportunidad) {
-              0: print "^Notas que hay algo más aquí...^";
-              1, 2, 3, 4: print "^¡Oyes que algo se dirige rápidamente hacia ti!^";
-                          Damusix.TocarV(Rugido_ogg);
+            if (alien.oportunidad > 0) {
+              print "^¡Notas que algo se dirige rápidamente hacia ti!^";
+              Damusix.TocarV(Rugido_ogg);
             }
             alien.oportunidad = alien.oportunidad + 2;
             rtrue;
@@ -6899,17 +6898,27 @@ Object alien procesador
                      }
                    }
                  }
-              1: print "^¡El monstruo gira su cabeza y ";
-                 if (jason in LugarReal()) {
-                   print "os observa amenazador!^";
-                   switch (random(2)) {
-                     1: HablaJason("¿Qué coño está haciendo? ¡Vamonos YA!");
-                     2: HablaJason("¡¡Vámonos de una puta vez!!");
-                   }
+              1: if (localizacion == laoscuridad) {
+                   print "^Puedes notar la mirada del ser taladrándote incluso a
+                          través de la oscuridad.^";
                  } else {
-                   print "te observa amenazador!^";
+                   print "^¡El monstruo gira su cabeza y ";
+                   if (jason in LugarReal()) {
+                     print "os observa amenazador!^";
+                     switch (random(2)) {
+                       1: HablaJason("¿Qué coño está haciendo? ¡Vamonos YA!");
+                       2: HablaJason("¡¡Vámonos de una puta vez!!");
+                     }
+                   } else {
+                     print "te observa amenazador!^";
+                   }
                  }
-              2: print "^¡El monstruo comienza a caminar hacia ";
+              2: if (localizacion == laoscuridad) {
+                   print "^¡Sientes que el";
+                 } else {
+                   print "^¡El";
+                 }
+                 print " monstruo comienza a caminar hacia ";
                  if (jason in LugarReal()) {
                    print "vosotros!^";
                    switch (random(2)) {
