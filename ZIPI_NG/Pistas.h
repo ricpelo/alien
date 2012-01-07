@@ -319,7 +319,7 @@ with
   ZIPI_titulo "¿Mejor solo o acompañado?",
   ZIPI_pistas
     "¿Has probado a entrar solo?"
-    "El monstruo sale y te mata..."
+    "Si entras solo, el monstruo sale y te mata..."
     "Está claro que es mejor llegar acompañado."
 ;
 ZIPI_Pista ZIPI_Pista13
@@ -696,6 +696,9 @@ with
        print "^SONIDO FONDO SI/NO . : Activar o desactivar el sonido de fondo. ";
        print "^SONIDO DETECTOR SI/NO: Activar o desactivar el sonido del detector de movimiento. ";
        print "^GRAFICOS SI/NO . . . : Activar o desactivar la visualización de gráficos. ";
+       print "^GRAFICOS PEQUEÑOS/ ";
+       print "^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión ";
+       print "^                       se mostrarán en tamaño GRANDE). ";
        print "^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual. ";
        print "^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en ";
        print "^                       cada localidad. ";

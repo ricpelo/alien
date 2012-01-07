@@ -89,6 +89,9 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       ^SONIDO FONDO SI/NO . : Activar o desactivar el sonido de fondo.
       ^SONIDO DETECTOR SI/NO: Activar o desactivar el sonido del detector de movimiento.
       ^GRAFICOS SI/NO . . . : Activar o desactivar la visualización de gráficos.
+      ^GRAFICOS PEQUEÑOS/
+      ^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión
+      ^                       se mostrarán en tamaño GRANDE).
       ^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual.
       ^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en
       ^                       cada localidad.
@@ -231,7 +234,7 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       
     <PREG>¿Mejor solo o acompañado?
       <PISTA>¿Has probado a entrar solo?
-      <PISTA>El monstruo sale y te mata...
+      <PISTA>Si entras solo, el monstruo sale y te mata...
       <PISTA>Está claro que es mejor llegar acompañado.
     
     <PREG>¡Socorro!
