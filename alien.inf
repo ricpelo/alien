@@ -7666,7 +7666,7 @@ Object detector_movimiento "detector de movimiento" rifle
           style bold;
           print "^[ Pulsa una tecla para continuar. ]^";
           style roman;
-          if (localizacion ~= laoscuridad) {
+          if (HayLuz(localizacion)) {
             viewImageCenter(localizacion.sgw_img);
           }
           barra_estado.dibujar();
