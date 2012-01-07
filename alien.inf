@@ -4365,8 +4365,20 @@ Object consola "consola de control" seguridad
 !                 otro más para seleccionar la grabación a reproducir, etiquetado con
 !                 la palabra ~Seleccionar~.",
     posicion_actual 0,
+    antes [;
+      Quemar:
+        if (procesador.arreglado()) {
+          "Ya está encendida.";
+        } else {
+          "No hay energía suficiente.";
+        }
+
+      Apagar:
+        "No ves cómo ni por qué hacerlo.";
+    ],
   has
     femenino transparente escenario;
+
 
 !Object boton_retroceder "botón Retroceder" consola
 !  with
@@ -4375,15 +4387,27 @@ Object consola "consola de control" seguridad
 !    descripcion "Es un botón que sirve para poder volver a visualizar la grabación desde
 !                 el principio.";
 
+
 Object teclado_consola "teclado de la consola" consola
   with
     nombre 'teclado',
     descripcion "Una sencilla formación de diversos botones entre los que
                  llama la atención uno etiquetado con la palabra ~Reproducir~.",
     antes [;
+      Quemar:
+        if (procesador.arreglado()) {
+          "La consola ya está encendida.";
+        } else {
+          "No hay energía suficiente.";
+        }
+
+      Apagar:
+        "No ves cómo ni por qué hacerlo.";
+
       Empujar:
         "Pulsar botones al azar no serviría de nada.";
     ];
+
 
 Object monitor "monitor de televisión" consola
   with
@@ -4391,6 +4415,17 @@ Object monitor "monitor de televisión" consola
     descripcion [;
       print "Es el aparato que muestra las imágenes grabadas por las cámaras de
              seguridad. Ahora mismo ";
+    ],
+    antes [;
+      Quemar:
+        if (procesador.arreglado()) {
+          "Ya está encendido.";
+        } else {
+          "No hay energía suficiente.";
+        }
+
+      Apagar:
+        "No ves cómo ni por qué hacerlo.";
     ],
     despues [;
       Examinar:
@@ -4404,6 +4439,7 @@ Object monitor "monitor de televisión" consola
           3: "indica que no hay más imágenes grabadas.";
         }
     ];
+
 
 Object boton_reproducir "botón Reproducir" consola
   with
@@ -4480,6 +4516,7 @@ Object boton_reproducir "botón Reproducir" consola
           "No ocurre nada. Parece que se han agotado las grabaciones.";
         }
     ];
+
 
 !Object boton_seleccionar "botón Seleccionar" consola
 !  with
