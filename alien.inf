@@ -2016,7 +2016,7 @@ Object procesador "Procesador atmosférico"
       if (alien.comportamiento == 0) {
         ! Si hay luz, y está el alien, y entras solo, te mata. Si entras con Jason, se lo
         ! lleva a él
-        if (HayLuz(self) && alien in self) {
+        if (localizacion ~= laoscuridad && alien in self) {
           if (jason notin self) {
             remove comunicador;         ! Esto es para que Jason no hable
             give comunicador ausente;   ! cuando nos están matando
@@ -2550,7 +2550,12 @@ Object montacargas "montacargas"
         } else {
           rfalse;
         }
-        print " por el montacargas hasta el nivel ", self.nivel, "...^";
+        if (procesador.arreglado()) {
+          print " por el montacargas hasta el nivel ";
+        } else {
+          print " escalando con cuidado hasta el nivel ";
+        }
+        print self.nivel, "...^";
     ],
   has
     escenario entrable;    
@@ -2661,21 +2666,32 @@ Object puerta_viscosa "puerta del complejo"
 Object oficina "Oficina"
   class Complejo
   with
-    descripcion "Has llegado a lo que parece ser una oficina. Todas los puestos están
-                 perfectamente delimitados e impolutamente ordenados, equipados cada uno
-                 con una moderna consola de trabajo. Al fondo, una mesa que da la
-                 impresión de ser la de algún pez gordo. La iluminación en esta sala es
-                 excelente, así como la decoración, sorprendentemente lujosa para un
-                 complejo como este. Una serie de archivadores se alinean perfectamente
-                 bajo decenas de cuadros que prácticamente ocultan por completo la pared
-                 con escenas marciales y bélicas. En una esquina, cerca del techo,
-                 una cámara de seguridad lo observa todo con su único ojo.",
+    descripcion [;
+      print "Has llegado a lo que parece ser una oficina. Todas los puestos están
+             perfectamente delimitados e impolutamente ordenados, equipados cada uno
+             con una moderna consola de trabajo. Al fondo, una mesa que da la
+             impresión de ser la de algún pez gordo. ";
+      if (procesador.arreglado()) {
+        print "La iluminación en esta sala es excelente, así como la decoración,
+               sorprendentemente lujosa para un complejo como este.";
+      } else {
+        print "La decoración es sorprendentemente lujosa para un complejo como este.";
+      }
+      " Una serie de archivadores se alinean perfectamente bajo decenas de cuadros
+       que prácticamente ocultan por completo la pared con escenas marciales y
+       bélicas. En una esquina, cerca del techo, una cámara de seguridad lo observa
+       todo con su único ojo.";
+    ],
     sgw_img Oficina_jpg,
     al_e balcon2,
     antes [;
       Examinar:
         if (uno == obj_arriba) {
-          "Hay una cámara girando lentamente cerca del techo de la sala.";
+          if (procesador.arreglado()) {
+            "Hay una cámara girando lentamente cerca del techo de la sala.";
+          } else {
+            "Hay una cámara cerca del techo de la sala.";
+          }
         }
     ];
 
@@ -2690,9 +2706,15 @@ Object decorado_oficina oficina
     desc_archivadores "Son inmensos muebles metálicos firmemente sujetos al suelo y a la
                        pared sobre la que descansan. Todos están cerrados, y no parece
                        que haya una forma fácil de abrirlos.",
-    desc_iluminacion "En contraste con el resto del complejo, parece que el sol mismo
-                      se filtra por las paredes de esta habitación. La iluminación
-                      proviene directamente del techo.",
+    desc_iluminacion [;
+      if (procesador.arreglado()) {
+        "En contraste con el resto del complejo, parece que el sol mismo
+         se filtra por las paredes de esta habitación. La iluminación
+         proviene directamente del techo.";
+      } else {
+        "¿Iluminación? Estás a oscuras, ¿recuerdas?";
+      }
+    ],
     desc_paredes "Las paredes están casi ocultas por una enorme cantidad de cuadros. En
                   una esquina, pegada casi al techo, hay una cámara de seguridad.",
     antes [;
@@ -2825,6 +2847,9 @@ Object caja_fuerte "caja fuerte"
           "No puedes abrirla hasta que introduzcas correctamente la combinación.";
         }
       Teclear:
+        if (~~(procesador.arreglado())) {
+          "No hay energía en el complejo, así que la caja fuerte no funciona.";
+        }
         t = DireccionDePalabra(2);
         ! 111582
         if (LongitudDePalabra(2) < 6 || t->0 ~= '1' || t ->1 ~= '1' || t->2 ~= '1' ||
@@ -2862,11 +2887,17 @@ Object enfermeria "Enfermería"
   class Complejo
   with
     nombre_localidad "enfermería",
-    descripcion "Te encuentras en la enfermería del complejo. Por lo que puedes observar,
-                 está perfectamente equipada. Su magnífica iluminación baña toda la sala
-                 con una lechosa luz blanca. La estancia se encuentra rodeada por una gran
-                 fila de armarios. Un charco de sangre roja y brillante reposa en el suelo
-                 junto a varias camillas desperdigadas.",
+    descripcion [;
+      print "Te encuentras en la enfermería del complejo. Por lo que puedes observar,
+             está perfectamente equipada. ";
+      if (procesador.arreglado()) {
+        print "Su magnífica iluminación baña toda la sala
+               con una lechosa luz blanca. ";
+      }
+      "La estancia se encuentra rodeada por una gran
+       fila de armarios. Un charco de sangre roja y brillante reposa en el suelo
+       junto a varias camillas desperdigadas.";
+    ],
     sgw_img Enfermeria_jpg,
     al_s laberinto16,
     al_o balcon7,
@@ -2882,7 +2913,13 @@ Object decorado_enfermeria enfermeria
     desc_camillas "Todas las camillas están tiradas y volcadas por el suelo. Rastros de
                    sangre contrastan de forma impactante con el blanco inmaculado de las
                    sábanas.",
-    desc_iluminacion "Una pulcra luz blanca, propia de los entornos sanitarios.",
+    desc_iluminacion [;
+      if (procesador.arreglado()) {
+        "Una pulcra luz blanca, propia de los entornos sanitarios.";
+      } else {
+        "No hay iluminación artificial en un complejo sin energía.";
+      }
+    ],
     desc_cajones "Multitud de cajones situados en la parte inferior de los armarios. De
                   entre todos ellos, sólo uno parece poder abrirse.",
     desc_puertas "Amplias puertas que llegan casi hasta el techo de la sala, y que impiden
@@ -3027,7 +3064,11 @@ Object laboratorio "Laboratorio"
     antes [;
       Examinar:
         if (uno == obj_arriba) {
-          "Hay una cámara girando lentamente cerca del techo de la sala.";
+          if (procesador.arreglado()) {
+            "Hay una cámara girando lentamente cerca del techo de la sala.";
+          } else {
+            "Hay una cámara cerca del techo de la sala.";
+          }
         }
     ];
 
@@ -3042,8 +3083,15 @@ Object decorado_laboratorio laboratorio
     desc_mesas "Los botes transparentes, situados aquí y alla sobre la superficie de las
                 mesas, contienen restos orgánicos semejantes a fetos o embriones de una
                 especie que te resulta imposible identificar.",
-    desc_paredes "No hay mucho más que destacar. Tan sólo la cámara que se desplaza
-                  suavemente en lo alto de una de las paredes.",
+    desc_paredes [;
+      if (procesador.arreglado()) {
+        "No hay mucho más que destacar. Tan sólo la cámara que se desplaza
+        suavemente en lo alto de una de las paredes.";
+      } else {
+        "No hay mucho más que destacar. Tan sólo la cámara que situada inerte
+         en lo alto de una de las paredes.";
+      }
+    ],
     desc_estanterias [;
       print "La mayoría de las estanterías están sueltas, tiradas o directamente
              destrozadas";
@@ -3146,9 +3194,14 @@ Object camara_seguridad "cámara de seguridad"
   with
     nombre 'camara' 'seguridad',
     descripcion [;
-      print "Es una cámara de seguridad que se mueve lentamente a izquierda y derecha
-             y que emite una parpadeante luz roja junto al objetivo. Por detrás le sale
-             un cable de color ";
+      if (procesador.arreglado()) {
+        print "Es una cámara de seguridad que se mueve lentamente a izquierda y derecha
+               y que emite una parpadeante luz roja junto al objetivo."; 
+      } else {
+        print "Es una cámara de seguridad que parece no estar funcionando.";
+      }
+      print " Por detrás le sale un cable de color ";
+
       if (LugarReal() == oficina) {
         print "blanco ";
       } else {
@@ -3526,10 +3579,17 @@ Object balcon4
     antes [;
       Ir:
         if (uno == obj_abajo) {
-          Damusix.TocarV(Montacargas_ogg, 50);
+          if (procesador.arreglado()) {
+            Damusix.TocarV(Montacargas_ogg, 50);
+          }
           if (balcon8 hasnt visitado) {
-            print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
-                   -1...^";
+            if (procesador.arreglado()) {
+              print "Te subes al montacargas y comienzas a bajar lentamente hacia el nivel
+                     -1...^";
+            } else {
+              print "Al no haber energía en el montacargas, desciendes lentamente apoyándote
+                     en los salientes disponibles y finalmente alcanzas el nivel -1...^";
+            }
             EsperarTecla();
             rfalse;
           }
@@ -3582,17 +3642,28 @@ Object balcon8
     abajo balcon12,
     antes [;
       Ir:
-        if (uno == obj_abajo or obj_arriba) {
+        if (uno == obj_abajo or obj_arriba && procesador.arreglado()) {
           Damusix.TocarV(Montacargas_ogg, 50);
         }
         if (uno == obj_abajo && balcon12 hasnt visitado) {
-          print "Lentamente, el montacargas va descendiendo aún más hacia las profundidades
-                 del complejo. Es evidente que estás entrando en un nivel aún inacabado
-                 (y el último construido hasta ahora, según puedes comprobar), diseñado para
-                 dar soporte y mantenimiento a los niveles superiores, y continuar
-                 descubriendo la veta aún más hacia el interior del planeta. La sensación
-                 de agobio se hace mayor por momentos, y las paredes y el techo se acercan
-                 entre sí como en una tenebrosa emboscada...^";
+          if (procesador.arreglado()) {
+            print "Lentamente, el montacargas va descendiendo aún más hacia las profundidades
+                 del complejo.";
+          } else {
+            print "Al no haber energía en el montacargas, desciendes lentamente apoyándote
+                   en los salientes disponibles y penetrando aún más hacia las profundidades
+                   del complejo.";
+          }
+          if (localizacion ~= laoscuridad) {
+            print " Es evidente que estás entrando en un nivel aún inacabado
+                   (y el último construido hasta ahora, según puedes comprobar), diseñado para
+                   dar soporte y mantenimiento a los niveles superiores, y continuar
+                   descubriendo la veta aún más hacia el interior del planeta. La sensación
+                   de agobio se hace mayor por momentos, y las paredes y el techo se acercan
+                   entre sí como en una tenebrosa emboscada...^";
+          } else {
+            print "^";
+          }
           EsperarTecla();
           rfalse;
         }
@@ -3754,6 +3825,11 @@ Object puerta_emergencia "puerta" emergencia_pasillo
         if (otro ~= nothing && otro ~= tarjeta) {
           print (_El) otro, " no parece entrar en la ranura.^";
           rtrue;
+        }
+
+        if (~~(procesador.arreglado())) {
+          "Introduces la tarjeta en la ranura, pero la puerta no responde ante la falta
+           de energía del complejo.";
         }
 
       EcharCerrojo:
@@ -3982,12 +4058,17 @@ Object aula "Aula"
   class Complejo
   with
     nombre_localidad "aula",
-    descripcion "Una sala de mediano tamaño, con el aspecto propio de un salón de reuniones
-                 o aula de formación, se extiende ante tus ojos iluminada uniformemente
-                 desde el techo. La mesa que parece destinada al docente domina la estancia
-                 desde un lateral de la habitación, enfrentada a las demás mesas o pupitres,
-                 más pequeñas y sencillas. En el centro de la sala hay un proyector orientado
-                 hacia una enorme pantalla blanca, situada al fondo.",
+    descripcion [;
+      print "Una sala de mediano tamaño, con el aspecto propio de un salón de reuniones
+             o aula de formación, se extiende ante tus ojos";
+      if (procesador.arreglado()) {
+        print " iluminada uniformemente desde el techo";
+      }
+      ". La mesa que parece destinada al docente domina la estancia
+       desde un lateral de la habitación, enfrentada a las demás mesas o pupitres,
+       más pequeñas y sencillas. En el centro de la sala hay un proyector orientado
+       hacia una enorme pantalla blanca, situada al fondo.";
+    ],
     sgw_img Aula_jpg,
     al_o laberinto3,
     al_s laberinto7;
@@ -4088,6 +4169,9 @@ Object proyector "proyector" aula
         if (self has abierta) {
           "Tienes que cerrar el proyector primero.";
         }
+        if (~~(procesador.arreglado())) {
+          "No hay energía suficiente en el complejo para encender el proyector.";
+        }
     ],
     despues [;
       Encender:
@@ -4177,14 +4261,20 @@ Object seguridad "Sala de seguridad"
   class Complejo
   with
     nombre_localidad "sala",
-    descripcion "En la sala de seguridad, tan fría y estéril como el restro del
-                 complejo, llama principalmente la atención la consola de control, un
-                 dispositivo pantalla-teclado que abarca en extensión casi todo el
-                 ancho de la estancia. Un cable blanco y otro negro entran en la sala
-                 por medio de una hendidura en la pared, para acabar conectados a la
-                 parte posterior de la consola. La luz, lúgubre y tenue, proyecta
-                 sombras en los paneles laterales de la habitación, por los que fluyen
-                 tubos de varios grosores.",
+    descripcion [;
+      print "En la sala de seguridad, tan fría y estéril como el restro del
+             complejo, llama principalmente la atención la consola de control, un
+             dispositivo pantalla-teclado que abarca en extensión casi todo el
+             ancho de la estancia. Un cable blanco y otro negro entran en la sala
+             por medio de una hendidura en la pared, para acabar conectados a la
+             parte posterior de la consola. ";
+      if (procesador.arreglado()) {
+        "La luz, lúgubre y tenue, proyecta sombras en los paneles laterales de
+         la habitación, por los que fluyen tubos de varios grosores.";
+      } else {
+        "Por los paneles laterales de la habitación fluyen tubos de varios grosores.";
+      }
+    ],
     sgw_img Seguridad_jpg,
     al_n laberinto18,
   has
@@ -4282,8 +4372,11 @@ Object monitor "monitor de televisión" consola
     ],
     despues [;
       Examinar:
+        if (~~(procesador.arreglado())) {
+          "está totalmente apagado.";
+        }
         switch (consola.posicion_actual) {
-          0: "sólo muestra nieve...";
+          0: "sólo muestra caracteres al azar...";
           1: "muestra la última imagen del alien escapando.";
           2: "muestra la caja fuerte abierta.";
           3: "indica que no hay más imágenes grabadas.";
@@ -4350,10 +4443,13 @@ Object boton_reproducir "botón Reproducir" consola
     ],
     antes [;
       Empujar:
+        if (~~(procesador.arreglado())) {
+          "No ocurre nada. No hay energía para poner esto en marcha.";
+        }
         if (consola.posicion_actual < 3) {
           consola.posicion_actual++;
           switch (consola.posicion_actual) {
-            0: "El monitor sólo muestra nieve...";
+            0: "El monitor sólo muestra caracteres al azar...";
             1: self.grabacion_laboratorio(); rtrue;
             2: self.grabacion_oficina(); rtrue;
             3: "No hay más imágenes grabadas.";
@@ -4655,8 +4751,15 @@ Object ventilacion1
 Object decorado_ventilacion1 ventilacion1
   class DecoradoAmpliado
   with
-    desc_ventiladores "Pequeños pero potentes ingenios que giran veloces absorbiendo aire
-                       del exterior y expulsándolo al interior del complejo.",
+    desc_ventiladores [;
+      print "Pequeños pero potentes ingenios que giran veloces absorbiendo aire
+             del exterior y expulsándolo al interior del complejo.";
+      if (~~(procesador.arreglado())) {
+        "La energía necesaria para moverlos debe provenir del exterior del complejo.";
+      } else {
+        print "^";
+      }
+    ],
     desc_paredes "Las paredes son metálicas y lisas, sin ningún adorno.",
     describir
       'paredes'      [; return self.desc_paredes; ] G_PLURAL
@@ -4673,7 +4776,7 @@ Object hueco_techo "Sala este de ventilación"
     descripcion "Estás en una sala de ventilación en los pasillos interiores del
                  complejo. Todos los ventiladores que deberían estar girando en
                  el techo se encuentran esparcidos por el suelo con sus aspas rotas e
-                 inútiles. Una enfermiza luz de color verde pálido lo ilumina todo sin
+                 inútiles. Una enfermiza luz de color verde pálido lo mancha todo sin
                  que sea posible apreciar su fuente. Pero lo que más llama tu atención
                  es la sustancia mucosa y repugnante que cubre casi la totalidad de las
                  paredes y el techo. Un techo tan bajo que casi te impide permanecer
@@ -7490,7 +7593,7 @@ Object detector_movimiento "detector de movimiento" rifle
 !            print "";
           }
         }
-        if (t) {
+        if (t && self.primera_vez) {
           self.primera_vez = false;
           control_timer.desactivar();
           glk($0086, style_Emphasized);
@@ -7504,7 +7607,9 @@ Object detector_movimiento "detector de movimiento" rifle
           style bold;
           print "^[ Pulsa una tecla para continuar. ]^";
           style roman;
-          viewImageCenter(LugarReal().sgw_img);
+          if (localizacion ~= laoscuridad) {
+            viewImageCenter(localizacion.sgw_img);
+          }
           barra_estado.dibujar();
           EsperarTecla();
           ActivarTimer();
@@ -8584,7 +8689,7 @@ Object tt_final
             1: snd = Gota_Oscura_ogg;
             2: snd = Gotas_Agua_ogg;
             3: snd = Cueva_Oscura_ogg;
-            4: if (alien notin LugarReal()) {
+            4: if (alien notin l) {
                  snd = Monstruo_ogg;
                  r = 100 / alien.distancia;
                } else {
@@ -8597,7 +8702,7 @@ Object tt_final
           ImprimirOEjecutar(l, cada_turno);
           contextoHandleGlkEvent = false;
         }
-        if (alien notin LugarReal()) {
+        if (alien notin l) {
           contextoHandleGlkEvent = true;
           alien.seHaMovido = false;
           if (alien.condicion_movimiento()) {
