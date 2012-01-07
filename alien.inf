@@ -8006,6 +8006,19 @@ Object autodestruccion
     ];
 
 
+! Para que el sacador de aliens funcione también en la oscuridad, tengo que
+! crear este objeto y meterlo en la localidad laoscuridad:
+Object sacador_de_aliens_oscuridad laoscuridad
+  with
+    cada_turno [;
+      if (alien.comportamiento == 1) {
+        sacador_de_aliens.cada_turno();
+      }
+    ],
+  has
+    oculto;
+
+
 ! El objeto que se encarga de sacar y meter al alien en el juego, de forma aleatoria,
 ! simulando el hecho de que se mete por las tuberías de los túneles.
 ! Cuando el alien está en el juego, ~general. Cuando está fuera, general.
