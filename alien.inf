@@ -3242,7 +3242,7 @@ Object abrazacaras_oscuridad laoscuridad
       } 
     ],
   has
-    escenario;
+    oculto;
 
 
 Class ZonaNorte
@@ -6718,7 +6718,7 @@ Object alien_oscuridad laoscuridad
       }
     ],
   has
-    escenario;
+    oculto;
 
 
 ! comportamiento =
