@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58785
+!% $MAX_PROP_TABLE_SIZE=59785
 !% $MAX_VERBS=153
 
 !
@@ -6674,6 +6674,32 @@ Object computadora "Madre"
     escenario hablable propio;
 
 
+! El alien cuando estamos en la oscuridad:
+Object alien_oscuridad laoscuridad
+  with
+    cada_turno [;
+      if (alien in localizacion_real && localizacion_real ofclass Complejo) {
+        if (alien.comportamiento == 1 or 3) {
+          if (alien.oportunidad < 4) {
+            control_timer.activar(TIMER_ALIEN);
+            switch (alien.oportunidad) {
+              0: print "^Notas que hay algo más aquí...^";
+              1, 2, 3, 4: print "^¡Oyes que algo se dirige rápidamente hacia ti!^";
+                          Damusix.TocarV(Rugido_ogg);
+            }
+            alien.oportunidad = alien.oportunidad + 2;
+            rtrue;
+          }
+          if (alien.oportunidad >= 4) {
+            alien.muerte_final();
+          }
+        }
+      }
+    ],
+  has
+    escenario;
+
+
 ! comportamiento =
 ! 0: Está en el procesador atmosférico esperando a que lleguemos
 ! 1: Está en el laberinto moviéndose al azar (después de haberse llevado a Jason)
@@ -6787,9 +6813,11 @@ Object alien procesador
         self.tiempo_restante = -1;
         self.oportunidad = 0;
         PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
-        control_timer.desactivar();
-        control_timer.activar(TIMER_ALIEN);
-        "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
+        if (alien in LugarReal()) {
+          control_timer.desactivar();
+          control_timer.activar(TIMER_ALIEN);
+          "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
+        }
       }
     ],
     ! Se usa por si el alien surge de repente de la pared. En ese caso, no se debe decir
