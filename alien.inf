@@ -3238,7 +3238,7 @@ Object abrazacaras_oscuridad laoscuridad
   with
     cada_turno [;
       if (localizacion_real ofclass ZonaNorte) {
-        ImprimirOEjecutar(localizacion_real, cada_turno);
+        localizacion_real.cada_turno();
       } 
     ],
   has
@@ -6807,7 +6807,7 @@ Object alien procesador
         }
       }
       if (contextoHandleGlkEvent) {
-        ImprimirOEjecutar(self, cada_turno);
+        self.cada_turno();
       }
     ],
     pnj_ha_llegado_default [;
@@ -7764,7 +7764,7 @@ Object detector_movimiento "detector de movimiento" rifle
     ! Imprimir en cada turno la distancia al alien
     cada_turno [;    
       if (rifle in jugador && self has encendido) {
-        ImprimirOEjecutar(self, presencia);
+        self.presencia();
       }
     ],
   has
@@ -8808,7 +8808,7 @@ Object tt_final
           Damusix.TocarV(snd, r);
         } else if (l ofclass ZonaNorte) {
           contextoHandleGlkEvent = true;
-          ImprimirOEjecutar(l, cada_turno);
+          l.cada_turno();
           contextoHandleGlkEvent = false;
         }
         if (alien notin l) {
@@ -8818,7 +8818,7 @@ Object tt_final
             alien.movimiento();
           }
           if (alien.seHaMovido) {
-            ImprimirOEjecutar(detector_movimiento, cada_turno);
+            detector_movimiento.cada_turno();
             barra_estado.dibujar();
           }
         }
@@ -8834,7 +8834,7 @@ Object tt_final
         }
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        ImprimirOEjecutar(alien, cada_turno);
+        alien.cada_turno();
         return RestaurarLineaOrdenes(buffer);
       }
   }
