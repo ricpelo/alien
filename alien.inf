@@ -219,7 +219,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
 [ ImprimePrompt;
-  print (s_in )"^> ";
+  print (s_in) "^> ";
 ];
 
 
@@ -3241,9 +3241,7 @@ Class ZonaNorte
             return "la sala situada al este";
           }
         despensa:
-          if (despensa has visitado) {
-            return "esta habitación";
-          }
+          return "esta habitación";
         cocina:
           if (despensa has visitado) {
             return "la despensa";
@@ -3345,11 +3343,12 @@ Class ZonaNorte
              (string) self.donde_estoy(), "... Esto no te gusta nada...";
         13: Damusix.TocarV(Arana_Largo_ogg, 100);
         14: Damusix.TocarV(Arana_Chillido_ogg, 100);
-            "^Es un chillido... Claramente es un chillido... ¡Hay algo en la despensa!
-             ¡Corre!";
+            "^Es un chillido... Claramente es un chillido... ¡Hay algo en ",
+            (string) self.donde_estoy(), "! ¡Corre!";
         15: Damusix.TocarV(Arana_Chillido_ogg, 100);
         16: Damusix.TocarV(Arana_Chillido_ogg, 100);
-            "^¡Corre! ¡Sal de aquí! ¡Pero no pases por la despensa!";
+            "^¡Corre! ¡Sal de aquí! ¡Pero no pases por ",
+            (string) self.donde_estoy(), "!";
       }
     ];
 
