@@ -260,7 +260,7 @@ Object MensajesLibreria
         }
         glk_set_style(style_Input);
         print "^> ";
-        glk_set_style(style_normal);
+        glk_set_style(style_Normal);
         rtrue;
 
       Ir:
