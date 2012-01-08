@@ -308,6 +308,13 @@ Object MensajesLibreria
            4: TextoLlamativo(" ¡Enhorabuena! Has acabado la aventura ");
               rtrue;
           10: rtrue;
+          17: switch (random(4)) {
+                1: "Está muy oscuro y no puedes ver nada.";
+                2: "Todo está demasiado oscuro y no aprecias nada con claridad.";
+                3: "La oscuridad te impide ver dónde te encuentras.";
+                4: "Te mueves a tientas a través de una oscuridad que te impide
+                    ver nada.";
+              }
           19: "Has tenido días mejores...";
           30: switch (random(3)) {
                 1: "No encuentro eso que dices.";
