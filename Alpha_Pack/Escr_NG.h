@@ -88,7 +88,7 @@ class Escritura
         tipo_pausa = self.elemento(n + 3);
         
         if (tipo_letra & LETRA_NORMAL)  style roman;
-        if (tipo_letra & LETRA_NEGRITA) style bold;    
+        if (tipo_letra & LETRA_NEGRITA) glk_set_style(style_User1);
         if (tipo_letra & LETRA_CURSIVA) style underline;
         if (tipo_letra & LETRA_FIJA)    glk_set_style(style_Preformatted);
         if (tipo_letra & LETRA_INVERSA) style reverse;

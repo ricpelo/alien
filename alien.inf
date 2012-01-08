@@ -205,11 +205,8 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
   print "- Todos las imágenes del juego son dibujos originales de Manolo, diseñados para^";
   print "  la ocasión.^^";
   EsperarTecla();
-  print "- ¿Has visto ya el documento ~";
-  style bold;
-  print "Holocubo.pdf";
-  style roman;
-  print "~ usando la contraseña apropiada?^";
+  print "- ¿Has visto ya el documento ~", (s_b) "Holocubo.pdf", "~ usando la contraseña
+           apropiada?^";
   print "  Contiene información muy interesante sobre el xenoforme.^^";
   EsperarTecla();
   print "- Si te estás preguntado para qué sirve la palanca... Efectivamente: no sirve^";
@@ -222,9 +219,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
 [ ImprimePrompt;
-  glk_set_style(style_Input);
-  print "^> ";
-  glk_set_style(style_Normal);
+  print (s_in )"^> ";
 ];
 
 
@@ -1839,11 +1834,7 @@ Object panel_control "panel de control" junto_procesador
         print " Varios de sus cables están temporalmente unidos a los bornes de una
                batería. ";
         if (puerta_procesador hasnt abierta) {
-          print "En el display puedes leer ~";
-          glk_set_style(style_Input);
-          print "Semilla: 9957. ¿Código?";
-          style roman;
-          print "~.";
+          print "En el display puedes leer ~", (s_in) "Semilla: 9957. ¿Código?", "~.";
         }
       } else {
         if (puerta_procesador hasnt abierta) {
@@ -1885,10 +1876,7 @@ Object panel_control "panel de control" junto_procesador
           viewImageCenter(junto_procesador.sgw_img);
           give self ~general;
           bateria.energia = 0;
-          print "El display dice: ~";
-          glk_set_style(style_Input);
-          print "Código correcto. Acceso permitido.";
-          style roman;
+          print "El display dice: ~", (s_in) "Código correcto. Acceso permitido.";
           Damusix.TocarV(Chispazo_ogg, 100);
           "~^^La puerta se abre y, a continuación, una enorme chispa salta de los bornes de
           conexión de la batería. Finalmente, el panel de control se apaga por falta de
@@ -1898,10 +1886,7 @@ Object panel_control "panel de control" junto_procesador
           ! Código viejo: 759812
           if (self.codigo_viejo == 0) {
             self.codigo_viejo = 1;
-            print "El display dice: ~";
-            glk_set_style(style_Input);
-            print "Código incorrecto. Acceso denegado.";
-            style roman;
+            print "El display dice: ~", (s_in) "Código incorrecto. Acceso denegado.";
             print "~^^Parece que ese código ya no sirve, después de que el sistema de
                       control del panel se haya reiniciado.^";
             if (SeVen(jugador, jason)) {
@@ -1919,17 +1904,11 @@ Object panel_control "panel de control" junto_procesador
             }
             rtrue; 
           } else {
-            print "El display insiste: ~";
-            glk_set_style(style_Input);
-            print "Código incorrecto. Acceso denegado.";
-            style roman;
+            print "El display insiste: ~", (s_in) "Código incorrecto. Acceso denegado.";
             "~. Habrá que buscar el nuevo código.";
           }
         } else {
-          print "El display muestra: ~";
-          glk_set_style(style_Input);
-          print "Código incorrecto. Acceso denegado.";
-          style roman;
+          print "El display muestra: ~", (s_in) "Código incorrecto. Acceso denegado.";
           "~.";
         }
       Recibir:
@@ -1967,10 +1946,7 @@ Object panel_control "panel de control" junto_procesador
           print "provocando una lluvia de chispas. El display se enciende y suena un
                  zumbido. En la pantalla aparecen símbolos y caracteres que indican
                  que el sistema de control del panel se está reiniciando. Finalmente,
-                 en el display puedes leer: ~";
-          glk_set_style(style_Input);
-          print "Semilla: 9957. ¿Código?";
-          style roman;
+                 en el display puedes leer: ~", (s_in) "Semilla: 9957. ¿Código?";
           "~.";
         }
       DejarSalir:
@@ -4072,9 +4048,7 @@ Object boton_oeste "botón azul" emergencia_oeste
         Damusix.VolumenCanal(CANAL_DETECTOR, 20);
         Damusix.Tocar(Sirena_ogg);
         ArrancarDaemon(autodestruccion);
-        style bold;
-        print "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
-        style roman;
+        print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
         self.pulsar = self.pulsar_ya_pulsado;
         self.descripcion = self.descripcion_ya_pulsado;
         boton_este.pulsar = boton_este.pulsar_ya_pulsado;
@@ -4244,32 +4218,21 @@ Object pantalla "pantalla" aula
               print "Al mirar a la pantalla, ves el contenido del holocubo:^^";
             }
           }
-          style bold;
-          print "*** HOLOCUBO DE SEGURIDAD - PROTOCOLO DE EMERGENCIA: ***^^";
-          style roman;
+          print (s_b) "*** HOLOCUBO DE SEGURIDAD - PROTOCOLO DE EMERGENCIA: ***^^";
           print "En caso de emergencia, proceder a la autodestrucción del complejo
                  siguiendo el siguiente procedimiento:^^";
           print "1. Penetrar en la zona de emergencia (nivel -1, zona sur).^";
           print "2. Cerrar su única entrada para aislarla del exterior.^";
           print "3. Pulsar simultáneamente los botones rojo y azul, en ese orden, antes
                  de que vuelvan a su posición inicial.^^";
-          style bold;
-          print "*** NOTAS: ***^^";
-          style roman;
+          print (s_b) "*** NOTAS: ***^^";
           print "a. Tras la activación del protocolo, se abrirá el ascensor de emergencia
                  (nivel -2, zona norte).^";
           print "b. El ascensor será la única vía de salida mientras dure la emergencia.^";
           print "c. Se dispondrá de un máximo de diez minutos para evacuar el complejo.^";
           print "d. El protocolo no puede abortarse en ningún momento.^^";
-          print "[La clave para acceder al documento ~";
-          style bold;
-          print "Holocubo.pdf";
-          style roman;
-          print "~ es ";
-          style bold;
-          print "APOGEO";
-          style roman;
-          print " (en mayúsculas).]^";
+          print "[La clave para acceder al documento ~", (s_b) "Holocubo.pdf", "~ es ",
+                (s_b) "APOGEO", " (en mayúsculas).]^";
           
           if (jason in LugarReal()) {
             HablaJason("¡Vamos a volar todo esto en pedazos!");
@@ -4868,12 +4831,9 @@ Object hueco_techo "Sala este de ventilación"
                  que una alucinación producto del hipnotizante ritmo del aire... Pero no:
                  lo que ves es muy real, así que algo no marcha bien... Nada bien...^";
           EsperarTecla();
-          glk_set_style(style_Emphasized);
-          print "^Dios santo... Pero... ¿qué...? ¿Qué es esto...?^";
+          print (s_em) "^Dios santo... Pero... ¿qué...? ¿Qué es esto...?^";
           EsperarTecla();
-          style bold;
-          print "^Oh... Dios... mío...^";
-          style roman;
+          print (s_b) "^Oh... Dios... mío...^";
           EsperarTecla();
         }
     ];
@@ -5052,9 +5012,7 @@ Object vaina "vaina mucosa" hueco_techo
                  lo que puedes, pegando casi tu cara contra el nauseabundo capullo...
                  y entonces lo ves...";
           EsperarTecla();
-          style bold;
-          print "^^¡VES A JASON DENTRO DE LA VAINA!";
-          style roman;
+          print (s_b) "^^¡VES A JASON DENTRO DE LA VAINA!";
         }
       }
       "";
@@ -5868,10 +5826,7 @@ Object jason "Jason" nave1
           HablaJason("No llevo nada encima.");
           rtrue;
         } else {
-          style bold;
-          print "^JASON: ";
-          style roman;
-          print "~Llevo ";
+          print (s_b) "^JASON: ", "~Llevo ";
           EscribirListaDesde(child(self), INFOTOTAL_BIT + ESPANOL_BIT + RECURSIVO_BIT);
           "~.";
         }
@@ -6226,9 +6181,7 @@ Object jason "Jason" nave1
             }
             if (~~(self.habla_en_vaina)) {
               self.habla_en_vaina = true;
-              style bold;
-              print "^¡ES JASON! ¡ESTÁ VIVO!^";
-              style roman;
+              print (s_b) "^¡ES JASON! ¡ESTÁ VIVO!^";
               rtrue;
             }
           }
@@ -6493,14 +6446,8 @@ Object computadora "Madre"
                              generador pseudoaleatorio. Indíqueme el valor de la nueva
                              semilla que aparece en el display, para que pueda calcular
                              el código correcto."); new_line;
-                 print "[Prueba usando ~";
-                 glk_set_style(style_Input);
-                 print "MADRE, LA SEMILLA ES n";
-                 style roman; print "~, sustituyendo ~";
-                 glk_set_style(style_Input);
-                 print "n";
-                 style roman;
-                 print "~ por el valor de la semilla.]^";
+                 print "[Prueba usando ~", (s_in) "MADRE, LA SEMILLA ES n",
+                       "~, sustituyendo ~", (s_in) "n", "~ por el valor de la semilla.]^";
               1: HablaMadre("El código de acceso se calcula a partir de la semilla del
                              generador pseudoaleatorio. A partir de la semilla que me
                              ha indicado, he calculado que el nuevo código de acceso es
@@ -7675,9 +7622,7 @@ Object detector_movimiento "detector de movimiento" rifle
           if (localizacion == laoscuridad) {
             self.preparaHandleGlkEvent();
             t = true;
-            style bold;
-            print "^¡El detector capta movimiento aquí mismo!^";
-            style roman;
+            print (s_b) "^¡El detector capta movimiento aquí mismo!^";
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
@@ -7705,17 +7650,13 @@ Object detector_movimiento "detector de movimiento" rifle
         if (t && self.primera_vez) {
           self.primera_vez = false;
           control_timer.desactivar();
-          glk_set_style(style_Emphasized);
-          print " [A partir de ahora, el detector de movimiento informará de la ";
-          print "presencia de la criatura a través de la barra de estado, en la ";
-          print "parte superior derecha, junto al contador de turnos. Por tanto, ";
-          print "no volverás a ver mensajes de este tipo en lo sucesivo. Un ";
-          print "consejo: consulta frecuentemente dicha información para intentar ";
-          print "evitar a la criatura.]^";
-          style roman;
-          style bold;
-          print "^[ Pulsa una tecla para continuar. ]^";
-          style roman;
+          print (s_em) " [A partir de ahora, el detector de movimiento informará de la
+                        presencia de la criatura a través de la barra de estado, en la
+                        parte superior derecha, junto al contador de turnos. Por tanto,
+                        no volverás a ver mensajes de este tipo en lo sucesivo. Un
+                        consejo: consulta frecuentemente dicha información para intentar
+                        evitar a la criatura.]^";
+          print (s_b) "^[ Pulsa una tecla para continuar. ]^";
           if (HayLuz(localizacion)) {
             viewImageCenter(localizacion.sgw_img);
           }
@@ -8004,11 +7945,7 @@ Object autodestruccion
           t = self.tiempo * 10 / 50;
           
           if (t > 0) {
-            style bold;
-            print "^MEGAFONÍA: ";
-            style roman;
-
-            print "~Falta";
+            print (s_b) "^MEGAFONÍA: ", "~Falta";
             
             if (t > 1) {
               print "n";
@@ -8029,10 +7966,7 @@ Object autodestruccion
           
         } else {
           t = self.tiempo;
-          style bold;
-          print "^MEGAFONÍA: ";
-          style roman;
-          print "~Falta";
+          print (s_b) "^MEGAFONÍA: ", "~Falta";
 
           if (t > 1) {
             print "n";
@@ -8459,10 +8393,8 @@ Object tt_final
 [ RecomiendaGargoyle;
   print "~A·L·I·E·N: La aventura - Edición Especial~ ha sido diseñada
          para funcionar con el intérprete Gargoyle, que puedes
-         descargar de la siguiente dirección:^^";
-  style fixed;
-  print "http://code.google.com/p/garglk/downloads^";
-  style roman;
+         descargar de la siguiente dirección:^^",
+         (s_pre) "http://code.google.com/p/garglk/downloads^";
   EsperarTecla();
   quit;
 ];
@@ -8515,18 +8447,17 @@ Object tt_final
       glk_stylehint_set(wintype_TextBuffer, style_Input,
                         stylehint_Weight, 1);
 
+      ! Esta será mi negrita:
       glk_stylehint_set(wintype_TextBuffer, style_User1,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $00ff00);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_BackColor, $000000);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Size, 1);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
-                        stylehint_Proportional, 0);
+                        stylehint_Proportional, 1);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextBuffer, style_User2,
-                        stylehint_Justification, stylehint_just_LeftRight);
   
       glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_TextColor, $ffffff);
@@ -8542,7 +8473,7 @@ Object tt_final
                         stylehint_Justification, stylehint_just_LeftRight);
 
       glk_stylehint_set(wintype_TextBuffer, style_Alert,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $00ff00);
       glk_stylehint_set(wintype_TextBuffer, style_Alert,
                         stylehint_BackColor, $000000);
       glk_stylehint_set(wintype_TextBuffer, style_Alert,
@@ -8566,8 +8497,6 @@ Object tt_final
                         stylehint_Oblique, 1);
       glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
-                        stylehint_Justification, stylehint_just_LeftRight);
 
       glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
                         stylehint_TextColor, $00aa00);
@@ -8889,14 +8818,9 @@ Object tt_final
 
 
 [ ComoHablar;
-  print "[Para hablar con un personaje, usa la forma ~";
-  glk_set_style(style_Input);
-  print "PERSONAJE, lo que sea";
-  style roman;
-  print "~. Por ejemplo: ~";
-  glk_set_style(style_input);
-  print "JASON, QUÉ OPINAS DE MADRE";
-  style roman;
+  print "[Para hablar con un personaje, usa la forma ~",
+        (s_in) "PERSONAJE, lo que sea", "~. Por ejemplo: ~",
+        (s_in) "JASON, QUÉ OPINAS DE MADRE";
   "~.]";
 ];
 
@@ -9273,16 +9197,14 @@ Object tt_final
 
 
 [ HablaJason msg1 obj1 msg2 obj2 msg3 obj3 msg4;
-  style bold;
 
   if (jason notin LugarReal()) {
     Damusix.TocarV(Transmisor_ogg);
-    print "^JASON (por el comunicador): ";
+    print (s_b) "^JASON (por el comunicador): ";
   } else {
-    print "^JASON: ";
+    print (s_b) "^JASON: ";
   }
     
-  style roman;
   print "~", (string) msg1;
     
   if (obj1 ~= 0) {
@@ -9320,10 +9242,7 @@ Object tt_final
 [ HablaRobot msg;
   robot.ha_hablado = true;
   Damusix.TocarV(Robot_ogg);
-  style bold;
-  print "^ROBOT: ";
-  style roman;
-  print "~", (string) msg, "~^";
+  print (s_b) "^ROBOT: ", "~", (string) msg, "~^";
 ];
 
 
@@ -9336,23 +9255,20 @@ Object tt_computadora
 
   
 [ HablaMadre msg;
-  style bold;
     
   if (LugarReal() ~= nave1 or nave2) {
     Damusix.TocarV(Transmisor_ogg);
-    print "^MADRE (por el comunicador): ";
+    print (s_b) "^MADRE (por el comunicador): ";
   } else {
-    print "^MADRE: ";
+    print (s_b) "^MADRE: ";
   }
 
-  style roman;
   print "~";
   
   tt_computadora.escribe(0, msg);
   tt_computadora.visualiza();
 
   print "~^";
-  style roman;
 ];
 
 
@@ -9757,30 +9673,13 @@ Extend 'di' first
 
 
 [ GraficosSub;
-  glk_set_style(style_Emphasized);
-  print "[Por favor, usa la forma ~";
-  glk_set_style(style_Input);
-  print "GRAFICOS SI";
-  glk_set_style(style_Emphasized);
-  print "~ o ~";
-  glk_set_style(style_Input);
-  print "GRAFICOS NO";
-  glk_set_style(style_Emphasized);
-  print "~ para activar o desactivar, respectivamente, el uso de gráficos.
-         También puedes cambiar el tamaño de la ventana gráfica usando ~";
-  glk_set_style(style_Input);
-  print "GRAFICOS PEQUEÑOS";
-  glk_set_style(style_Emphasized);
-  print "~, ~";
-  glk_set_style(style_Input);
-  print "GRAFICOS MEDIANOS";
-  glk_set_style(style_Emphasized);
-  print "~ o ~";
-  glk_set_style(style_Input);
-  print "GRAFICOS GRANDES";
-  glk_set_style(style_Emphasized);
-  print "~.]^";
-  style roman;
+  print (s_em) "[Por favor, usa la forma ~", (s_in) "GRAFICOS SI",
+        (s_em) "~ o ~", (s_in) "GRAFICOS NO", (s_em) "~ para activar o
+        desactivar, respectivamente, el uso de gráficos. También puedes
+        cambiar el tamaño de la ventana gráfica usando ~",
+        (s_in) "GRAFICOS PEQUEÑOS", (s_em) "~, ~",
+        (s_in) "GRAFICOS MEDIANOS", (s_em) "~ o ~",
+        (s_in) "GRAFICOS GRANDES", (s_em) "~.]^";
 ];
 
 
@@ -9802,62 +9701,30 @@ Extend 'di' first
 
 
 [ SonidoSub;
-  glk_set_style(style_Emphasized);
-  print "[Por favor, usa la forma ~";
-  glk_set_style(style_Input);
-  print "SONIDO SI";
-  glk_set_style(style_Emphasized);
-  print "~ o ~";
-  glk_set_style(style_Input);
-  print "SONIDO NO";
-  glk_set_style(style_Emphasized);
-  print "~ para activar o desactivar, respectivamente, todos los efectos sonoros.]^";
-  style roman;
+  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO SI", (s_em) "~ o ~",
+        (s_in) "SONIDO NO", (s_em) "~ para activar o desactivar, respectivamente,
+        todos los efectos sonoros.]^";
 ];
 
 
 [ MusicaSub;
-  glk_set_style(style_Emphasized);
-  print "[Por favor, usa la forma ~";
-  glk_set_style(style_Input);
-  print "SONIDO FONDO SI";
-  glk_set_style(style_Emphasized);
-  print "~ o ~";
-  glk_set_style(style_Input);
-  print "SONIDO FONDO NO";
-  glk_set_style(style_Emphasized);
-  print "~ para activar o desactivar, respectivamente, el sonido de fondo.]^";
-  style roman;
+  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO FONDO SI",
+        (s_em) "~ o ~", (s_in) "SONIDO FONDO NO", (s_em) "~ para activar
+        o desactivar, respectivamente, el sonido de fondo.]^";
 ];
 
 
 [ SonidoDetectorSub;
-  glk_set_style(style_Emphasized);
-  print "[Por favor, usa la forma ~";
-  glk_set_style(style_Input);
-  print "SONIDO DETECTOR SI";
-  glk_set_style(style_Emphasized);
-  print "~ o ~";
-  glk_set_style(style_Input);
-  print "SONIDO DETECTOR NO";
-  glk_set_style(style_Emphasized);
-  print "~ para activar o desactivar, respectivamente, el sonido del detector de movimiento.]^";
-  style roman;
+  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO DETECTOR SI",
+        (s_em) "~ o ~", (s_in) "SONIDO DETECTOR NO", (s_em) "~ para activar
+        o desactivar, respectivamente, el sonido del detector de movimiento.]^";
 ];
 
 
 [ TeclearMalSub;
-  glk_set_style(style_Emphasized);
-  print "[Por favor, usa la forma ~";
-  glk_set_style(style_Input);
-  print "TECLEA tal EN cual";
-  glk_set_style(style_Emphasized);
-  print "~. Por ejemplo: ~";
-  glk_set_style(style_Input);
-  print "TECLEA HOLA EN EL TECLADO";
-  glk_set_style(style_Emphasized);
-  print "~.]^";
-  style roman;
+  print (s_em) "[Por favor, usa la forma ~", (s_in) "TECLEA tal EN cual",
+        (s_em) "~. Por ejemplo: ~", (s_in) "TECLEA HOLA EN EL TECLADO",
+        (s_em) "~.]^";
 ];
 
 
@@ -9923,9 +9790,7 @@ Extend 'di' first
   hayGraficos = false;
   closeGraphicWindow();
   if (~~t) {
-    glk_set_style(style_Emphasized);
-    print "[Desactivados los gráficos.]^";
-    style roman;
+    print (s_em) "[Desactivados los gráficos.]^";
   }
 ];
 
@@ -9938,11 +9803,7 @@ Extend 'di' first
 
 [ AyudarSub;
   print "Prueba a pedir ayuda a alguien. Si necesitas pistas más elaboradas, puedes usar
-         el sistema de pistas interactivas tecleando el comando ";
-  glk_set_style(style_Input);
-  print "PISTAS";
-  style roman;
-  ".";
+         el sistema de pistas interactivas tecleando el comando ", (s_in) "PISTAS", ".^";
 ];
 
 
@@ -10018,18 +9879,14 @@ Extend 'di' first
 [ ActivarSalidasSub;
   mostrarSalidas = true;
 !  give mostrar_salidas ~oculto;
-  glk_set_style(style_Emphasized);
-  print "[Activado el listado automático de salidas.]^";
-  style roman;
+  print (s_em) "[Activado el listado automático de salidas.]^";
 ];
 
 
 [ DesactivarSalidasSub;
   mostrarSalidas = false;
 !  give mostrar_salidas oculto;
-  glk_set_style(style_Emphasized);
-  print "[Desactivado el listado automático de salidas.]^";
-  style roman;
+  print (s_em) "[Desactivado el listado automático de salidas.]^";
 ];
 
 
@@ -10121,18 +9978,14 @@ Endif;
   if (control_sonido_detector.sonido ~= null) {
     control_sonido_detector.activar(control_sonido_detector.sonido, SONIDO_BUCLE_INFINITO);
   }
-  glk_set_style(style_Emphasized);
-  print "[Activados todos los efectos sonoros.]^";
-  style roman;
+  print (s_em) "[Activados todos los efectos sonoros.]^";
 ];
 
 
 [ ApagarSonidoSub;
   Damusix.DesactivarAudio();
   control_sonido_fondo.hay_sonido = false;
-  glk_set_style(style_Emphasized);
-  print "[Desactivados todos los efectos sonoros.]^";
-  style roman;
+  print (s_em) "[Desactivados todos los efectos sonoros.]^";
 ];
 
 
@@ -10152,9 +10005,7 @@ Endif;
   control_sonido_fondo.hay_sonido = true;
     
   if (~~i) {
-    glk_set_style(style_Emphasized);
-    print "[Activado el sonido de fondo.]^";
-    style roman;
+    print (s_em) "[Activado el sonido de fondo.]^";
   }
 ];
 
@@ -10162,17 +10013,13 @@ Endif;
 [ ApagarMusicaSub;
   control_sonido_fondo.hay_sonido = false;
   control_sonido_fondo.desactivar();
-  glk_set_style(style_Emphasized);
-  print "[Desactivado el sonido de fondo.]^";
-  style roman;
+  print (s_em) "[Desactivado el sonido de fondo.]^";
 ];
 
 
 [ EncenderSonidoDetectorSub;
   control_sonido_detector.hay_detector = true;
-  glk_set_style(style_Emphasized);
-  print "[Activado el sonido del detector de movimiento.]^";
-  style roman;
+  print (s_em) "[Activado el sonido del detector de movimiento.]^";
 ];
 
 
@@ -10181,9 +10028,7 @@ Endif;
   if (control_sonido_detector.sonido ~= Sirena_ogg) {
     control_sonido_detector.desactivar();
   }
-  glk_set_style(style_Emphasized);
-  print "[Desactivado el sonido del detector de movimiento.]^";
-  style roman;
+  print (s_em) "[Desactivado el sonido del detector de movimiento.]^";
 ];
 
 
@@ -10231,20 +10076,14 @@ Endif;
          (c) 2008-2012 Alpha Aventuras^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
-  style fixed;
-  print "http://www.gnu.org/licenses/gpl.txt^";
-  style roman;
+  print (s_pre) "http://www.gnu.org/licenses/gpl.txt^";
   print "^El código fuente del programa está disponible en Github:^^";
-  style fixed;
-  print "https://github.com/ricpelo/alien/tree/deluxe^";
-  style roman;
+  print (s_pre) "https://github.com/ricpelo/alien/tree/deluxe^";
   EsperarTecla();
   print "^Visítanos en:^^";
-  style fixed;
-  print "http://wiki.caad.es/Alpha_Aventuras^";
-  print "http://sites.google.com/site/alphaaventuras^";
-  print "http://www.facebook.com/alphaaventuras^";
-  style roman;
+  print (s_pre) "http://wiki.caad.es/Alpha_Aventuras^
+        http://sites.google.com/site/alphaaventuras^
+        http://www.facebook.com/alphaaventuras^";
   EsperarTecla();
   viewImageCenter(LugarReal().sgw_img);
 ];
@@ -10272,20 +10111,12 @@ Endif;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
-       glk_set_style(style_Emphasized);
-       print "[Advertencia: Es sabido que la tentación de la ayuda es a veces
-              tan fuerte que se suelen obtener pistas prematuramente. Por tanto,
-              en cualquier momento durante el juego puedes poner ";
-       glk_set_style(style_Input);
-       print "PISTAS NO";
-       glk_set_style(style_Emphasized);
-       print ", y eso te impedirá obtener ayuda en la sesión de juego actual.
-              Si sigues queriendo una pista, pon ";
-       glk_set_style(style_Input);
-       print "PISTAS";
-       glk_set_style(style_Emphasized);
-       print " otra vez.]^";
-       style roman;
+       print (s_em) "[Advertencia: Es sabido que la tentación de la ayuda es a veces
+             tan fuerte que se suelen obtener pistas prematuramente. Por tanto,
+             en cualquier momento durante el juego puedes poner ",
+             (s_in) "PISTAS NO", (s_em) ", y eso te impedirá obtener ayuda en la
+             sesión de juego actual. Si sigues queriendo una pista, pon ",
+             (s_in) "PISTAS", (s_em) " otra vez.]^";
     1: t = false;
        if (hayGraficos) {
          t = true;
@@ -10301,22 +10132,44 @@ Endif;
        }
        clearTextWindow();
        <<Mirar>>;
-    2: glk_set_style(style_Emphasized);
-       print "[Las pistas han sido desactivadas.]^";
-       style roman;
+    2: print (s_em) "[Las pistas han sido desactivadas.]^";
   }
 ];
 
 
 [ PistasNoSub;
   switch (hayPistas) {
-    2:       glk_set_style(style_Emphasized);
-             print "[Las pistas ya han sido desactivadas.]^";
-             style roman;
+    2:       print (s_em) "[Las pistas ya han sido desactivadas.]^";
     default: hayPistas = 2;
-             glk_set_style(style_Emphasized);
-             print "[PISTAS desactivadas.]^";
-             style roman;
+             print (s_em) "[PISTAS desactivadas.]^";
   }
+];
+
+
+[ s_em text;
+  glk_set_style(style_Emphasized);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_in text;
+  glk_set_style(style_Input);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_pre text;
+  glk_set_style(style_Preformatted);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_b text;
+  glk_set_style(style_User1);
+  print (string) text;
+  glk_set_style(style_Normal);
 ];
 
