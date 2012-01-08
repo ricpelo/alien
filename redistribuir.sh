@@ -23,3 +23,7 @@ cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/cover.jpg /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/*.pdf /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 
+# Dropbox:
+cp alien.blb /home/ricardo/Dropbox/
+cp garglk.ini /home/ricardo/Dropbox/
+
