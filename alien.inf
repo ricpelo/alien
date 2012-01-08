@@ -6833,11 +6833,11 @@ Object alien procesador
     ],
     tiempo_restante,
     tiempo_agotado [;
-      if (alien.comportamiento == 1) {
+      if (self.comportamiento == 1) {
         self.tiempo_restante = -1;
         self.oportunidad = 0;
-        PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
-        if (alien in LugarReal()) {
+        PNJ_Ruta(self, MOVIMIENTO_ALEATORIO);
+        if (self in LugarReal()) {
           control_timer.desactivar();
           control_timer.activar(TIMER_ALIEN);
           "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
@@ -6966,10 +6966,11 @@ Object alien procesador
                  }
                  Damusix.TocarV(Rugido_ogg);
             }
+
             if (self.tiempo_restante >= 0) {
               if (self.oportunidad > 0) {
                 PNJ_Ruta(alien, MOVIMIENTO_PERSEGUIR, jugador);
-                ArrancarReloj(self, random(5));
+                ArrancarReloj(self, 5 + random(5));
               }
             } else {
               self.tiempo_restante = 0;
