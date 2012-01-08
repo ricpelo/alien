@@ -221,6 +221,13 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 ];
 
 
+[ ImprimePrompt;
+  glk_set_style(style_Input);
+  print "^> ";
+  glk_set_style(style_Normal);
+];
+
+
 Object MensajesLibreria
   with
     antes [;
@@ -258,9 +265,7 @@ Object MensajesLibreria
         if (localizacion == procesador) {
           procesador.comprobar_segunda_parte();
         }
-        glk_set_style(style_Input);
-        print "^> ";
-        glk_set_style(style_Normal);
+        ImprimePrompt();
         rtrue;
 
       Ir:
@@ -8763,7 +8768,7 @@ Object tt_final
     ActualizarEstatus();
     AfterGameOver();
   }
-  print "^> ";
+  ImprimePrompt();
   buffer-->0 = gg_event-->2;
   glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                          INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
