@@ -8791,31 +8791,6 @@ Object tt_final
 ];
 
 
-[ BuscarEnSub;
-  <<Examinar uno>>;
-];
-
-
-[ ConsultarSub;
-  <<Examinar uno>>;
-];
-
-
-[ HablarSub;
-  ComoHablar();
-];
-
-
-[ ResponderSub;
-  ComoHablar();
-];
-
-
-[ DecirSub;
-  ComoHablar();
-];
-
-
 [ ComoHablar;
   print "[Para hablar con un personaje, usa la forma ~",
         (s_in) "PERSONAJE, lo que sea", "~. Por ejemplo: ~",
@@ -8847,42 +8822,6 @@ Object tt_final
       s == Sirena_ogg) {
     control_sonido_detector.activar(s, SONIDO_BUCLE_INFINITO);
   }
-];
-
-
-[ ReiniciarSub s;
-  s = RestaurarSonidoAntes();                                     ! (c) Alpha
-  
-  M__L(##Reiniciar,1);
-  if (SiONo()~=0) {
-    @restart;
-    M__L(##Reiniciar,2);
-  }
-  
-  RestaurarSonidoDespues(s);                                      ! (c) Alpha
-];
-
-
-[ RestaurarSub res fref s;
-  s  = RestaurarSonidoAntes();                                    ! (c) Alpha
-
-  fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
-  if (fref == 0)
-    jump RFailed;
-  gg_savestr = glk($0042, fref, $02, GG_SAVESTR_ROCK); ! stream_open_file
-  glk($0063, fref); ! fileref_destroy
-  if (gg_savestr == 0)
-    jump RFailed;
-
-  @restore gg_savestr res;
-
-  glk($0044, gg_savestr, 0); ! stream_close
-  gg_savestr = 0;
-
-.RFailed;
-  M__L(##Restaurar,1);
-
-  RestaurarSonidoDespues(s);                                      ! (c) Alpha
 ];
 
 
@@ -9347,6 +9286,34 @@ Object tt_computadora
   alien.pnj_ha_llegado = alien.pnj_ha_llegado_default;
   alien.comportamiento = 1;
   PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
+];
+
+
+[ s_em text;
+  glk_set_style(style_Emphasized);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_in text;
+  glk_set_style(style_Input);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_pre text;
+  glk_set_style(style_Preformatted);
+  print (string) text;
+  glk_set_style(style_Normal);
+];
+
+
+[ s_b text;
+  glk_set_style(style_User1);
+  print (string) text;
+  glk_set_style(style_Normal);
 ];
 
 
@@ -10145,30 +10112,63 @@ Endif;
 ];
 
 
-[ s_em text;
-  glk_set_style(style_Emphasized);
-  print (string) text;
-  glk_set_style(style_Normal);
+[ BuscarEnSub;
+  <<Examinar uno>>;
 ];
 
 
-[ s_in text;
-  glk_set_style(style_Input);
-  print (string) text;
-  glk_set_style(style_Normal);
+[ ConsultarSub;
+  <<Examinar uno>>;
 ];
 
 
-[ s_pre text;
-  glk_set_style(style_Preformatted);
-  print (string) text;
-  glk_set_style(style_Normal);
+[ HablarSub;
+  ComoHablar();
 ];
 
 
-[ s_b text;
-  glk_set_style(style_User1);
-  print (string) text;
-  glk_set_style(style_Normal);
+[ ResponderSub;
+  ComoHablar();
+];
+
+
+[ DecirSub;
+  ComoHablar();
+];
+
+
+[ ReiniciarSub s;
+  s = RestaurarSonidoAntes();                                     ! (c) Alpha
+  
+  M__L(##Reiniciar,1);
+  if (SiONo()~=0) {
+    @restart;
+    M__L(##Reiniciar,2);
+  }
+  
+  RestaurarSonidoDespues(s);                                      ! (c) Alpha
+];
+
+
+[ RestaurarSub res fref s;
+  s  = RestaurarSonidoAntes();                                    ! (c) Alpha
+
+  fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
+  if (fref == 0)
+    jump RFailed;
+  gg_savestr = glk($0042, fref, $02, GG_SAVESTR_ROCK); ! stream_open_file
+  glk($0063, fref); ! fileref_destroy
+  if (gg_savestr == 0)
+    jump RFailed;
+
+  @restore gg_savestr res;
+
+  glk($0044, gg_savestr, 0); ! stream_close
+  gg_savestr = 0;
+
+.RFailed;
+  M__L(##Restaurar,1);
+
+  RestaurarSonidoDespues(s);                                      ! (c) Alpha
 ];
 
