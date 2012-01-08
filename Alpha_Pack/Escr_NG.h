@@ -90,7 +90,7 @@ class Escritura
         if (tipo_letra & LETRA_NORMAL)  style roman;
         if (tipo_letra & LETRA_NEGRITA) style bold;    
         if (tipo_letra & LETRA_CURSIVA) style underline;
-        if (tipo_letra & LETRA_FIJA)    style fixed;       
+        if (tipo_letra & LETRA_FIJA)    glk_set_style(style_Preformatted);
         if (tipo_letra & LETRA_INVERSA) style reverse;
 
         if (tipo_mensaje == POR_MENSAJE) {

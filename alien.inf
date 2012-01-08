@@ -8522,10 +8522,10 @@ Object tt_final
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Size, 1);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
-                        stylehint_Proportional, 1);
+                        stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextBuffer, style_User1,
+      glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_Justification, stylehint_just_LeftRight);
   
       glk_stylehint_set(wintype_TextBuffer, style_User2,
@@ -8579,8 +8579,6 @@ Object tt_final
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
                         stylehint_Weight, 0);
-      glk_stylehint_set(wintype_TextBuffer, style_Preformatted,
-                        stylehint_Justification, stylehint_just_LeftRight);
 
       glk_stylehint_set(wintype_TextBuffer, style_Header,
                         stylehint_TextColor, $00ff00);
@@ -8699,8 +8697,6 @@ Object tt_final
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextGrid, style_Preformatted,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextGrid, style_Preformatted,
-                        stylehint_Justification, stylehint_just_LeftRight);
 
       glk_stylehint_set(wintype_TextGrid, style_Header,
                         stylehint_TextColor, $00ff00);
