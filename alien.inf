@@ -5067,7 +5067,7 @@ Object vaina "vaina mucosa" hueco_techo
       DejarSalir:
         ! Intentas sacar algo de la vaina. Si está cerrada, se dice, y retorna true.
         ! Si está abierta, se retorna false, y se permite.
-        ImprimirOEjecutar(self, dejar_salir);
+        self.dejar_salir();
       QuitarCerrojo:
         ! Si no hay aire fuera, no se deja:
         if (self.comprobar_aire()) {
@@ -5323,7 +5323,7 @@ Object jason "Jason" nave1
         }
         ! Sacar a Jason de la vaina:
         if (vaina hasnt abierta) {                        ! Si la vaina no está abierta
-          ImprimirOEjecutar(vaina, dejar_salir);          ! te dice que está demasiado dura
+          vaina.dejar_salir();                            ! te dice que está demasiado dura
           rtrue;                                          ! y sale.
         } else {                                          ! Si la vaina está abierta:
           move jason to hueco_techo;                      ! lo sacas
@@ -5354,7 +5354,7 @@ Object jason "Jason" nave1
           rtrue;
         }
 
-      Atacar, Disparar, Empujar, EmpujarDir, Tirar:
+      Atacar, Disparar:
         if (accion == ##Disparar && rifle notin jugador) {
           rfalse;
         }
@@ -5364,6 +5364,18 @@ Object jason "Jason" nave1
         HablaJason("Conozco ciento cincuenta formas de matar a un hombre. Sólo necesito
                     la mitad de una de ellas para acabar con usted.");
         rtrue;
+
+      Empujar, EmpujarDir, Tirar:
+        if (self in vaina) {
+          if (vaina has abierta) {
+            <<Sacar self vaina>>;
+          } else {
+            vaina.dejar_salir();
+            rtrue;
+          }
+        }
+        HablaJason("No vuelva a hacerlo. En serio. No lo haga.");
+!        rtrue;
 
       Tocar:
         if (self.comprobar_inconsciencia()) {
