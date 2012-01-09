@@ -93,6 +93,7 @@ Constant TIMER_ALIEN = 6000;
 Constant TIMER_ESPERA_TRUENO = 100;
 
 
+
 ! ====================================================================
 !
 ! VARIABLES GLOBALES
@@ -127,6 +128,7 @@ Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 ! Si vengo de HandleGlkEvent (ver detector_movimiento.presencia y
 ! alien.llega):
 Global contextoHandleGlkEvent = false;
+
 
 
 ! ====================================================================
@@ -8341,9 +8343,13 @@ Object tt_final
 
   dibujarEstado = false;
   print "¿Quieres ver la introducción? (S/N): ";
+  glk_set_style(style_User2);
+  print " ";
+  glk_set_style(style_Normal);
+
   intro = false;
 
-  if (SiONo() == 1) {
+  if (EsperarTecla() == 's' or 'S') {
     intro = true;
     Introduccion();
   } else {
@@ -8463,19 +8469,19 @@ Object tt_final
                         stylehint_Proportional, 1);
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Weight, 1);
-  
+
+      ! Este estilo lo uso sólo para dibujar el cursor
+      ! en la pregunta de si quiero introducción:  
       glk_stylehint_set(wintype_TextBuffer, style_User2,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextBuffer, style_User2,
-                        stylehint_BackColor, $000000);
+                        stylehint_BackColor, $00ff00);
       glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_Size, 1);
       glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextBuffer, style_User2,
-                        stylehint_Justification, stylehint_just_LeftRight);
 
       glk_stylehint_set(wintype_TextBuffer, style_Alert,
                         stylehint_TextColor, $00ff00);
@@ -8538,9 +8544,9 @@ Object tt_final
                         stylehint_BackColor, $000000);
 
       glk_stylehint_set(wintype_TextBuffer, style_BlockQuote,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextBuffer, style_BlockQuote,
-                        stylehint_BackColor, $000000);
+                        stylehint_BackColor, $ffffff);
 
 
       glk_stylehint_set(wintype_TextGrid, style_Normal,
@@ -8577,13 +8583,11 @@ Object tt_final
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextGrid, style_User1,
                         stylehint_Weight, 1);
-      glk_stylehint_set(wintype_TextGrid, style_User1,
-                        stylehint_Justification, stylehint_just_LeftRight);
   
       glk_stylehint_set(wintype_TextGrid, style_User2,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextGrid, style_User2,
-                        stylehint_BackColor, $000000);
+                        stylehint_BackColor, $00ff00);
       glk_stylehint_set(wintype_TextGrid, style_User2,
                         stylehint_Size, 1);
       glk_stylehint_set(wintype_TextGrid, style_User2,
@@ -8654,9 +8658,9 @@ Object tt_final
                         stylehint_BackColor, $000000);
 
       glk_stylehint_set(wintype_TextGrid, style_BlockQuote,
-                        stylehint_TextColor, $ffffff);
+                        stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextGrid, style_BlockQuote,
-                        stylehint_BackColor, $000000);
+                        stylehint_BackColor, $ffffff);
   }
 
   rfalse; ! si te olvidas esta linea, el juego no funcionará bien
