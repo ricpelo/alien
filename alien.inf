@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59009
+!% $MAX_PROP_TABLE_SIZE=59023
 !% $MAX_VERBS=153
 
 !
@@ -5287,6 +5287,13 @@ Object jason "Jason" nave1
         rfalse;
       }
     ],
+    comprobar_inconsciencia [;
+      ! Si está en la vaina, permanece en semi-inconsciencia:
+      if (self in vaina) {
+        "Sólo oyes un débil sonido de respiración...";
+      }
+      rfalse;
+    ],
     antes [;
       Coger:
         if (self in vaina) {
@@ -5340,6 +5347,7 @@ Object jason "Jason" nave1
         }
 
       Atacar, Disparar, Empujar, EmpujarDir, Tirar:
+        if (self.comprobar_inconsciencia()) rtrue;
         if (accion == ##Disparar && rifle notin jugador) {
           rfalse;
         }
@@ -5348,19 +5356,17 @@ Object jason "Jason" nave1
         rtrue;
 
       Tocar:
+        if (self.comprobar_inconsciencia()) rtrue;
         HablaJason("Yo que usted no lo haría...");
         rtrue;
     ],
 !    precamino RUTA_NINGUNA,    ! En realidad no sé si hace falta
     tras_abrir NO_PUEDE_ABRIR,   ! Comportamiento después de pasar por una puerta
     vida [ tema;
+      if (self.comprobar_inconsciencia()) rtrue;
+
       Preguntar:
         self.hablar = false;
-
-        ! Si está en la vaina, permanece en semi-inconsciencia:
-        if (self in vaina) {
-          "Sólo oyes un débil sonido de respiración...";
-        }
 
         tema = AveriguarTema(TemasJason);
         switch (tema) {
@@ -5586,12 +5592,8 @@ Object jason "Jason" nave1
       rtrue;    
     ],
     ordenes [ tmp;
+      if (self.comprobar_inconsciencia()) rtrue;
       self.hablar = false;
-
-      ! Si está en la vaina, permanece en semi-inconsciencia:
-      if (self in vaina) {
-        "Sólo oyes un débil sonido de respiración...";
-      }
 
       Si:
         HablaJason("¿Sí qué?");
@@ -6001,6 +6003,7 @@ Object jason "Jason" nave1
     ],
     no_mostrar_despues false,
     despuesPNJ [;
+      if (self.comprobar_inconsciencia()) rtrue;
       Coger:
         if (~~(self.no_mostrar_despues)) {
           if (uno == tu_traje) {
@@ -8931,13 +8934,14 @@ Object tt_final
 ];
 
 
-[ HablaJason msg1 obj1 msg2 obj2 msg3 obj3 msg4;
+[ HablaJason msg1 obj1 msg2 obj2 msg3 obj3 msg4 l;
+  l = LugarReal();
 
-  if (jason notin LugarReal()) {
+  if (jason in l || (l == hueco_techo && jason in vaina && vaina has abierta)) {
+    print (s_b) "^JASON: ";
+  } else {
     Damusix.TocarV(Transmisor_ogg);
     print (s_b) "^JASON (por el comunicador): ";
-  } else {
-    print (s_b) "^JASON: ";
   }
     
   print "~", (string) msg1;
