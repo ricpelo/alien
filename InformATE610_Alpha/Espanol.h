@@ -1852,7 +1852,10 @@ Constant ELCUAL__TX     = "que ";  ! de antes de los 'que'. [020423]
 	      switch(prep){
 	       'a//': print " ", (al) i;
 	       'de': print " ", (del) i;
-	       NULL: print " ", (el) i;
+	       NULL: if (i has animado)           ! (c) Alpha
+                       print " ", (al) i;         ! (c) Alpha
+                     else                         ! (c) Alpha
+                       print " ", (el) i;
  	       default: print " ", (address) prep, " ", (el) i;
 	      }
 	  }
