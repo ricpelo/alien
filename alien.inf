@@ -4853,7 +4853,7 @@ Object techo "techo" hueco_techo
     despues [;
       Examinar:
         give vaina ~escenario;
-        give vaina estatico;    
+        give vaina estatico;
     ],
   has
     escenario;
@@ -5106,6 +5106,7 @@ Object vaina "vaina mucosa" hueco_techo
       Examinar:
         give self ~escenario;
         give self estatico;
+
       QuitarCerrojo:
         Damusix.TocarV(Bisturi_ogg);
         print "Desgarras cuidadosamente la vaina usando el bisturí, procurando no dañar
@@ -5118,7 +5119,7 @@ Object vaina "vaina mucosa" hueco_techo
         rtrue;
     ],
   has
-    escenario femenino transparente recipiente cerrojo cerrojoechado abrible;   
+    escenario femenino transparente recipiente cerrojo cerrojoechado abrible;
 
 
 
@@ -5286,7 +5287,7 @@ Object jason "Jason" nave1
         rfalse;
       }
     ],
-    antes [;        
+    antes [;
       Coger:
         if (self in vaina) {
           <<Sacar self vaina>>;
@@ -5302,16 +5303,15 @@ Object jason "Jason" nave1
         if (jason notin vaina) {
           "No hay que sacar a Jason de ningún sitio.";
         }
-        if (vaina hasnt general && vaina hasnt abierta) {
-          print "Te aproximas a observar la vaina más de cerca...^";
-          <<Examinar vaina>>;
+        if (vaina hasnt general) {
+          "¿Dónde se supone que está Jason para sacarlo?";
         }
-        ! Sacar a Jason de la vaina
+        ! Sacar a Jason de la vaina:
         if (vaina hasnt abierta) {                        ! Si la vaina no está abierta
           ImprimirOEjecutar(vaina, dejar_salir);          ! te dice que está demasiado dura
           rtrue;                                          ! y sale.
         } else {                                          ! Si la vaina está abierta:
-          move jason to hueco_techo;                    ! lo sacas
+          move jason to hueco_techo;                      ! lo sacas
           PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
           move traje_inutil to hueco_techo;
           max_longitud_camino = 30;
@@ -9359,6 +9359,12 @@ Extend 'desatornilla' last
 Extend 'atornilla' last
   * noun 'con' held -> Girar;
 
+Extend 'saca' first
+  *                                     -> SacarNadaDeNada
+  * 'a//'                               -> SacarNadaDeNada
+  * multiinside                         -> Sacar
+  * 'a//' multiinside                   -> Sacar;
+
 Extend 'saca' last
   * multiinside 'de' 'dentro' 'de' noun -> Sacar;
 
@@ -9931,5 +9937,10 @@ Endif;
 
 [ DecirSub;
   ComoHablar();
+];
+
+
+[ SacarNadaDeNadaSub;
+  "¿Que saque qué de dónde?";
 ];
 
