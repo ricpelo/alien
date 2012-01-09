@@ -5013,6 +5013,7 @@ Object vaina "vaina mucosa" hueco_techo
           print "Jason sigue dentro. ¡Sácalo de ahí!";
         } else {
           give self general;  ! general indica que ya sabemos que Jason está dentro
+          give self transparente;
           print "Espera... Un momento... No puedes creer lo que ves... Te acercas todo
                  lo que puedes, pegando casi tu cara contra el nauseabundo capullo...
                  y entonces lo ves...";
@@ -5121,7 +5122,7 @@ Object vaina "vaina mucosa" hueco_techo
         rtrue;
     ],
   has
-    escenario femenino transparente recipiente cerrojo cerrojoechado abrible;
+    escenario femenino recipiente cerrojo cerrojoechado abrible;
 
 
 
@@ -5354,23 +5355,29 @@ Object jason "Jason" nave1
         }
 
       Atacar, Disparar, Empujar, EmpujarDir, Tirar:
-        if (self.comprobar_inconsciencia()) rtrue;
         if (accion == ##Disparar && rifle notin jugador) {
           rfalse;
+        }
+        if (self.comprobar_inconsciencia()) {
+          rtrue;
         }
         HablaJason("Conozco ciento cincuenta formas de matar a un hombre. Sólo necesito
                     la mitad de una de ellas para acabar con usted.");
         rtrue;
 
       Tocar:
-        if (self.comprobar_inconsciencia()) rtrue;
+        if (self.comprobar_inconsciencia()) {
+          rtrue;
+        }
         HablaJason("Yo que usted no lo haría...");
         rtrue;
     ],
 !    precamino RUTA_NINGUNA,    ! En realidad no sé si hace falta
     tras_abrir NO_PUEDE_ABRIR,   ! Comportamiento después de pasar por una puerta
     vida [ tema;
-      if (self.comprobar_inconsciencia()) rtrue;
+      if (self.comprobar_inconsciencia()) {
+        rtrue;
+      }
 
       Preguntar:
         self.hablar = false;
@@ -5599,7 +5606,10 @@ Object jason "Jason" nave1
       rtrue;    
     ],
     ordenes [ tmp;
-      if (self.comprobar_inconsciencia()) rtrue;
+      if (self.comprobar_inconsciencia()) {
+        rtrue;
+      }
+
       self.hablar = false;
 
       Si:
