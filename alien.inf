@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59023
+!% $MAX_PROP_TABLE_SIZE=59037
 !% $MAX_VERBS=153
 
 !
@@ -4852,8 +4852,7 @@ Object techo "techo" hueco_techo
                  verde de aspecto repulsivo y ligeramente fosforescente.",
     despues [;
       Examinar:
-        give vaina ~escenario;
-        give vaina estatico;
+        vaina.aparecer();
     ],
   has
     escenario;
@@ -5102,10 +5101,13 @@ Object vaina "vaina mucosa" hueco_techo
         "La vaina es demasiado dura para poder sacarlo.";
       }
     ],
+    aparecer [;
+      give self ~escenario;
+      give self estatico;
+    ],
     despues [;
       Examinar:
-        give self ~escenario;
-        give self estatico;
+        self.aparecer();
 
       QuitarCerrojo:
         Damusix.TocarV(Bisturi_ogg);
