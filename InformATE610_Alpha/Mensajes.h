@@ -233,11 +233,11 @@ Constant PARTICULA_TE = "te";
   !   3: Si intenta empujar hacia arriba o hacia abajo
     switch(ml_n)
     {
-     1: if (ml_o has propio) {
-          "No creo que empujar ", (al) ml_o, " sirva para nada.";
-        } else {
+     1: if (ml_o has propio) {                                     ! (c) Alpha
+          "No creo que empujar ", (al) ml_o, " sirva para nada.";  ! (c) Alpha
+        } else {                                                   ! (c) Alpha
           "No creo que empujar ", (el) ml_o, " sirva para nada.";
-        }
+        }                                                          ! (c) Alpha
      2: "Eso no es una dirección.";
      3: "No, no puedes en esa dirección.";
     }
