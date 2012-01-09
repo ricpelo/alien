@@ -5137,10 +5137,15 @@ Object jason "Jason" nave1
     nombre 'jason' 'mayor' 'soldado' 'marine' 'companero',
     descripcion [;
       if (self in vaina) {
-        "A través de la vaina semi-transparente puedes ver que tiene los ojos cerrados, y
-         que no parece muy consciente de tu presencia. Realmente tiene mal aspecto. Su
-         traje tiene un corte bastante grande en un costado y, por lo que puedes intuir,
-         el oxígeno de su traje llena ahora por completo la vaina.";
+        print "A través de la vaina semi-transparente puedes ver que tiene los ojos
+               cerrados, y que no parece muy consciente de tu presencia. Realmente
+               tiene mal aspecto. Su traje tiene un corte bastante grande en un costado";
+        if (vaina hasnt abierta) {
+          " y, por lo que puedes intuir, el oxígeno de su traje llena ahora por completo
+          la vaina.";
+        } else {
+          ".";
+        }
       }
       if (self.sacado()) {
         ! Lo hemos sacado de la vaina:
