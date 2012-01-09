@@ -77,6 +77,9 @@ Constant CANAL_TICTAC = 3;
 Constant SGW_CON_DAMUSIX;
 Constant SONIDO_BUCLE_INFINITO = -1;
 
+! El color de fondo de la ventana gráfica es negro:
+Constant CLR_GG_PERSBACK = CLR_GG_BLACK;
+
 ! Es importante que todos los timers tengan duración distinta, porque
 ! esa es la forma que tengo de distinguirlos (es muy cutre, pero va):
 
