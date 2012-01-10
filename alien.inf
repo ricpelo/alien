@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59079
+!% $MAX_PROP_TABLE_SIZE=58963
 !% $MAX_VERBS=154
 
 !
@@ -66,12 +66,12 @@ Constant GRAFICOS_MEDIANOS = 400;
 Constant GRAFICOS_GRANDES  = 500;
 
 ! Canales de sonido:
-! Constant NUM_CANALES = 6;
 Constant CANAL_FONDO = 9;
-! Este canal se comparte entre el detector de movimiento y la sirena de emergencia:
 Constant CANAL_DETECTOR = 1;
+Constant VOLUMEN_DETECTOR = 70;
 Constant CANAL_TELETIPO = 2;
 Constant CANAL_TICTAC = 3;
+Constant CANAL_SIRENA = 4;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -719,13 +719,6 @@ Object control_sonido_fondo
     hay_sonido true,
     canal CANAL_FONDO,
     volumen 50; ! $5000;
-
-Object control_sonido_detector
-  class ControlSonido
-  with
-    hay_detector true,
-    canal CANAL_DETECTOR,
-    volumen 70; ! $7000;
 
 Object control_sonido_teletipo
   class ControlSonido
@@ -4059,8 +4052,8 @@ Object boton_oeste "botón azul" emergencia_oeste
         alien.comportamiento = 4;
         give ascensor abierto;
         control_sonido_tictac.desactivar();
-        Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 100, SONIDO_BUCLE_INFINITO);
-        Damusix.VolumenCanal(CANAL_DETECTOR, 20);
+        Damusix.PararCanal(CANAL_DETECTOR);
+        Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, 20, SONIDO_BUCLE_INFINITO);
         Damusix.Tocar(Sirena_ogg);
         ActivarTimer();
         ArrancarDaemon(autodestruccion);
@@ -4659,7 +4652,7 @@ Object laberinto28
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
-              control_sonido_detector.cambiar_volumen(10);
+              Damusix.VolumenCanal(CANAL_DETECTOR, 10);
               move ascensor_arriba to exterior3;
               move jason to exterior3;
               JugadorA(exterior3);
@@ -7642,8 +7635,8 @@ Object detector_movimiento "detector de movimiento" rifle
       }
 
       if (alien has ausente) {
-        if (control_sonido_detector.sonido ~= null) {
-          control_sonido_detector.desactivar();
+        if (Damusix.SonandoDeFondoCanal(CANAL_DETECTOR)) {
+          Damusix.PararCanal(CANAL_DETECTOR);
         }
         rtrue;
       }
@@ -7733,7 +7726,7 @@ Object detector_movimiento "detector de movimiento" rifle
         }
       Apagar:
         give self ~encendido;
-        control_sonido_detector.desactivar();
+        Damusix.PararCanal(CANAL_DETECTOR);
 
         if (rifle in jason) {
           jason.hablar = false;
@@ -7741,15 +7734,18 @@ Object detector_movimiento "detector de movimiento" rifle
           "^Jason apaga el detector de movimiento.";
         }
     ],
+    tocar [ s v;
+      v = Damusix.QueVolumenCanal(CANAL_DETECTOR);
+      Damusix.AsignarCanal(s, CANAL_DETECTOR, v, SONIDO_BUCLE_INFINITO);
+      Damusix.Tocar(s);
+    ],
     sonar [ s;
-      if ((~~(control_sonido_detector.hay_detector)) ||
-          control_sonido_detector.sonido == Sirena_ogg) {
+      if (Damusix.SonandoDeFondo(Sirena_ogg)) {
         rfalse;
       }
       if (alien in LugarReal()) {
-        if (control_sonido_detector.sonido ~= Detector5_ogg) {
-          control_sonido_detector.sonido = Detector5_ogg;
-          control_sonido_detector.activar(Detector5_ogg, SONIDO_BUCLE_INFINITO);
+        if (Damusix.SonandoDeFondo(Detector5_ogg) == 0) {
+          self.tocar(Detector5_ogg);
         }
       } else {
         if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {                   
@@ -7760,12 +7756,11 @@ Object detector_movimiento "detector de movimiento" rifle
             2: s = Detector4_ogg;
             1: s = Detector5_ogg;
           }
-          if (s ~= control_sonido_detector.sonido) {
-            control_sonido_detector.sonido = s;
-            control_sonido_detector.activar(s, SONIDO_BUCLE_INFINITO);
+          if (Damusix.SonandoDeFondo(s) == 0) {
+            self.tocar(s);
           }                           
         } else {
-          control_sonido_detector.desactivar();
+          Damusix.PararCanal(CANAL_DETECTOR);
         }
       }
     ],
@@ -8075,7 +8070,8 @@ Object autodestruccion
         self.tiempo--;
       } else {
         Bandera_Fin(1);
-        control_sonido_detector.activar(Explosion_ogg);
+        Damusix.PararCanal(CANAL_DETECTOR);
+        Damusix.TocarV(Explosion_ogg);
 
         if (contextoHandleGlkEvent) {
           glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
@@ -8143,7 +8139,7 @@ Object sacador_de_aliens
         "^¡Ves que el monstruo se mete de repente entre los tubos de la pared y
          desaparece!";
       } else {
-        if (control_sonido_detector.sonido ~= null) {
+        if (Damusix.SonandoDeFondoCanal(CANAL_DETECTOR)) {
           print "^De repente, el detector de movimiento enmudece... ¡Aquello que
                  estaba detectando ha desaparecido!^";
           if (jason in LugarReal() && random(100) < 50) {
@@ -8515,7 +8511,7 @@ Object tt_final
 
 [ IniciarSonidos;
   control_sonido_fondo.iniciar();
-  control_sonido_detector.iniciar();
+  Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
   control_sonido_teletipo.iniciar();
   control_sonido_tictac.iniciar();
 ];
@@ -9093,7 +9089,7 @@ Object tt_computadora
 
 [ Bandera_Fin bf;
   control_sonido_fondo.desactivar();
-  control_sonido_detector.desactivar();
+  Damusix.PararCanal(CANAL_DETECTOR);
   control_timer.desactivar();
   
   if (bf == 1) {
@@ -9829,9 +9825,8 @@ Ifdef DEBUG;
   alien.comportamiento = 4;
   give ascensor abierto;
   control_sonido_tictac.desactivar();
-  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 100, SONIDO_BUCLE_INFINITO);
-  Damusix.VolumenCanal(CANAL_DETECTOR, 20);
-  Damusix.Tocar(Sirena_ogg);
+!  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 20, SONIDO_BUCLE_INFINITO);
+!  Damusix.Tocar(Sirena_ogg);
   ActivarTimer();
   ArrancarDaemon(autodestruccion);
   print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
@@ -9848,9 +9843,6 @@ Endif;
 [ EncenderSonidoSub;
   Damusix.ActivarAudio();
   EncenderMusicaSub(true);
-  if (control_sonido_detector.sonido ~= null) {
-    control_sonido_detector.activar(control_sonido_detector.sonido, SONIDO_BUCLE_INFINITO);
-  }
   print (s_em) "[Activados todos los efectos sonoros.]^";
 ];
 
@@ -9891,16 +9883,13 @@ Endif;
 
 
 [ EncenderSonidoDetectorSub;
-  control_sonido_detector.hay_detector = true;
+  Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
   print (s_em) "[Activado el sonido del detector de movimiento.]^";
 ];
 
 
 [ ApagarSonidoDetectorSub;
-  control_sonido_detector.hay_detector = false;
-  if (control_sonido_detector.sonido ~= Sirena_ogg) {
-    control_sonido_detector.desactivar();
-  }
+  Damusix.VolumenCanal(CANAL_DETECTOR, 0);
   print (s_em) "[Desactivado el sonido del detector de movimiento.]^";
 ];
 
