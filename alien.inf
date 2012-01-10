@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59051
+!% $MAX_PROP_TABLE_SIZE=59079
 !% $MAX_VERBS=154
 
 !
@@ -443,7 +443,14 @@ Object barra_estado
         1: if (linterna has encendida && bateria in linterna) {
              print_ret " | Linterna: ", bateria.nivel_carga(), "%";
            }
-        2: if (rifle in jugador && detector_movimiento has encendido &&
+        2: if (alien.comportamiento == 4 && autodestruccion.falta_en_barra > 0) {
+             print " | Autodestruc: ", autodestruccion.falta_en_barra, " ";
+             if (autodestruccion hasnt general) {
+               "min.";
+             } else {
+               "seg.";
+             }
+           } else if (rifle in jugador && detector_movimiento has encendido &&
                alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
              if (parent(alien) == LugarReal()) {
                print_ret " | Detector: 0 m.";
@@ -7985,6 +7992,22 @@ Object tuberias "tuberías"
 Object autodestruccion
   with
     tiempo 50,
+    falta [ t;
+      if (t ~= 0) {
+        if (self hasnt general) {
+          return t * 10 / 50;
+        } else {
+          return t;
+        }
+      } else {
+        if (self hasnt general) {
+          return self.tiempo * 10 / 50;
+        } else {
+          return self.tiempo;
+        }
+      }
+    ],
+    falta_en_barra 0,
     daemon [;
       self.cuenta_atras();
     ],
@@ -7992,9 +8015,9 @@ Object autodestruccion
       if (self.tiempo > 0) {
 
         if (self hasnt general) {
-          t = self.tiempo * 10 / 50;
+          t = self.falta();
 
-          if (((self.tiempo - 1) * 10 / 50) ~= t) {
+          if (self.falta(self.tiempo - 1) ~= t) {
             if (t > 0) {
               if (contextoHandleGlkEvent) {
                 glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
@@ -8011,7 +8034,11 @@ Object autodestruccion
               if (t > 1) {
                 print "s";
               }
-              print " para la autodestrucción.~^";          
+
+              print " para la autodestrucción.~^";
+
+              self.falta_en_barra = t;
+              barra_estado.dibujar(); 
             }
           }
 
@@ -8021,7 +8048,7 @@ Object autodestruccion
           }
           
         } else {
-          t = self.tiempo;
+          t = self.falta();
 
           if (contextoHandleGlkEvent) {
             glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
@@ -8040,6 +8067,9 @@ Object autodestruccion
           }
 
           print " para la autodestrucción.~^";
+
+          self.falta_en_barra = t;
+          barra_estado.dibujar();
         }
 
         self.tiempo--;
@@ -9067,6 +9097,8 @@ Object tt_computadora
   control_timer.desactivar();
   
   if (bf == 1) {
+    autodestruccion.falta_en_barra = 0;
+    barra_estado.dibujar();
     Damusix.TocarV(Grito_Jugador_ogg);
   }
   
