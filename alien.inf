@@ -70,7 +70,9 @@ Constant CANAL_FONDO = 9;
 Constant CANAL_DETECTOR = 1;
 Constant VOLUMEN_DETECTOR = 70;
 Constant CANAL_TELETIPO = 2;
+Constant VOLUMEN_TELETIPO = 100;
 Constant CANAL_TICTAC = 3;
+Constant VOLUMEN_TICTAC = 100;
 Constant CANAL_SIRENA = 4;
 
 ! Vamos a usar Damusix junto con SGW+DMX
@@ -719,21 +721,6 @@ Object control_sonido_fondo
     hay_sonido true,
     canal CANAL_FONDO,
     volumen 50; ! $5000;
-
-Object control_sonido_teletipo
-  class ControlSonido
-  with
-    canal CANAL_TELETIPO,
-    iniciar [;
-      Damusix.VolumenCanal(self.canal, self.volumen);
-      Damusix.AsignarCanal(Teletipo_ogg, self.canal, self.volumen, 1);
-    ];
-
-Object control_sonido_tictac
-  class ControlSonido
-  with
-    canal CANAL_TICTAC,
-    volumen 100;
 
 ! Controla el timer. Se usa sobre todo para el efecto del relámpago en el exterior,
 ! pero también porque la rutina EsperarTecla desactiva el timer actual cuando
@@ -3740,7 +3727,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
       ! Cuando pasamos por el pasillo y hay algún botón pulsado, éste se escucha más
       ! bajito:
       if (boton_este has general || boton_oeste has general) {
-        control_sonido_tictac.cambiar_volumen(60);
+        Damusix.VolumenCanal(CANAL_TICTAC, 60);
       }
     ],
     despues [;
@@ -3932,7 +3919,7 @@ Class BotonEmergencia
     tiempo_restante,
     cada_turno [;
       if (self has general) {
-        control_sonido_tictac.cambiar_volumen(100);
+        Damusix.VolumenCanal(CANAL_TICTAC, VOLUMEN_TICTAC);
       }
     ],
     antes [;
@@ -3964,8 +3951,8 @@ Class BotonEmergencia
           default:            vol = 30;
         }
       }
-      control_sonido_tictac.cambiar_volumen(vol);
-      control_sonido_tictac.activar(Tic_ogg, SONIDO_BUCLE_INFINITO);
+      Damusix.VolumenCanal(CANAL_TICTAC, vol);
+      Damusix.Tocar(Tic_ogg);
       switch (actor) {
         objjugador:
           "Al pulsar el botón, este se queda hundido y se oye un tic tac...";
@@ -3977,7 +3964,7 @@ Class BotonEmergencia
     ],
     liberar_boton [;
       give self ~general;
-      control_sonido_tictac.desactivar();
+      Damusix.PararCanal(CANAL_TICTAC);
       if (LugarReal() == parent(self)) {
         "^El botón salta a su posición inicial y el tic tac se detiene.";
       } else {
@@ -4051,7 +4038,7 @@ Object boton_oeste "botón azul" emergencia_oeste
         give alien ausente;
         alien.comportamiento = 4;
         give ascensor abierto;
-        control_sonido_tictac.desactivar();
+        Damusix.PararCanal(CANAL_TICTAC);
         Damusix.PararCanal(CANAL_DETECTOR);
         Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, 20, SONIDO_BUCLE_INFINITO);
         Damusix.Tocar(Sirena_ogg);
@@ -8512,8 +8499,8 @@ Object tt_final
 [ IniciarSonidos;
   control_sonido_fondo.iniciar();
   Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
-  control_sonido_teletipo.iniciar();
-  control_sonido_tictac.iniciar();
+  Damusix.AsignarCanal(Teletipo_ogg, CANAL_TELETIPO, VOLUMEN_TELETIPO, 1);
+  Damusix.AsignarCanal(Tic_ogg, CANAL_TICTAC, VOLUMEN_TICTAC, SONIDO_BUCLE_INFINITO);
 ];
 
 
@@ -9824,9 +9811,9 @@ Ifdef DEBUG;
   give alien ausente;
   alien.comportamiento = 4;
   give ascensor abierto;
-  control_sonido_tictac.desactivar();
-!  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 20, SONIDO_BUCLE_INFINITO);
-!  Damusix.Tocar(Sirena_ogg);
+  Damusix.PararCanal(CANAL_TICTAC);
+  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 20, SONIDO_BUCLE_INFINITO);
+  Damusix.Tocar(Sirena_ogg);
   ActivarTimer();
   ArrancarDaemon(autodestruccion);
   print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
