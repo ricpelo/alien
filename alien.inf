@@ -2,8 +2,8 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59037
-!% $MAX_VERBS=153
+!% $MAX_PROP_TABLE_SIZE=59051
+!% $MAX_VERBS=154
 
 !
 ! "A·L·I·E·N" - Edición Especial
@@ -91,6 +91,8 @@ Constant TIMER_LABERINTO = 7000;
 Constant TIMER_ALIEN = 6000;
 ! Tiempo de espera desde que sale el rayo hasta que desaparece:
 Constant TIMER_ESPERA_TRUENO = 100;
+! Timer de la autodestruccion:
+Constant TIMER_AUTODESTRUCCION = 4000;
 
 
 
@@ -4053,6 +4055,7 @@ Object boton_oeste "botón azul" emergencia_oeste
         Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 100, SONIDO_BUCLE_INFINITO);
         Damusix.VolumenCanal(CANAL_DETECTOR, 20);
         Damusix.Tocar(Sirena_ogg);
+        ActivarTimer();
         ArrancarDaemon(autodestruccion);
         print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
         self.pulsar = self.pulsar_ya_pulsado;
@@ -4645,16 +4648,18 @@ Object laberinto28
                 ApagarGraficosSub(true);
               }
               clearMainWindow();
+              control_timer.desactivar();    ! Para que no corra el tiempo ahora
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
-              control_sonido_detector.cambiar_volumen(7);
+              control_sonido_detector.cambiar_volumen(10);
               move ascensor_arriba to exterior3;
               move jason to exterior3;
               JugadorA(exterior3);
               if (t) {
                 EncenderGraficosSub(true);
               }
+              ActivarTimer();               ! Para que vuelva a correr el tiempo
               <<Mirar>>;
 !              rtrue;
             } else {
@@ -6818,6 +6823,9 @@ Object alien procesador
       if (self.tipo_de_movimiento == MOVIMIENTO_POR_META && self in entrada) {
         AlienBloqueaPuerta();
         if (LugarReal() == entrada) {
+          if (contextoHandleGlkEvent) {
+            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+           }
           "¡Ves al monstruo tapando la entrada con una sustancia viscosa que se vuelve
            inmediatamente rígida!";
         }
@@ -7977,27 +7985,36 @@ Object tuberias "tuberías"
 Object autodestruccion
   with
     tiempo 50,
-    daemon [ t;
+    daemon [;
+      self.cuenta_atras();
+    ],
+    cuenta_atras [ t;
       if (self.tiempo > 0) {
 
-        if (self hasnt general) {        
+        if (self hasnt general) {
           t = self.tiempo * 10 / 50;
-          
-          if (t > 0) {
-            print (s_b) "^MEGAFONÍA: ", "~Falta";
-            
-            if (t > 1) {
-              print "n";
-            }
 
-            print " ", t, " minuto";
-          
-            if (t > 1) {
-              print "s";
+          if (((self.tiempo - 1) * 10 / 50) ~= t) {
+            if (t > 0) {
+              if (contextoHandleGlkEvent) {
+                glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+              }
+
+              print (s_b) "^MEGAFONÍA: ", "~Falta";
+
+              if (t > 1) {
+                print "n";
+              }
+
+              print " ", t, " minuto";
+
+              if (t > 1) {
+                print "s";
+              }
+              print " para la autodestrucción.~^";          
             }
-            print " para la autodestrucción.~^";          
           }
-              
+
           if (t == 0 && self hasnt general) {
             give self general;
             self.tiempo = 60;
@@ -8005,6 +8022,11 @@ Object autodestruccion
           
         } else {
           t = self.tiempo;
+
+          if (contextoHandleGlkEvent) {
+            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          }
+
           print (s_b) "^MEGAFONÍA: ", "~Falta";
 
           if (t > 1) {
@@ -8019,10 +8041,16 @@ Object autodestruccion
 
           print " para la autodestrucción.~^";
         }
+
         self.tiempo--;
       } else {
         Bandera_Fin(1);
         control_sonido_detector.activar(Explosion_ogg);
+
+        if (contextoHandleGlkEvent) {
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        }
+
         "^El complejo estalla en una gigantesca explosión, llevándose consigo todo lo que
          había en su interior y alrededores... incluyéndote a ti.^";
       }
@@ -8701,28 +8729,16 @@ Object tt_final
 
 [ ActivarTimer l;
   l = LugarReal();
-  if (EsExterior(l) || l == nave1 or nave2) {
-    control_timer.activar(TIMER_TRUENO);
-  } else if (l ofclass Complejo && alien notin l &&
-             alien.comportamiento == 1 or 3) {
+  if (l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3) {
     control_timer.activar(TIMER_LABERINTO);
+  } else if (alien.comportamiento == 4) {
+    control_timer.activar(TIMER_AUTODESTRUCCION);
+  } else if (EsExterior(l) || l == nave1 or nave2) {
+    control_timer.activar(TIMER_TRUENO);
   } else if (alien notin l) {
     control_timer.desactivar();
   }
 ];
-
-
-! Rutina usada en la siguiente HandleGlkEvent:
-![ EsperarTimer espera timer;
-!  glk($00D6, espera);               ! request_timer_events
-!  while (1) {
-!    glk($00C0, gg_arguments);       ! glk_select(gg_arguments);
-!    if ((gg_arguments-->0) == 1) {
-!      glk($00D6, timer);            ! request_timer_events
-!      break;
-!    }
-!  }
-!];
 
 
 [ RestaurarLineaOrdenes buffer;
@@ -8779,48 +8795,53 @@ Object tt_final
             return 1;
           }
         }
-      } else if (control_timer.timer_actual == TIMER_LABERINTO &&
-                 l ofclass Complejo) { ! && r < 75) {
-        if (l ofclass Laberinto || l ofclass Balcon) {
-          r = 20 * random(3) + 40;
-          switch (random(4)) {
-            1: snd = Gota_Oscura_ogg;
-            2: snd = Gotas_Agua_ogg;
-            3: snd = Cueva_Oscura_ogg;
-            4: if (alien notin l) {
-                 snd = Monstruo_ogg;
-                 r = 100 / alien.distancia;
-               } else {
-                 snd = Cueva_Oscura_ogg;
-               }
+      } else if (control_timer.timer_actual == TIMER_LABERINTO) {
+        if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
+          if (l ofclass Laberinto || l ofclass Balcon) {
+            r = 20 * random(3) + 40;
+            switch (random(4)) {
+              1: snd = Gota_Oscura_ogg;
+              2: snd = Gotas_Agua_ogg;
+              3: snd = Cueva_Oscura_ogg;
+              4: if (alien notin l) {
+                   snd = Monstruo_ogg;
+                   r = 100 / alien.distancia;
+                 } else {
+                   snd = Cueva_Oscura_ogg;
+                 }
+            }
+            Damusix.TocarV(snd, r);
+          } else if (l ofclass ZonaNorte) {
+            contextoHandleGlkEvent = true;
+            l.cada_turno();
+            contextoHandleGlkEvent = false;
           }
-          Damusix.TocarV(snd, r);
-        } else if (l ofclass ZonaNorte) {
-          contextoHandleGlkEvent = true;
-          l.cada_turno();
+          if (alien notin l) {
+            contextoHandleGlkEvent = true;
+            alien.seHaMovido = false;
+            if (alien.condicion_movimiento()) {
+              alien.movimiento();
+            }
+            if (alien.seHaMovido) {
+              detector_movimiento.cada_turno();
+              barra_estado.dibujar();
+            }
+          }
           contextoHandleGlkEvent = false;
-        }
-        if (alien notin l) {
-          contextoHandleGlkEvent = true;
-          alien.seHaMovido = false;
-          if (alien.condicion_movimiento()) {
-            alien.movimiento();
-          }
-          if (alien.seHaMovido) {
-            detector_movimiento.cada_turno();
-            barra_estado.dibujar();
+          if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
+              (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
+            alien.ha_imprimido_algo = false;
+            detector_movimiento.ha_imprimido_algo = false;
+            if (l ofclass ZonaNorte) {
+              l.ha_imprimido_algo = false;
+            }
+            return RestaurarLineaOrdenes(buffer);
           }
         }
-        contextoHandleGlkEvent = false;
-        if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
-            (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
-          alien.ha_imprimido_algo = false;
-          detector_movimiento.ha_imprimido_algo = false;
-          if (l ofclass ZonaNorte) {
-            l.ha_imprimido_algo = false;
-          }
-          return RestaurarLineaOrdenes(buffer);
-        }
+      } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION) {
+        contextoHandleGlkEvent = true;
+        autodestruccion.cuenta_atras();
+        return RestaurarLineaOrdenes(buffer);
       } else if (control_timer.timer_actual == TIMER_ALIEN) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         alien.cada_turno();
@@ -9316,6 +9337,9 @@ Verb meta 'segunda'
 
 Verb meta 'cuarta'
   *         -> CuartaParte;
+
+Verb meta 'quinta'
+  *         -> QuintaParte;
 Endif;
 
 Extend 'salidas'
@@ -9764,6 +9788,21 @@ Ifdef DEBUG;
   give proyector ~abierto;
   
   JugadorA(aula);
+];
+
+
+[ QuintaParteSub;
+  remove alien;
+  give alien ausente;
+  alien.comportamiento = 4;
+  give ascensor abierto;
+  control_sonido_tictac.desactivar();
+  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 100, SONIDO_BUCLE_INFINITO);
+  Damusix.VolumenCanal(CANAL_DETECTOR, 20);
+  Damusix.Tocar(Sirena_ogg);
+  ActivarTimer();
+  ArrancarDaemon(autodestruccion);
+  print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
 ];
 
 
