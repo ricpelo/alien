@@ -711,7 +711,7 @@ with
        print "^GRAFICOS SI/NO . . . : Activar o desactivar la visualización de gráficos. ";
        print "^GRAFICOS PEQUEÑOS/ ";
        print "^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión ";
-       print "^                       se mostrarán en tamaño GRANDE). ";
+       print "^                       se mostrarán en tamaño MEDIANO). ";
        print "^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual. ";
        print "^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en ";
        print "^                       cada localidad. ";
