@@ -114,6 +114,27 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       ^- Si te encuentras con algún fallo o no sabes cómo avanzar, puedes plantear tus
       ^  dudas en el foro del CAAD o en alpha.aventuras@gmail.com.
     </TEXTO>
+
+    <TEXTO>Créditos
+       A·L·I·E·N: LA AVENTURA - EDICIÓN ESPECIAL (c) 2008-2012 Alpha Aventuras^
+      ^- PROGRAMACIÓN Y DISEÑO:
+      ^     Ricardo Pérez López
+      ^- GRÁFICOS E IDEA ORIGINAL:
+      ^     Manuel Millán Ruiz
+      ^- TEXTOS:
+      ^     Ricardo Pérez López
+      ^     Francisco J. Roldán Domínguez
+      ^     Manuel I. Monge García
+      ^- MAPEADO Y MANUALES:
+      ^     Francisco J. Roldán Domínguez
+      ^- PRUEBAS:
+      ^     Ricardo Pérez López
+      ^     Francisco J. Roldán Domínguez
+      ^     Manuel Millán Ruiz
+      ^     Francisco Picazo Millán
+      ^     Manuel I. Monge García^
+      ^  Para más información, usa el comando CRÉDITOS durante el juego.
+    </TEXTO>
     
   </MENU>
 

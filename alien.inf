@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58682
+!% $MAX_PROP_TABLE_SIZE=58782
 !% $MAX_VERBS=154
 
 !
@@ -8427,7 +8427,7 @@ Object tt_final
   IniciarGraficosSonidos();
   altoVentanaGrafica = 250;
   EncenderGraficosSub();
-  barra_estado.numero_lineas = 22;
+  barra_estado.numero_lineas = 23;
   barra_estado.dibujar();
   clearMainWindow();
   viewImageCenter(Logo_Alpha_Aventuras_jpg);
@@ -8506,7 +8506,7 @@ Object tt_final
          ZIPI_RunMenu(target);
        else if (target ofclass ZIPI_Pista)
          ZIPI_RunPista(target);
-       else if (target == ZIPI_Otro15)
+       else if (target == ZIPI_Otro16)
          break;
        else {
          ZIPI_RunOtro(target);
@@ -8526,9 +8526,9 @@ ZIPI_Menu Menu_Principal
     ZIPI_item
       ZIPI_Jugar_Con_Intro
       ZIPI_Jugar_Sin_Intro
-      ZIPI_Otro15
+      ZIPI_Otro16
       ZIPI_Menu1
-      ZIPI_Otro15
+      ZIPI_Otro16
       ZIPI_Salir;
 
 
@@ -9955,7 +9955,7 @@ Endif;
 
 [ CreditosSub;
   viewImageCenter(Logo_Alpha_Aventuras_jpg);
-  print "A·L·I·E·N : LA AVENTURA - EDICIÓN ESPECIAL^";
+  print "A·L·I·E·N: LA AVENTURA - EDICIÓN ESPECIAL^";
   print "(c) 2008-2012 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
   print "    Ricardo Pérez López^^";
