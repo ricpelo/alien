@@ -65,16 +65,14 @@ Constant GRAFICOS_PEQUENOS = 300;
 Constant GRAFICOS_MEDIANOS = 400;
 Constant GRAFICOS_GRANDES  = 500;
 
-! Canales de sonido:
-Constant CANAL_FONDO = 9;
-Constant VOLUMEN_FONDO = 50;
-Constant CANAL_DETECTOR = 1;
-Constant VOLUMEN_DETECTOR = 70;
-Constant CANAL_TELETIPO = 2;
-Constant VOLUMEN_TELETIPO = 100;
-Constant CANAL_TICTAC = 3;
-Constant VOLUMEN_TICTAC = 100;
-Constant CANAL_SIRENA = 4;
+! Canales de sonido y sus volúmenes:
+Constant CANAL_DETECTOR = 1; Constant VOLUMEN_DETECTOR = 70;
+Constant CANAL_TELETIPO = 2; Constant VOLUMEN_TELETIPO = 100;
+Constant CANAL_TICTAC = 3;   Constant VOLUMEN_TICTAC = 100;
+Constant CANAL_SIRENA = 4;   Constant VOLUMEN_SIRENA = 20;
+! El canal de la música de fondo siempre tiene que ser
+! DAMUSIX_NCANALMAX - 1 = 10 - 1 = 9:
+Constant CANAL_FONDO = 9;    Constant VOLUMEN_FONDO = 50;
 
 ! Vamos a usar Damusix junto con SGW+DMX
 Constant SGW_CON_DAMUSIX;
@@ -3991,7 +3989,8 @@ Object boton_oeste "botón azul" emergencia_oeste
         give ascensor abierto;
         Damusix.PararCanal(CANAL_TICTAC);
         Damusix.PararCanal(CANAL_DETECTOR);
-        Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, 20, SONIDO_BUCLE_INFINITO);
+        Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, VOLUMEN_SIRENA,
+                             SONIDO_BUCLE_INFINITO);
         Damusix.Tocar(Sirena_ogg);
         ActivarTimer();
         ArrancarDaemon(autodestruccion);
@@ -4590,7 +4589,7 @@ Object laberinto28
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
-              Damusix.VolumenCanal(CANAL_DETECTOR, 10);
+              Damusix.VolumenCanal(CANAL_SIRENA, VOLUMEN_SIRENA / 2);
               move ascensor_arriba to exterior3;
               move jason to exterior3;
               JugadorA(exterior3);
@@ -4599,7 +4598,6 @@ Object laberinto28
               }
               ActivarTimer();               ! Para que vuelva a correr el tiempo
               <<Mirar>>;
-!              rtrue;
             } else {
               "¡No dejes a Jason aquí!";
             }
@@ -9766,7 +9764,8 @@ Ifdef DEBUG;
   alien.comportamiento = 4;
   give ascensor abierto;
   Damusix.PararCanal(CANAL_TICTAC);
-  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, 20, SONIDO_BUCLE_INFINITO);
+  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, VOLUMEN_SIRENA,
+                       SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Sirena_ogg);
   ActivarTimer();
   ArrancarDaemon(autodestruccion);
