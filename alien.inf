@@ -8593,6 +8593,8 @@ ZIPI_Otro ZIPI_Restaurar
     .RFailed;
       glk($002F, gg_statuswin);
       StatusLineHeight(24);
+      tt_computadora.escribe(0, "^Error: no se ha podido cargar la partida");
+      tt_computadora.visualiza();
       rfalse;
     ];
 
