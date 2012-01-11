@@ -9835,7 +9835,6 @@ Endif;
   print " - MAPEADO Y MANUALES:^";
   print "    Francisco J. Roldán Domínguez^^";
   print "- PRUEBAS:^";
-  print "    Jenesis^";
   print "    Ricardo Pérez López^";
   print "    Francisco J. Roldán Domínguez^";
   print "    Manuel Millán Ruiz^";
