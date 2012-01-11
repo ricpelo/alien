@@ -5165,7 +5165,7 @@ Object jason "Jason" nave1
         'metete':                 a = ##Meterse;
         'sal':                    a = ##Salir;
         'salte':                  a = ##Salirse;
-        'no':                     if (SiguientePalabra() == 'te' &&
+        'no', 'nx':               if (SiguientePalabra() == 'te' &&
                                       SiguientePalabra() == 'muevas' or 'vayas') {
                                     accion = ##Quedar;
                                     rtrue;
@@ -9182,22 +9182,22 @@ Verb 'usa' 'utiliza'
   * noun 'con' noun -> Usar;
 
 Verb meta 'sonido' 'sonidos'
-  *                                      -> Sonido
-  * 'on' / 'encendido' / 'si'            -> EncenderSonido
-  * 'off' / 'apagado' / 'no'             -> ApagarSonido
-  * 'detector'                           -> SonidoDetector
-  * 'detector' 'on' / 'encendido' / 'si' -> EncenderSonidoDetector
-  * 'detector' 'off' / 'apagado' / 'no'  -> ApagarSonidoDetector
-  * 'fondo'                              -> Musica
-  * 'fondo' 'on' / 'encendida' / 'si'    -> EncenderMusica
-  * 'fondo' 'off' / 'apagada' / 'no'     -> ApagarMusica;
+  *                                            -> Sonido
+  * 'on' / 'encendido' / 'si'                  -> EncenderSonido
+  * 'off' / 'apagado' / 'no' / 'nx'            -> ApagarSonido
+  * 'detector'                                 -> SonidoDetector
+  * 'detector' 'on' / 'encendido' / 'si'       -> EncenderSonidoDetector
+  * 'detector' 'off' / 'apagado' / 'no' / 'nx' -> ApagarSonidoDetector
+  * 'fondo'                                    -> Musica
+  * 'fondo' 'on' / 'encendida' / 'si'          -> EncenderMusica
+  * 'fondo' 'off' / 'apagada' / 'no' / 'nx'    -> ApagarMusica;
 
 Verb meta 'musica'
-  *                                   -> Musica
-  * 'fondo' 'on' / 'encendida' / 'si' -> EncenderMusica
-  * 'fondo' 'off' / 'apagada' / 'no'  -> ApagarMusica
-  * 'on' / 'encendida' / 'si'         -> EncenderMusica
-  * 'off' / 'apagada' / 'no'          -> ApagarMusica;
+  *                                         -> Musica
+  * 'fondo' 'on' / 'encendida' / 'si'       -> EncenderMusica
+  * 'fondo' 'off' / 'apagada' / 'no' / 'nx' -> ApagarMusica
+  * 'on' / 'encendida' / 'si'               -> EncenderMusica
+  * 'off' / 'apagada' / 'no' / 'nx'         -> ApagarMusica;
 
 Verb 'activa'
   * noun -> Encender;
@@ -9313,8 +9313,8 @@ Verb meta 'quinta'
 Endif;
 
 Extend 'salidas'
-  * 'on' / 'si' -> ActivarSalidas
-  * 'off' / 'no' -> DesactivarSalidas;
+  * 'on' / 'si'         -> ActivarSalidas
+  * 'off' / 'no' / 'nx' -> DesactivarSalidas;
 
 Verb 'ayuda' 'socorro' 'auxilio'
   *          -> Ayudar
@@ -9364,12 +9364,12 @@ Extend 'rompe' first
   * noun 'con' noun  -> AtacarCon;
 
 Verb meta 'graficos'
-  *                           -> Graficos
-  * 'on' / 'encendido' / 'si' -> EncenderGraficos
-  * 'off' / 'apagado' / 'no'  -> ApagarGraficos
-  * 'pequenos'                -> GraficosPequenos
-  * 'medianos'                -> GraficosMedianos
-  * 'grandes'                 -> GraficosGrandes;
+  *                                 -> Graficos
+  * 'on' / 'encendido' / 'si'       -> EncenderGraficos
+  * 'off' / 'apagado' / 'no' / 'nx' -> ApagarGraficos
+  * 'pequenos'                      -> GraficosPequenos
+  * 'medianos'                      -> GraficosMedianos
+  * 'grandes'                       -> GraficosGrandes;
  
 Extend 'sal' last
   * 'por' noun      -> Meterse;
@@ -9439,7 +9439,7 @@ Verb 'desbloquea'
 
 Verb meta 'pistas'
   *                 -> Pistas
-  * 'no'            -> PistasNo;
+  * 'no' / 'nx'     -> PistasNo;
 
 Extend 'quita' first
   *                 -> Empujar;
