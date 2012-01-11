@@ -8429,6 +8429,7 @@ Object tt_final
   barra_estado.numero_lineas = 26;
   barra_estado.dibujar();
   clearMainWindow();
+  ZIPI_Intro();
   if (RICKY_RunMenu(Menu_Principal) ~= 2) {
     quit;
   }
