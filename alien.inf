@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58678
+!% $MAX_PROP_TABLE_SIZE=58682
 !% $MAX_VERBS=154
 
 !
@@ -8523,6 +8523,7 @@ ZIPI_Menu Menu_Principal
     ZIPI_item
       ZIPI_Jugar_Con_Intro
       ZIPI_Jugar_Sin_Intro
+      ZIPI_Otro15
       ZIPI_Menu1
       ZIPI_Otro15
       ZIPI_Salir;
