@@ -214,10 +214,6 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
   EsperarTecla();
   print "- Si te estás preguntado para qué sirve la palanca... Efectivamente: no sirve^";
   print "  para nada en absoluto.^^";
-!  print "- El sonido de fondo dentro de la nave es un extracto del tema ~Overflight~,^";
-!  print "  incluido en el álbum ~The Secret Life of Angels~ del grupo ~SkinMechanix~.^";
-!  print "  Más información en Magnatune (http://www.magnatune.com).^^";
-!  EsperarTecla();
 ];
 
 
@@ -408,7 +404,7 @@ Include "Acciones";
 ! Include "Mensajes";
 ! Include "Msg1P";
 
-! Esto es para poder usar las palabras 'abrir' y 'cerrar' como temas de conversación,
+! Esto es para poder usar las palabras 'abrir', 'cerrar',... como temas de conversación,
 ! y, al mismo tiempo, poder usarlas como infinitivos de verbos:
 [ VerboDesconocido x;
   if (x == 'abrir')    return 'abre';
