@@ -3981,7 +3981,7 @@ Object boton_oeste "botón azul" emergencia_oeste
           objjugador:
             print "¡El botón se queda hundido!^";
           jason:
-            HablaJason("!Esto parece que funciona!");
+            HablaJason("¡Esto parece que funciona!");
         }
         
         ! Se activa la autodestrucción:
