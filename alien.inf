@@ -377,10 +377,17 @@ Include "Acciones";
   }
   
   ! Lo mismo para la computadora:
-  if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
-      comunicador in jugador && comunicador has puesto) {
-    PonerAlAlcance(computadora);
-  }
+  ! [ATENCIÓN: ESTO YA NO LO HAGO PORQUE MADRE AHORA ESTÁ EN TODAS PARTES
+  ! PARA QUE EL JUGADOR PUEDA EXAMINAR A LA COMPUTADORA EN CUALQUIER SITIO
+  ! (LA RUTINA esta_en DE computadora ES [; rtrue; ]). POR ESO YA NO HACE
+  ! FALTA PONER AL ALCANCE ALGO QUE SIEMPRE ESTÁ EN TODAS LAS LOCALIDADES.
+  ! ADEMÁS, SI LO HICIERA, SERÍA UN ERROR, PORQUE EN ESE CASO LA LIBRERÍA
+  ! InformATE EJECUTARÍA DOS VECES SU RUTINA cada_turno. ESTO ÚLTIMO CREO
+  ! QUE ES UN ERROR DE InformATE.]
+!  if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
+!      comunicador in jugador && comunicador has puesto) {
+!    PonerAlAlcance(computadora);
+!  }
   
   ! Ponemos la compuerta de la nave al alcance de la computadora, para que pueda abrirla
   ! aunque no estemos físicamente delante de la puerta:
