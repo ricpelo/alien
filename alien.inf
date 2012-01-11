@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58732
+!% $MAX_PROP_TABLE_SIZE=58782
 !% $MAX_VERBS=154
 
 !
@@ -8423,7 +8423,8 @@ Object tt_final
 ];
 
 
-[ MenuPrincipal;
+[ MenuPrincipal r;
+  altoVentanaGrafica = GRAFICOS_MEDIANOS;
   IniciarGraficosSonidos();
   altoVentanaGrafica = 250;
   EncenderGraficosSub();
@@ -8435,9 +8436,10 @@ Object tt_final
                        SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
-  if (RICKY_RunMenu(Menu_Principal) ~= 2) {
-    quit;
-  }
+  .Menu;
+  r = RICKY_RunMenu(Menu_Principal);
+  if (r == 3) jump Menu;
+  if (r ~= 2) quit;
   barra_estado.numero_lineas = 1;
   barra_estado.dibujar();
   EncenderGraficosSub(true);
@@ -8510,7 +8512,8 @@ Object tt_final
          break;
        else {
          ZIPI_RunOtro(target);
-         return 2;
+         if (target == ZIPI_Restaurar) return 3;
+         else return 2;
        }
        redibujar = 1;
        break;
@@ -8526,6 +8529,7 @@ ZIPI_Menu Menu_Principal
     ZIPI_item
       ZIPI_Jugar_Con_Intro
       ZIPI_Jugar_Sin_Intro
+      ZIPI_Restaurar
       ZIPI_Otro16
       ZIPI_Menu1
       ZIPI_Otro16
@@ -8544,6 +8548,7 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       clearTextWindow();
       Introduccion();
       Inicializar();
+      dibujarEstado = true;
       rtrue;
     ];
 
@@ -8559,7 +8564,31 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       EncenderGraficosSub(true);
       clearTextWindow();
       Inicializar(true);
+      dibujarEstado = true;
       rtrue;
+    ];
+
+
+ZIPI_Otro ZIPI_Restaurar
+  with
+    ZIPI_titulo "Restaurar una partida guardada",
+    ZIPI_ejecutar [ res fref;
+      clearTextWindow();
+      fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
+      if (fref == 0)
+        jump RFailed;
+      gg_savestr = glk($0042, fref, $02, GG_SAVESTR_ROCK); ! stream_open_file
+      glk($0063, fref); ! fileref_destroy
+      if (gg_savestr == 0)
+        jump RFailed;
+
+      @restore gg_savestr res;
+
+      glk($0044, gg_savestr, 0); ! stream_close
+      gg_savestr = 0;
+ 
+    .RFailed;
+      rfalse;
     ];
 
 
