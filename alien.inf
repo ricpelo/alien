@@ -8431,6 +8431,9 @@ Object tt_final
   barra_estado.dibujar();
   clearMainWindow();
   viewImageCenter(Logo_Alpha_Aventuras_jpg);
+  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
+                       SONIDO_BUCLE_INFINITO);
+  Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
   if (RICKY_RunMenu(Menu_Principal) ~= 2) {
     quit;
@@ -10043,7 +10046,13 @@ Endif;
        }
        barra_estado.numero_lineas = 26;
        barra_estado.dibujar();
+       Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
+                            SONIDO_BUCLE_INFINITO);
+       Damusix.Tocar(Estancia_ogg);
        ZIPI_Empezar();
+       Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, LugarReal().sgw_vol,
+                            SONIDO_BUCLE_INFINITO);
+       Damusix.TocarCanal(CANAL_FONDO);
        barra_estado.numero_lineas = 1;
        barra_estado.dibujar();
        if (t) {
