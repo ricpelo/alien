@@ -9895,7 +9895,7 @@ Endif;
 ];
 
 
-[ PistasSub t;
+[ PistasSub t timer;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
@@ -9905,7 +9905,9 @@ Endif;
              (s_in) "PISTAS NO", (s_em) ", y eso te impedirá obtener ayuda en la
              sesión de juego actual. Si sigues queriendo una pista, pon ",
              (s_in) "PISTAS", (s_em) " otra vez.]^";
-    1: t = false;
+    1: timer = control_timer.timer_actual;
+       control_timer.desactivar();
+       t = false;
        if (hayGraficos) {
          t = true;
          ApagarGraficosSub(true);
@@ -9919,6 +9921,7 @@ Endif;
          EncenderGraficosSub(true);
        }
        clearTextWindow();
+       control_timer.activar(timer);
        <<Mirar>>;
     2: print (s_em) "[Las pistas han sido desactivadas.]^";
   }
