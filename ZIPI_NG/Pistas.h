@@ -644,7 +644,6 @@ with
        print "Los verbos se pueden escribir en imperativo («COGE») o infinitivo («COGER»), si bien ";
        print "^se recomienda la primera opción, más que nada porque resulta más corta. Y los ";
        print "^artículos («EL», «LA») se pueden poner, aunque no son necesarios. ";
-       print "^^";
   ];
 ZIPI_Otro ZIPI_Otro2
 with
@@ -721,7 +720,7 @@ with
        print "^                       GUARDAR. ";
        print "^AYUDA . . . . . . . .: Por si alguna vez te encuentras atascado. ";
        print "^REINICIAR . . . . . .: Volver a empezar desde el principio. ";
-       print "^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual).^ ";
+       print "^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual). ";
   ];
 ZIPI_Otro ZIPI_Otro6
 with
@@ -735,7 +734,7 @@ with
        print "^- Graba frecuentemente tu situación con la orden GUARDAR. Nunca se sabe lo que ";
        print "^  puedes encontrarte tras esa esquina... ";
        print "^- Si te encuentras con algún fallo o no sabes cómo avanzar, puedes plantear tus ";
-       print "^  dudas en el foro del CAAD o en alpha.aventuras@@64gmail.com.^ ";
+       print "^  dudas en el foro del CAAD o en alpha.aventuras@@64gmail.com. ";
   ];
 ZIPI_Otro ZIPI_Otro7
 with

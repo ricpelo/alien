@@ -106,7 +106,7 @@ Constant TIMER_AUTODESTRUCCION = 4000;
 
 
 ! Alto de la ventana gráfica:
-Global altoVentanaGrafica = 400;
+Global altoVentanaGrafica = GRAFICOS_MEDIANOS;
 
 ! Hay gráficos o no:
 Global hayGraficos = true;
@@ -8425,10 +8425,12 @@ Object tt_final
 
 [ MenuPrincipal;
   IniciarGraficosSonidos();
-  ApagarGraficosSub(true);
-  barra_estado.numero_lineas = 26;
+  altoVentanaGrafica = 250;
+  EncenderGraficosSub();
+  barra_estado.numero_lineas = 22;
   barra_estado.dibujar();
   clearMainWindow();
+  viewImageCenter(Logo_Alpha_Aventuras_jpg);
   ZIPI_Intro();
   if (RICKY_RunMenu(Menu_Principal) ~= 2) {
     quit;
@@ -8533,6 +8535,7 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
+      altoVentanaGrafica = GRAFICOS_MEDIANOS;
       EncenderGraficosSub(true);
       clearTextWindow();
       Introduccion();
@@ -8548,6 +8551,7 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
+      altoVentanaGrafica = GRAFICOS_MEDIANOS;
       EncenderGraficosSub(true);
       clearTextWindow();
       Inicializar(true);
@@ -8622,8 +8626,6 @@ ZIPI_Otro ZIPI_Salir
       glk_stylehint_set(wintype_TextBuffer, style_User1,
                         stylehint_Weight, 1);
 
-      ! Este estilo lo uso sólo para dibujar el cursor
-      ! en la pregunta de si quiero introducción:  
       glk_stylehint_set(wintype_TextBuffer, style_User2,
                         stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextBuffer, style_User2,

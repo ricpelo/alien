@@ -32,7 +32,6 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       Los verbos se pueden escribir en imperativo («COGE») o infinitivo («COGER»), si bien
       ^se recomienda la primera opción, más que nada porque resulta más corta. Y los
       ^artículos («EL», «LA») se pueden poner, aunque no son necesarios.
-
     </TEXTO>
 
     <TEXTO>Algunas acciones frecuentes
@@ -101,7 +100,7 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       ^                       GUARDAR.
       ^AYUDA . . . . . . . .: Por si alguna vez te encuentras atascado.
       ^REINICIAR . . . . . .: Volver a empezar desde el principio.
-      ^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual).^
+      ^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual).
     </TEXTO>
     
     <TEXTO>Consejos y ayudas
@@ -113,7 +112,7 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       ^- Graba frecuentemente tu situación con la orden GUARDAR. Nunca se sabe lo que
       ^  puedes encontrarte tras esa esquina...
       ^- Si te encuentras con algún fallo o no sabes cómo avanzar, puedes plantear tus
-      ^  dudas en el foro del CAAD o en alpha.aventuras@gmail.com.^
+      ^  dudas en el foro del CAAD o en alpha.aventuras@gmail.com.
     </TEXTO>
     
   </MENU>
