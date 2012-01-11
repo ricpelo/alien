@@ -8573,6 +8573,7 @@ ZIPI_Otro ZIPI_Restaurar
   with
     ZIPI_titulo "Restaurar una partida guardada",
     ZIPI_ejecutar [ res fref;
+      StatusLineHeight(1);
       clearTextWindow();
       fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
       if (fref == 0)
@@ -8588,6 +8589,7 @@ ZIPI_Otro ZIPI_Restaurar
       gg_savestr = 0;
  
     .RFailed;
+      StatusLineHeight(24);
       rfalse;
     ];
 
