@@ -67,6 +67,7 @@ Constant GRAFICOS_GRANDES  = 500;
 
 ! Canales de sonido:
 Constant CANAL_FONDO = 9;
+Constant VOLUMEN_FONDO = 50;
 Constant CANAL_DETECTOR = 1;
 Constant VOLUMEN_DETECTOR = 70;
 Constant CANAL_TELETIPO = 2;
@@ -488,7 +489,7 @@ Class Lugar
   class LugarConRastro
   with
     sgw_mus Estancia_ogg,
-    sgw_vol 50,
+    sgw_vol VOLUMEN_FONDO,
     describir [;
       ImprimirOEjecutar(self, descripcion);
       if (mostrarSalidas) {
@@ -527,13 +528,6 @@ Class Lugar
     ],
     despues [;
       Ir:
-        ! Cuando el jugador se mueve a otra localidad, se comprueba si hay que activar el
-        ! sonido de fondo
-        if (control_sonido_fondo.hay_sonido && LugarReal() provides sgw_mus) {
-          EncenderMusicaSub(true);
-        } else {
-          control_sonido_fondo.desactivar();
-        }
         ! Si no está el alien presente, se resetea su oportunidad a cero y
         ! su capricho a 50:
         if (alien notin LugarReal()) {
@@ -681,46 +675,6 @@ Class Contenedor
   has
     recipiente;
 
-
-! Controla los efectos de sonido. Cada objeto ControlSonido trabaja sobre un canal:
-
-Class ControlSonido
-  with
-    sonido null,      ! El sonido que está sonando en este momento
-    canal,            ! El canal por el que suena
-    volumen 100,      ! $10000,
-    activar [ efecto rep;
-      self.sonido = efecto;
-      if (rep) {
-        Damusix.AsignarCanal(efecto, self.canal, self.volumen, rep);
-      } else {
-        Damusix.AsignarCanal(efecto, self.canal, self.volumen, 1);
-      }
-      Damusix.Tocar(efecto);
-    ],
-    desactivar [;
-      Damusix.Parar(self.sonido);
-      self.sonido = null;
-    ],
-    cambiar_volumen [ v;
-      self.volumen = v;
-      Damusix.VolumenCanal(self.canal, v);
-    ],
-    iniciar [;
-      Damusix.VolumenCanal(self.canal, self.volumen);
-    ];
-    
-
-! Guarda el sonido de fondo que está sonando actualmente. Se usa para cuando el jugador se
-! mueve de una localidad a otra que tiene el mismo sonido de fondo que la localidad de origen
-! (en ese caso no detiene el sonido y lo vuelve a arrancar, sino que lo deja sonando):
-
-Object control_sonido_fondo
-  class ControlSonido
-  with
-    hay_sonido true,
-    canal CANAL_FONDO,
-    volumen 50; ! $5000;
 
 ! Controla el timer. Se usa sobre todo para el efecto del relámpago en el exterior,
 ! pero también porque la rutina EsperarTecla desactiva el timer actual cuando
@@ -1613,7 +1567,6 @@ Object exterior1 "Junto a la nave"
                  La temperatura es elevada, y la sensación de agobio, palpable.",
     sgw_img Exterior1_jpg,
     sgw_mus Lluvia_ogg,
-    sgw_vol 50,
     adentro puerta_nave,
     al_s exterior3,
     al_n junto_procesador,
@@ -1656,7 +1609,6 @@ Object junto_procesador "Frente al procesador atmosférico"
                  lloviendo, y el calor es asfixiante.",
     sgw_img Junto_Procesador_jpg,
     sgw_mus Junto_Procesador_ogg,
-    sgw_vol 50,
     al_s exterior1,
     adentro puerta_procesador,
     tenga_cuidado false,
@@ -2187,7 +2139,6 @@ Object exterior3 "Exterior de la colonia"
                  el suelo.",
     sgw_img Exterior3_jpg,
     sgw_mus Lluvia_ogg,
-    sgw_vol 50,
     al_n exterior1,
     al_e junto_puerta,
     antes [;
@@ -8459,7 +8410,9 @@ Object tt_final
   IniciarPuertas();
   IniciarRastros();
 
-  EncenderMusicaSub(true);
+!  EncenderMusicaSub(true);
+  Damusix.AsignarCanal(localizacion.sgw_mus, CANAL_FONDO, VOLUMEN_FONDO, SONIDO_BUCLE_INFINITO);
+  Damusix.TocarCanal(CANAL_FONDO);
 
   if (~~intro) {
     DibujaLogoAlien();
@@ -8497,7 +8450,7 @@ Object tt_final
 
 
 [ IniciarSonidos;
-  control_sonido_fondo.iniciar();
+  Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
   Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
   Damusix.AsignarCanal(Teletipo_ogg, CANAL_TELETIPO, VOLUMEN_TELETIPO, 1);
   Damusix.AsignarCanal(Tic_ogg, CANAL_TICTAC, VOLUMEN_TICTAC, SONIDO_BUCLE_INFINITO);
@@ -8910,7 +8863,8 @@ Object tt_final
 [ Introduccion i;
   clearMainWindow();
   viewImageCenter(Oscuridad_jpg);
-  control_sonido_fondo.activar(Intro_ogg);
+  Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, VOLUMEN_FONDO, 1);
+  Damusix.Tocar(Intro_ogg);
   tt_inicial1.visualiza();
   for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 300);
@@ -9075,7 +9029,7 @@ Object tt_computadora
 
 
 [ Bandera_Fin bf;
-  control_sonido_fondo.desactivar();
+  Damusix.PararCanal(CANAL_FONDO);
   Damusix.PararCanal(CANAL_DETECTOR);
   control_timer.desactivar();
   
@@ -9829,33 +9783,19 @@ Endif;
 
 [ EncenderSonidoSub;
   Damusix.ActivarAudio();
-  EncenderMusicaSub(true);
   print (s_em) "[Activados todos los efectos sonoros.]^";
 ];
 
 
 [ ApagarSonidoSub;
   Damusix.DesactivarAudio();
-  control_sonido_fondo.hay_sonido = false;
   print (s_em) "[Desactivados todos los efectos sonoros.]^";
 ];
 
 
-[ EncenderMusicaSub i sf;
+[ EncenderMusicaSub i;
+  Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
 
-  if (LugarReal() provides sgw_mus) {
-    sf = (LugarReal()).sgw_mus;
-  } else {
-    sf = null;
-  }
-
-  if (sf ~= null && control_sonido_fondo.sonido ~= sf ||
-      ~~(control_sonido_fondo.hay_sonido)) {
-    control_sonido_fondo.activar(sf, SONIDO_BUCLE_INFINITO);
-  }
-
-  control_sonido_fondo.hay_sonido = true;
-    
   if (~~i) {
     print (s_em) "[Activado el sonido de fondo.]^";
   }
@@ -9863,8 +9803,7 @@ Endif;
 
   
 [ ApagarMusicaSub;
-  control_sonido_fondo.hay_sonido = false;
-  control_sonido_fondo.desactivar();
+  Damusix.VolumenCanal(CANAL_FONDO, 0);
   print (s_em) "[Desactivado el sonido de fondo.]^";
 ];
 

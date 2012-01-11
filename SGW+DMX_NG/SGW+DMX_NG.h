@@ -1495,6 +1495,8 @@ Default WIN_MAIN    = 2;
 #ifdef TARGET_GLULX;
   #ifdef SGW_CON_DAMUSIX;
   [ CalcVol vol aux;
+      aux = Damusix.QueVolumenCanal(DAMUSIX_NCANALMAX - 1); ! (c) Alpha
+      if (aux == 0) { return 0; }                           ! (c) Alpha
       aux = Damusix.QueVolumenGlobal();
       if (aux == 0) { return 0; } ! COMPROBACION: evitar division por cero
       return (vol*aux)/100;       ! devolvemos el porcentaje de vol. corregido
