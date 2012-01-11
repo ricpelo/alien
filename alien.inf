@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58478
+!% $MAX_PROP_TABLE_SIZE=58674
 !% $MAX_VERBS=154
 
 !
@@ -8336,9 +8336,7 @@ Object tt_final
 ! ====================================================================
 
 
-
-! Rutina principal y obligatoria de todo juego InformATE
-[ Inicializar intro;
+[ IniciarGraficosSonidos;
   if (~~testGraphics()) {
     print "^Lo sentimos, pero este juego necesita un intérprete Glulx
             con capacidades gráficas.^^";
@@ -8357,42 +8355,29 @@ Object tt_final
     RecomiendaGargoyle();
   }
 
-  ! Inicialización gráfica
-  initializeSGW(altoVentanaGrafica);
-  clearMainWindow();
-  viewImageCenter(Logo_Alpha_Aventuras_jpg);
-  localizacion = laoscuridad;
-
   ! Inicialización sonora
   IniciarSonidos();
 
+  ! Inicialización gráfica
+  initializeSGW(altoVentanaGrafica);
+];
+
+! Rutina principal y obligatoria de todo juego InformATE
+[ Inicializar logo;
+  localizacion = laoscuridad;
+
   dibujarEstado = false;
-  print "¿Quieres ver la introducción? (S/N): ";
-  glk_set_style(style_User2);
-  print " ";
-  glk_set_style(style_Normal);
-
-  intro = false;
-
-  if (EsperarTecla() == 's' or 'S') {
-    intro = true;
-    Introduccion();
-  } else {
-    clearMainWindow(); 
-  }
-
-  dibujarEstado = true;
 
   ! Esto es para que el juego dé siempre la descripción de la habitación, aunque
   ! ya la hayamos visitado
   modomirar = 2;
-  
+
   ! Inventario en una sola frase
   estilo_inventario = ESPANOL_BIT + RECURSIVO_BIT + INFOTOTAL_BIT;
 
   ! Usamos un parser más "tonto":
   parser_listo = 0;
-  
+
   ! Nombre de la oscuridad
   laoscuridad.nombre_corto = "Zona de oscuridad";
 
@@ -8407,15 +8392,15 @@ Object tt_final
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
   PNJ_Ruta(alien, MOVIMIENTO_NINGUNO);
   PNJ_Ruta(testigo, MOVIMIENTO_NINGUNO);
-  IniciarMoviles();  
+  IniciarMoviles();
   IniciarPuertas();
   IniciarRastros();
 
-!  EncenderMusicaSub(true);
   Damusix.AsignarCanal(localizacion.sgw_mus, CANAL_FONDO, VOLUMEN_FONDO, SONIDO_BUCLE_INFINITO);
   Damusix.TocarCanal(CANAL_FONDO);
 
-  if (~~intro) {
+  if (logo) {
+    clearGraphicWindow();
     DibujaLogoAlien();
   }
 
@@ -8436,6 +8421,142 @@ Object tt_final
   EsperarTecla();
   quit;
 ];
+
+
+[ MenuPrincipal;
+  IniciarGraficosSonidos();
+  ApagarGraficosSub(true);
+  barra_estado.numero_lineas = 26;
+  barra_estado.dibujar();
+  clearMainWindow();
+  if (RICKY_RunMenu(Menu_Principal) ~= 2) {
+    quit;
+  }
+  barra_estado.numero_lineas = 1;
+  barra_estado.dibujar();
+  EncenderGraficosSub(true);
+  clearTextWindow();
+];
+
+
+[ RICKY_RunMenu _m   i j count cur key target redibujar ft;
+
+  redibujar = 1;
+
+  cur = 0;
+  count = _m.#ZIPI_item / WORDSIZE;
+  ft = true;
+
+  for (::) {
+    if (redibujar) {
+      ZIPI_PintaTitulo(_m.ZIPI_titulo);
+      redibujar = 0;
+    }
+
+   for (i = 0: i < count: i++) {
+     j = i + 3;
+     ZIPI_setcursor(5,j);
+     if (ft) {
+       tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
+       tt_computadora.visualiza();
+     } else {
+       style fixed;
+       print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
+       style roman;
+     }
+   }
+
+   ft = false;
+   j = cur + 3;
+   ZIPI_setcursor(2,j);
+   print ">";
+   ZIPI_setcursor(2, j);
+   key = ZIPI_tecla();
+   print " ";
+
+   if (key > ZIPI_EVENTO_HYPER) {
+     cur = key - ZIPI_EVENTO_HYPER - 2;
+     if (cur == -1)
+       key = 27;
+     else
+       key = 13;
+   }
+
+   switch(key) {
+     'k', 'p', '-', '_', 129, -4:
+       cur--;
+       if (cur < 0) cur = count-1;
+       break;
+     'j', 'n', '=', '+', 130, -5:
+       cur++;
+       if (cur >= count) cur = 0;
+       break;
+     'q', 'Q', 27, 131, 10, 8, -2:
+       return;
+
+     132, 13, 'n', ' ', -3, -6:
+       target = _m.&ZIPI_item-->cur;
+       if (target ofclass ZIPI_Menu)
+         ZIPI_RunMenu(target);
+       else if (target ofclass ZIPI_Pista)
+         ZIPI_RunPista(target);
+       else {
+         ZIPI_RunOtro(target);
+         return 2;
+       }
+       redibujar = 1;
+       break;
+     }
+  }
+  rfalse;
+];
+
+
+ZIPI_Menu Menu_Principal
+  with
+    ZIPI_titulo "A·L·I·E·N: La aventura - Edición Especial",
+    ZIPI_item
+      ZIPI_Jugar_Con_Intro
+      ZIPI_Jugar_Sin_Intro
+      ZIPI_Menu1
+      ZIPI_Salir;
+
+
+ZIPI_Otro ZIPI_Jugar_Con_Intro
+  with
+    ZIPI_titulo "Comenzar la aventura con introducción",
+    ZIPI_ejecutar [;
+      StatusLineHeight(1);
+      glk($002A, gg_statuswin);  ! window_clear
+      glk($002F, gg_mainwin);    ! set_window
+      EncenderGraficosSub(true);
+      clearTextWindow();
+      Introduccion();
+      Inicializar();
+      rtrue;
+    ];
+
+
+ZIPI_Otro ZIPI_Jugar_Sin_Intro
+  with
+    ZIPI_titulo "Comenzar la aventura saltando la introducción",
+    ZIPI_ejecutar [;
+      StatusLineHeight(1);
+      glk($002A, gg_statuswin);  ! window_clear
+      glk($002F, gg_mainwin);    ! set_window
+      EncenderGraficosSub(true);
+      clearTextWindow();
+      Inicializar(true);
+      rtrue;
+    ];
+
+
+ZIPI_Otro ZIPI_Salir
+  with
+    ZIPI_titulo "Salir",
+    ZIPI_ejecutar [;
+      quit;
+    ];
 
 
 [ DibujaLogoAlien i;
