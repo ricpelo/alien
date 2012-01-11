@@ -8575,6 +8575,8 @@ ZIPI_Otro ZIPI_Restaurar
     ZIPI_ejecutar [ res fref;
       StatusLineHeight(1);
       clearTextWindow();
+      glk($002F, gg_mainwin);    ! set_window
+      ImprimePrompt();
       fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
       if (fref == 0)
         jump RFailed;
@@ -8587,8 +8589,9 @@ ZIPI_Otro ZIPI_Restaurar
 
       glk($0044, gg_savestr, 0); ! stream_close
       gg_savestr = 0;
- 
+
     .RFailed;
+      glk($002F, gg_statuswin);
       StatusLineHeight(24);
       rfalse;
     ];
