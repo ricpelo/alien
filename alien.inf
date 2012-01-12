@@ -2,7 +2,7 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=58840
+!% $MAX_PROP_TABLE_SIZE=59190
 !% $MAX_VERBS=154
 
 !
@@ -111,6 +111,11 @@ Global altoVentanaGrafica = GRAFICOS_MEDIANOS;
 ! Hay gráficos o no:
 Global hayGraficos = true;
 
+! Hay sonidos:
+Global haySonido = true;
+Global haySonidoFondo = true;
+Global haySonidoDetector = true;
+
 ! Si se ha activado el listado automático de salidas:
 Global mostrarSalidas = true;
 
@@ -160,6 +165,8 @@ Replace DecirSub;
 
 Replace PermitirEmpujarDir;
 
+! Ponemos nuestra propia versión de ZIPI_RunMenu, para el menú principal:
+Replace ZIPI_RunMenu;
 
 ! ====================================================================
 
@@ -8435,18 +8442,19 @@ Object tt_final
                        SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
-  .Menu;
-  r = RICKY_RunMenu(Menu_Principal);
+.Menu;
+  r = ZIPI_RunMenu(Menu_Principal);
   if (r == 3) jump Menu;
   if (r ~= 2) quit;
   barra_estado.numero_lineas = 1;
   barra_estado.dibujar();
-  EncenderGraficosSub(true);
+  if (hayGraficos) EncenderGraficosSub(true);
+  else ApagarGraficosSub(true);
   clearTextWindow();
 ];
 
 
-[ RICKY_RunMenu _m   i j count cur key target redibujar ft;
+[ ZIPI_RunMenu _m   i j count cur key target redibujar ft;
 
   redibujar = 1;
 
@@ -8468,7 +8476,8 @@ Object tt_final
        tt_computadora.visualiza();
      } else {
        style fixed;
-       print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
+       if ((_m.&ZIPI_item-->i).ZIPI_titulo ofclass Routine) (_m.&ZIPI_item-->i).ZIPI_titulo();
+       else print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
        style roman;
      }
    }
@@ -8509,6 +8518,8 @@ Object tt_final
          ZIPI_RunPista(target);
        else if (target == ZIPI_Separador)
          break;
+       else if (target provides ZIPI_cambiar)
+         target.ZIPI_cambiar();
        else {
          ZIPI_RunOtro(target);
          if (target == ZIPI_Restaurar) return 3;
@@ -8529,6 +8540,7 @@ ZIPI_Menu Menu_Principal
       ZIPI_Jugar_Con_Intro
       ZIPI_Jugar_Sin_Intro
       ZIPI_Restaurar
+      ZIPI_Configuracion
       ZIPI_Separador
       ZIPI_Menu1
       ZIPI_Separador
@@ -8536,9 +8548,112 @@ ZIPI_Menu Menu_Principal
 
 
 ZIPI_Otro ZIPI_Separador
- with
-   ZIPI_titulo "",
-   ZIPI_ejecutar [; rtrue; ];
+  with
+    ZIPI_titulo "",
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Menu ZIPI_Configuracion
+  with
+    ZIPI_titulo "Opciones de gráficos y sonido",
+    ZIPI_item
+      ZIPI_Graficos
+      ZIPI_Tamano_Graficos
+      ZIPI_Sonido_Fondo
+      ZIPI_Sonido_Detector;
+
+
+ZIPI_Otro ZIPI_Graficos
+  with
+    ZIPI_titulo [;
+      if (hayGraficos) {
+        "Gráficos: SI";
+      } else {
+        "Gráficos: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      hayGraficos = ~~hayGraficos;
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+ZIPI_Otro ZIPI_Tamano_Graficos
+  with
+    ZIPI_titulo [;
+      switch (altoVentanaGrafica) {
+        GRAFICOS_PEQUENOS: "Gráficos: PEQUEÑOS";
+        GRAFICOS_MEDIANOS: "Gráficos: MEDIANOS";
+        GRAFICOS_GRANDES:  "Gráficos: GRANDES";
+      }
+    ],
+    ZIPI_cambiar [;
+      switch (altoVentanaGrafica) {
+        GRAFICOS_PEQUENOS: altoVentanaGrafica = GRAFICOS_MEDIANOS;
+        GRAFICOS_MEDIANOS: altoVentanaGrafica = GRAFICOS_GRANDES;
+        GRAFICOS_GRANDES: altoVentanaGrafica = GRAFICOS_PEQUENOS;
+      }
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Otro ZIPI_Sonido
+  with
+    ZIPI_titulo [;
+      if (haySonido) {
+        "Sonido: SI";
+      } else {
+        "Sonido: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      haySonido = ~~haySonido;
+      if (haySonido) {
+        Damusix.ActivarAudio();
+      } else {
+        Damusix.DesactivarAudio();
+      }
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Otro ZIPI_Sonido_Fondo
+  with
+    ZIPI_titulo [;
+      if (haySonidoFondo) {
+        "Sonido de fondo: SI";
+      } else {
+        "Sonido de fondo: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      haySonidoFondo = ~~haySonidoFondo;
+      if (haySonidoFondo) {
+        Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
+      } else {
+        Damusix.VolumenCanal(CANAL_FONDO, 0);
+      } 
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Otro ZIPI_Sonido_Detector
+  with
+    ZIPI_titulo [;
+      if (self.haySonidoDetector) {
+        "Sonido del detector: SI";
+      } else {
+        "Sonido del detector: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      haySonidoDetector = ~~haySonidoDetector;
+      if (haySonidoDetector) {
+        Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
+      } else {
+        Damusix.VolumenCanal(CANAL_DETECTOR, 0);
+      }
+    ],
+    ZIPI_ejecutar [; rtrue; ];
 
 
 ZIPI_Otro ZIPI_Jugar_Con_Intro
@@ -8548,7 +8663,8 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
-      EncenderGraficosSub(true);
+      if (hayGraficos) EncenderGraficosSub(true);
+      else ApagarGraficosSub(true);
       clearTextWindow();
       Introduccion();
       Inicializar();
@@ -8564,7 +8680,8 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
-      EncenderGraficosSub(true);
+      if (hayGraficos) EncenderGraficosSub(true);
+      else ApagarGraficosSub(true);
       clearTextWindow();
       Inicializar(true);
       dibujarEstado = true;
@@ -8611,6 +8728,7 @@ ZIPI_Otro ZIPI_Salir
 
 
 [ DibujaLogoAlien i;
+  if (~~hayGraficos) rtrue;
   for (i = 0 : i < 15 : i++) {
     viewImageCenter(ALIEN_Sin_Puntos_png, true);
     EsperarTecla(0, 20);
@@ -9954,18 +10072,21 @@ Endif;
 
 
 [ EncenderSonidoSub;
+  haySonido = true;
   Damusix.ActivarAudio();
   print (s_em) "[Activados todos los efectos sonoros.]^";
 ];
 
 
 [ ApagarSonidoSub;
+  haySonido = false;
   Damusix.DesactivarAudio();
   print (s_em) "[Desactivados todos los efectos sonoros.]^";
 ];
 
 
 [ EncenderMusicaSub i;
+  haySonidoFondo = true;
   Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
 
   if (~~i) {
@@ -9975,18 +10096,21 @@ Endif;
 
   
 [ ApagarMusicaSub;
+  haySonidoFondo = false;
   Damusix.VolumenCanal(CANAL_FONDO, 0);
   print (s_em) "[Desactivado el sonido de fondo.]^";
 ];
 
 
 [ EncenderSonidoDetectorSub;
+  haySonidoDetector = true;
   Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
   print (s_em) "[Activado el sonido del detector de movimiento.]^";
 ];
 
 
 [ ApagarSonidoDetectorSub;
+  haySonidoDetector = false;
   Damusix.VolumenCanal(CANAL_DETECTOR, 0);
   print (s_em) "[Desactivado el sonido del detector de movimiento.]^";
 ];

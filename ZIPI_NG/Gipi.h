@@ -162,7 +162,8 @@ ZIPI_Otro Otro_vacio;
     if (j == 0) j = 80;
     ZIPI_spaces(j);
     ZIPI_setcursor(2,1);
-    print (string)titulo;
+    if (titulo ofclass Routine) titulo();
+    else print (string)titulo;
     ZIPI_roman();
 ];
 
