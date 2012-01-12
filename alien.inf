@@ -3686,7 +3686,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
   class ZonaEmergencia
   with
     descripcion "Estás en el pasillo central del área de emergencia. El pasillo discurre
-                 de este a oeste, hacia sendas salas separadas entre sí unos cincuenta
+                 de este a oeste, hacia sendas salas separadas entre sí unos diez
                  metros. La luz aquí es de un amarillo muy tenue, y la enorme letra ~E~
                  dibujada en la pared te recuerda que te encuentras en un lugar
                  especialmente restringido.",
