@@ -91,6 +91,7 @@ Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para
       ^GRAFICOS PEQUEÑOS/
       ^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión
       ^                       se mostrarán en tamaño MEDIANO).
+      ^CONFIGURACION . . . .: Muestra un menú de opciones de gráficos y sonido.
       ^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual.
       ^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en
       ^                       cada localidad.

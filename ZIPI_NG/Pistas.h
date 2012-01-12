@@ -712,6 +712,7 @@ with
        print "^GRAFICOS PEQUEÑOS/ ";
        print "^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión ";
        print "^                       se mostrarán en tamaño MEDIANO). ";
+       print "^CONFIGURACION . . . .: Muestra un menú de opciones de gráficos y sonido. ";
        print "^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual. ";
        print "^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en ";
        print "^                       cada localidad. ";
