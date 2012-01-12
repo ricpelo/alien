@@ -2637,7 +2637,14 @@ Object oficina "Oficina"
 Object decorado_oficina oficina
   class DecoradoAmpliado
   with
-    desc_cuadros "Todos muy oscuros y, al mismo tiempo, alegóricos.",
+    desc_cuadros [;
+      print "Todos muy oscuros y, al mismo tiempo, alegóricos.";
+      if (cuadro in oficina) {
+        " Hay uno en concreto que te llama la atención.";
+      } else {
+        "";
+      }
+    ],
     desc_puestos "Típicos escritorios de despacho, salvo la mesa del fondo.",
     desc_papeles "Cientos y cientos de documentos con información que no te resultan para
                   nada interesantes.",
@@ -2745,6 +2752,7 @@ Object "mesa" oficina
 Object cuadro "cuadro"
   with
     nombre 'cuadro',
+    adjetivos 'exaltador' 'patriotico',
     descripcion [;
       print "Un patriótico cuadro exaltador de la vida al servicio de tu país. ";
       if (caja_fuerte notin oficina) {
@@ -2787,6 +2795,10 @@ Object caja_fuerte "caja fuerte"
       Teclear:
         if (~~(procesador.arreglado())) {
           "No hay energía en el complejo, así que la caja fuerte no funciona.";
+        }
+        if (self has general) {
+          "La caja fuerte ya está abierta, y teclear algo más en su teclado no
+           tendrá ningún efecto.";
         }
         t = DireccionDePalabra(2);
         ! 111582
@@ -2976,7 +2988,7 @@ Object jeringa "jeringa" cajon
                  grito desgarrador... Retiras la aguja rápidamente de su pecho, y
                  comienza a toser fuertemente mientras se aprieta el tórax con las
                  manos... ¡Está vivo y despierto! ¡Ha funcionado!^";
-          print "Jason mira la interminable aguja de la jeringa, y exclama:^";
+          print "^Jason mira la interminable aguja de la jeringa, y exclama:^";
           HablaJason("Dios mío... ¿Ha tenido que ensartarme con ESO?"); PreguntaSiNo = 1;
           rtrue;
         }
@@ -4420,8 +4432,8 @@ Object boton_reproducir "botón Reproducir" consola
              la caja, y a continuación la abre. El monitor lo ha mostrado bien claro: el
              número de la combinación es el 111582.^";
       EsperarTecla();
-      print "^El hombre saca algo de su bolsillo... Es un objeto no muy grande, de forma
-             rectangular... Finalmente, lo mete en la caja fuerte y la cierra, volviendo
+      print "^El hombre saca algo de su bolsillo... Es un objeto no muy grande, en forma
+             de cubo... Finalmente, lo mete en la caja fuerte y la cierra, volviendo
              a colocar el cuadro en su posición original.^";
       rtrue;
     ],
