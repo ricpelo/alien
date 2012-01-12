@@ -9408,6 +9408,10 @@ Object tt_computadora
   alien.pnj_ha_llegado = alien.pnj_ha_llegado_default;
   alien.comportamiento = 1;
   PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
+  entrada.sgw_img = Entrada_Sellada_jpg;
+  if (localizacion == entrada) {
+    viewImageCenter(entrada.sgw_img);
+  }
 ];
 
 
