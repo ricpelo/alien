@@ -8568,7 +8568,7 @@ ZIPI_Otro ZIPI_Graficos
   with
     ZIPI_titulo [;
       if (hayGraficos) {
-        "Gráficos: SI";
+        "Gráficos: SI (recomendado)";
       } else {
         "Gráficos: NO";
       }
@@ -8583,7 +8583,7 @@ ZIPI_Otro ZIPI_Tamano_Graficos
     ZIPI_titulo [;
       switch (altoVentanaGrafica) {
         GRAFICOS_PEQUENOS: "Gráficos: PEQUEÑOS";
-        GRAFICOS_MEDIANOS: "Gráficos: MEDIANOS";
+        GRAFICOS_MEDIANOS: "Gráficos: MEDIANOS (recomendado)";
         GRAFICOS_GRANDES:  "Gráficos: GRANDES";
       }
     ],
@@ -8591,7 +8591,7 @@ ZIPI_Otro ZIPI_Tamano_Graficos
       switch (altoVentanaGrafica) {
         GRAFICOS_PEQUENOS: altoVentanaGrafica = GRAFICOS_MEDIANOS;
         GRAFICOS_MEDIANOS: altoVentanaGrafica = GRAFICOS_GRANDES;
-        GRAFICOS_GRANDES: altoVentanaGrafica = GRAFICOS_PEQUENOS;
+        GRAFICOS_GRANDES:  altoVentanaGrafica = GRAFICOS_PEQUENOS;
       }
     ],
     ZIPI_ejecutar [; rtrue; ];
@@ -8601,9 +8601,9 @@ ZIPI_Otro ZIPI_Sonido
   with
     ZIPI_titulo [;
       if (haySonido) {
-        "Sonido: SI";
+        "Sonido global: SI (recomendado)";
       } else {
-        "Sonido: NO";
+        "Sonido global: NO";
       }
     ],
     ZIPI_cambiar [;
@@ -8621,7 +8621,7 @@ ZIPI_Otro ZIPI_Sonido_Fondo
   with
     ZIPI_titulo [;
       if (haySonidoFondo) {
-        "Sonido de fondo: SI";
+        "Sonido de fondo: SI (recomendado)";
       } else {
         "Sonido de fondo: NO";
       }
@@ -8640,8 +8640,8 @@ ZIPI_Otro ZIPI_Sonido_Fondo
 ZIPI_Otro ZIPI_Sonido_Detector
   with
     ZIPI_titulo [;
-      if (self.haySonidoDetector) {
-        "Sonido del detector: SI";
+      if (haySonidoDetector) {
+        "Sonido del detector: SI (recomendado)";
       } else {
         "Sonido del detector: NO";
       }
