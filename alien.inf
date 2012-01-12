@@ -8424,10 +8424,9 @@ Object tt_final
 
 
 [ MenuPrincipal r;
-  altoVentanaGrafica = GRAFICOS_MEDIANOS;
   IniciarGraficosSonidos();
-  altoVentanaGrafica = 250;
-  EncenderGraficosSub();
+  openGraphicWindow(250);
+  clearGraphicWindow();
   barra_estado.numero_lineas = 23;
   barra_estado.dibujar();
   clearMainWindow();
@@ -8543,7 +8542,6 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
-      altoVentanaGrafica = GRAFICOS_MEDIANOS;
       EncenderGraficosSub(true);
       clearTextWindow();
       Introduccion();
@@ -8560,7 +8558,6 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       StatusLineHeight(1);
       glk($002A, gg_statuswin);  ! window_clear
       glk($002F, gg_mainwin);    ! set_window
-      altoVentanaGrafica = GRAFICOS_MEDIANOS;
       EncenderGraficosSub(true);
       clearTextWindow();
       Inicializar(true);
