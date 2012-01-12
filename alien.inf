@@ -2,8 +2,8 @@
 !% -G
 !% -D
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59190
-!% $MAX_VERBS=154
+!% $MAX_PROP_TABLE_SIZE=59250
+!% $MAX_VERBS=155
 
 !
 ! "A·L·I·E·N" - Edición Especial
@@ -8559,6 +8559,7 @@ ZIPI_Menu ZIPI_Configuracion
     ZIPI_item
       ZIPI_Graficos
       ZIPI_Tamano_Graficos
+      ZIPI_Sonido
       ZIPI_Sonido_Fondo
       ZIPI_Sonido_Detector;
 
@@ -9469,6 +9470,9 @@ Verb 'usa' 'utiliza'
   * noun noun       -> Usar
   * noun 'con' noun -> Usar;
 
+Verb meta 'configuracion'
+  *                                            -> Configuracion;
+
 Verb meta 'sonido' 'sonidos'
   *                                            -> Sonido
   * 'on' / 'encendido' / 'si'                  -> EncenderSonido
@@ -9754,6 +9758,36 @@ Extend 'di' first
 !
 ! ====================================================================
 
+
+
+[ ConfiguracionSub timer;
+  timer = control_timer.timer_actual;
+  control_timer.desactivar();
+  if (hayGraficos) {
+    ApagarGraficosSub(true);
+    hayGraficos = true;
+  }
+  barra_estado.numero_lineas = 26;
+  barra_estado.dibujar();
+  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
+                       SONIDO_BUCLE_INFINITO);
+  Damusix.Tocar(Estancia_ogg);
+  clearMainWindow();
+  ZIPI_RunMenu(ZIPI_Configuracion);
+  if (haySonidoFondo) {
+    Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, LugarReal().sgw_vol,
+                         SONIDO_BUCLE_INFINITO);
+    Damusix.TocarCanal(CANAL_FONDO);
+  }
+  barra_estado.numero_lineas = 1;
+  barra_estado.dibujar();
+  if (hayGraficos) {
+    EncenderGraficosSub(true);
+  }
+  clearTextWindow();
+  control_timer.activar(timer);
+  <<Mirar>>;
+];
 
 
 [ GraficosSub;
