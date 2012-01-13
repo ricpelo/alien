@@ -6088,7 +6088,7 @@ Object jason "Jason" nave1
                        rtrue;
                   }
                 }
-                switch (random(9)) {
+                switch (random(15)) {
                   1: HablaJason("¡Estoy deseando entrar en acción!");
                   2: HablaJason("Este lugar me da escalofríos...");
                   3: HablaJason("En el espacio sólo puedes fiarte de ti mismo.");
@@ -6150,6 +6150,19 @@ Object jason "Jason" nave1
                                    por más que lo deseara.");
                        "^Se ve que se llevan maravillosamente.";
                      }
+                 10: HablaJason("Me encanta este clima.");
+                 11: HablaJason("Señor, deme una alegría y dígame que hay un bar por
+                                 aquí cerca..."); PreguntaSiNo = 1;
+                 12: HablaJason("Me pregunto cuántas mujeres viven en este complejo...");
+                     HablaMadre("12 mujeres censadas, Mayor.");
+                     HablaJason("Ya lo sabía, G-R-A-C-I-A-S.");
+                 13: HablaJason("Esto no me gusta nada. NADA.");
+                 14: print "^Jason se acerca y te susurra:^";
+                     HablaJason("Hágame un favor: apague a esa entrometida en cuanto
+                                 todo esto acabe.");
+                     HablaMadre("No tengo un enchufe del que pueda tirar, Mayor.");
+                     HablaJason("Mierda, me ha oído...");
+                 15: HablaJason("Cuanto antes nos vayamos, más tiempo viviremos.");
                 }
               } else {
                 ! Ya lo hemos sacado de la vaina:
