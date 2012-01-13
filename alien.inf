@@ -3,9 +3,7 @@
 !% $MAX_STATIC_DATA=20000
 !% $MAX_PROP_TABLE_SIZE=59212
 !% $MAX_VERBS=155
-!!% -D
 !!% $MAX_VERBS=200
-!!% -X
 
 !
 ! "A·L·I·E·N" - Edición Especial
