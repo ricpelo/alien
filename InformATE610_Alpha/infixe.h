@@ -44,6 +44,7 @@
 System_file;
 #Ifdef DEBUG;
 
+
 Constant INFIXTT_NUMBER 0;
 Constant INFIXTT_ARRAY 1;
 Constant INFIXTT_ROUTINE 2;
@@ -127,14 +128,16 @@ Array infix_text -> 128;
 
   i2 = range2-range1; it2 = infix_text+2;
   for (i=0: i<=i2: i++)
-  {   infix_text-->0 = 62; @output_stream 3 infix_text;
+  {   
+      infix_text-->0 = 62; 
+      !@output_stream 3 infix_text;
       if (t) print (string) t-->i; else PrintingRule(i+range1);
-      @output_stream -3;
+      !@output_stream -3;
       k = infix_text-->0;
       if (printingrule==infixprintattribute or infixprintproperty) {
- 	  for (j=2:j<k+2:j++)
-	      if (infix_text->j=='/') break;
-	  k=j-2;
+       for (j=2:j<k+2:j++)
+          if (infix_text->j=='/') break;
+      k=j-2;
       }
       if (k ~= wl) jump XL;
       if (itlc->(it2->0) ~= wa->0) jump XL;
@@ -550,7 +553,7 @@ Array InfixRV_commas --> 32;
  acc;
                      default:
                          w = InfixRV_lvals-->lvalside; if (w == -1) return -1;
-                         @storew #globals_array w acc;
+                 !        @storew #globals_array w acc;
                  }
                  switch(InfixRV_rvals-->maxi)
                  {   'post++': acc--;
@@ -683,42 +686,42 @@ Array InfixRV_commas --> 32;
 
 [ InfixWelcomeSub;
     print "; Bienvenido al depurador ~Infix~ (1/990428) que te permite
-	usar los siguientes verbos de depuración:^^
-	~; <expresion>~: evalúa esa expresión, que puede ser cualquier
-	expresión válida de Inform. Por ejemplo, ~;localizacion~
-	imprimirá el valor de la variable ~localizacion~, ~; 3*5+1~
-	imprimirá 16, ~; children(caja de madera)~ te dirá cuántos
-	elementos contiene. (Puedes referirte a los objetos tanto por
-	su nombre dentro del código fuente, como ~obj_n~, o
-	escribiendo el nombre bajo el que normalmente los reconocería el parser,
-	como ~lado norte~: el efecto es el mismo.)^
-	Se permite cualquier expresión, excepto las que contengan
-	cadenas de texto (comillas dobles). Pero puedes enviar
-	mensajes a los objetos, llamar a rutinas o asignar valores a
-	las variables, propiedades y elementos de los arrays.
-	^   ~; puntuacion++~ es una forma de progresar en el mundo.
-	^   ~; banderafin = true~ es una forma de salirse de él.
-	^   ~; PararDaemon(enanito odioso)~ evitará que el enano te
-	moleste.^
-	También se permiten condiciones, como ~; puntuacion>20~, en
-	cuyo caso el resultado es 1 (si true) o 0 (si false).^^";
+    usar los siguientes verbos de depuración:^^
+    ~; <expresion>~: evalúa esa expresión, que puede ser cualquier
+    expresión válida de Inform. Por ejemplo, ~;localizacion~
+    imprimirá el valor de la variable ~localizacion~, ~; 3*5+1~
+    imprimirá 16, ~; children(caja de madera)~ te dirá cuántos
+    elementos contiene. (Puedes referirte a los objetos tanto por
+    su nombre dentro del código fuente, como ~obj_n~, o
+    escribiendo el nombre bajo el que normalmente los reconocería el parser,
+    como ~lado norte~: el efecto es el mismo.)^
+    Se permite cualquier expresión, excepto las que contengan
+    cadenas de texto (comillas dobles). Pero puedes enviar
+    mensajes a los objetos, llamar a rutinas o asignar valores a
+    las variables, propiedades y elementos de los arrays.
+    ^   ~; puntuacion++~ es una forma de progresar en el mundo.
+    ^   ~; banderafin = true~ es una forma de salirse de él.
+    ^   ~; PararDaemon(enanito odioso)~ evitará que el enano te
+    moleste.^
+    También se permiten condiciones, como ~; puntuacion>20~, en
+    cuyo caso el resultado es 1 (si true) o 0 (si false).^^";
     print "~;examina <algo>~ o ~;x <algo>~ o ~;ex <algo>~ te da todo
-	tipo de detalles sobre ese algo. Por ejemplo, ~;x ##Coger~
-	describe la acción Coger, ~;x Class~ la clase Class, ~;x
-	'deja'~ la palabra de diccionario ~deja~ y lo mismo para
-	números, rutinas, arrays y por supuesto objetos. El comando
-	~;xo~ examina algo como un objeto, así por ejemplo ~;x
-	localizacion~ te da detalles sobre la variable ~localizacion~,
-	mientras que ~;xo localizacion~ te los da sobre el objeto a
-	que se refiere.^^";
+    tipo de detalles sobre ese algo. Por ejemplo, ~;x ##Coger~
+    describe la acción Coger, ~;x Class~ la clase Class, ~;x
+    'deja'~ la palabra de diccionario ~deja~ y lo mismo para
+    números, rutinas, arrays y por supuesto objetos. El comando
+    ~;xo~ examina algo como un objeto, así por ejemplo ~;x
+    localizacion~ te da detalles sobre la variable ~localizacion~,
+    mientras que ~;xo localizacion~ te los da sobre el objeto a
+    que se refiere.^^";
     print "~;give~, ~;remove~ and ~;move~ funcionan igual que los
-	comandos Inform del mismo nombre.^^";
+    comandos Inform del mismo nombre.^^";
     print "~;<~ causa una acción,  por ejemplo ~;< Comer queso~.^^";
     print "~;watch~ o ~;w~ o ~;observa~ o ~;o~ activa un ~watch~
-	para actividades varias. Pon simplemente ~;w~ para más
-	información.^^";
+    para actividades varias. Pon simplemente ~;w~ para más
+    información.^^";
     print "~;inventario~ o ~;i~ muestra los objetos, variables,
-	etc. del juego.^";
+    etc. del juego.^";
 ];
 [ InfixEvalSub;
   InfixExamineP(true);
@@ -738,8 +741,8 @@ Array InfixRV_commas --> 32;
   if (otro < 0 || otro>=48) "<Atributo inexistente>";
   if (f) print "@@126";
   print (DepurarAtributo) otro;
-  if (f) @clear_attr uno otro;
-  else @set_attr uno otro;
+  !if (f) @clear_attr uno otro;
+  !else @set_attr uno otro;
 ];
 [ InfixMoveSub;
   print "; move (", (the) uno, ") to (", (the) otro, ")";
@@ -813,7 +816,7 @@ Array InfixRV_commas --> 32;
           print "; Propiedad ", (property) uno, " (con el número ", uno, ")^";
           objectloop (x provides uno)
           {   if (flag) print ", "; else print "Los siguientes objetos usan
-		  (~provide~) esta propiedad: ";
+          (~provide~) esta propiedad: ";
               print (name) x, " (", x, ")"; flag = true;
           }
           if (flag == false) "Que no es ~provided~ por ningún objeto";
@@ -871,14 +874,14 @@ Array InfixRV_commas --> 32;
               && uno <= #highest_fake_action_number)
              "; Acción falsa ", (InfixPrintFakeAction) uno,
               " (con el número ", uno, ")^No es generada por ninguna
-		 línea de gramática";
+         línea de gramática";
           print "; Acción ", (InfixPrintAction) uno,
               " (con el número ", uno, ")^";
-          w = HDR_DICTIONARY --> 0;
-          for (b = 0 : b < (HDR_DICTIONARY-->0 + 5)-->0 : b++)
-          {   w = HDR_DICTIONARY-->0 + 7 + b*9;
+          w = 0-->4;
+          for (b=0:b<(0-->4 + 5)-->0:b++)
+          {   w = 0-->4 + 7 + b*9;
               if ((w->#dict_par1) & 1)
-              {   a = (HDR_STATICMEMORY --> 0) --> ($ff - (w -> #dict_par2));
+              {   a = (0-->7)-->($ff-(w->#dict_par2));
                   lines = a->0; a++;
                   for (:lines > 0:lines--)
                   {   a = DesempaquetarLineaGramatica(a);
@@ -894,7 +897,7 @@ Array InfixRV_commas --> 32;
       INFIXTT_SYSFUN:
           if (brief) "; == ", uno;
          "; Función de librería ~", (address) infix_parsed_lvalue, "~
-	  no ha sido reescrita, y mantiene su definición estándar.";
+      no ha sido reescrita, y mantiene su definición estándar.";
       INFIXTT_STATICSTRING:
           if (brief) "; == ", uno;
           if (metaclass(uno) ~= String) "; ", uno, " no es una cadena.";
@@ -906,34 +909,34 @@ Array InfixRV_commas --> 32;
 ];
 [ InfixDescribeWatchSub x y z s flag aflag;
     print "; El verbo ~;watch~ o ~;observa~ te permite activar un
-	~observador~ para cualquier rutina u objeto: por ejemplo
-	~;watch PuntuacionSub~ o ~;watch espada de plata~. El
-	observador imprimirá información cada vez que la rutina o el
-	objeto sean accedidos. También puedes usar los comandos:
-	^   ~;watch objetos~: observa todos los cambios en propiedades
-	o atributos de cualquier objeto";
+    ~observador~ para cualquier rutina u objeto: por ejemplo
+    ~;watch PuntuacionSub~ o ~;watch espada de plata~. El
+    observador imprimirá información cada vez que la rutina o el
+    objeto sean accedidos. También puedes usar los comandos:
+    ^   ~;watch objetos~: observa todos los cambios en propiedades
+    o atributos de cualquier objeto";
     if (debug_flag & 8) print " (on)"; else print " (off)";
 
     print ";^   ~;watch relojes~: observa los daemons y relojes
-	activos en cada turno";
+    activos en cada turno";
     if (debug_flag & 4) print " (on)"; else print " (off)";
 
     print ";^    ~;watch mensajes~: observa los mensajes enviados a
-	cualquier objeto";
+    cualquier objeto";
     if (debug_flag & 1) print " (on)"; else print " (off)";
 
     print ";^   ~;watch acciones~: observa la activación de cualquier acción";
     if (debug_flag & 2) print " (on)"; else print " (off)";
 
     print ".^~;watch~ puede abreviarse como ~;w~ o ~;o~ y puedes usar
-	~off~ para dejar de observar algo: por ejemplo ~;w localizacion off~.^";
+    ~off~ para dejar de observar algo: por ejemplo ~;w localizacion off~.^";
     aflag = debug_flag;
     objectloop (x has infix__watching) flag = true; aflag = aflag || flag;
     if (flag) print "Están siendo observados los siguientes objetos: ";
     flag = false;
     objectloop (x has infix__watching)
     {   if (flag) print ", "; flag = true;
-      	print (name) x, " (", x, ")";
+          print (name) x, " (", x, ")";
     }
     if (flag) new_line;
     s = (#highest_routine_number - #lowest_routine_number);
@@ -945,8 +948,8 @@ Array InfixRV_commas --> 32;
     {   for (y=1,z=0:y<256:z++,y=y*2)
     {   if ((#routine_flags_array->x) & y)
     {   if (flag) print ", "; flag = true;
-	print (InfixPrintRoutine)
-	    #lowest_routine_number + x*8 + z;
+    print (InfixPrintRoutine)
+        #lowest_routine_number + x*8 + z;
     }
     }
     }
@@ -957,15 +960,15 @@ Array InfixRV_commas --> 32;
     if (uno == 0) return InfixDescribeWatchSub();
     if (infix_term_type == INFIXTT_ROUTINE)
     {   i = infix_parsed_lvalue/8;
-      	for (j=0,k=1:j<infix_parsed_lvalue%8:j++) k=k*2;
-      	l = #routine_flags_array->i;
-      	l = l | k;
-      	@storeb #routine_flags_array i l;
-     	"; Observando la rutina ", (InfixPrintRoutine) infix_parsed_lvalue, ".";
+          for (j=0,k=1:j<infix_parsed_lvalue%8:j++) k=k*2;
+          l = #routine_flags_array->i;
+          l = l | k;
+    !      @storeb #routine_flags_array i l;
+         "; Observando la rutina ", (InfixPrintRoutine) infix_parsed_lvalue, ".";
     }
     if (metaclass(uno) == Object)
     {   give uno infix__watching;
-     	"; Observando el objeto ~", (name) uno, "~ (", uno, ").";
+         "; Observando el objeto ~", (name) uno, "~ (", uno, ").";
     }
     InfixDescribeWatchSub();
 ];
@@ -976,11 +979,11 @@ Array InfixRV_commas --> 32;
       for (j=0,k=1:j<infix_parsed_lvalue%8:j++) k=k*2;
       l = #routine_flags_array->i;
       l = l & (~k);
-      @storeb #routine_flags_array i l;
+  !    @storeb #routine_flags_array i l;
      "; No se está observando ", (InfixPrintRoutine) infix_parsed_lvalue, ".";
   }
   if (metaclass(uno) == Object)
-  {   @clear_attr uno infix__watching;
+  {  ! @clear_attr uno infix__watching;
      "; No se está observando el objeto ~", (name) uno, "~ (", uno, ").";
   }
   InfixDescribeWatchSub();
@@ -988,63 +991,63 @@ Array InfixRV_commas --> 32;
 [ InfixList from to tab filter i flag;
     print "^    ";
     for (i=from:i<=to:i++)
-      	if (tab-->(i-from))
-      	{   flag = true;
+          if (tab-->(i-from))
+          {   flag = true;
             if (tab == #array_names_array)
             {   Symb__Tab(INFIXTT_ARRAY, i);
-              	flag = ~~(temp__global3 & 16);
+                  flag = ~~(temp__global3 & 16);
             }
             if (tab == #routine_names_array)
             {   Symb__Tab(INFIXTT_ROUTINE,i);
-              	flag = ~~(temp__global3 & 16);
+                  flag = ~~(temp__global3 & 16);
             }
             if (tab == #constant_names_array)
             {   Symb__Tab(INFIXTT_CONSTANT,i);
-              	flag = (~~(temp__global3 & 16)) && (temp__global3 % 16 == filter);
+                  flag = (~~(temp__global3 & 16)) && (temp__global3 % 16 == filter);
             }
             if (flag) print (string) tab-->(i-from), " ";
-      	}
+          }
     new_line;
 ];
 [ InfixInvSub i;
 
     print (string) Historia, (string) Titular;
     print "  ", (number) #highest_object_number - #lowest_object_number + 1,
-      	" objetos;^";
+          " objetos;^";
     print "  objetos no de librería:";
     InfixList(#lowest_constant_number, #highest_constant_number,
-      	      #constant_names_array, 2);
+                #constant_names_array, 2);
     print "  ", (number) #highest_class_number - #lowest_class_number + 1,
-      	"  clases:^    ";
+          "  clases:^    ";
     for (i=#lowest_class_number:i<=#highest_class_number:i++)
-      	print (name) #class_objects_array-->i, " ";
+          print (name) #class_objects_array-->i, " ";
     new_line;
     print "  arrays no de librería:";
     InfixList(#lowest_array_number, #highest_array_number,
-      	      #array_names_array);
+                #array_names_array);
     print "  rutinas no de librería:";
     InfixList(#lowest_routine_number, #highest_routine_number,
-      	      #routine_names_array);
+                #routine_names_array);
     print "  constantes no de librería:";
     InfixList(#lowest_constant_number, #highest_constant_number,
-      	      #constant_names_array, 0);
+                #constant_names_array, 0);
     print "  propiedades (comunes):";
     InfixList(#lowest_property_number, 63, #property_names_array);
     print "  propiedades (individuales):";
     InfixList(64, #highest_property_number, #property_names_array + 126);
     print "  atributos:";
     InfixList(#lowest_attribute_number, #highest_attribute_number,
-      	      #attribute_names_array);
+                #attribute_names_array);
     if (true) return;
     print "  variables globales:";
     InfixList(#lowest_global_number, #highest_global_number,
-      	      #global_names_array);
+                #global_names_array);
     print "  acciones:";
     InfixList(#lowest_action_number, #highest_action_number,
-      	      #action_names_array);
+                #action_names_array);
     print "  acciones falsas:";
     InfixList(#lowest_fake_action_number, #highest_fake_action_number,
-      	      #fake_action_names_array);
+                #fake_action_names_array);
 ];
 
 Verb meta ";i" ";inv" ";inventario"
@@ -1062,24 +1065,26 @@ Verb meta ";<"
 Verb meta ";"
      * -> InfixWelcome
      * InfixRvalue -> InfixEval;
+
 Verb meta ";give"
      * InfixRvalue InfixRvalue -> InfixGive;
+     
 Verb meta ";move"
      * InfixRvalue "to" InfixRvalue -> InfixMove;
 Verb meta ";remove"
      * InfixRvalue -> InfixRemove;
 Verb meta ";watch" ";w" ";observa" ";o"
-    * 					-> InfixWatchOn
-    * "relojes"/"daemons"/"timers" 	-> ActivarRelojes
+    *                     -> InfixWatchOn
+    * "relojes"/"daemons"/"timers"     -> ActivarRelojes
     * "relojes"/"daemons"/"timers" "off" -> DesactivarRelojes
-    * "actions"/"acciones"		-> ActivarAcciones
-    * "actions"/"acciones" "off"	-> DesactivarAcciones
-    * "messages"/"mensajes"		-> ActivarRutinas
-    * "messages"/"mensajes" "off"	-> DesactivarRutinas
-    * "objects"/"objetos"		-> CambiosOn
-    * "objects"/"objetos" "off"		-> CambiosOff
-    * InfixRvalueTerm 			-> InfixWatchOn
-    * InfixRvalueTerm "off" 		-> InfixWatchOff;
+    * "actions"/"acciones"        -> ActivarAcciones
+    * "actions"/"acciones" "off"    -> DesactivarAcciones
+    * "messages"/"mensajes"        -> ActivarRutinas
+    * "messages"/"mensajes" "off"    -> DesactivarRutinas
+    * "objects"/"objetos"        -> CambiosOn
+    * "objects"/"objetos" "off"        -> CambiosOff
+    * InfixRvalueTerm             -> InfixWatchOn
+    * InfixRvalueTerm "off"         -> InfixWatchOff;
 
 #Endif; ! DEBUG
 
