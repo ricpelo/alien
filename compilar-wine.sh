@@ -1,4 +1,4 @@
 #!/bin/sh
 
-front-wine alien alien.inf
+front-wine alien alien.inf $*
 

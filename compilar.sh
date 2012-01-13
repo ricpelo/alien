@@ -1,4 +1,4 @@
 #!/bin/sh
 
-front alien alien.inf
+front alien alien.inf $*
 
