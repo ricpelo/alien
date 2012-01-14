@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59212
+!% $MAX_PROP_TABLE_SIZE=59272
 !% $MAX_VERBS=200
 
 !
@@ -166,6 +166,8 @@ Replace PermitirEmpujarDir;
 
 ! Ponemos nuestra propia versión de ZIPI_RunMenu, para el menú principal:
 Replace ZIPI_RunMenu;
+Replace ZIPI_RunOtro;
+
 
 ! ====================================================================
 
@@ -8469,7 +8471,7 @@ Object tt_final
 .Menu;
   r = ZIPI_RunMenu(Menu_Principal);
   if (r == 3) jump Menu;
-  if (r ~= 2) quit;
+  if (r ~= 1) quit;
   barra_estado.numero_lineas = 1;
   barra_estado.dibujar();
   if (hayGraficos) EncenderGraficosSub(true);
@@ -8478,7 +8480,17 @@ Object tt_final
 ];
 
 
-[ ZIPI_RunMenu _m   i j count cur key target redibujar ft;
+[ ZIPI_RunOtro _o r;
+  ZIPI_PintaTitulo(_o.ZIPI_titulo);
+  print "^";
+  r = _o.ZIPI_ejecutar();
+  if (~~r)
+     ZIPI_Espera();
+  return r;
+];
+
+
+[ ZIPI_RunMenu _m   i j count cur key target redibujar ft r;
 
   redibujar = 1;
 
@@ -8532,7 +8544,7 @@ Object tt_final
        if (cur >= count) cur = 0;
        break;
      'q', 'Q', 27, 131, 10, 8, -2:
-       return;
+       rfalse;
 
      132, 13, 'n', ' ', -3, -6:
        target = _m.&ZIPI_item-->cur;
@@ -8545,9 +8557,9 @@ Object tt_final
        else if (target provides ZIPI_cambiar)
          target.ZIPI_cambiar();
        else {
-         ZIPI_RunOtro(target);
+         r = ZIPI_RunOtro(target);
          if (target == ZIPI_Restaurar) return 3;
-         else return 2;
+         if (r ~= 0) return r;
        }
        redibujar = 1;
        break;
@@ -8585,7 +8597,14 @@ ZIPI_Menu ZIPI_Configuracion
       ZIPI_Tamano_Graficos
       ZIPI_Sonido
       ZIPI_Sonido_Fondo
-      ZIPI_Sonido_Detector;
+      ZIPI_Sonido_Detector
+      ZIPI_Volver;
+
+
+ZIPI_Otro ZIPI_Volver
+  with
+    ZIPI_titulo "Volver",
+    ZIPI_ejecutar [; return 3; ];
 
 
 ZIPI_Otro ZIPI_Graficos
@@ -8601,6 +8620,7 @@ ZIPI_Otro ZIPI_Graficos
       hayGraficos = ~~hayGraficos;
     ],
     ZIPI_ejecutar [; rtrue; ];
+
 
 ZIPI_Otro ZIPI_Tamano_Graficos
   with
