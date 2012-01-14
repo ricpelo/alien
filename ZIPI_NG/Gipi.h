@@ -31,6 +31,10 @@ Class ZIPI_Pista
 Class ZIPI_Otro
 	with ZIPI_titulo, ZIPI_ejecutar;
 
+ZIPI_Otro ZIPI_Separador
+	with ZIPI_titulo "",
+	ZIPI_ejecutar [; rtrue; ];
+
 !================================================================
 ! Variables globales
 !

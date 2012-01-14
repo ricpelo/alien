@@ -60,15 +60,8 @@ BEGIN{
   next;
 }
 /<NADA>/{
-  textos++;
-  split($0,a,"<NADA>");
-  titulootro[textos]=a[2];
-  lineas[textos]=0;
-#  print "! Nivel=" nivel;
-#  print "! Menu=" menunivel[nivel];
   m=menunivel[nivel];
-#  print "! Opcion=" opciones[m];
-  item[m, opciones[m]]="ZIPI_Otro" textos;
+  item[m, opciones[m]]="ZIPI_Separador";
   opciones[m]++;
   nada=1;
   next;
@@ -154,7 +147,6 @@ BEGIN{
     next;
   }
   if (nada) {
-    texto[textos, lineas[textos]++]="rtrue;";
     nada = 0;
     next;
   }

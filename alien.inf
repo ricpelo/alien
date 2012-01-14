@@ -8523,14 +8523,14 @@ Object tt_final
     ZIPI_setcursor(5,j);
 
     if (ft) {
-      if (_m == ZIPI_Menu_Principal) {
+      if (_m == ZIPI_Menu_Principal or ZIPI_Menu0) {
         tt_computadora.escribe(0, "Salir");
       } else {
         tt_computadora.escribe(0, "Volver");
       }
       tt_computadora.visualiza();
     } else {
-      if (_m == ZIPI_Menu_Principal) {
+      if (_m == ZIPI_Menu_Principal or ZIPI_Menu0) {
         print (s_pre) "Salir";
       } else {
         print (s_pre) "Volver";
@@ -8555,12 +8555,18 @@ Object tt_final
 
     switch(key) {
       'k', 'p', '-', '_', 129, -4:
-        cur--;
-        if (cur < 0) cur = count - 1;
+        do {
+          cur--;
+          if (cur == count - 2) cur--;
+          if (cur < 0) cur = count - 1;
+        } until ((_m.&ZIPI_item-->cur) ~= ZIPI_Separador);
         break;
       'j', 'n', '=', '+', 130, -5:
-        cur++;
-        if (cur >= count) cur = 0;
+        do {
+          cur++;
+          if (cur == count - 2) cur++;
+          if (cur >= count) cur = 0;
+        } until ((_m.&ZIPI_item-->cur) ~= ZIPI_Separador);
         break;
       'q', 'Q', 27, 131, 10, 8, -2:
         rfalse;
@@ -8598,12 +8604,6 @@ ZIPI_Menu ZIPI_Menu_Principal
       ZIPI_Configuracion
       ZIPI_Separador
       ZIPI_Menu1;
-
-
-ZIPI_Otro ZIPI_Separador
-  with
-    ZIPI_titulo "",
-    ZIPI_ejecutar [; rtrue; ];
 
 
 ZIPI_Menu ZIPI_Configuracion

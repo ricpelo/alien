@@ -12,12 +12,12 @@ with
   ZIPI_titulo "Sistema de pistas interactivas",
   ZIPI_item
     ZIPI_Menu1
-    ZIPI_Otro8
+    ZIPI_Separador
     ZIPI_Menu2
     ZIPI_Menu3
     ZIPI_Menu6
     ZIPI_Menu7
-    ZIPI_Otro10
+    ZIPI_Separador
     ZIPI_Menu16
 ;
 ZIPI_Menu ZIPI_Menu1
@@ -100,7 +100,7 @@ ZIPI_Menu ZIPI_Menu9
 with
   ZIPI_titulo "Zonas del complejo",
   ZIPI_item
-    ZIPI_Otro9
+    ZIPI_Otro8
     ZIPI_Menu10
 ;
 ZIPI_Menu ZIPI_Menu10
@@ -159,44 +159,44 @@ with
   ZIPI_titulo "Información adicional (mapas y solución)",
   ZIPI_item
     ZIPI_Menu17
-    ZIPI_Otro16
+    ZIPI_Separador
     ZIPI_Menu19
 ;
 ZIPI_Menu ZIPI_Menu17
 with
   ZIPI_titulo "Mapas (sólo para casos de extrema necesidad)",
   ZIPI_item
-    ZIPI_Otro11
-    ZIPI_Otro12
+    ZIPI_Otro9
+    ZIPI_Otro10
     ZIPI_Menu18
 ;
 ZIPI_Menu ZIPI_Menu18
 with
   ZIPI_titulo "El complejo",
   ZIPI_item
+    ZIPI_Otro11
+    ZIPI_Otro12
     ZIPI_Otro13
-    ZIPI_Otro14
-    ZIPI_Otro15
 ;
 ZIPI_Menu ZIPI_Menu19
 with
   ZIPI_titulo "Solución (prohibido leer esto)",
   ZIPI_item
-    ZIPI_Otro17
-    ZIPI_Otro18
-    ZIPI_Otro19
+    ZIPI_Otro14
+    ZIPI_Otro15
+    ZIPI_Otro16
     ZIPI_Menu20
 ;
 ZIPI_Menu ZIPI_Menu20
 with
   ZIPI_titulo "El complejo",
   ZIPI_item
+    ZIPI_Otro17
+    ZIPI_Otro18
+    ZIPI_Otro19
     ZIPI_Otro20
     ZIPI_Otro21
     ZIPI_Otro22
-    ZIPI_Otro23
-    ZIPI_Otro24
-    ZIPI_Otro25
 ;
 ZIPI_Pista ZIPI_Pista0
 with
@@ -763,25 +763,13 @@ with
   ];
 ZIPI_Otro ZIPI_Otro8
 with
-  ZIPI_titulo "",
-  ZIPI_ejecutar [;
-       rtrue;
-  ];
-ZIPI_Otro ZIPI_Otro9
-with
   ZIPI_titulo "¡Cuidado!",
   ZIPI_ejecutar [;
        print "^Si sigues adelante, sabrás qué estancias tiene el complejo. Te recomendamos que ";
        print "^intentes descubrirlo por ti mismo, moviéndote por su interior, pero si aún así ";
        print "^quieres continuar con las pistas, entra en la siguiente opción del menú. ";
   ];
-ZIPI_Otro ZIPI_Otro10
-with
-  ZIPI_titulo "",
-  ZIPI_ejecutar [;
-       rtrue;
-  ];
-ZIPI_Otro ZIPI_Otro11
+ZIPI_Otro ZIPI_Otro9
 with
   ZIPI_titulo "La nave",
   ZIPI_ejecutar [;
@@ -792,7 +780,7 @@ with
        print "        +------+  +------+^";
        font on;
   ];
-ZIPI_Otro ZIPI_Otro12
+ZIPI_Otro ZIPI_Otro10
 with
   ZIPI_titulo "El exterior",
   ZIPI_ejecutar [;
@@ -814,7 +802,7 @@ with
        print "                 (robot)^";
        font on;
   ];
-ZIPI_Otro ZIPI_Otro13
+ZIPI_Otro ZIPI_Otro11
 with
   ZIPI_titulo "Nivel 0",
   ZIPI_ejecutar [;
@@ -838,7 +826,7 @@ with
        print "                                    v  (abajo al nivel -1)^";
        font on;
   ];
-ZIPI_Otro ZIPI_Otro14
+ZIPI_Otro ZIPI_Otro12
 with
   ZIPI_titulo "Nivel -1",
   ZIPI_ejecutar [;
@@ -866,7 +854,7 @@ with
        print "      +---------------+  +------------+  +---------------+^";
        font on;
   ];
-ZIPI_Otro ZIPI_Otro15
+ZIPI_Otro ZIPI_Otro13
 with
   ZIPI_titulo "Nivel -2",
   ZIPI_ejecutar [;
@@ -885,13 +873,7 @@ with
        print "   emergencia)^";
        font on;
   ];
-ZIPI_Otro ZIPI_Otro16
-with
-  ZIPI_titulo "",
-  ZIPI_ejecutar [;
-       rtrue;
-  ];
-ZIPI_Otro ZIPI_Otro17
+ZIPI_Otro ZIPI_Otro14
 with
   ZIPI_titulo "En la nave",
   ZIPI_ejecutar [;
@@ -900,7 +882,7 @@ with
        print "^Jason que haga lo mismo. Dile a Madre que abra la compuerta exterior, y salid los dos.^ ";
        print "^Por cierto: la palanca no sirve para nada durante el juego... ";
   ];
-ZIPI_Otro ZIPI_Otro18
+ZIPI_Otro ZIPI_Otro15
 with
   ZIPI_titulo "En el exterior",
   ZIPI_ejecutar [;
@@ -915,7 +897,7 @@ with
        print "^exterior. Vete al norte, de nuevo a la entrada del procesador atmosférico. Enciende ";
        print "^la linterna y entra. ";
   ];
-ZIPI_Otro ZIPI_Otro19
+ZIPI_Otro ZIPI_Otro16
 with
   ZIPI_titulo "El procesador atmosférico",
   ZIPI_ejecutar [;
@@ -926,7 +908,7 @@ with
        print "^atmosférico, por lo que ya no necesitarás el traje ni la linterna. Sal de la sala, ";
        print "^sur, sur, este y entra por la puerta del complejo. ";
   ];
-ZIPI_Otro ZIPI_Otro20
+ZIPI_Otro ZIPI_Otro17
 with
   ZIPI_titulo "El monstruo",
   ZIPI_ejecutar [;
@@ -936,7 +918,7 @@ with
        print "^movimiento te advertirá de su presencia, así que no te debe resultar difícil ";
        print "^esquivarlo. No intentes dispararle, o luchar con él. Tan sólo evítalo. ";
   ];
-ZIPI_Otro ZIPI_Otro21
+ZIPI_Otro ZIPI_Otro18
 with
   ZIPI_titulo "Rescatando a Jason",
   ZIPI_ejecutar [;
@@ -951,7 +933,7 @@ with
        print "^bisturí láser y saca a Jason. En unos 7 u 8 turnos, Jason caerá al suelo ";
        print "^inconsciente. En ese momento, clávale la inyección de adrenalina y se recuperará. ";
   ];
-ZIPI_Otro ZIPI_Otro22
+ZIPI_Otro ZIPI_Otro19
 with
   ZIPI_titulo "Investigando",
   ZIPI_ejecutar [;
@@ -965,7 +947,7 @@ with
        print "^comprobarás que el monstruo era un espécimen en estudio que luego escapó, sembrando ";
        print "^caos y muerte. Hay que hacer estallar todo esto. ";
   ];
-ZIPI_Otro ZIPI_Otro23
+ZIPI_Otro ZIPI_Otro20
 with
   ZIPI_titulo "El contenido de la caja fuerte",
   ZIPI_ejecutar [;
@@ -981,7 +963,7 @@ with
        print "^ser rápido. Otra cosa que puedes hacer es, sencillamente, no examinar la pantalla ";
        print "^(toda la información que necesitas está aquí). ";
   ];
-ZIPI_Otro ZIPI_Otro24
+ZIPI_Otro ZIPI_Otro21
 with
   ZIPI_titulo "La zona de emergencia",
   ZIPI_ejecutar [;
@@ -994,7 +976,7 @@ with
        print "^activará la autodestrucción. Tienes diez minutos para escapar (hay tiempo de sobra si ";
        print "^no te demoras). ";
   ];
-ZIPI_Otro ZIPI_Otro25
+ZIPI_Otro ZIPI_Otro22
 with
   ZIPI_titulo "La huida final",
   ZIPI_ejecutar [;
