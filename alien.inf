@@ -8471,7 +8471,7 @@ Object tt_final
 .Menu;
   r = ZIPI_RunMenu(Menu_Principal);
   if (r == 3) jump Menu;
-  if (r ~= 1) quit;
+  if (r ~= 2) quit;
   barra_estado.numero_lineas = 1;
   barra_estado.dibujar();
   if (hayGraficos) EncenderGraficosSub(true);
@@ -8495,7 +8495,7 @@ Object tt_final
   redibujar = 1;
 
   cur = 0;
-  count = _m.#ZIPI_item / WORDSIZE; count++;
+  count = _m.#ZIPI_item / WORDSIZE; count = count + 2;
   ft = true;
 
   for (::) {
@@ -8504,7 +8504,7 @@ Object tt_final
       redibujar = 0;
     }
 
-    for (i = 0: i < count - 1: i++) {
+    for (i = 0: i < count - 2: i++) {
       j = i + 3;
       ZIPI_setcursor(5,j);
       if (ft) {
@@ -8518,7 +8518,7 @@ Object tt_final
       }
     }
 
-    j = i + 3;
+    j = i + 4;
     ZIPI_setcursor(5,j);
 
     if (ft) {
@@ -8558,19 +8558,18 @@ Object tt_final
  
       132, 13, 'n', ' ', -3, -6:
         if (cur == count - 1) rfalse;
+        if (cur == count - 2) break;
         target = _m.&ZIPI_item-->cur;
         if (target ofclass ZIPI_Menu)
           ZIPI_RunMenu(target);
         else if (target ofclass ZIPI_Pista)
           ZIPI_RunPista(target);
-        else if (target == ZIPI_Separador)
-          break;
         else if (target provides ZIPI_cambiar)
           target.ZIPI_cambiar();
         else {
           r = ZIPI_RunOtro(target);
           if (target == ZIPI_Restaurar) return 3;
-          if (r ~= 0) return r;
+          if (r == 2) return r;
         }
         redibujar = 1;
         break;
@@ -8589,8 +8588,7 @@ ZIPI_Menu Menu_Principal
       ZIPI_Restaurar
       ZIPI_Configuracion
       ZIPI_Separador
-      ZIPI_Menu1
-      ZIPI_Separador;
+      ZIPI_Menu1;
 
 
 ZIPI_Otro ZIPI_Separador
@@ -8717,7 +8715,7 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       Introduccion();
       Inicializar();
       dibujarEstado = true;
-      rtrue;
+      return 2;
     ];
 
 
@@ -8733,7 +8731,7 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       clearTextWindow();
       Inicializar(true);
       dibujarEstado = true;
-      rtrue;
+      return 2;
     ];
 
 
