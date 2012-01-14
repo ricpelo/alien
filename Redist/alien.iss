@@ -45,8 +45,9 @@ Source: libvorbis-0.dll; DestDir: {app}
 Source: libvorbisfile-3.dll; DestDir: {app}
 Source: "LUXI License.txt"; DestDir: {app}
 Source: mikmod.dll; DestDir: {app}
-Source: "MIT License.txt"; DestDir: {app}
 Source: SDL.dll; DestDir: {app}
+Source: "MIT License.txt"; DestDir: {app}
+Source: "Gargoyle License.txt"; DestDir: {app}
 Source: SDL_mixer.dll; DestDir: {app}
 Source: SDL_sound.dll; DestDir: {app}
 Source: smpeg.dll; DestDir: {app}
