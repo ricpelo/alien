@@ -8464,7 +8464,7 @@ Object tt_final
   barra_estado.numero_lineas = 23;
   barra_estado.dibujar();
   clearMainWindow();
-  viewImageCenter(Logo_Alpha_Aventuras_jpg);
+  viewImageCenter(Logo_Alpha_Aventuras_Corto_jpg);
   Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
                        SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
