@@ -56,7 +56,7 @@ Constant HAY_CURIOSIDADES;
 !Constant RUTA_SEGUIR_JUGADOR = 2;
 
 ! Máximo nivel de carga para la batería:
-Constant MAX_NIVEL_CARGA = 150;
+Constant MAX_NIVEL_CARGA = 600;
 
 ! Alto de la ventana gráfica
 !Constant ALTO_VENTANA_GRAFICA = 350; !500; !315;
@@ -1505,18 +1505,28 @@ Object linterna "linterna" armario
         tate_callao = 0;
         rtrue;
     ],
-    daemon [;
-      if (self has encendida && bateria.energia > 0) {
-        bateria.energia--;
-        
-        if (bateria.energia == 0) {
+    pierde_energia [;
+     if (self has encendida && bateria.energia > 0) {
+        bateria.energia = bateria.energia - bateria.decremento;
+
+        if (bateria.energia <= 0) {
+          bateria.energia = 0;
           self.apagar();
+          if (contextoHandleGlkEvent) {
+            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          }
           "^La linterna se ha quedado sin batería.";
         }
-        if (bateria.energia < 10) {
+        if (bateria.nivel_carga() < 10) {
+          if (contextoHandleGlkEvent) {
+            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          }
           "^La linterna se está quedando sin batería...";
         }
       }
+    ],
+    daemon [;
+      self.pierde_energia();
     ],
     listarse [;
       if (etapa_inventario == 2) {
@@ -1549,6 +1559,7 @@ Object bateria "batería" linterna
     ],
     nivel_carga [; return (self.energia * 100) / MAX_NIVEL_CARGA; ],
     energia MAX_NIVEL_CARGA,
+    decremento 4,
     antes [;
       Encender, Atar:
         <<Atar otro uno>>;
@@ -9067,6 +9078,18 @@ ZIPI_Otro ZIPI_Salir
 ];
 
 
+[ ReduceBateriaEnTimer dec;
+  if (linterna has encendida && bateria.energia > 0) {
+    contextoHandleGlkEvent = true;
+    bateria.decremento = dec;
+    linterna.pierde_energia();
+    barra_estado.dibujar();
+    bateria.decremento = 4;
+    contextoHandleGlkEvent = false;
+  }
+];
+
+
 [ HandleGlkEvent ev context buffer snd r l p;
   SGW_HandleGlk(ev);
   context = context;  ! Para evitar el warning
@@ -9081,6 +9104,7 @@ ZIPI_Otro ZIPI_Salir
         return 1;
       } else
       if (control_timer.timer_actual == TIMER_TRUENO) {
+        ReduceBateriaEnTimer(1);
         if (l == nave1 or nave2 && r < 35) {
           r = 20 * random(5);
           if (r >= 65) {
@@ -9106,6 +9130,7 @@ ZIPI_Otro ZIPI_Salir
           }
         }
       } else if (control_timer.timer_actual == TIMER_LABERINTO) {
+        ReduceBateriaEnTimer(2);
         if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
           if (l ofclass Laberinto || l ofclass Balcon) {
             r = 20 * random(3) + 40;
