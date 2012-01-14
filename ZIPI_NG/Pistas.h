@@ -996,7 +996,7 @@ with
   ZIPI_Intro();
 !  barra_estado.numero_lineas = 26;
 !  barra_estado.dibujar();
-  ZIPI_RunMenu(ZIPI_Menu0);
+  ZIPI_RunMenu(ZIPI_Menu0, true);
 !  barra_estado.numero_lineas = 1;
 !  barra_estado.dibujar();
 ];

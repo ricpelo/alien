@@ -227,7 +227,7 @@ END{
   print "  ZIPI_Intro();";
   print "!  barra_estado.numero_lineas = 26;";
   print "!  barra_estado.dibujar();";
-  print "  ZIPI_RunMenu(ZIPI_Menu0);";
+  print "  ZIPI_RunMenu(ZIPI_Menu0, true);";
   print "!  barra_estado.numero_lineas = 1;";
   print "!  barra_estado.dibujar();";
   print "];";

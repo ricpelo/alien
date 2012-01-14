@@ -8470,7 +8470,7 @@ Object tt_final
   Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
 .Menu;
-  r = ZIPI_RunMenu(ZIPI_Menu_Principal);
+  r = ZIPI_RunMenu(ZIPI_Menu_Principal, true);
   if (r == 3) jump Menu;
   if (r ~= 2) quit;
   barra_estado.numero_lineas = 1;
@@ -8491,7 +8491,7 @@ Object tt_final
 ];
 
 
-[ ZIPI_RunMenu _m   i j count cur key target redibujar ft r;
+[ ZIPI_RunMenu _m top  i j count cur key target redibujar ft r;
 
   redibujar = 1;
 
@@ -8523,14 +8523,14 @@ Object tt_final
     ZIPI_setcursor(5,j);
 
     if (ft) {
-      if (_m == ZIPI_Menu_Principal or ZIPI_Menu0) {
+      if (top) {
         tt_computadora.escribe(0, "Salir");
       } else {
         tt_computadora.escribe(0, "Volver");
       }
       tt_computadora.visualiza();
     } else {
-      if (_m == ZIPI_Menu_Principal or ZIPI_Menu0) {
+      if (top) {
         print (s_pre) "Salir";
       } else {
         print (s_pre) "Volver";
@@ -9831,7 +9831,7 @@ Extend 'di' first
                        SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
   clearMainWindow();
-  ZIPI_RunMenu(ZIPI_Configuracion);
+  ZIPI_RunMenu(ZIPI_Configuracion, true);
   if (haySonidoFondo) {
     Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, LugarReal().sgw_vol,
                          SONIDO_BUCLE_INFINITO);
