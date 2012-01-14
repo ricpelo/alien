@@ -8495,7 +8495,7 @@ Object tt_final
   redibujar = 1;
 
   cur = 0;
-  count = _m.#ZIPI_item / WORDSIZE;
+  count = _m.#ZIPI_item / WORDSIZE; count++;
   ft = true;
 
   for (::) {
@@ -8504,66 +8504,77 @@ Object tt_final
       redibujar = 0;
     }
 
-   for (i = 0: i < count: i++) {
-     j = i + 3;
-     ZIPI_setcursor(5,j);
-     if (ft) {
-       tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
-       tt_computadora.visualiza();
-     } else {
-       style fixed;
-       if ((_m.&ZIPI_item-->i).ZIPI_titulo ofclass Routine) (_m.&ZIPI_item-->i).ZIPI_titulo();
-       else print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
-       style roman;
-     }
-   }
+    for (i = 0: i < count - 1: i++) {
+      j = i + 3;
+      ZIPI_setcursor(5,j);
+      if (ft) {
+        tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
+        tt_computadora.visualiza();
+      } else {
+        style fixed;
+        if ((_m.&ZIPI_item-->i).ZIPI_titulo ofclass Routine) (_m.&ZIPI_item-->i).ZIPI_titulo();
+        else print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
+        style roman;
+      }
+    }
 
-   ft = false;
-   j = cur + 3;
-   ZIPI_setcursor(2,j);
-   print ">";
-   ZIPI_setcursor(2, j);
-   key = ZIPI_tecla();
-   print " ";
+    j = i + 3;
+    ZIPI_setcursor(5,j);
 
-   if (key > ZIPI_EVENTO_HYPER) {
-     cur = key - ZIPI_EVENTO_HYPER - 2;
-     if (cur == -1)
-       key = 27;
-     else
-       key = 13;
-   }
+    if (ft) {
+      tt_computadora.escribe(0, "Salir");
+      tt_computadora.visualiza();
+    } else {
+      print (s_pre) "Salir";
+    }
 
-   switch(key) {
-     'k', 'p', '-', '_', 129, -4:
-       cur--;
-       if (cur < 0) cur = count-1;
-       break;
-     'j', 'n', '=', '+', 130, -5:
-       cur++;
-       if (cur >= count) cur = 0;
-       break;
-     'q', 'Q', 27, 131, 10, 8, -2:
-       rfalse;
+    ft = false;
+    j = cur + 3;
+    ZIPI_setcursor(2, j);
+    print ">";
+    ZIPI_setcursor(2, j);
+    key = ZIPI_tecla();
+    print " ";
 
-     132, 13, 'n', ' ', -3, -6:
-       target = _m.&ZIPI_item-->cur;
-       if (target ofclass ZIPI_Menu)
-         ZIPI_RunMenu(target);
-       else if (target ofclass ZIPI_Pista)
-         ZIPI_RunPista(target);
-       else if (target == ZIPI_Separador)
-         break;
-       else if (target provides ZIPI_cambiar)
-         target.ZIPI_cambiar();
-       else {
-         r = ZIPI_RunOtro(target);
-         if (target == ZIPI_Restaurar) return 3;
-         if (r ~= 0) return r;
-       }
-       redibujar = 1;
-       break;
-     }
+    if (key > ZIPI_EVENTO_HYPER) {
+      cur = key - ZIPI_EVENTO_HYPER - 2;
+      if (cur == -1)
+        key = 27;
+      else
+        key = 13;
+    }
+
+    switch(key) {
+      'k', 'p', '-', '_', 129, -4:
+        cur--;
+        if (cur < 0) cur = count - 1;
+        break;
+      'j', 'n', '=', '+', 130, -5:
+        cur++;
+        if (cur >= count) cur = 0;
+        break;
+      'q', 'Q', 27, 131, 10, 8, -2:
+        rfalse;
+ 
+      132, 13, 'n', ' ', -3, -6:
+        if (cur == count - 1) rfalse;
+        target = _m.&ZIPI_item-->cur;
+        if (target ofclass ZIPI_Menu)
+          ZIPI_RunMenu(target);
+        else if (target ofclass ZIPI_Pista)
+          ZIPI_RunPista(target);
+        else if (target == ZIPI_Separador)
+          break;
+        else if (target provides ZIPI_cambiar)
+          target.ZIPI_cambiar();
+        else {
+          r = ZIPI_RunOtro(target);
+          if (target == ZIPI_Restaurar) return 3;
+          if (r ~= 0) return r;
+        }
+        redibujar = 1;
+        break;
+    }
   }
   rfalse;
 ];
@@ -8579,8 +8590,7 @@ ZIPI_Menu Menu_Principal
       ZIPI_Configuracion
       ZIPI_Separador
       ZIPI_Menu1
-      ZIPI_Separador
-      ZIPI_Salir;
+      ZIPI_Separador;
 
 
 ZIPI_Otro ZIPI_Separador
@@ -8597,14 +8607,7 @@ ZIPI_Menu ZIPI_Configuracion
       ZIPI_Tamano_Graficos
       ZIPI_Sonido
       ZIPI_Sonido_Fondo
-      ZIPI_Sonido_Detector
-      ZIPI_Volver;
-
-
-ZIPI_Otro ZIPI_Volver
-  with
-    ZIPI_titulo "Volver",
-    ZIPI_ejecutar [; return 3; ];
+      ZIPI_Sonido_Detector;
 
 
 ZIPI_Otro ZIPI_Graficos
