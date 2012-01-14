@@ -20,6 +20,7 @@ cp garglk.ini /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/*.url /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp doc/COPYING /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/copyright /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
+cp Redist/INSTALL /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/cover.jpg /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/*.pdf /home/ricardo/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 
