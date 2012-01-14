@@ -751,11 +751,11 @@ with
        print "^     Ricardo Pérez López ";
        print "^     Francisco J. Roldán Domínguez ";
        print "^     Manuel I. Monge García ";
-       print "^- MAPEADO Y MANUALES: ";
+       print "^- MAPEADO Y DOCUMENTACIÓN: ";
        print "^     Francisco J. Roldán Domínguez ";
+       print "^     Antonio Matiola Ortiz ";
        print "^- PRUEBAS: ";
        print "^     Ricardo Pérez López ";
-       print "^     Francisco J. Roldán Domínguez ";
        print "^     Manuel Millán Ruiz ";
        print "^     Francisco Picazo Millán ";
        print "^     Manuel I. Monge García^ ";
