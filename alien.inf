@@ -164,7 +164,8 @@ Replace DecirSub;
 
 Replace PermitirEmpujarDir;
 
-! Ponemos nuestra propia versión de ZIPI_RunMenu, para el menú principal:
+! Ponemos nuestra propia versión de ZIPI_RunMenu y ZIPI_RunOtro,
+! para el menú principal y las pistas:
 Replace ZIPI_RunMenu;
 Replace ZIPI_RunOtro;
 
@@ -8469,7 +8470,7 @@ Object tt_final
   Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
 .Menu;
-  r = ZIPI_RunMenu(Menu_Principal);
+  r = ZIPI_RunMenu(ZIPI_Menu_Principal);
   if (r == 3) jump Menu;
   if (r ~= 2) quit;
   barra_estado.numero_lineas = 1;
@@ -8522,10 +8523,18 @@ Object tt_final
     ZIPI_setcursor(5,j);
 
     if (ft) {
-      tt_computadora.escribe(0, "Salir");
+      if (_m == ZIPI_Menu_Principal) {
+        tt_computadora.escribe(0, "Salir");
+      } else {
+        tt_computadora.escribe(0, "Volver");
+      }
       tt_computadora.visualiza();
     } else {
-      print (s_pre) "Salir";
+      if (_m == ZIPI_Menu_Principal) {
+        print (s_pre) "Salir";
+      } else {
+        print (s_pre) "Volver";
+      }
     }
 
     ft = false;
@@ -8579,7 +8588,7 @@ Object tt_final
 ];
 
 
-ZIPI_Menu Menu_Principal
+ZIPI_Menu ZIPI_Menu_Principal
   with
     ZIPI_titulo "A·L·I·E·N: La aventura - Edición Especial",
     ZIPI_item
