@@ -9233,7 +9233,7 @@ ZIPI_Otro ZIPI_Salir
   clearMainWindow();
   viewImageCenter(Oscuridad_jpg);
   Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, VOLUMEN_FONDO, 1);
-  Damusix.Tocar(Intro_ogg);
+  Damusix.Tocar(Intro_ogg, 1);
   tt_inicial1.visualiza();
   for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); EsperarTecla(0, 20); }
   EsperarTecla(0, 300);
@@ -9249,7 +9249,26 @@ ZIPI_Otro ZIPI_Salir
   tt_inicial5.visualiza();
   EsperarTecla(0, 600);
   DibujaLogoAlien();
-  Damusix.SimpleFadeOut(Intro_ogg, 3000);
+  glk($00D6, 500);                      ! request_timer_events
+  glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
+  while (1) {
+    glk($00C0, gg_arguments);           ! glk_select(gg_arguments);
+    switch (gg_arguments-->0) {
+      evtype_CharInput:
+        glk($00D3, gg_mainwin);         ! cancel_char_event
+        Damusix.SimpleFadeOut(Intro_ogg, 3000);
+        jump Salir;
+
+      evtype_Timer:
+        glk($00D6, 500);                ! request_timer_events
+
+      evtype_SoundNotify:
+        glk($00D6, 0);                  ! request_timer_events
+        jump Salir;
+    }
+  }
+.Salir;
+  rfalse;
 ];
 
 
