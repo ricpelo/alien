@@ -1,12 +1,4 @@
 Include "Gipi.h";
-[ ZIPI_Intro ; 
-  print "Desplázate con las flechas del cursor. Pulsa ~Entrar~ para seleccionar, ~P~ para continuar, o ~Q~ para salir. ";
-!  print "[Pulsa 'T' para ejecutar en modo texto (las teclas no funcionarán)]^";
-!  print "[o cualquier otra tecla para ejecutar en modo menu manejado por teclas]^";
-!  ZIPI_modo=0;
-!  tecla=ZIPI_tecla();  if (tecla=='T' or 't') ZIPI_modo=1;
-];
-
 ZIPI_Menu ZIPI_Menu0
 with
   ZIPI_titulo "Sistema de pistas interactivas",
@@ -990,6 +982,13 @@ with
        print "******** FIN ******** ";
        print "^^";
   ];
+
+
+[ ZIPI_Intro;
+  print "Desplázate con las flechas del cursor. Pulsa ", (s_in) "Enter", " para seleccionar, ", (s_in) "P", " para continuar, o ", (s_in) "Q", " para salir.";
+];
+
+
 [ ZIPI_Empezar ;
 !  ZIPI_InitGlk();
   clearMainWindow();

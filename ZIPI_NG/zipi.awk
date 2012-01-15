@@ -214,11 +214,12 @@ END{
     print "  ];";
   }
   if (hay_intro==0) {
-    print "[ ZIPI_Intro tecla;";
-    print "  print \"[Pulsa 'T' para ejecutar en modo texto (sin menus)]^\";\n"\
-      "  print \"[o cualquier otra tecla para ejecutar en modo menu]^\";\n"\
-      "  ZIPI_modo=0;\n  tecla=ZIPI_Tecla();\n  if (tecla=='T' or 't') ZIPI_modo=1;\n"\
-      "];\n\n";
+    print "\n\n[ ZIPI_Intro;";
+    print "  print \"Desplázate con las flechas del cursor. Pulsa \", (s_in) \"Enter\", \" para seleccionar, \", (s_in) \"P\", \" para continuar, o \", (s_in) \"Q\", \" para salir.\";";
+#    print "  print \"[Pulsa 'T' para ejecutar en modo texto (sin menus)]^\";\n"\
+#      "  print \"[o cualquier otra tecla para ejecutar en modo menu]^\";\n"\
+#      "  ZIPI_modo=0;\n  tecla=ZIPI_Tecla();\n  if (tecla=='T' or 't') ZIPI_modo=1;\n"\
+    print "];\n\n";
   }
 
   print "[ ZIPI_Empezar ;";
