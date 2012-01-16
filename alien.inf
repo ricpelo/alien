@@ -5315,15 +5315,39 @@ Object jason "Jason" nave1
       rfalse;
     ],
     antes [;
+      Quitarle:
+        ! Si queremos quitarle un objeto a Jason que él tiene:
+        if (jason in vaina) {
+          if (otro == traje_jason) {
+            if (vaina has abierta) {
+              "Mejor espera a sacar a Jason de la vaina.";
+            } else {
+              "No, mejor no quitarle el traje hasta estar seguro de que puede respirar
+               sin él.";
+            }
+          } else {
+            "Jason no está en condiciones de que le quites nada.";
+          }
+        } else {
+          if (ContieneIndirectamente(jason, otro)) {
+            HablaJason("Mejor pídamelo a mí, señor. Por educación, sobre todo...");
+            rtrue;
+          } else {
+            "Jason no tiene eso. No se lo puedes quitar.";
+          }
+        }
+
       Coger:
         if (self in vaina) {
           <<Sacar self vaina>>;
         }
 
       Sacar:
-        if (otro == nothing) {
+        ! Si no especificas, se entiende que quieres sacarlo de la vaina:
+        if (otro == nothing && LugarReal() == hueco_techo) {
           otro = vaina;
         }
+        ! A Jason sólo se le puede sacar de la vaina:
         if (otro ~= vaina) {
           "¿De dónde? Pero si Jason no está ahí...";
         }
@@ -9583,6 +9607,29 @@ Verb 'gilipollas'
 Verb 'guarro'
   *               -> Tacos;
 
+Extend 'quitale' first
+  * 'el' 'traje' 'a//' creature                                  -> QuitarleTrajeA
+  * 'el' 'traje' 'de' 'jason' 'a//' creature                     -> QuitarleTrajeA
+  * 'el' 'traje' 'atmosferico' 'a//' creature                    -> QuitarleTrajeA
+  * 'el' 'traje' 'atmosferico' 'de' 'jason' 'a//' creature       -> QuitarleTrajeA
+  * 'a//' 'jason' 'el' 'traje'                                   -> QuitarleTraje
+  * 'a//' 'jason' 'el' 'traje' 'de' 'jason'                      -> QuitarleTraje
+  * 'a//' 'jason' 'el' 'traje' 'atmosferico'                     -> QuitarleTraje
+  * 'a//' 'jason' 'el' 'traje' 'atmosferico' 'de' 'jason'        -> QuitarleTraje
+  * multiinside 'a//' creature                                   -> QuitarleA
+  * '-le' 'a//' creature multiinside                             -> Quitarle
+  * '-le' 'el' 'traje' 'a//' creature                            -> QuitarleTrajeA
+  * '-le' 'el' 'traje' 'de' 'jason' 'a//' creature               -> QuitarleTrajeA
+  * '-le' 'el' 'traje' 'atmosferico' 'a//' creature              -> QuitarleTrajeA
+  * '-le' 'el' 'traje' 'atmosferico' 'de' 'jason' 'a//' creature -> QuitarleTrajeA
+  * '-le' 'a//' 'jason' 'el' 'traje'                             -> QuitarleTraje
+  * '-le' 'a//' 'jason' 'el' 'traje' 'de' 'jason'                -> QuitarleTraje
+  * '-le' 'a//' 'jason' 'el' 'traje' 'atmosferico'               -> QuitarleTraje
+  * '-le' 'a//' 'jason' 'el' 'traje' 'atmosferico' 'de' 'jason'  -> QuitarleTraje
+  * '-le' multiinside 'a//' creature                             -> QuitarleA
+  * '-le' 'a//' creature multiinside                             -> Quitarle;
+
+
 Verb 'madre,'
   * 'semilla' number                                         -> Semilla
   * 'semilla' 'es'/'vale' number                             -> Semilla
@@ -9896,6 +9943,26 @@ Extend 'di' first
 !
 ! ====================================================================
 
+
+
+[ QuitarleTrajeSub;
+  <<Quitarle jason traje_jason>>;
+];
+
+
+[ QuitarleTrajeASub;
+  <<Quitarle uno traje_jason>>;
+];
+
+
+[ QuitarleSub;
+  <<Quitar uno otro>>;
+];
+
+
+[ QuitarleASub;
+  <<Quitarle otro uno>>;
+];
 
 
 [ ConfiguracionSub timer;
