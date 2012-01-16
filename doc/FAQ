@@ -1,0 +1,267 @@
+
+PROBLEMAS Y PREGUNTAS FRECUENTES
+================================
+
+1. ¿CÓMO PUEDO EJECUTAR LA AVENTURA?
+
+  a) En Windows:
+     -----------
+
+     Para instalar A·L·I·E·N en un sistema Windows sólo tienes que
+     ejecutar el programa de instalación y seguir sus instrucciones.
+     Para empezar a jugar, selecciona: 
+
+     Menú Inicio → Programas → Juegos Conversacionales →
+                   A·L·I·E·N: La aventura – Edición Especial → 
+                   Jugar a A·L·I·E·N: La aventura – Edición Especial. 
+
+  b) En Linux:
+     ---------
+
+     A·L·I·E·N para Linux se distribuye en forma de paquete .deb,
+     listo para ser instalado en cualquier sistema Debian GNU/Linux
+     o derivados (Ubuntu, Guadalinex, Linex, etc.). Para instalarlo
+     correctamente, sigue lo siguientes pasos (el orden es importante):
+
+       i. Instala el intérprete Gargoyle descargando la versión adecuada
+          para tu distribución y arquitectura hardware en la siguiente
+          dirección:
+
+            http://code.google.com/p/garglk/downloads
+
+          o bien, usa el sistema de gestión de paquetes de tu distribución:
+
+            $ sudo apt-get install gargoyle-free
+
+      ii. Instala la aventura abriendo el siguiente enlace, que abrirá el
+          paquete dentro del Centro de software o el Instalador de paquetes:
+
+            https://github.com/downloads/ricpelo/alien/alphaaventuras-alien-ee_081124-2_all.deb
+
+          o bien, descarga el archivo en tu carpeta personal y ejecuta las
+          siguientes órdenes en una terminal:
+
+            $ sudo apt-get install ttf-liberation ttf-linux-libertine
+            $ sudo dpkg -i alphaaventuras-alien*
+            $ sudo apt-get -f install
+
+     iii. A·L·I·E·N se instalará en el submenú de Juegos, dentro del menú de
+          programas de tu entorno gráfico.
+
+  c) En versión multiplataforma:
+     ---------------------------
+
+     Esta versión no incorpora el intérprete Gargoyle, necesario para poder 
+     jugar a la aventura, por lo que si no lo tienes ya, tendrás que
+     descargarlo desde la siguiente dirección:
+
+       http://code.google.com/p/garglk/downloads
+
+     e instalarlo correctamente, en función de tu arquitectura y tu sistema
+     operativo. Asegúrate de usar una versión igual o superior a la 2011.1.
+
+     Si usas Linux, asegúrate también de tener instaladas las tipografías
+     necesarias para que la aventura se muestre correctamente.
+     Para ello, ejecuta la siguiente orden en un terminal:
+
+       $ sudo apt-get install ttf-liberation ttf-linux-libertine
+
+     A·L·I·E·N usa las tipografías Liberation Mono y Linux Libertine O.
+
+
+
+2. AL JUGAR LA AVENTURA, LAS LETRAS SE VEN FEAS O CON COLORES EXTRAÑOS.
+
+   Comprueba los siguientes puntos, en este orden:
+
+   a) [Si usas otro sistema que no sea Windows] Asegúrate de tener instalada
+      la última versión de Gargoyle (al menos, la 2011.1). Los usuarios de
+      Windows que instalen la aventura con el programa de instalación no
+      necesitan comprobar esto, ya que Gargoyle se instala con la aventura.
+
+   b) Asegúrate de que exista el archivo 'garglk.ini' en la misma carpeta que
+      la aventura. Para ello:
+
+       i. Si usas Linux, y has instalado la aventura usando el paquete .deb,
+          comprueba si existe el archivo en esta ruta:
+
+            /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+
+      ii. Si estas usando la versión multiplataforma, comprueba simplemente
+          que el archivo 'garglk.ini' se encuentra en la misma carpeta que la
+          aventura 'alien.blb', junto al resto de los archivos incluidos.
+
+   Si todo lo anterior no funciona, descárgate de nuevo la aventura y vuelve
+   a instalarla (si procede).
+
+
+
+3. LAS LETRAS SE VEN DEMASIADO GRANDES O DEMASIADO PEQUEÑAS.
+
+   Si no encuentras confortable el tamaño de las letras durante el juego,
+   puedes cambiarlo editando el archivo 'garglk.ini'. Para ello:
+
+   a) En Windows:
+      -----------
+
+      Localiza el archivo 'garglk.ini' en la siguiente ruta:
+
+        \Program Files\Juegos Conversacionales\ALIEN - La aventura - Edición Especial\garglk.ini
+
+      Ábrelo con el bloc de notas o con cualquier otro editor de texto sin formato.
+      Recuerda que en Windows Vista, Windows 7 o superiores, tendrás que
+      tener los permisos adecuados para poder cambiar ese archivo.
+
+   b) En Linux:
+      ---------
+
+      Si has instalado la aventura usando el paquete .deb, localiza el
+      archivo 'garglk.ini' en la siguiente ruta:
+
+        /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+
+      Ábrelo con privilegios de administrador usando tu editor de textos
+      favorito. Por ejemplo:
+
+        $ sudo gedit /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+
+  c) En versión multiplataforma:
+     ---------------------------
+
+     El archivo 'garglk.ini' debe encontrarse en la misma carpeta que el resto
+     de los archivos incluidos en la aventura. Ábrelo usando tu editor de
+     textos favorito.
+
+  Cuando hayas abierto el archivo 'garglk.ini' con tu editor de textos, localiza
+  las líneas que empiecen por 'monosize' y 'propsize'. Esa porción del archivo
+  tendrá el siguiente aspecto:
+
+    [ ... más contenido por arriba ...]
+
+    monofont      Liberation Mono
+    monosize      17
+
+    propfont      Linux Libertine O
+    propsize      20
+
+    [ ... más contenido por abajo ...]
+
+  Para ajustar el tamaño de las letras, simplemente cambia los números anteriores.
+  Poniendo números mayores, las letras se verán más grandes. Con números menores,
+  las letras se verán más pequeñas. Procura que el 'propsize' sea siempre un poco
+  mayor que el 'monosize', para que algunos caracteres no se vean más grandes que
+  el resto y el conjunto se muestre de forma armónica.
+
+  Una vez realizados los cambios, guarda el archivo con el mismo nombre y ejecuta
+  de nuevo la aventura. Repite la misma operación tantas veces como necesites
+  hasta ajustar el tamaño a uno que te resulte cómodo.
+
+
+
+4. LOS GRÁFICOS SE VEN DEMASIADO GRANDES Y RESULTA MUY INCÓMODO JUGAR ASÍ.
+
+   Prueba lo siguiente:
+
+   a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar
+      todo el escritorio.
+
+   b) Configura la aventura para que use gráficos más pequeños, usando uno de
+      los comandos siguientes dentro del juego:
+
+      > GRÁFICOS PEQUEÑOS
+          (esto hará que la aventura use los gráficos al tamaño más pequeño)
+
+      > GRÁFICOS MEDIANOS
+          (esto hará que la aventura use los gráficos a tamaño mediano)
+
+   c) Si lo anterior no fuera suficiente, siempre puedes desactivar los gráficos
+      completamente, aunque no te lo recomendamos, ya que con ello perderías
+      gran parte del atractivo de la aventura. Para ello, ejecuta el comando
+      siguiente dentro del juego:
+
+      > GRÁFICOS NO
+          (esto hará que la aventura no use gráficos en absoluto)
+
+
+
+5. LOS GRÁFICOS SE VEN DEMASIADO PEQUEÑOS.
+
+   Prueba lo siguiente:
+
+   a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar
+      todo el escritorio. Si la ventana es demasiado pequeña, los gráficos
+      se reescalarán automáticamente para que quepan completos dentro de la
+      misma, pero se verán muy pequeños.
+
+   b) Configura la aventura para que use gráficos más grandes, usando uno de
+      los comandos siguientes dentro del juego:
+
+      > GRÁFICOS MEDIANOS
+          (esto hará que la aventura use los gráficos a tamaño mediano)
+
+      > GRÁFICOS GRANDES
+          (esto hará que la aventura use los gráficos al tamaño más grande)
+
+
+
+6. ¡NO VEO GRÁFICOS EN NINGÚN MOMENTO!
+
+   Comprueba lo siguiente:
+
+   a) Asegúrate de tener activados los gráficos dentro del juego. Para ello,
+      usa el comando siguiente dentro del juego:
+
+      > GRÁFICOS SI
+
+      Ten en cuenta también que los gráficos se apagan automáticamente en
+      ciertas partes de la aventura, para que el texto ocupe toda la ventana
+      de juego.
+
+   b) Asegúrate de que no estás en un lugar a oscuras y sin ninguna fuente de
+      luz, como una linterna encendida.
+
+
+
+7. ¡NO OIGO NADA!
+
+   Si no oyes música ni sonidos durante el juego, comprueba lo siguiente:
+
+   a) Asegúrate de tener activados los sonidos dentro del juego. Para ello,
+      usa el comando siguiente dentro del juego:
+
+      > SONIDO SI
+
+   b) Si no oyes el sonido de fondo, asegúrate de tenerlo activado usando el
+      comando siguiente:
+
+      > SONIDO FONDO SI
+
+   c) Si no oyes el sonido del detector de movimiento, asegúrate de tenerlo
+      activado usando el comando siguiente:
+
+      > SONIDO DETECTOR SI
+
+
+
+8. ESTOY ATASCADO Y NO SÉ CÓMO CONTINUAR.
+
+   Si andas perdido y no sabes cómo resolver algún puzzle o situación en la
+   aventura, puedes:
+
+   a) Usar el sistema de pistas interactivas, tecleando:
+
+        > PISTAS
+
+      en cualquier momento del juego.
+
+   b) Pregunta en el foro del CAAD, en la siguiente dirección:
+
+        http://foro.caad.es
+
+   c) Contacta con nosotros por alguna de las las estas vías:
+
+      - email: alpha.aventuras@gmail.com
+      - web: http://sites.google.com/site/alphaaventuras
+      - facebook: https://www.facebook.com/alphaaventuras
+      - wikiCAAD: http://wiki.caad.es/Alpha_Aventuras
+

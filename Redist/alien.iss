@@ -24,8 +24,9 @@ Source: Alien.url; DestDir: {app}
 Source: Alpha_Aventuras.url; DestDir: {app}
 Source: "CAAD Club de Aventuras AD.url"; DestDir: {app}
 Source: CAAD.ico; DestDir: {app}
-Source: COPYING; DestDir: {app}
 Source: copyright; DestDir: {app}
+Source: COPYING; DestDir: {app}
+Source: README; DestDir: {app}
 Source: cover.jpg; DestDir: {app};
 Source: freetype6.dll; DestDir: {app}
 Source: garglk.ini; DestDir: {app}
