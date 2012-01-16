@@ -91,6 +91,13 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
           que el archivo 'garglk.ini' se encuentra en la misma carpeta que la
           aventura 'alien.blb', junto al resto de los archivos incluidos.
 
+   c) A·L·I·E·N usa las tipografías Liberation Mono y Linux Libertine O. Si usas
+      Linux, asegúrate también de tener instaladas las tipografías necesarias
+      para que la aventura se muestre correctamente. Para ello, ejecuta la
+      siguiente orden en un terminal:
+
+        $ sudo apt-get install ttf-liberation ttf-linux-libertine
+
    Si todo lo anterior no funciona, descárgate de nuevo la aventura y vuelve
    a instalarla (si procede).
 
