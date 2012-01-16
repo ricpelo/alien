@@ -112,6 +112,168 @@
       ^  dudas en el foro del CAAD o en alpha.aventuras@gmail.com.
     </TEXTO>
 
+    <MENU>Problemas y preguntas frecuentes
+
+      <TEXTO>Al jugar la aventura, las letras se ven feas o con colores extraños
+        <NOFONT>
+
+   a) [Si usas otro sistema que no sea Windows] Asegúrate de tener instalada
+      la última versión de Gargoyle (al menos, la 2011.1). Los usuarios de
+      Windows que instalen la aventura con el programa de instalación no
+      necesitan comprobar esto, ya que Gargoyle se instala con la aventura.
+
+   b) Asegúrate de que exista el archivo 'garglk.ini' en la misma carpeta que
+      la aventura. Para ello:
+
+       i. Si usas Linux, y has instalado la aventura usando el paquete .deb,
+          comprueba si existe el archivo en esta ruta:
+
+            /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+
+      ii. Si estas usando la versión multiplataforma, comprueba simplemente
+          que el archivo 'garglk.ini' se encuentra en la misma carpeta que la
+          aventura 'alien.blb', junto al resto de los archivos incluidos.
+
+   Si todo lo anterior no funciona, instala de nuevo la aventura.
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>Las letras se ven demasiado grandes o demasiado pequeñas
+        <NOFONT>
+
+  Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':
+
+  a) En Windows estará en la ruta:
+     \Program Files\Juegos Conversacionales\ALIEN - La aventura - Edición Especial\
+
+  b) En Linux, si instalaste la aventura con el paquete .deb, estará en:
+     /usr/share/games/alphaaventuras-alien-ee/
+
+  c) En la versión multiplataforma lo encontrarás en la misma ruta que el resto
+     de los archivos distribuidos con la aventura.
+
+  Cuando hayas abierto el archivo 'garglk.ini' con tu editor de textos favorito,
+  localiza las líneas que empiecen por 'monosize' y 'propsize'. Para ajustar el
+  tamaño de las letras, simplemente cambia los números que aparezcan al lado.
+  Poniendo números mayores, las letras se verán más grandes, y viceversa. Asegúrate
+  de que el 'propsize' sea siempre un poco mayor que el 'monosize'.
+
+  Guarda los cambios en el mismo archivo y ejecuta de nuevo la aventura.
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>Los gráficos se ven demasiado grandes y es incómodo jugar así
+        <NOFONT>
+
+   a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar
+      todo el escritorio.
+
+   b) Configura la aventura para que use gráficos más pequeños, usando uno de
+      los comandos siguientes dentro del juego:
+
+      > GRÁFICOS PEQUEÑOS
+          (esto hará que la aventura use los gráficos al tamaño más pequeño)
+
+      > GRÁFICOS MEDIANOS
+          (esto hará que la aventura use los gráficos a tamaño mediano)
+
+   c) Si lo anterior no fuera suficiente, siempre puedes desactivar los gráficos
+      completamente, aunque no te lo recomendamos, ya que con ello perderías
+      gran parte del atractivo de la aventura. Para ello, ejecuta el comando
+      siguiente dentro del juego:
+
+      > GRÁFICOS NO
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>Los gráficos se ven demasiado pequeños
+        <NOFONT>
+
+  Prueba lo siguiente:
+
+   a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar
+      todo el escritorio. Si la ventana es demasiado pequeña, los gráficos
+      se reescalarán automáticamente para que quepan completos dentro de la
+      misma, pero se verán muy pequeños.
+
+   b) Configura la aventura para que use gráficos más grandes, usando uno de
+      los comandos siguientes dentro del juego:
+
+      > GRÁFICOS MEDIANOS
+          (esto hará que la aventura use los gráficos a tamaño mediano)
+
+      > GRÁFICOS GRANDES
+          (esto hará que la aventura use los gráficos al tamaño más grande)
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>¡No veo gráficos en ningún momento!
+        <NOFONT>
+
+  Comprueba lo siguiente:
+
+   a) Asegúrate de tener activados los gráficos dentro del juego. Para ello,
+      usa el comando siguiente dentro del juego:
+
+      > GRÁFICOS SI
+
+      Ten en cuenta también que los gráficos se apagan automáticamente en
+      ciertas partes de la aventura, para que el texto ocupe toda la ventana
+      de juego.
+
+   b) Asegúrate de que no estás en un lugar a oscuras y sin ninguna fuente de
+      luz, como una linterna encendida.
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>¡No oigo nada!
+        <NOFONT>
+
+  Si no oyes música ni sonidos durante el juego, comprueba lo siguiente:
+
+   a) Asegúrate de tener activados los sonidos dentro del juego. Para ello,
+      usa el comando siguiente dentro del juego:
+
+      > SONIDO SI
+
+   b) Si no oyes el sonido de fondo, asegúrate de tenerlo activado usando el
+      comando siguiente:
+
+      > SONIDO FONDO SI
+
+   c) Si no oyes el sonido del detector de movimiento, asegúrate de tenerlo
+      activado usando el comando siguiente:
+
+      > SONIDO DETECTOR SI
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>Estoy atascado y no sé cómo continuar
+        <NOFONT>
+
+  Si andas perdido y no sabes cómo resolver algún puzzle o situación:
+
+   a) Usa el sistema de pistas interactivas, tecleando:
+
+        > PISTAS
+
+      en cualquier momento del juego.
+
+   b) Pregunta en el foro del CAAD, en la siguiente dirección:
+
+        http://foro.caad.es
+
+   c) Contacta con nosotros por alguna de las las estas vías:
+
+      - email: alpha.aventuras@gmail.com
+      - web: http://sites.google.com/site/alphaaventuras
+      - facebook: https://www.facebook.com/alphaaventuras
+      - wikiCAAD: http://wiki.caad.es/Alpha_Aventuras
+        </NOFONT>
+      </TEXTO>
+
+    </MENU>
+
     <TEXTO>Créditos
        A·L·I·E·N: LA AVENTURA - EDICIÓN ESPECIAL (c) 2008-2012 Alpha Aventuras^
       ^- PROGRAMACIÓN Y DISEÑO:
