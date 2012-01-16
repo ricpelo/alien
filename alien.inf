@@ -4479,7 +4479,7 @@ Object boton_reproducir "botón Reproducir" consola
              número de la combinación es el 111582.^";
       EsperarTecla();
       print "^El hombre saca algo de su bolsillo... Es un objeto no muy grande, en forma
-             de cubo... Finalmente, lo mete en la caja fuerte y la cierra, volviendo
+             rectangular... Finalmente, lo mete en la caja fuerte y la cierra, volviendo
              a colocar el cuadro en su posición original.^";
       rtrue;
     ],
