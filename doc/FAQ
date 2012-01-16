@@ -155,9 +155,9 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
   Para ajustar el tamaño de las letras, simplemente cambia los números anteriores.
   Poniendo números mayores, las letras se verán más grandes. Con números menores,
-  las letras se verán más pequeñas. Procura que el 'propsize' sea siempre un poco
-  mayor que el 'monosize', para que algunos caracteres no se vean más grandes que
-  el resto y el conjunto se muestre de forma armónica.
+  las letras se verán más pequeñas. Asegúrate de que el 'propsize' sea siempre un
+  poco mayor que el 'monosize', para que algunos caracteres no se vean más grandes
+  que el resto y el conjunto se muestre de forma armónica.
 
   Una vez realizados los cambios, guarda el archivo con el mismo nombre y ejecuta
   de nuevo la aventura. Repite la misma operación tantas veces como necesites
@@ -261,11 +261,11 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
       en cualquier momento del juego.
 
-   b) Pregunta en el foro del CAAD, en la siguiente dirección:
+   b) Preguntar en el foro del CAAD, en la siguiente dirección:
 
         http://foro.caad.es
 
-   c) Contacta con nosotros por alguna de las las estas vías:
+   c) Contactar con nosotros por alguna de las las estas vías:
 
       - email: alpha.aventuras@gmail.com
       - web: http://sites.google.com/site/alphaaventuras
