@@ -136,6 +136,8 @@ Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 ! alien.llega):
 Global contextoHandleGlkEvent = false;
 
+! Usado en VerboDesconocido:
+Global objetoVerboDesconocido = 0;
 
 
 ! ====================================================================
@@ -421,8 +423,10 @@ Include "Acciones";
 ! Include "Msg1P";
 
 ! Esto es para poder usar las palabras 'abrir', 'cerrar',... como temas de conversación,
-! y, al mismo tiempo, poder usarlas como infinitivos de verbos:
-[ VerboDesconocido x;
+! y, al mismo tiempo, poder usarlas como infinitivos de verbos. Además, permite usar
+! simplemente el nombre de un objeto como sinónimo de 'examinar objeto' (copiado de
+! Transilvania Corruption, de Alien Soft):
+[ VerboDesconocido x obj;
   if (x == 'abrir')    return 'abre';
   if (x == 'cerrar')   return 'cierra';
   if (x == 'cortar')   return 'corta';
@@ -432,8 +436,32 @@ Include "Acciones";
   if (x == 'salir')    return 'sal';
   if (x == 'arreglar') return 'arregla';
   if (x == 'reparar')  return 'repara';
+
+  objectloop (obj) {
+    if (obj ofclass Object && PruebaDeAlcance(obj, jugador)) {
+      if (PalabraEnPropiedad(x, obj, nombre) ||
+          PalabraEnPropiedad(x, obj, nombre_m) ||
+          PalabraEnPropiedad(x, obj, nombre_f) ||
+          PalabraEnPropiedad(x, obj, nombre_mp) ||
+          PalabraEnPropiedad(x, obj, nombre_fp)) {
+        objetoVerboDesconocido = obj;
+        return 'examinar.falso';
+      }
+    }
+  }
   rfalse;
 ];
+
+
+Verb 'examinar.falso'
+   *                   -> ExaminarFalso
+;
+[ ExaminarFalsoSub;
+  uno = objetoVerboDesconocido;
+  ActualizarPronombre(uno);
+  <<Examinar uno>>;
+];
+
 
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
@@ -631,7 +659,7 @@ Class EscenarioAbrible
       give self ~estatico;
     ],
     sonido_abrir_cerrar [ snd;
-      if (self notin LugarReal()) return;
+      if (self notin LugarReal()) rfalse;
       snd = 0;
       switch (self) {
         puerta_nave:          snd = Puerta2_ogg;
