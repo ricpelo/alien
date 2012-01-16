@@ -2663,8 +2663,9 @@ Object oficina "Oficina"
       }
       " Una serie de archivadores se alinean perfectamente bajo decenas de cuadros
        que prácticamente ocultan por completo la pared con escenas marciales y
-       bélicas. En una esquina, cerca del techo, una cámara de seguridad lo observa
-       todo con su único ojo.";
+       bélicas, lo que dota a la estancia de un estilo retro muy de siglos pasados.
+       En una esquina, cerca del techo, una cámara de seguridad lo observa todo con
+       su único ojo.";
     ],
     sgw_img Oficina_jpg,
     al_e balcon2,
@@ -2684,7 +2685,9 @@ Object decorado_oficina oficina
   class DecoradoAmpliado
   with
     desc_cuadros [;
-      print "Todos muy oscuros y, al mismo tiempo, alegóricos.";
+      print "Se ve que al responsable le encantaba la antigua práctica, habitual en los
+             siglos XIX y XX, de colgar innumerables cuadros por las paredes, cubriéndolas
+             casi por completo. Todos son muy oscuros y, al mismo tiempo, alegóricos.";
       if (cuadro in oficina) {
         " Hay uno en concreto que te llama la atención.";
       } else {
@@ -2793,7 +2796,7 @@ Object "mesa" oficina
     escenario;
                  
                  
-! El cuadro se crear cuando has visto las grabaciones de la cámara de seguridad
+! El cuadro se crea cuando has visto las grabaciones de la cámara de seguridad
 
 Object cuadro "cuadro"
   with
