@@ -349,34 +349,8 @@ Object MensajesLibreria
 Include "Acciones";
 
 
-[ AlAlcance actor p;
+[ AlAlcance actor;
 
-  ! Ponemos al alcance el decorado de los trajes, si uno de éstos (o los dos) también
-  ! está al alcance. Lo ideal sería poder usar la rutina PruebaDeAlcance, pero eso
-  ! provocaría una recursión infinita. Por eso tenemos que hacer las comprobaciones
-  ! "a mano":
-  if (razon_alcance == RAZON_PARSING) {
-    p = parent(tu_traje);
-
-    if (tu_traje hasnt ausente && (tu_traje in jugador or LugarReal() ||
-        (p in LugarReal() && (p has abierto or transparente)))) {
-      PonerAlAlcance(decorado_traje);
-    } else {
-      p = parent(traje_jason);
-      
-      if (traje_jason hasnt ausente && (traje_jason in jugador or LugarReal() ||
-          (p in LugarReal() && (p has abierto or transparente)))) {
-        PonerAlAlcance(decorado_traje);
-      } else {
-        ! Con el traje inútil hay que hacer menos comprobaciones, porque no se puede
-        ! mover de donde está:
-        if (traje_inutil hasnt ausente && traje_inutil in LugarReal()) {
-          PonerAlAlcance(decorado_traje_inutil);
-        }
-      }
-    }
-  }
-  
   ! Ponemos a Jason al alcance para hablar, ya que tenemos comunicador:
   if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
       comunicador in jugador && comunicador has puesto) {
@@ -1190,6 +1164,7 @@ Class TrajeAtmosferico
     ! Los trajes se muestran juntos al listarse una localidad o un inventario. Quedaría:
     ! "Puedes ver dos trajes atmosféricos (tu traje y el traje de Jason)"
     listar_juntos "trajes atmosféricos",
+    suma_al_alcance 0,
     descripcion [;
       print "Es un traje hermético, compuesto por un mono de un material resistente,
              botas, guantes y un casco destinado a proporcionar aislamiento y oxígeno
@@ -1227,9 +1202,7 @@ Class TrajeAtmosferico
     despues [;
       Examinar:
         ! El jugador ya puede ver las botas, los guantes y el casco
-        give self transparente;
-        ! Hacer un salto de línea para que quede mejor
-!        "";
+        self.suma_al_alcance = decorado_traje;
     ],
     listarse [;
       if (etapa_inventario == 2) {
@@ -1240,7 +1213,7 @@ Class TrajeAtmosferico
       }
     ],
   has
-    prenda transparente;
+    prenda;
 
 
 Object tu_traje "traje" compartimento_trajes
@@ -1316,7 +1289,7 @@ Object traje_jason "traje de Jason" compartimento_trajes
     ];
 
 
-! El decorado de los trajes (ver rutina AlAlcance):
+! El decorado de los trajes:
 
 Object decorado_traje
   class DecoradoAmpliado
