@@ -6322,6 +6322,20 @@ Object computadora "Madre"
     gramatica [;
       return -'madre,';
     ],
+    antes [;
+      Escuchar:
+        self.mensaje_aleatorio();
+        rtrue;
+
+      Encender:
+        "Madre ya está encendida.";
+
+      Apagar:
+        "No hay forma de desactivar a Madre, y si la hubiera, no querrías hacerlo.";
+
+      default:
+        "Madre es una inteligencia artificial incorpórea. ¿Sabes lo que es eso?";
+    ],
     ! codigo_nuevo == 0: indica que Madre todavía no ha calculado el nuevo código
     ! codigo_nuevo == 1: sí lo ha calculado
     codigo_nuevo 0,
@@ -6755,7 +6769,7 @@ Object computadora "Madre"
       }
     ],
   has
-    escenario hablable propio;
+    escenario animado propio conmutable;
 
 
 ! El alien cuando estamos en la oscuridad:
