@@ -1163,10 +1163,15 @@ Class TrajeAtmosferico
     ! "Puedes ver dos trajes atmosféricos (tu traje y el traje de Jason)"
     listar_juntos "trajes atmosféricos",
     descripcion [;
-      "Es un traje hermético, compuesto por un mono de un material resistente, botas,
-       guantes y un casco destinado a proporcionar aislamiento y oxígeno al usuario.
-       Es de color ", (string) self.color, ", y lleva impreso ", (string) self.lateral,
-       " en un lateral.";
+      print "Es un traje hermético, compuesto por un mono de un material resistente,
+             botas, guantes y un casco destinado a proporcionar aislamiento y oxígeno
+             al usuario. Es de color ", (string) self.color, ", y lleva impreso ",
+             (string) self.lateral, " en un lateral.";
+      if (self == traje_jason && jason in vaina) {
+        " Tiene un corte bastante grande en un costado.";
+      } else {
+        "";
+      }
     ],
     antes [ l;
       Tocar:
@@ -5304,6 +5309,8 @@ Object jason "Jason" nave1
         } else {                                          ! Si la vaina está abierta:
           move jason to hueco_techo;                      ! lo sacas
           PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
+          remove traje_jason;
+          give traje_jason ausente;
           move traje_inutil to hueco_techo;
           max_longitud_camino = 30;
           alien.pnj_ha_llegado = alien.pnj_ha_llegado_puerta;
@@ -9434,14 +9441,12 @@ Object tt_computadora
 
 [ SegundaParte o sig;
   alien.primera_vez = false;
-  ! Jason ya no lleva el traje:
-  remove traje_jason;
-  give traje_jason ausente;
-  ! A Jason se le cae todo cuando se lo lleva el alien:
+  ! A Jason se le cae todo cuando se lo lleva el alien,
+  ! menos el traje:
   o = child(jason);
   while (o ~= Nothing) {
     sig = sibling(o);
-    move o to procesador;
+    if (o ~= traje_jason) move o to procesador;
     o = sig;
   }
   move jason to vaina;
