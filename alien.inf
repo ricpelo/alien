@@ -2386,7 +2386,6 @@ Object decorado_laberinto
       'agua'     [; return self.desc_charcos; ] 0
       'paredes'  [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
       'pared'    [; return self.desc_paredes; ] G_FEMENINO
-      'pared'    [; return self.desc_paredes; ] G_FEMENINO
       'sangre'   "Sólo eso: sangre salpicada (o proyectada) contra la pared. No hay ninguna
                   pista sobre a qué ser (persona o animal) pertenecía." G_FEMENINO;
 
