@@ -111,7 +111,7 @@ Constant PARTICULA_TE = "te";
 !  4) Mensajes "Miscelanea", donde están todos los errores de parsing
 !  y otros. Algunos son fáciles de cambiar, otros son más complejos.
 
-[ MLIdioma ml_n ml_o  aux;
+[ MLIdioma ml_n ml_o;
   Prompt:
     print "^>";
     ! El prompt aparece justo antes de pedir una nueva línea al
@@ -398,8 +398,8 @@ Constant PARTICULA_TE = "te";
     !   3: Éxito
     switch(ml_n)
     {
-     1: aux = parent (ml_o);
-	"Por desgracia ", (el) aux, " ", (esta) aux, " cerrad", (o) aux, ".";
+     1: "Por desgracia ", (el) parent(ml_o), " ",(esta) parent(ml_o),
+	 " cerrad", (o) parent(ml_o), ".";
      2: print "¡Pero si no ";
 	if (otro has animado) print (lo)   ml_o, " tiene", (n) otro;
 	else                  print (esta) ml_o, " ahí ahora";
@@ -409,20 +409,10 @@ Constant PARTICULA_TE = "te";
 	print_ret (o) ml_o, ".";
     }
 
-  PonerSobre, Meter:
+ PonerSobre:
     ! 1: Error, el objeto no está en poder del jugador. [Nota,
     !    conviene mirar en este caso si el objeto es animado o no,
     !    para generar un mensaje más adecuado]
-    if (ml_n == 1)
-    {
-      if (ml_o has animado)
-	"Antes tendrías que ", (coge) "rl", (o) ml_o, ", y no sé si se dejará",
-	  (n) ml_o, ".";
-      "Necesitas tener ", (el) ml_o, " para poder poner", (lo) ml_o,
-	" donde sea.";
-    }
-
- PonerSobre:
     ! 2: Error, el jugador intenta poner un objeto sobre sí mismo
     ! 3: Error, el jugador intenta poner el objeto sobre otro que no
     !    tiene el atributo "soporte"
@@ -440,6 +430,11 @@ Constant PARTICULA_TE = "te";
     !    otro.
     switch(ml_n)
     {
+     1: if (ml_o has animado)
+	  "Antes tendrías que ", (coge) "rl", (o) ml_o,
+	    ", y no sé si se dejará", (n) ml_o, ".";
+	"Necesitas tener ", (el) ml_o, " para poder poner", (lo) ml_o,
+	  " donde sea.";
      2: "No puedes poner un objeto sobre sí mismo.";
      3: "Poner cosas sobre ", (el) ml_o, " no servirá de nada.";
      4: "Te falta destreza.";
@@ -450,6 +445,9 @@ Constant PARTICULA_TE = "te";
     }
 
   Meter:
+    ! 1: Error, el objeto no está en poder del jugador. [Nota,
+    !    conviene mirar en este caso si el objeto es animado o no,
+    !    para generar un mensaje más adecuado]
     ! 2: Error, el jugador intenta meter el objeto en otro que no
     !    tiene el atributo "recipiente"
     ! 3: Error, el jugador intenta meter el objeto en un recipiente
@@ -469,6 +467,11 @@ Constant PARTICULA_TE = "te";
     !    de otro
     switch(ml_n)
     {
+     1: if (ml_o has animado)
+	  "Antes tendrías que ", (coge) "rl", (o) ml_o,
+	    " y no sé si se dejará", (n) ml_o, ".";
+	"Necesitas tener ", (el) ml_o, " para poder meter", (lo) ml_o,
+	  " donde sea.";
      2: "No se pueden meter cosas dentro ", (del) ml_o, ".";
      3: print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
      4: "Tienes que quitarte", (lo) ml_o, " antes.";
@@ -709,14 +712,12 @@ Constant PARTICULA_TE = "te";
                       + BREVE_BIT + HAY_BIT + OCULTAR_BIT);
 	".";
      default:
-	if (ml_o ~= localizacion)
-	{
-	  if (ml_o has soporte) print "^Sobre ";
-	  else                  print "^En ";
-	  print (el) ml_o, " p";
+	if (ml_o~=localizacion)
+     	{   if (ml_o has soporte) print "^Sobre "; else print "^En ";
+	    print (el) ml_o;
+	    print " puedes ver ";
 	}
-	else print "^P";
-	print "uedes ver ";
+	else print "^Puedes ver ";
 	if (n==5) print "también ";
 	EscribirListaDesde(child(ml_o),
                       ESPANOL_BIT + BANDERAUX_BIT + RECURSIVO_BIT
@@ -773,17 +774,13 @@ Constant PARTICULA_TE = "te";
 	".";
     }
 
-  QuitarCerrojo, EcharCerrojo:
-    !  1: Error, el objeto que se intenta abrir, no tiene el atributo
-    !    cerrojo.
-    if (ml_n == 1)
-      "No parece", (n) ml_o, " tener ningún tipo de cerrojo.";
-
   QuitarCerrojo:
     ! QuitarCerrojo se genera ante ABRE <objeto> CON <objeto2>, o también
     ! ante QUITA CERROJO A <objeto> (en este segundo caso no se
     ! especifica la "llave" que abre la puerta).
     !
+    !  1: Error, el objeto que se intenta abrir, no tiene el atributo
+    !    cerrojo.
     !  2: Error, el objeto que se intenta abrir tiene atributo
     !     "cerrojo", pero no tiene atributo "cerrojoechado"
     !  3: Error, el <objeto2> que se intenta usar como llave, no
@@ -793,6 +790,7 @@ Constant PARTICULA_TE = "te";
     !     especificado, el cual podemos encontrarlo en la variable "otro"
     switch(ml_n)
     {
+     1: "No parece", (n) ml_o," tener ningún tipo de cerrojo.";
      2:	print_ret (_El) ml_o, " ya tenía", (n) ml_o, " abierto el cerrojo.";
      3: if (otro) "No parece", (n) ml_o, " encajar en la cerradura.";
 	"Necesitas algún tipo de llave.";
@@ -806,6 +804,8 @@ Constant PARTICULA_TE = "te";
     ! también ante ECHA CERROJO A <objeto>. (sin especificar un
     ! segundo objeto en este caso)
     !
+    !  1: Error, el objeto que se intenta cerrar no tiene la propiedad
+    !     "cerrojo".
     !  2: Error, el objeto que se intenta cerrar tiene la propiedad
     !     "cerrojo", pero ya tiene también "cerrojoechado
     !  3: Error, el objeto tiene "cerrojo", pero está "abierto". No se
@@ -817,6 +817,7 @@ Constant PARTICULA_TE = "te";
     !     "otro")
     switch(ml_n)
     {
+     1: "No parece", (n) ml_o, " tener ningún tipo de cerrojo.";
      2: print (_El) ml_o, " ya ";
 	if (ml_o provides con_llave)
 	  "estaba", (n) ml_o, " cerrad", (o) ml_o, " con llave.";
@@ -831,44 +832,38 @@ Constant PARTICULA_TE = "te";
 	".";
     }
 
-  Encender, Apagar, Abrir, Cerrar:
-    !  1: Error, el objeto no tiene el atributo "conmutable" (Encender y
-    !     Apagar) o "abrible" (Abrir y Cerrar)
-    !     NOTA con respecto a la acción Encender: este error no aparecerá
-    !     si el jugador pone ENCIENDE OBJETO, ya que en este caso la
-    !     acción generada será Quemar objeto, pero puede aparecer si
-    !     pone CONECTA OBJETO
-    if (ml_n == 1)
-    {
-      print "No es algo que pueda ";
-      IdiomaVerbo (palabra_verbo);
-      "se.";
-    }
-
  Encender:
     ! Generada al intentar ENCIENDE OBJETO si el objeto tiene el
     ! atributo "conmutable". Observar que si no lo tiene, la acción
     ! que se genera será sin embargo Quemar.
     !
+    !   1: Error, el objeto no es conmutable (este error no aparecerá
+    !      si el jugador pone ENCIENDE OBJETO, ya que en este caso la
+    !      acción generada será Quemar objeto, pero puede aparecer si
+    !      pone CONECTA OBJETO)
     !   2: Error, el objeto ya tenía el atributo "encendido"
     !   3: Éxito, el objeto tiene ahora activado "encendido".
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda encenderse.";
      2: print_ret "Ya estaba", (n) ml_o, " encendid", (o) ml_o, ".";
      3: "Enciendes ", (el) ml_o, ".";
     }
 
  Apagar:
+    !  1: Error, el objeto no tiene el atributo "conmutable"
     !  2: Error, el objeto ya tenia desactivado el atributo
     !    "encendido"
     !  3: Éxito, el objeto tiene ahora desactivado "encendido"
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda apagarse.";
      2: print_ret "Ya estaba", (n) ml_o, " apagad", (o) ml_o, ".";
      3: "Apagas ", (el) ml_o, ".";
     }
 
   Abrir:
+    !  1: Error, el objeto no tiene el atributo "abrible"
     !  2: Error, el objeto es abrible, pero tiene "cerrojoechado"
     !  3: Error, el objeto es abrible, pero ya tiene el atributo
     !     "abierto"
@@ -879,6 +874,7 @@ Constant PARTICULA_TE = "te";
     !     interior, o no era recipiente).
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda abrirse.";
      2: "Está", (n) ml_o, " cerrad", (o) ml_o, " con llave.";
      3: "Ya estaba", (n) ml_o, " abiert", (o) ml_o, ".";
      4: print "Abres ", (el) ml_o, ", descubriendo ";
@@ -890,11 +886,13 @@ Constant PARTICULA_TE = "te";
     }
 
   Cerrar:
+    !  1: Error, el objeto no tiene el atributo "abrible"
     !  2: Error, el objeto es "abrible" pero ya estaba quitado su
     !     atributo "abierto" (o sea, estaba ya cerrado)
     !  3: Éxito.
     switch(ml_n)
     {
+     1: print_ret "No es algo que pueda cerrarse.";
      2: "Ya estaba", (n) ml_o, " cerrad", (o)ml_o, ".";
      3: "Cierras ", (el) ml_o, ".";
     }
@@ -1046,7 +1044,7 @@ Constant PARTICULA_TE = "te";
     ! La acción ModoM1 se genera ante el comando BREVE (o NORMAL). La
     ! librería imprime la constante Historia y a continuación este
     ! mensaje.
-    " está ahora en su modo normal ~breve~, que da sólo descripciones
+    " está ahora en su modo normal ~breve~, que da solo descripciones
     largas de los lugares la primera vez que son visitadas, y
     descripciones cortas en otro caso.";
 
@@ -1382,14 +1380,15 @@ Constant PARTICULA_TE = "te";
 	! encontrar tantos. Por ejemplo: COGE SEIS MONEDAS.
 	! En ml_o se recibe el número de objetos hallados por el
 	! parser.
-	if (ml_o == 0) "No hay suficientes.";
-	if (ml_o == 1) {
-	  print "Aquí sólo hay un";
-	  if (objeto_multiple-->1) print (o) objeto_multiple-->1;
-	  else                     print "o";
-	  " disponible.";
+ 	if (ml_o==0) "No hay suficientes.";
+         else if (ml_o==1){
+	 print "Aquí sólo hay un";
+	 if (objeto_multiple-->1) print (o) objeto_multiple-->1;
+	 else print "o";
+	 " disponible.";
         }
-	"Sólo hay ", (number) ml_o, " disponibles para esa acción.";
+	else
+	   "Sólo hay ", (number) ml_o, " disponibles para esa acción.";
 
      43: ! El jugador ha puesto TODO como objeto múltiple, pero el
 	! parser no ha encontrado ningún objeto. En realidad este

@@ -2,3 +2,9 @@
 
 git clone git://gitorious.org/informate/mainline.git
 
+El commit 4b9fec76 incluye un fallo gordo que hace que no se muestren
+bien los mensajes de la librería al, por ejemplo, abrir y cerrar
+contenedores. Lo mejor es revertirlo haciendo:
+
+git revert 4b9fec76
+
