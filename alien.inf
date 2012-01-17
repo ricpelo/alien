@@ -1327,6 +1327,7 @@ Object traje_inutil "restos del traje de Jason"
     nombre 'restos' 'traje',
     adjetivos 'jason',
     articulo "los",
+    suma_al_alcance decorado_traje_inutil,
     descripcion "Esto es lo que ha quedado del traje de Jason tras su enfrentamiento con
                  la criatura. Tiene una generosa hendidura en un lateral. Sin duda, está
                  del todo inservible.",
