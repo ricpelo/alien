@@ -1339,7 +1339,7 @@ Object traje_inutil "restos del traje de Jason"
         "No merece la pena. No sirve para nada ya.";
     ],
   has
-    nombreplural transparente;
+    nombreplural;
     
 
 Object decorado_traje_inutil
