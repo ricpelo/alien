@@ -1297,14 +1297,6 @@ Object decorado_traje
     desc_guantes "Sujetos firmemente al resto del traje, son flexibles y muy cómodos.",
     desc_botas "Recias y fuertes, para su uso en cualquier entorno.",
     antes [;
-      Examinar:
-        ! Esto hay que ponerlo siempre, o si no, el decorado no aparecerá,
-        ! aunque usemos suma_al_alcance:
-        if (PruebaDeAlcance(tu_traje) || PruebaDeAlcance(traje_jason)) {
-          PonerAlAlcance(decorado_traje);
-        }
-        rfalse;
-
       Tocar:
         if (PruebaDeAlcance(traje_jason) && ObjetoEsIntocable(traje_jason)) rtrue;
         if (ObjetoEsIntocable(tu_traje)) rtrue;
