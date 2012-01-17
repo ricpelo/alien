@@ -1,0 +1,874 @@
+Este registro fue iniciado a partir de la revisión [001008], los
+cambios anteriores no han sido documentados aquí.
+
+El registro aparece en orden cronológico inverso, es decir, la versión
+más reciente es la primera que aparece.
+
+======================================================================
+Versión del repositorio
+
+ - Modificado el mensaje que se muestra al intentar dejar un objeto
+   que no lleva el jugador pero que está en su misma localidad, para
+   que tenga en cuenta si el objeto es animado, en cuyo caso ahora
+   usará la preposición 'a': Para dejar (al) Objeto deberías
+   tener(lo).
+   [Morgul, con ayuda de Al-Khwarizmi y Sothoth]
+
+ - Modificados dos mensajes más que incorrectamente omitían la
+   preposición 'a' al nombrar objetos animados: al empujar un objeto
+   animado en una dirección (como en "EMPUJA JUAN SUR"), y al
+   realizar un intento automático de coger un objeto animado (como en
+   "PONTE JUAN").
+   [Morgul]
+
+ - Los verbos de grabación y reproducción de comandos desde un fichero
+   dejan de ser de sólo depuración, por lo que ya podrán usarse desde
+   cualquier fichero de aventura.
+   [Graham Nelson, adaptado a InformATE! por Morgul]
+
+ - Corregidos los mensajes de la rutina LeerComandosSub, que hablaban
+   de grabación de comandos cuando deberían decir reproducción.
+   Añadida una tilde que faltaba a un mensaje de ActivarComandosSub y
+   formas infinitivas para estos verbos meta, así como un sinónimo en
+   castellano para 'replay': 'reproducir'.
+   [Morgul]
+
+ - Se permite la entrada de comentarios por parte del jugador, al
+   escribir líneas que empiecen con el carácter '!'. Este cambio es
+   similar a la funcionalidad del módulo de ampliación Betatest, que
+   ahora queda totalmente obsoleto. Puede elegirse algún otro caracter
+   definiendo la constante CARACTER_COMENTARIO antes de incluir
+   EParser, ejemplo: Constant CARACTER_COMENTARIO '*';
+   [Graham Nelson, adaptado a InformATE! por Morgul]
+
+ - Reestructurado el fichero plantilla.inf, debido a que nunca había
+   tenido un orden correcto.
+   [Urbatain]
+
+ - Añadidos nombres a los objetos de dirección obj_adentro y
+   obj_afuera. Sin ellos no se podía "EMPUJAR X HACIA DENTRO" (o
+   FUERA) ni "IR HACIA DENTRO" (o FUERA).
+   [Bug detectado por Sothoth, solución de RML]
+
+ - Añadida una rutina de formato _Al, para imprimir "A", "Al", "A la",
+   "A los" o "A las", con la primera letra en mayúscula.
+   [Petición de Saimazoom y Sothoth, solución de Eliuk Blau]
+
+ - Descomentada la línea de gramática que impedía usar formas "SALIR
+   POR...". Fue comentada por Zak hace mucho tiempo, pero no indicó en
+   este fichero de cambios el motivo.
+   [Petición de Sothoth y Urbatain]
+
+
+======================================================================
+Versión [080625] (25 de Junio de 2008)
+
+ - Cambiado el mensaje "No observas nada más digno de mención al mirar
+   hacia..." por "No observas nada digno de mención al mirar hacia..."
+   [Eliuk Blau]
+
+ - Se ha corregido el formato del array results en una sección de la
+   rutina Parser__parse, que debía incluir el número de parámetros en
+   segunda posición, pero no incluía dicho número, sino los parámetros
+   tal cual. Esto provocaba que la propiedad gramatica no funcionara
+   coherentemente.
+   [Bug detectado por Sothoth, solución de Sarganar]
+
+ - Corregida la versión Glulx de la rutina al_, que escribía "al" en
+   lugar de "a" cuando se aplicaba sobre objetos con nombre propio.
+   [Detectado por Sothoth y Eliuk Blau, solución de Sarganar]
+
+ - Modificada la rutina GGInitialise de Glulx, para que (igual que ya
+   hacía con la ventana de texto) blanquee la barra de estado en caso
+   de existir una. Esto hace que al reiniciar en un juego con una
+   'Intro', no quede la barra de estado con texto, sino en blanco
+   como al (primer) inicio de la aventura.
+   [Detectado por Radio Marte Libre, solución de Morgul]
+
+ - A partir de ahora, la variable parser_trace pasa a ser una variable
+   de sólo depuración, es decir: sólo aparecerá al compilar en modo de
+   depuración. Se ha modificado en todo InformATE! el código que
+   utilizaba dicha variable sin comprobar si se estaba en modo de
+   depuración o no, para que siempre se haga esta comprobación.
+   [Morgul]
+
+ - Corregido el bug que hacía que bajo Glulx no se comprendiera los
+   verbos en mayúscula terminados en -r y/o pronombres. Para ello se
+   ha modificado la rutina KeyboardPrimitive de Glulx para que pase
+   siempre la entrada del jugador a minúscula antes de analizarla,
+   cosa que ocurría automáticamente en la Máquina-Z.
+   [Bug detectado por Sarganar y uMay, localizado por RML, solución de
+   Morgul]
+
+
+======================================================================
+Versión [071030] (30 de Octubre de 2007)
+
+ - Nuevas entradas VerboIrregular para los infinitivos 'ingerir',
+   'retorcer' y 'volver', que sólo eran reconocidos en su forma
+   imperativa.
+   [Morgul]
+
+ - Reconstruida la gramática de la acción LoSiento, para que se
+   admitan más formas de pedir disculpa en castellano. Por ejemplo,
+   antes no funcionaba "LO SIENTO" o "PERDÓN" así, a secas; ahora sí,
+   además de las formas anteriormente admitidas como "LO SIENTO MUCHO"
+   o "PERDÓN POR LO DICHO".
+   [Detectado por Urbatain, solución de Morgul]
+
+ - Mejorado el comportamiento en los juegos que utilicen por defecto
+   el dialecto sudamericano, para que se informe al jugador la primera
+   vez que haga uso del verbo COGER.
+   [Propuesto por Urbatain, solución de Morgul]
+
+ - Añadidos los mensajes de error a la hora de activar o desactivar la
+   transcripción a los ficheros de mensajes. Estos se referenciaban
+   desde Acciones.h, pero nunca se añadieron.
+   [Bug detectado por Sarganar]
+
+ - Corregida la visualización de la hora en la rutina IdiomaHoraDelDia
+   cuando el número de horas era múltiplo de 12, pues se imprimía un
+   espacio de más. Este defecto había existido en InformATE! desde
+   siempre, pero en la librería original Inform estaba corregido desde
+   la versión 6/6.
+   [Graham Nelson, adaptado a InformATE! por Morgul]
+
+ - Corregidas las cuatro ocurrencias de formas verbales del verbo
+   'coger' en mensajes (incluidas las de los comentarios de ejemplo),
+   que no hacían uso de las rutinas necesarias por la diferencia entre
+   dialectos, como '(coge)'.
+   [Morgul]
+
+ - Añadido un print que hacía falta en un mensaje de Msg1P.h (sí
+   estaba en el mismo mensaje de Mensajes.h), lo que provocaba que se
+   saltara código que debía ejecutarse.
+   [Urbatain]
+
+ - Completada la corrección en la acción MeterseSub hecha por Presi en
+   la versión anterior, para que tampoco se permita subir por una
+   puerta que lleve hacia abajo.
+   [Urbatain]
+
+ - Pasados como parámetro de M__L() los objetos pertinentes en algunos
+   mensajes donde correspondía, pero se había pasado por alto hacerlo
+   o no se pasaba la variable adecuada. La rutina corregida es
+   Objetos1Sub.
+   [RML]
+
+ - Añadido el punto final a un mensaje de la acción EcharCerrojo en
+   los ficheros de mensajes, pues carecía de él.
+   [Pedro Antonio Sanz]
+
+
+======================================================================
+Versión [030305] (5 de Marzo de 2003)
+
+ - Modificada la función SiONo para que llame a QuitarAcentos() de
+   modo que ya no es necesario declarar la palabra de diccionario 'sí'
+   (con acento) en la librería, lo que provocaba problemas de
+   reconocimiento de la acción "Si".
+   [Detectado por Jenesis, solución de Zak, Ceotan, Morgul y Presi]
+
+ - Cambiado en Mensajes.h (y Msg1P.h) el mensaje de coger objetos
+   animados para prever un posible plural de estos.
+   [Propuesta de RML]
+
+ - Eliminada la variable parser_listillo, ahora eso mismo se activa
+   con la variable existente parser_listo al valor 2, es decir:
+
+   parser_listo=0   Dar mensaje de que no entendió y no ejecutar
+                    ninguna acción.
+   parser_listo=1   Preguntar al jugador si quiere realizar la acción
+                    más probable.
+   parser_listo=2   Realizar la acción sin preguntar.
+   [Propuesta de Morgul]
+
+ - Modificado el funcionamiento de la rutina que desencadenaba la
+   variable parser_listo. Antes se ejecutaba la acción sin más, lo que
+   provocaba muchísimos errores ya que la gramática no encajaba, ahora
+   lo que se hace es reparsear la línea evitando las últimas palabras
+   no reconocidas.
+   [Morgul y Presi]
+
+ - Modificada la función (del) para que imprima "de" en caso de que el
+   objeto involucrado tenga el atributo propio.
+   [Propuesta de Urbatain]
+
+ - Modificada la rutina de acción MeterseSub de modo que ahora se
+   puede bajar por cualquier puerta excepto que lleve a arriba (ya que
+   no tiene sentido bajar hacia arriba :).
+   [Presi]
+
+
+======================================================================
+Versión [021230] (30 de Diciembre de 2002)
+
+ - Reparado un bug introducido en la versión anterior que impedía
+   compilar con Msg1P.h.
+   [Bug detectado por Urbatain]
+
+ - Modificada la gramática del verbo 'baja', su rutina de acción
+   BajarSub y ligeramente la rutina MeterseSub para evitar casos
+   inconsistentes, se impide que se pueda bajar por (meterse en) un
+   objeto que no sea una puerta hacia abajo. Además ahora si se está
+   sobre un objeto soporte, "bajar" sin más y "bajar por" harán bajar
+   del objeto, ejemplos "BAJAR ESCALERA", "BAJAR POR LA LADERA".
+   [Presi]
+
+ - Añadida la línea "* noun -> Meterse;" a la gramática de 'sube'.
+   Así se contemplan cosas como "SUBE ESCALERA" totalmente correctas.
+   [Presi]
+
+ - Cambiada la variable parser_listo a 1 por defecto en la aventura de
+   prueba (prueba.inf) ya que en la librería también viene por defecto
+   a 1, añadido el objeto "Armario de cedro" y un "Sótano lúgubre"
+   bajo la sala de objetos variados para poder probar subir y bajar.
+   [Presi]
+
+ - Añadida la variable parser_listillo que conmuta a un modo en el que
+   ejecuta la acción como si el jugador hubiera respondido "si" en la
+   pregunta de desambiguación (la de parser_listo). Por defecto
+   parser_listillo se inicializa a 0 (false).
+   [Propuesto por Jarel, solución de Presi]
+
+
+======================================================================
+Versión [021025] (25 de Octubre de 2002)
+
+ - Modificada la rutina ImprimirListaDudosos en los ficheros de
+   mensajes (Mensajes.h y Msg1P.h) para que, al preguntar en casos de
+   duda en la desambiguación por haber varios objetos no idénticos con
+   la máxima puntuación, pregunte sólo por ésos de máxima puntuación,
+   y no por todos (como ocurría hasta ahora).
+   [Bug detectado por Urbatain, solución de Morgul]
+
+ - El comando Salidas deja de ser un verbo meta, por lo cual ahora
+   siempre pasará un turno cuando se use este comando, y se podrá
+   interceptar esta acción en las rutinas antes.
+   [Morgul]
+
+ - Corregida en Gramatica.h la forma infinitiva de 'atraviesa', que
+   era "atrevesar" y debería ser "atravesar".
+   [Detectado por Saimazoom]
+
+ - Sustituido el fichero de esqueleto de aventura ("plantilla.inf")
+   por otro más completo.
+   [Morgul]
+
+ - Corregida la falta ortográfica en el mensaje: "Siempre te tienes a
+   tí mismo" (no se escribe 'tí' sino 'ti'), en Mensajes.h (en Msg1P.h
+   no se daba el caso, pues 'mí' sí es correcto).
+   [Morgul]
+
+
+======================================================================
+Versión [020804] (4 de Agosto de 2002)
+
+ - Corregidos dos bugs que impedían compilar en modo Infix, debido a
+   unos reajustes de línea automáticos, que habían dejado parte de dos
+   comentarios en infixe.h sin comentar.
+   [Morgul]
+
+ - Eliminadas las menciones a la oficialidad en la librería, excepto
+   en este fichero, por razones "históricas".
+   [Presi]
+
+ - La partícula 'me' ha sido añadida a los reflexivos. Antes
+   obteníamos:
+
+     >METERME EN EL COCHE ROJO
+     Antes tendrías que cogerlo, y no sé si se dejarás.
+
+     >QUITARME EL COCHE ROJO
+     No entiendo la última parte. ¿Quieres quitar ti mismo?
+
+   Ahora obtendremos:
+
+     >METERME EN EL COCHE ROJO
+     No es algo donde puedas meterte.
+
+     >QUITARME EL COCHE ROJO
+     No llevas puesto eso.
+   [Bug detectado por Urbatain, solución de Urbatain, Presi y Zak]
+
+ - Creada la constante PARTICULA_TE en los ficheros de mensajes
+   (Mensajes.h y Msg1P.h) y referenciada desde Espanol.h para que
+   concuerde con la persona verbal.
+
+   En Mensajes.h, PARTICULA_TE es "te", con lo que obtenemos:
+
+     >METERME EN EL COCHE ROJO
+     No es algo donde puedas meterte.
+
+   En Msg1P.h, PARTICULA_TE es "me", con lo que obtenemos:
+
+     >METERME EN EL COCHE ROJO
+     No es algo donde pueda meterme.
+   [Presi]
+
+ - La acción Sacar ha sido modificada para permitir sacar cosas de
+   objetos animados (PSIs).
+   [Propuesto por Jarel, solución de Zak y Presi]
+
+ - Eliminado el mensaje al compilar "*** En InformATE! 6/10 no es
+   necesaria la constante ADMITIR_INFINITIVOS. Los infinitivos se
+   admiten automáticamente ***".
+   [Presi]
+
+ - Modificado el mensaje (en Mensajes.h y Msg1P.h) "primero coges..."
+   por "primero tratas de coger..." y si la acción de coger tiene
+   éxito, sale el mensaje correspondiente (p. ej. "Cogido.").
+   [Propuesta de Jarel, solución de Zak, Urbatain y Presi]
+
+ - Incluido el fichero "plantilla.inf" que sirve como código esqueleto
+   inicial para escribir un juego, lleva los Includes necesarios,
+   algunas constantes, la rutina Inicializar y comentarios indicando
+   dónde va cada cosa.
+   [Presi]
+
+
+======================================================================
+Versión no oficial [020622] (22 de Junio de 2002)
+
+ - Modificado un mensaje (en Mensajes.h y Msg1P.h) de la acción
+   QuitarCerrojo, ahora en lugar de decir:
+
+     >ABRIR PUERTA CON LLAVE
+     Abres la puerta con la llave.
+
+   dirá:
+
+     >ABRIR PUERTA CON LLAVE
+     Quitas el cerrojo a la puerta con la llave.
+
+   y su equivalente en primera persona para Msg1P.h
+   [DEF y Presi]
+
+ - Añadida la forma infinitiva 'ver' como sinónimo de 'mirar' (antes
+   se consideraba como infinitivo de 've', que es imperativo de 'ir').
+   [Bug detectado por Vampiri-k, comunicado por Dhan, solución de Zak
+    y Presi]
+
+
+======================================================================
+Versión no oficial [020621] (21 de Junio de 2002)
+
+ - Corregido un bug que afectaba al tratamiento del verbo Dejar y que
+   impedía que funcionaran cosas como: "Dejar moneda en bolsa",
+   contestando siempre con el mensaje "¡Pero si no llevas nada!".
+   Además se ha mejorado este mensaje de respuesta ante la acción
+   Dejar, con lo cual ahora obtendremos "¡Pero si no llevas nada de
+   eso!" si tenemos algún objeto en nuestra posesión y "¡Pero si no
+   llevas nada!" si realmente no tenemos ningún objeto.
+   [Zak]
+
+ - Añadida la forma 'ir' como forma imperativa de este verbo irregular
+   para evitar que al poner "Ir arriba loquesea" ponga "No entiendo la
+   última parte. ¿Quieres irr ...".
+   [Morgul]
+
+ - Modificada la rutina ImprimirComando de EParser.h para evitar un
+   bug que causaba el siguiente resultado tan poco inteligente (además
+   paradójicamente sólo cuando estaba la variable parser_listo a 1 :-)
+
+     >IR NORTE DESPACIO
+     No entiendo la última parte. ¿Quieres ir el norte?
+
+   aunque sí hacía bien:
+
+     >IR ARRIBA DESPACIO
+     No entiendo la última parte. ¿Quieres ir arriba?
+
+   Ahora, y sólo en los casos en que se haya intentado usar un comando
+   IR (o sinónimos) + DIRECCIÓN + LOQUESEA se añadirá la preposición
+   "hacia", con lo que ahora obtendremos:
+
+     >IR NORTE DEPRISA
+     No entiendo la última parte. ¿Quieres ir hacia el norte?
+
+   y también:
+
+     >IR ARRIBA DEPRISA
+     No entiendo la última parte. ¿Quieres ir hacia arriba?
+   [Morgul]
+
+ - Añadida una nueva constante NO_PUNTUACION, que si se define (con
+   cualquier valor) antes de incluir ningún fichero en el juego, no se
+   utilizarán los verbos de puntuación y esta no aparecerá en la barra
+   de estado ni al final del juego. En realidad, la puntuación seguirá
+   ahí, sólo que no se mostrará por defecto de ningún modo (ideal para
+   juegos sin puntuación y para juegos que la tienen pero que por lo
+   que sea se desea quitar, sin tocar el código del juego).
+   [Morgul]
+
+ - Puesto todo el código referente a los comandos Objetos y Lugares
+   para que sólo se incluya en el juego cuando no se haya definido la
+   constante NO_LUGARES.
+   [Morgul]
+
+ - En prueba.inf, en la habitación de los objetos plurales, ahora hay
+   tres monedas de oro, dos de plata y dos de bronce, estando una de
+   estas últimas oxidada. También en este fichero se ha añadido el
+   adjetivo 'gordo' a Rojo y se ha definido la nueva constante
+   NO_PUNTUACION. Además se ha añadido una mesa (soporte y entrable)
+   al lugar de objetos variados.
+   [Morgul]
+
+ - Añadida una línea de gramática para que los tacos funcionen sueltos
+   pues hasta ahora era necesario poner algo detrás de ellos, al menos
+   en cuanto se refiere a los tacos gordos, y si no se hacía el parser
+   contestaba con "No entendí esa frase".
+   [Morgul]
+
+ - Añadida 'predecible' a las formas imperativas de la meta-acción
+   Predecible y 'notificacion' a las de cambio de la notificación de
+   puntos.
+   [Morgul]
+
+ - Más mejoras estilísticas y traducción de algunos comentarios.
+   Destaca la adición de un signo de apertura de interrogación ante la
+   pregunta que se hace al terminar un juego sobre si se quiere volver
+   a jugar a él, salir, etc.
+   [Morgul]
+
+
+======================================================================
+Versión no oficial [020524] (24 de Mayo de 2002)
+
+ - Corregido un bug de discordancia de número al mostrar información
+   entre paréntesis de varios recipientes plurales idénticos, como en:
+   "Puedes ver dos cajas (que está cerrada)".
+   [Anson Turner, adaptado a InformATE! por Morgul]
+
+ - Reparado un bug por el que varios recipientes plurales idénticos
+   pero unos abiertos y otros cerrados, se listaban juntos mostrándose
+   una anotación con información (entre paréntesis) de uno de ellos
+   como si todos estuvieran en el mismo estado. Por ejemplo, si
+   tenemos dos cajas idénticas una cerrada y la otra abierta, podíamos
+   obtener: "Puedes ver dos cajas (que están cerradas)".
+   [Anson Turner, adaptado a InformATE! por Morgul]
+
+ - Corregido un bug en la rutina DibujarLineaEstado por el cual cuando
+   correspondía mostrarse en la línea de estado la hora (al
+   modificarse la variable la_hora, normalmente mediante la rutina
+   PonerLaHora), se mostraban las horas como puntuación y los minutos
+   como movimientos.
+   [Torbjörn Andersson, adaptado a InformATE! por Morgul]
+
+ - Sustituidas todas las referencias a la constante NO_PLACES en la
+   librería por su traducción oficial NO_LUGARES. Hasta ahora, en
+   algunos sitios se usaba NO_LUGARES y en otros NO_PLACES.
+   [Morgul]
+
+ - Modificada la forma infinitiva de la acción Objetos, para que no
+   interfiera con la persona verbal de los mensajes. Antes era "listar
+   los objetos que has tenido", ahora es "listar los objetos que se
+   han tenido".
+   [Morgul]
+
+ - Modificadas algunas líneas de gramática (en Gramatica.h) para que
+   se comprendan formas como "Quita el cierre a la caja con la llave"
+   o "Echa el cierre a la caja con la llave".
+   [Morgul]
+
+ - Más cambios estilísticos.
+   [Morgul]
+
+
+======================================================================
+Versión no oficial [020423] (23 de Abril de 2002)
+
+ - Modificada en EParser.h la rutina Identicos, para que tenga en
+   cuenta también las propiedades de InformATE! nombre_f, nombre_fp,
+   nombre_mp y adjetivos a la hora de determinar si dos objetos son
+   indistinguibles por el usuario o no. Puede que esto sea la solución
+   definitiva al problema de la desambiguación, aún así pienso que hay
+   que probarlo más a fondo.
+   [Morgul]
+
+ - Corregido un bug introducido en la anterior versión referente a la
+   elección de objetos por parte del parser. Antes se elegían a veces
+   objetos que no tenían la máxima puntuación, y el efecto era como si
+   se tratara de un problema de desambiguación. Como por ejemplo aquí:
+
+     >MIRAR
+     Puedes ver una caja de cerillas (que está vacía) y tres cerillas.
+
+     >COGER CERILLAS
+     cerilla: Cogida.
+     caja de cerillas: Cogida.
+     cerilla: Cogida.
+     cerilla: Cogida.
+
+   El objeto erróneo en este caso era la caja de cerillas, que ahora
+   ya no se cogerá.
+   [Morgul]
+
+ - Añadido el mensaje "No observas nada más digno de mención al mirar
+   hacia...", que era usado por DireccionBrujula, al objeto de
+   mensajes de librería (como la acción MirarHacia), para corregir la
+   discordancia de persona verbal cuando se usan los mensajes en
+   primera persona. Ahora cuando se usan estos mensajes dice "No
+   observo...".
+   [Bug detectado por Urbatain]
+
+ - En Gramatica.h: Añadidas formas infinitivas de algunos verbos
+   (total, pt, restaurar y restore) para evitar mensajes del parser
+   del estilo de:
+
+     >RESTAURAR LA SILLA
+     No entiendo la última parte. ¿Quieres restaurarr?
+
+   Ahora la respuesta del parser sería:
+
+     >RESTAURAR EL CUADRO
+     No entiendo la última parte. ¿Quieres cargar un juego previamente
+     guardado en disco?
+   [Morgul]
+
+ - En Espanol.h: Corregidas las constantes QUIEN__TX y ELCUAL__TX.
+   Ambas eran " que ", con lo que sobraba un espacio al mostrar los
+   mensajes en los que se utilizaban, siempre al mostrar anotaciones
+   de los objetos: "Puedes ver una bolsa (en la  que ves un lápiz)."
+   Se ha eliminado el espacio extra (el primero) de dichas constantes.
+   [Morgul]
+
+ - Añadido al programa de prueba del parser el comando PARSER LISTO/
+   TONTO para activar/desactivar la inteligencia del parser.
+   [Morgul]
+
+ - Más cambios estilísticos (indentación, corrección de faltas
+   ortográficas, etc.) en el código fuente y comentarios de algunos
+   ficheros.
+   [Morgul]
+
+
+======================================================================
+Versión no oficial [020415] (15 de Abril de 2002)
+
+ - Cambiado el modo de elección de los objetos por parte del parser
+   cuando se trata de múltiples objetos posibles y varios de ellos
+   tienen la máxima puntuación para ser elegidos. Antes se elegía
+   siempre a los primeros (en el árbol de objetos del juego), ahora
+   se elige al azar entre ellos.
+
+   Por ejemplo, en el juego de prueba del parser (prueba.inf):
+
+     >TRAZA 4
+     [Nivel de traza 4.]
+
+     >SACA DOS MONEDAS DE LA BOLSA
+     (...)
+     Puntuando la lista de aciertos: modo indef 1 tipo 8, que
+     satisfaga 0 requisitos:
+       La moneda de oro oxidada (41) en la bolsa : 636 puntos
+       La moneda de oro (42) en la bolsa : 636 puntos
+       La moneda de oro (43) en la bolsa : 636 puntos
+       La moneda de plata (44) en la bolsa : 636 puntos
+       La moneda de plata (45) en la bolsa : 636 puntos
+       La moneda de bronce (46) en la bolsa : 636 puntos
+     (...)
+     [DN añadió a la lista de objetos múltiples:
+       Elemento 1: La moneda de oro oxidada (41)
+       Elemento 2: La moneda de oro (42)
+     La lista tiene ahora tamaño 2]
+     (...)
+     moneda de oro oxidada: Sacada.
+     moneda de oro: Sacada.
+
+   Siempre se elegían las dos primeras monedas (la 41 y la 42).
+   Mientras que ahora, podemos obtener por ejemplo:
+
+     >SACA DOS MONEDAS DE LA BOLSA
+     (...)
+     [DN añadió a la lista de objetos múltiples:
+       Elemento 1: La moneda de plata (44)
+       Elemento 2: La moneda de oro (42)
+     La lista tiene ahora tamaño 2]
+     (...)
+     moneda de plata: Sacada.
+     moneda de oro: Sacada.
+   [Morgul]
+
+ - Trasladadas las constantes HAY__TX, HAYP__TX, HAY2__TX y HAYP2__TX
+   de Espanol.h a los módulos de mensajes estándar (Mensajes y Msg1P),
+   con lo que ahora, por ejemplo, al incluir Msg1P el parser ya no
+   dice "(en el que ves...)" sino "(en el que veo...)" al mostrar el
+   contenido de un recipiente.
+   [Bug detectado por Urbatain]
+
+
+======================================================================
+Versión no oficial [020408] (8 de Abril de 2002)
+
+ - Cambiado el ajuste automático de los pronombres para que ocurra
+   antes de llamarse a la rutina Descripcion de la localidad, de este
+   modo el programador puede ajustar los pronombres según la
+   descripción de la localidad en dicha rutina, sin que la librería
+   estándar interfiera en su decisión.
+   [Morgul]
+
+ - Añadido 'recoge' como sinónimo de 'coge'.
+   [Morgul]
+
+ - Corregidos algunos errores ortográficos y mejorada la presentación
+   de varios mensajes y comentarios en diversos ficheros. También se
+   ha hecho uniforme el estilo de este mismo documento.
+   [Morgul]
+
+
+======================================================================
+Versión [010515] (15 de Mayo de 2001)
+
+ - El fichero Mensajes.h ahora sólo es incluido por la librería si el
+   programador no ha incluido ya otro que defina su propia función
+   MLIdioma. Esto hace más sencillo el poder incluir ficheros de
+   mensajes personalizados. Basta hacer un Include del fichero en
+   cuestión antes del Include Gramatica. Si no se hace, Gramatica se
+   ocupa de incluir el Mensajes.h estándar.
+   [Zak, sobre sugerencias de Akbarr y Presi]
+
+ - Arreglados una serie de problemas con el uso de la conjunción Y
+   como separadora de frases. Ahora Y se entiende como un separador de
+   sustantivos siempre que la palabra que va a continuación sea una
+   palabra tipo nombre aplicable a algún objeto cercano, y en cambio
+   se tomará como separador de frases si la palabra que le sigue es un
+   verbo. Así, en el juego de ejemplo, en el que hay una letra Q, la
+   frase: COGE X Y Q, será interpretada como <<Coger letraX>>, <<Coger
+   letraQ>> si la letra Q está cerca. Si no, será interpretada como
+   <<Coger letraX>> <<Abandonar>> (pues en ese caso se entiende Q como
+   verbo).
+   [Bug detectado por Presi]
+
+ - Arreglado un bug que impedía compilar los juegos en modo no-debug.
+   [Bug detectado por Presi]
+
+ - Arreglado un bug al imprimir la forma infinitiva de "mete", que
+   escribía "meterte" en lugar de "meter".
+   [Bug detectado por Presi]
+
+ - Modificado un mensaje ("Difícilmente podría cargar con eso") en
+   Msg1P.h
+   [Presi]
+
+ - Arreglado un bug por el cual, si el parser generaba el error "Has
+   puesto demasiadas palabras ¿Quieres <hacer tal cosa>?", en una
+   frase que llevara la conjunción "Y", el siguiente comando no era
+   interpretado correctamente.
+   [Zak]
+
+
+======================================================================
+Versión [010510] (10 de Mayo de 2001)
+
+ - Se suministra un fichero alternativo a Mensajes.h, que contiene
+   todos los mensajes de librería escritos en primera persona. Este
+   fichero ha sido realizado por Presi. Para usarlo, renombrar el
+   Mensajes.h original como Msg2P.h, y el Msg1P.h como Mensajes.h
+   [Presi]
+
+ - Corregido un bug en Mensajes.h que escribía un número en lugar de
+   "Has ganado" o "Has muerto". Algunos otros mensajes de librería han
+   sido corregidos.
+   [Bug detectado por Presi y Morgul]
+
+ - Corregido un bug que causaba un Stack Overflow en la máquina Z
+   cuando se activaba el comando de depuración "Cambios" (y también en
+   "Acciones" si se había compilado para el modo Strict).
+   [Bug detectado por José Miguel]
+
+ - Corregido un bug por el cual, cuando el jugador ponía un comando
+   incompleto, el parser lo completaba con el último objeto que el
+   jugador había mencionado. Así, por ejemplo, antes ocurría:
+
+     >NORTE
+     Llegas al comedor.
+
+     >COME
+     (primero intentas coger el norte)
+     No está disponible.
+
+   Un desagradable efecto secundario es que después de haber caminado
+   en una dirección, por ejemplo NORTE, SIENTATE generará en realidad
+   la acción "Sientate Norte", que causaba que el jugador se fuera de
+   nuevo hacia el norte. Este efecto secundario me fue señalado por
+   Morgul.
+
+   Ahora esto ya no ocurre:
+
+     >NORTE
+     Llegas al comedor.
+
+     >COME
+     ¿Qué quieres comer?
+
+     >SIENTATE
+     ¿Dónde quieres sentarte?
+   [Bug detectado por Morgul]
+
+ - COGE TODO y DEJA TODO parecen funcionar mejor ahora, y se excluyen
+   los objetos de escenario de la lista "TODO". Aún queda por saber si
+   los cambios en el parser para el manejo de "TODO" pueden tener
+   algún efecto secundario.
+   [Zak, por petición de Dhan]
+
+
+======================================================================
+Versión [001114] (14 de Noviembre de 2000)
+
+ - Corregido un bug introducido por la anterior revisión, que impedía
+   compilar para Glulx al faltar las declaraciones de bufferaux y
+   parseaux para este caso.
+   [Bug detectado por JSJ]
+
+ - Cambiadas unas cuantas partes del parser para que el comando DEJA
+   TODO se comporte de forma más lógica (no intenta dejar los objetos
+   que no están en poder del jugador, ni tampoco intenta dejar al
+   propio jugador). Estos cambios afectan al corazón del parser, es
+   posible que hayan introducido nuevos bugs, (que podrían
+   manifestarse si el juego define nuevos verbos que usen el token
+   "multiheld").
+   [Zak]
+
+ - Separados los mensajes de librería a un nuevo fichero Mensajes.h
+   para que sea más sencilla su modificación. Además se han cambiado
+   unos cuantos para adaptarlos a los gustos del público.
+   [Zak]
+
+ - Nueva variable en el parser (parser_listo) que por defecto vale 1.
+   Afecta a cómo el parser trata los comandos en los que sobran
+   palabras al final del comando (como en QUITATE ZAPATOS RAPIDAMENTE,
+   en donde le sobra eso de RAPIDAMENTE). Antes decía una frase como
+   "Has puesto demasiadas palabras, sólo entendí que quieres quitarte
+   los zapatos". Ahora, si parser_listo es 1 (por defecto), escribe
+   "No entendí la parte final ¿Quieres quitarte los zapatos?" y espera
+   a que el jugador ponga Sí o No. Si pone "sí", la acción que el
+   parser ha sugerido será ejecutada.
+
+   Si parser_listo vale 0 (puede ponerse este valor en Inicializar),
+   entonces el mensaje será simplemente "No entendí la parte final" y
+   no se sugerirá acción alguna al jugador.
+   [Zak]
+
+ - Nueva acción Quitar, generada por el verbo "quita" o "quitale". Los
+   programas no necesitan capturar esta acción, porque la librería en
+   su rutina QuitarSub la reconvierte en una acción Desvestir, Sacar o
+   Coger, según detecte el tipo de objeto a que se refiere (Objeto en
+   poder del jugador -> Desvestir, Especificado un segundo objeto ->
+   sacar, otro caso -> Coger).
+
+   Por ejemplo:
+
+     Puedes ver un enano (que lleva un hacha) y una mesa.
+
+     >I
+     Llevas una gorra (puesta) y una linterna.
+
+     >QUITA GORRA
+     Te quitas la gorra.
+
+     >QUITA LINTERNA
+     No llevas puesto eso.
+
+     >QUITA LA GORRA DE LA LINTERNA
+     ¡Pero si no está ahí ahora!
+
+     >QUITA HACHA A ENANO
+     Parece pertenecer al enano.
+
+     >PON LINTERNA EN LA MESA
+     Pones la linterna sobre la mesa.
+
+     >QUITA LA LINTERNA
+     Cogida.
+
+     >QUITA LA LINTERNA
+     No llevas puesto eso.
+
+   De todas formas, un objeto puede capturar la acción Quitar, y
+   reaccionar de forma más adecuada para el juego.
+   [Zak]
+
+
+======================================================================
+Versión [001108] (8 de Noviembre de 2000)
+
+ - Modificada la función BuscarEnDiccionario para que use un buffer
+   que no interfiera con el buffer de comandos incompletos. Tal como
+   estaba antes, causaba un bug al usar infinitivos como respuesta a
+   una pregunta del parser, del estilo de:
+
+     >COGER CANICA
+     ¿Cuál concretamente, la canica roja o la canica verde?
+
+     >COGER CANICA VERDE
+     ¿Qué quieres coger?
+   [Bug detectado por Presi]
+
+ - Corregido un bug por el cual el parser no reconocía los pronombres
+   -me -te -se, en comandos como EXAMINATE, COGETE (no se trata de
+   verbos reflexivos declarados como tal en la gramática, sino de
+   verbos normales a los que se les añade -TE como se les podía
+   añadir -LA, -LO).
+   [Bug detectado por Sirrus]
+
+
+======================================================================
+Versión [001101] (1 de Noviembre de 2000)
+
+ - Corregidos bugs relacionados con ciertos verbos de depuración
+   (IRDONDE, XROBA, XMUEVE).
+   [Zak]
+
+ - Añadido un nuevo verbo de depuración XLISTA, que es análogo a
+   XARBOL pero no incluye en la lista los objetos de librería ni los
+   verbos irregulares, con lo que su salida es mucho más limpia y
+   útil.
+   [Zak]
+
+ - Además, me hacía ilusión sacar una versión 001101 que es 13 en
+   binario, para probar que no soy supersticioso :-)
+
+
+======================================================================
+Versión [001030] (30 de Octubre de 2000)
+
+ Corregidos bugs:
+
+ - La acción Meterse Puerta, no generaba una acción Ir direcc_puerta,
+   que es lo que se explicaba en DocumentatE. Ahora sí lo hace.
+   [Bug detectado por Presi]
+
+ - La acción Meterse tenía bugs que impedían que funcionase (pues daba
+   lugar a la acción Entrar, que no es la misma, ya que entrar es
+   simplemente un sinónimo de <Ir obj_adentro>, por lo que no movía
+   realmente al jugador a ningún sitio.
+   [Bug detectado por Presi]
+
+ - El género y número de un objeto con nombres de diferentes géneros y
+   números no era correctamente fijado. Por ejemplo, si un objeto
+   tenía dos nombres: 'pantalones' (en nombre_mp) y 'ropa'
+   (en nombre_f), al poner COGE ROPA, el mensaje era "Cogido", en
+   lugar de "Cogida". Esto se ha arreglado en Gramatica.h
+   [Zak]
+
+ Mejorados algunos mensajes estándar:
+
+ - El mensaje por defecto "No puede ir por ahí", cambiado a "No puedes
+   ir por ahí" (en Espanol.h).
+   [Bug detectado por Presi]
+
+ - Cambiado el mensaje estándar cuando se intenta dejar un objeto que
+   ya está dejado. Antes era "El objeto ya estaba aquí." Ahora es
+   "Para dejar el objeto deberías tenerlo."
+   [Zak]
+
+ - Cambiado el mensaje estándar cuando se intenta entrar en un objeto
+   del inventario. Antes era "Sólo puedes meterte en algo firmemente
+   apoyado". Ahora es "No puedes meterte ahí mientras no lo sueltes".
+   [Zak]
+
+
+======================================================================
+Versión inicial [001008] (8 de Octubre de 2000)
+

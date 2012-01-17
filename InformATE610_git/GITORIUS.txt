@@ -1,0 +1,4 @@
+- Para descargarse la última versión:
+
+git clone git://gitorious.org/informate/mainline.git
+
