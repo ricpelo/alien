@@ -597,6 +597,8 @@ Class DecoradoAmpliado
   class Decorado
   with
     antes [;
+      ! Esto hay que ponerlo siempre, o si no, el decorado no aparecerá,
+      ! aunque usemos suma_al_alcance:
       Examinar:
         if (PruebaDeAlcance(tu_traje, jugador) ||
             PruebaDeAlcance(traje_jason, jugador)) {
@@ -1205,7 +1207,8 @@ Class TrajeAtmosferico
     despues [;
       Examinar:
         ! El jugador ya puede ver las botas, los guantes y el casco
-        self.suma_al_alcance = decorado_traje;
+        tu_traje.suma_al_alcance = decorado_traje;
+        traje_jason.suma_al_alcance = decorado_traje;
     ],
     listarse [;
       if (etapa_inventario == 2) {
@@ -1301,6 +1304,8 @@ Object decorado_traje
     desc_botas "Recias y fuertes, para su uso en cualquier entorno.",
     antes [;
       Tocar:
+        if (PruebaDeAlcance(traje_jason) && ObjetoEsIntocable(traje_jason)) rtrue;
+        if (ObjetoEsIntocable(tu_traje)) rtrue;
         switch (self.cantidad) {
           'guantes', 'guante': "Son guantes fuertes y resistentes.";
           'botas', 'bota': "Las botas son gruesas, y tienen una suela dura como el
@@ -1312,13 +1317,17 @@ Object decorado_traje
         <<Vestir tu_traje>>;
       Desvestir:
         <<Desvestir tu_traje>>;
+      Coger:
+        <<Coger tu_traje>>;
+      Dejar:
+        <<Dejar tu_traje>>;
     ],
     describir
       'guantes' [; return self.desc_guantes; ] G_PLURAL
       'guante'  [; return self.desc_guantes; ] 0
       'botas'   [; return self.desc_botas; ] G_FEMENINO + G_PLURAL
       'bota'    [; return self.desc_botas; ] G_FEMENINO
-      'casco' "Un casco herméticamente cerrado que te permite respirar en este nocivo
+      'casco' "Un casco herméticamente cerrado que permite respirar en este nocivo
                ambiente, y provisto de un enorme visor." 0;
 
 
