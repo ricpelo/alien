@@ -6340,7 +6340,7 @@ Object computadora "Madre"
       Apagar:
         "No hay forma de desactivar a Madre, y si la hubiera, no querrías hacerlo.";
 
-      default:
+      Coger, Dejar, Empujar, EmpujarDir, Tirar, Tocar, Probar, Oler:
         "Madre es una inteligencia artificial incorpórea. ¿Sabes lo que es eso?";
     ],
     ! codigo_nuevo == 0: indica que Madre todavía no ha calculado el nuevo código
