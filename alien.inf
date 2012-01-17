@@ -163,7 +163,6 @@ Replace DecirSub;
 
 ! Con el siguiente Replace conseguimos que el objeto empujado hacia una dirección
 ! aparezca en la descripción de la localidad de destino del "empuje":
-
 Replace PermitirEmpujarDir;
 
 ! Ponemos nuestra propia versión de ZIPI_RunMenu y ZIPI_RunOtro,
@@ -350,7 +349,6 @@ Include "Acciones";
 
 
 [ AlAlcance actor;
-
   ! Ponemos a Jason al alcance para hablar, ya que tenemos comunicador:
   if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
       comunicador in jugador && comunicador has puesto) {
@@ -360,7 +358,7 @@ Include "Acciones";
       PonerAlAlcance(jason);
     }
   }
-  
+
   ! Ponemos a Madre al alcance para hablar y para que se ejecute su
   ! rutina cada_turno:
   if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
@@ -597,14 +595,10 @@ Class DecoradoAmpliado
   class Decorado
   with
     antes [;
-      ! Esto hay que ponerlo siempre, o si no, el decorado no aparecerá,
-      ! aunque usemos suma_al_alcance:
+      ! Esto hay que ponerlo, o no se podrá examinar nada:
       Examinar:
-        if (PruebaDeAlcance(tu_traje, jugador) ||
-            PruebaDeAlcance(traje_jason, jugador)) {
-          PonerAlAlcance(decorado_traje);
-        }
         rfalse;
+
       Coger: "No puedes hacerlo, ya que está", (n) self, " fij", (o) self,
              " en su sitio.";
       Empujar: print_ret (_El) self,
@@ -1303,9 +1297,18 @@ Object decorado_traje
     desc_guantes "Sujetos firmemente al resto del traje, son flexibles y muy cómodos.",
     desc_botas "Recias y fuertes, para su uso en cualquier entorno.",
     antes [;
+      Examinar:
+        ! Esto hay que ponerlo siempre, o si no, el decorado no aparecerá,
+        ! aunque usemos suma_al_alcance:
+        if (PruebaDeAlcance(tu_traje) || PruebaDeAlcance(traje_jason)) {
+          PonerAlAlcance(decorado_traje);
+        }
+        rfalse;
+
       Tocar:
         if (PruebaDeAlcance(traje_jason) && ObjetoEsIntocable(traje_jason)) rtrue;
         if (ObjetoEsIntocable(tu_traje)) rtrue;
+
         switch (self.cantidad) {
           'guantes', 'guante': "Son guantes fuertes y resistentes.";
           'botas', 'bota': "Las botas son gruesas, y tienen una suela dura como el
@@ -1315,10 +1318,13 @@ Object decorado_traje
         }
       Vestir:
         <<Vestir tu_traje>>;
+
       Desvestir:
         <<Desvestir tu_traje>>;
+
       Coger:
         <<Coger tu_traje>>;
+
       Dejar:
         <<Dejar tu_traje>>;
     ],
@@ -1638,7 +1644,7 @@ Object decorado_exterior1 exterior1
       'colonia' "La colonia minera se alza no muy lejos, esperando." G_FEMENINO;
 
 
-Object junto_procesador "Frente al procesador atmosférico"
+Object junto_procesador "Junto al procesador atmosférico"
   class LugarExterior
   with
     descripcion "Te encuentras junto a la entrada al recinto de la maquinaria de
