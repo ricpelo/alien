@@ -8466,8 +8466,8 @@ Object tt_final
   initializeSGW(altoVentanaGrafica);
 ];
 
-! Rutina principal y obligatoria de todo juego InformATE
-[ Inicializar logo;
+
+[ IniciarAventura logo;
   localizacion = laoscuridad;
 
   dibujarEstado = false;
@@ -8527,7 +8527,8 @@ Object tt_final
 ];
 
 
-[ MenuPrincipal r;
+! Rutina principal y obligatoria de todo juego InformATE
+[ Inicializar r;
   IniciarGraficosSonidos();
   openGraphicWindow(250);
   clearGraphicWindow();
@@ -8792,7 +8793,7 @@ ZIPI_Otro ZIPI_Jugar_Con_Intro
       else ApagarGraficosSub(true);
       clearTextWindow();
       Introduccion();
-      Inicializar();
+      IniciarAventura();
       dibujarEstado = true;
       return 2;
     ];
@@ -8808,7 +8809,7 @@ ZIPI_Otro ZIPI_Jugar_Sin_Intro
       if (hayGraficos) EncenderGraficosSub(true);
       else ApagarGraficosSub(true);
       clearTextWindow();
-      Inicializar(true);
+      IniciarAventura(true);
       dibujarEstado = true;
       return 2;
     ];

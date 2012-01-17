@@ -4721,8 +4721,7 @@ Object LibreriaInform "(Librería Inform)"
        LanguageInitialise();
        #Endif;
        new_line;
-!       j=Inicializar();   ! (c) Alpha
-       j=MenuPrincipal();  ! (c) Alpha
+       j=Inicializar();
        punt_anterior = puntuacion;
        move jugador to localizacion;
        while (parent(localizacion)~=0) localizacion=parent(localizacion);
