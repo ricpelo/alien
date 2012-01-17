@@ -148,6 +148,8 @@ Global objetoVerboDesconocido = 0;
 
 
 
+! Nuestra versión de esta rutina sólo redibuja la línea de estado cuando
+! la variable global dibujarEstado está a true:
 Replace DibujarLineaEstado;
 
 ! En este juego no se usa el BuscarEn (MIRA EN, BUSCA EN/DENTRO/DE/SOBRE, REGISTRA...)
@@ -170,8 +172,13 @@ Replace PermitirEmpujarDir;
 Replace ZIPI_RunMenu;
 Replace ZIPI_RunOtro;
 
+! Nuestra versión elimina también los signos de admiración e interrogación:
+Replace QuitarAcentos;
+
+
 
 ! ====================================================================
+
 
 
 Include "EParser";
@@ -181,6 +188,7 @@ Replace InitGlkWindow;
 Replace HandleGlkEvent;
 Include "SGW+DMX_NG";    ! Entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
+
 
 
 [ Curiosidades;
@@ -429,8 +437,9 @@ Include "Acciones";
 
 
 Verb 'examinar.falso'
-   *                   -> ExaminarFalso
-;
+   *                   -> ExaminarFalso;
+
+
 [ ExaminarFalsoSub;
   uno = objetoVerboDesconocido;
   ActualizarPronombre(uno);
@@ -8438,6 +8447,32 @@ Object tt_final
 ! RUTINAS
 !
 ! ====================================================================
+
+
+[ QuitarAcentos buffer parse x i word at len;
+  for (x = 0: x < parse-->0: x++) { ! para cada palabra
+    word = parse-->(x * 3 + 1);
+    at = parse-->(x * 3 + 3);
+    len = parse-->(x * 3 + 2);
+    if (word == 0) { ! no comprendida
+      for (i = at: i < at + len: i++)
+        ! [080625] Quitados caracteres en mayúscula
+        switch(buffer->i) {
+          225: buffer->i = 'a';       ! 225: á
+          233: buffer->i = 'e';       ! 233: é
+          237: buffer->i = 'i';       ! 237: í
+          243: buffer->i = 'o';       ! 243: ó
+     250, 252: buffer->i = 'u';       ! 250: ú, 252: ü
+          241: buffer->i = 'n';       ! 241: ñ
+          '?': buffer->i = ' ';
+          191: buffer->i = ' ';
+          '!': buffer->i = ' ';
+          161: buffer->i = ' ' ;
+        }
+        tokenise__(buffer, parse);
+      }
+  }
+];
 
 
 [ IniciarGraficosSonidos;

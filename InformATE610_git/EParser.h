@@ -980,10 +980,10 @@ Array gg_tokenbuf -> DICT_WORD_SIZE;
     if (cx >= len)
       break;
     bx = cx;
-    if (buf->cx == '.' or ',' or '"' or '?' or '¿' or '!' or '¡')    ! (c) Alpha
+    if (buf->cx == '.' or ',' or '"')
       cx++;
     else {
-      while (cx < len && buf->cx ~= ' ' or '.' or ',' or '"' or '?' or '¿' or '!' or '¡') ! (c) Alpha
+      while (cx < len && buf->cx ~= ' ' or '.' or ',' or '"')
         cx++;
     }
     tab-->(numwords*3+2) = (cx-bx);
