@@ -55,6 +55,7 @@ SOUND Bisturi_ogg res/snd/bisturi.ogg
 SOUND Transmisor_ogg res/snd/transmisor.ogg
 SOUND Nave_ogg res/snd/nave.ogg
 SOUND Lluvia_ogg res/snd/lluvia.ogg
+SOUND Procesador_ogg res/snd/procesador.ogg
 SOUND Maquinaria_ogg res/snd/maquinaria.ogg
 SOUND Junto_Procesador_ogg res/snd/junto_procesador.ogg
 SOUND Pasillo_ogg res/snd/pasillo.ogg

@@ -1656,6 +1656,7 @@ Object junto_procesador "Junto al procesador atmosférico"
                  lloviendo, y el calor es asfixiante.",
     sgw_img Junto_Procesador_jpg,
     sgw_mus Junto_Procesador_ogg,
+    sgw_vol [; return VOLUMEN_FONDO - 20; ],
     al_s exterior1,
     adentro puerta_procesador,
     tenga_cuidado false,
@@ -1974,7 +1975,7 @@ Object procesador "Procesador atmosférico"
       "";
     ],
     sgw_img Procesador_jpg,
-    sgw_mus Maquinaria_ogg,
+    sgw_mus Procesador_ogg,
     afuera puerta_procesador,
     antes [;
       Ir:
@@ -6900,10 +6901,11 @@ Object alien procesador
        alrededor de tu cabeza, que en pocos segundos deja de formar parte de tu
        cuerpo.^";
     ],
-    describir [;
+    describir [ v;
       if (self.primera_vez) {
         self.primera_vez = false;
         viewImageCenter(procesador.sgw_img);
+        Damusix.PararCanal(CANAL_FONDO);
         Damusix.TocarV(Rugido_ogg);
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
                terrorífico comienza a sobresalir entre un conglomerado de tuberías.
@@ -6916,6 +6918,9 @@ Object alien procesador
                encontraba escondido, puedes ver su larga cola, que mueve con una
                velocidad y precisión asombrosas.^";
         EsperarTecla();
+        v = Damusix.QueVolumenCanal(CANAL_FONDO);
+        Damusix.AsignarCanal(procesador.sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
+        Damusix.TocarCanal(CANAL_FONDO);
         rtrue;
       } else {
         ! A partir de ahora, la rutina cada_turno se encargará de describir la presencia
@@ -7219,6 +7224,7 @@ Object robot "robot de mantenimiento" exterior3,
           move robot_inutil to procesador;
           give jugador luz;
           Damusix.TocarV(Chispazo_ogg, 100);
+          procesador.sgw_mus = Maquinaria_ogg;
           print "^El robot mueve su brazo soldador hasta situarlo justo delante del circuito
                  dañado. Se ven y oyen ráfagas de chispas eléctricas saliendo del punto de
                  unión entre el circuito y la punta del soldador. Finalmente, retira
@@ -8502,7 +8508,7 @@ Object tt_final
 ];
 
 
-[ IniciarAventura logo;
+[ IniciarAventura logo v;
   localizacion = laoscuridad;
 
   dibujarEstado = false;
@@ -8535,7 +8541,8 @@ Object tt_final
   IniciarPuertas();
   IniciarRastros();
 
-  Damusix.AsignarCanal(localizacion.sgw_mus, CANAL_FONDO, VOLUMEN_FONDO, SONIDO_BUCLE_INFINITO);
+  v = Damusix.QueVolumenCanal(CANAL_FONDO);
+  Damusix.AsignarCanal(localizacion.sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
   Damusix.TocarCanal(CANAL_FONDO);
 
   if (logo) {
@@ -8563,7 +8570,7 @@ Object tt_final
 
 
 ! Rutina principal y obligatoria de todo juego InformATE
-[ Inicializar r;
+[ Inicializar r v;
   IniciarGraficosSonidos();
   openGraphicWindow(250);
   clearGraphicWindow();
@@ -8571,8 +8578,8 @@ Object tt_final
   barra_estado.dibujar();
   clearMainWindow();
   viewImageCenter(Logo_Alpha_Aventuras_Corto_jpg);
-  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
-                       SONIDO_BUCLE_INFINITO);
+  v = Damusix.QueVolumenCanal(CANAL_FONDO);
+  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
 .Menu;
@@ -9324,10 +9331,11 @@ ZIPI_Otro ZIPI_Salir
 ];
 
 
-[ Introduccion i;
+[ Introduccion i v;
   clearMainWindow();
   viewImageCenter(Oscuridad_jpg);
-  Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, VOLUMEN_FONDO, 1);
+  v = Damusix.QueVolumenCanal(CANAL_FONDO);
+  Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, v, 1);
   Damusix.Tocar(Intro_ogg, 1);
   tt_inicial1.visualiza();
   for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); EsperarTecla(0, 20); }
@@ -9998,7 +10006,7 @@ Extend 'di' first
 ];
 
 
-[ ConfiguracionSub timer;
+[ ConfiguracionSub timer v;
   timer = control_timer.timer_actual;
   control_timer.desactivar();
   if (hayGraficos) {
@@ -10007,14 +10015,14 @@ Extend 'di' first
   }
   barra_estado.numero_lineas = 26;
   barra_estado.dibujar();
-  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
-                       SONIDO_BUCLE_INFINITO);
+  v = Damusix.QueVolumenCanal(CANAL_FONDO);
+  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Estancia_ogg);
   clearMainWindow();
   ZIPI_RunMenu(ZIPI_Configuracion, true);
   if (haySonidoFondo) {
-    Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, LugarReal().sgw_vol,
-                         SONIDO_BUCLE_INFINITO);
+    v = Damusix.QueVolumenCanal(CANAL_FONDO);
+    Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
     Damusix.TocarCanal(CANAL_FONDO);
   }
   barra_estado.numero_lineas = 1;
@@ -10464,7 +10472,7 @@ Endif;
 ];
 
 
-[ PistasSub t timer;
+[ PistasSub t timer v;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
@@ -10483,12 +10491,12 @@ Endif;
        }
        barra_estado.numero_lineas = 26;
        barra_estado.dibujar();
-       Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, VOLUMEN_FONDO,
-                            SONIDO_BUCLE_INFINITO);
+       v = Damusix.QueVolumenCanal(CANAL_FONDO);
+       Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
        Damusix.Tocar(Estancia_ogg);
        ZIPI_Empezar();
-       Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, LugarReal().sgw_vol,
-                            SONIDO_BUCLE_INFINITO);
+       v = Damusix.QueVolumenCanal(CANAL_FONDO);
+       Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
        Damusix.TocarCanal(CANAL_FONDO);
        barra_estado.numero_lineas = 1;
        barra_estado.dibujar();
