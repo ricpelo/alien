@@ -10010,7 +10010,7 @@ Extend 'di' first
 ];
 
 
-[ ConfiguracionSub timer v;
+[ ConfiguracionSub timer v m;
   timer = control_timer.timer_actual;
   control_timer.desactivar();
   if (hayGraficos) {
@@ -10019,14 +10019,12 @@ Extend 'di' first
   }
   barra_estado.numero_lineas = 26;
   barra_estado.dibujar();
-  v = Damusix.QueVolumenCanal(CANAL_FONDO);
-  Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
-  Damusix.Tocar(Estancia_ogg);
   clearMainWindow();
   ZIPI_RunMenu(ZIPI_Configuracion, true);
-  if (haySonidoFondo) {
-    v = Damusix.QueVolumenCanal(CANAL_FONDO);
-    Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
+  v = Damusix.QueVolumenCanal(CANAL_FONDO);
+  m = LugarReal().sgw_mus;
+  if (haySonidoFondo && v ~= 0 && ~~(Damusix.SonandoDeFondo(m))) {
+    Damusix.AsignarCanal(m, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
     Damusix.TocarCanal(CANAL_FONDO);
   }
   barra_estado.numero_lineas = 1;
