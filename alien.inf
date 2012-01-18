@@ -1985,6 +1985,16 @@ Object procesador "Procesador atmosférico"
     cada_turno [;
       self.comprobar_segunda_parte();
     ],
+    arreglar [;
+      give circuito general;
+      remove robot;
+      give robot ausente;
+      move robot_inutil to procesador;
+      give jugador luz;
+      procesador.sgw_mus = Maquinaria_ogg;
+      junto_procesador.sgw_mus = Junto_Procesador_ogg;
+      junto_procesador.sgw_vol = VOLUMEN_FONDO - 10;
+    ],
     ! ¿Se ha arreglado el procesador atmosférico?
     arreglado [;
       return circuito has general;
@@ -7216,16 +7226,9 @@ Object robot "robot de mantenimiento" exterior3,
            resultado siempre es negativo. Es evidente que el problema no es que la
            energía no puede circular, sino más bien que NO HAY energía...";
         } else if (uno == circuito) {
-          give circuito general;
           HablaRobot("Soldando... soldando...");
-          remove robot;
-          give robot ausente;
-          move robot_inutil to procesador;
-          give jugador luz;
+          procesador.arreglar();
           Damusix.TocarV(Chispazo_ogg, 100);
-          procesador.sgw_mus = Maquinaria_ogg;
-          junto_procesador.sgw_mus = Junto_Procesador_ogg;
-          junto_procesador.sgw_vol = VOLUMEN_FONDO - 10;
           print "^El robot mueve su brazo soldador hasta situarlo justo delante del circuito
                  dañado. Se ven y oyen ráfagas de chispas eléctricas saliendo del punto de
                  unión entre el circuito y la punta del soldador. Finalmente, retira
@@ -10275,7 +10278,8 @@ Ifdef DEBUG;
 [ SegundaParteSub;
   
   SegundaParte();
-
+  
+  procesador.arreglar();
   move tu_traje to jugador;
   give tu_traje puesto;
   move bateria to linterna;
@@ -10285,12 +10289,7 @@ Ifdef DEBUG;
   puerta_procesador.abrir();
   move rifle to jugador;
   move bisturi to jugador;
-  give circuito general;
   move tarjeta to jugador;
-  remove robot;
-  give robot ausente;
-  move robot_inutil to procesador;
-  give jugador luz;
 
   JugadorA(entrada);
 ];
