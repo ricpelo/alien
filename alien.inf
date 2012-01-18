@@ -1655,8 +1655,7 @@ Object junto_procesador "Junto al procesador atmosférico"
                  y su fachada frontal tiene signos de haber sido maltratada. Sigue
                  lloviendo, y el calor es asfixiante.",
     sgw_img Junto_Procesador_jpg,
-    sgw_mus Junto_Procesador_ogg,
-    sgw_vol [; return VOLUMEN_FONDO - 20; ],
+    sgw_mus Lluvia_ogg, ! Junto_Procesador_ogg,
     al_s exterior1,
     adentro puerta_procesador,
     tenga_cuidado false,
@@ -7225,6 +7224,8 @@ Object robot "robot de mantenimiento" exterior3,
           give jugador luz;
           Damusix.TocarV(Chispazo_ogg, 100);
           procesador.sgw_mus = Maquinaria_ogg;
+          junto_procesador.sgw_mus = Junto_Procesador_ogg;
+          junto_procesador.sgw_vol = VOLUMEN_FONDO - 10;
           print "^El robot mueve su brazo soldador hasta situarlo justo delante del circuito
                  dañado. Se ven y oyen ráfagas de chispas eléctricas saliendo del punto de
                  unión entre el circuito y la punta del soldador. Finalmente, retira
