@@ -4,4 +4,5 @@ alien.bli
 alien.ulx
 .alien.inf.swp
 *.o
+*.a
 

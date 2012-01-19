@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+    <story>
+        <identification>
+            <ifid>GLULX-1-120117-3989313C</ifid>
+            <format>glulx</format>
+        </identification>
+        <bibliographic>
+            <title>A·L·I·E·N: La aventura</title>
+            <author>Alpha Aventuras</author>
+            <language>ES</language>
+            <headline>Edición Especial</headline>
+            <genre>Science_Fiction</genre>
+            <description>
+              Desde hace casi tres años, el Gobierno ha estado utilizando una rica mina
+              de Vibrantium en el planeta 2003 UB313, pero llevamos quince días sin tener
+              noticias de la colonia minera situada en el planeta.<br/>
+              Deberá partir inmediatamente a dicho planeta para hacer un informe de campo
+              sobre la situación y restablecer las comunicaciones con la colonia. Para esta
+              tarea, que no debería resultar peligrosa, le acompañará el Mayor Jason, un
+              experto marine estelar que llevará consigo su equipo habitual de combate y
+              dispondrá de pleno apoyo logístico para que le ayude en su misión.<br/>
+              Le serán enviados más datos cuando se estime oportuno.<br/>
+              La nave, que estará autogobernada, les dejará en el punto de encuentro
+              establecido junto a los edificios principales de la colonia. El primero de ellos
+              está destinado a la purificación ambiental, mientras que el otro es el complejo
+              principal, construido alrededor de una veta central de mineral.<br/>
+              Le serán enviados más datos cuando se estime oportuno.<br/>
+              El objetivo de su misión será elaborar un informe detallado de la situación,
+              restablecer las comunicaciones y, en el improbable caso de que no lo consiga,
+              traer consigo algún elemento que permita a la cúpula militar evaluar el estado
+              actual de la colonia.<br/>
+              La nave se posa suavemente en la superficie, y todo está en silencio.<br/><br/>
+              Demasiado silencio...</description>
+        </bibliographic>
+        <contacts>
+            <authoremail>alpha.aventuras@gmail.com</authoremail>
+            <url>http://wiki.caad.es/Alpha_Aventuras</url>
+        </contacts>
+        <release>
+            <version>1</version>
+            <releasedate>2012/01/19</releasedate>
+        </release>
+        <colophon>
+            <generator>Babble</generator>
+            <originated>2012/01/19</originated>
+        </colophon>
+    </story>
+</ifindex>

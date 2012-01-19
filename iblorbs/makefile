@@ -10,7 +10,7 @@ BDIFF = bdiff
 BINARC = iblorbb.zip
 SRCARC = iblorbs.zip
 BPAL = bpal
-all: $(FRONT) $(BRES) $(BLC) $(BPAL) $(BDIFF)
+all: $(FRONT) $(BRES) $(BLC) $(BPAL) $(BDIFF) $(BMERGE)
 compress:
 	strip *.exe
 	-djp *.exe
