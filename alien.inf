@@ -9378,6 +9378,8 @@ ZIPI_Otro ZIPI_Salir
       evtype_CharInput:
         glk($00D3, gg_mainwin);         ! cancel_char_event
         Damusix.SimpleFadeOut(Intro_ogg, 3000);
+        Damusix.PararCanal(CANAL_FONDO);
+        Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
         jump Salir;
 
       evtype_Timer:
