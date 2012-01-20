@@ -28,6 +28,6 @@ cp Redist/FAQ       ~/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 cp Redist/*.pdf     ~/IF/Empaquetar/Alien_EE/ZIP/Alien_EE/
 
 # Dropbox:
-cp alien.blb  ~/Dropbox/
-cp garglk.ini ~/Dropbox/
+cp alien.blb  ~/Dropbox/Public
+cp garglk.ini ~/Dropbox/Public
 

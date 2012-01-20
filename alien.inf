@@ -58,10 +58,9 @@ Constant HAY_CURIOSIDADES;
 ! Máximo nivel de carga para la batería:
 Constant MAX_NIVEL_CARGA = 600;
 
-! Alto de la ventana gráfica
-!Constant ALTO_VENTANA_GRAFICA = 350; !500; !315;
-Constant GRAFICOS_PEQUENOS = 300;
-Constant GRAFICOS_MEDIANOS = 400;
+! Alturas de los gráficos (tres modalidades):
+Constant GRAFICOS_PEQUENOS = 250;
+Constant GRAFICOS_MEDIANOS = 350;
 Constant GRAFICOS_GRANDES  = 500;
 
 ! Canales de sonido y sus volúmenes:
