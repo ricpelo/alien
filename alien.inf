@@ -58,7 +58,8 @@ Constant HAY_CURIOSIDADES;
 ! Máximo nivel de carga para la batería:
 Constant MAX_NIVEL_CARGA = 600;
 
-! Alturas de los gráficos (tres modalidades):
+! Alturas de los gráficos:
+Constant GRAFICOS_MINUSCULOS = 200;
 Constant GRAFICOS_PEQUENOS = 250;
 Constant GRAFICOS_MEDIANOS = 350;
 Constant GRAFICOS_GRANDES  = 500;
@@ -8771,17 +8772,18 @@ ZIPI_Otro ZIPI_Tamano_Graficos
   with
     ZIPI_titulo [;
       switch (altoVentanaGrafica) {
-        GRAFICOS_PEQUENOS: "Gráficos: ", GRAFICOS_PEQUENOS,  " px. (PEQUEÑOS)";
-        GRAFICOS_MEDIANOS: "Gráficos: ", GRAFICOS_MEDIANOS,  " px. (MEDIANOS, recomendado)";
-        GRAFICOS_GRANDES:  "Gráficos: ", GRAFICOS_GRANDES,   " px. (GRANDES)";
-        default:           "Gráficos: ", altoVentanaGrafica, " px.";          
+        GRAFICOS_MINUSCULOS: "Gráficos: ", GRAFICOS_MINUSCULOS, " px. (MINÚSCULOS)";
+        GRAFICOS_PEQUENOS:   "Gráficos: ", GRAFICOS_PEQUENOS,   " px. (PEQUEÑOS)";
+        GRAFICOS_MEDIANOS:   "Gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS, recomendado)";
+        GRAFICOS_GRANDES:    "Gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES)";
+        default:             "Gráficos: ", altoVentanaGrafica,  " px.";          
       }
     ],
     ZIPI_cambiar [;
       if (altoVentanaGrafica < GRAFICOS_GRANDES) {
         altoVentanaGrafica = altoVentanaGrafica + 50;
       } else {
-        altoVentanaGrafica = 200;
+        altoVentanaGrafica = GRAFICOS_MINUSCULOS;
       }
     ],
     ZIPI_ejecutar [; rtrue; ];

@@ -168,14 +168,13 @@
    a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar
       todo el escritorio.
 
-   b) Configura la aventura para que use gráficos más pequeños, usando uno de
-      los comandos siguientes dentro del juego:
+   b) Configura la aventura para que use gráficos más pequeños, usando el
+      comando siguiente dentro del juego:
 
-      > GRÁFICOS PEQUEÑOS
-          (esto hará que la aventura use los gráficos al tamaño más pequeño)
-
-      > GRÁFICOS MEDIANOS
-          (esto hará que la aventura use los gráficos a tamaño mediano)
+      > CONFIGURACIÓN
+      
+      Una vez dentro, cambia el tamaño de los gráficos a uno pequeño (entre
+      200 y 350 píxeles puede resultar más adecuado para tu pantalla).
 
    c) Si lo anterior no fuera suficiente, siempre puedes desactivar los gráficos
       completamente, aunque no te lo recomendamos, ya que con ello perderías
@@ -204,6 +203,9 @@
 
       > GRÁFICOS GRANDES
           (esto hará que la aventura use los gráficos al tamaño más grande)
+
+      > CONFIGURACIÓN
+          (mostrará un menú donde podrás cambiar el tamaño con más detalle)
         </NOFONT>
       </TEXTO>
 

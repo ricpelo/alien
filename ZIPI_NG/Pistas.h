@@ -804,14 +804,13 @@ with
        print "   a) Amplía el tamaño de la ventana del juego, maximizándola hasta ocupar^";
        print "      todo el escritorio.^";
        print "^";
-       print "   b) Configura la aventura para que use gráficos más pequeños, usando uno de^";
-       print "      los comandos siguientes dentro del juego:^";
+       print "   b) Configura la aventura para que use gráficos más pequeños, usando el^";
+       print "      comando siguiente dentro del juego:^";
        print "^";
-       print "      > GRÁFICOS PEQUEÑOS^";
-       print "          (esto hará que la aventura use los gráficos al tamaño más pequeño)^";
-       print "^";
-       print "      > GRÁFICOS MEDIANOS^";
-       print "          (esto hará que la aventura use los gráficos a tamaño mediano)^";
+       print "      > CONFIGURACIÓN^";
+       print "      ^";
+       print "      Una vez dentro, cambia el tamaño de los gráficos a uno pequeño (entre^";
+       print "      200 y 350 píxeles puede resultar más adecuado para tu pantalla).^";
        print "^";
        print "   c) Si lo anterior no fuera suficiente, siempre puedes desactivar los gráficos^";
        print "      completamente, aunque no te lo recomendamos, ya que con ello perderías^";
@@ -842,6 +841,9 @@ with
        print "^";
        print "      > GRÁFICOS GRANDES^";
        print "          (esto hará que la aventura use los gráficos al tamaño más grande)^";
+       print "^";
+       print "      > CONFIGURACIÓN^";
+       print "          (mostrará un menú donde podrás cambiar el tamaño con más detalle)^";
        font on;
   ];
 ZIPI_Otro ZIPI_Otro11

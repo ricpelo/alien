@@ -181,6 +181,10 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
       > GRÁFICOS MEDIANOS
           (esto hará que la aventura use los gráficos a tamaño mediano)
 
+      > CONFIGURACIÓN
+          (mostrará un menú de opciones donde podrás hacer un ajuste más
+          fino del tamaño de los gráficos)
+
    c) Si lo anterior no fuera suficiente, siempre puedes desactivar los gráficos
       completamente, aunque no te lo recomendamos, ya que con ello perderías
       gran parte del atractivo de la aventura. Para ello, ejecuta el comando
@@ -208,6 +212,10 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
       > GRÁFICOS GRANDES
           (esto hará que la aventura use los gráficos al tamaño más grande)
+
+      > CONFIGURACIÓN
+          (mostrará un menú de opciones donde podrás hacer un ajuste más
+          fino del tamaño de los gráficos)
 
 
 
