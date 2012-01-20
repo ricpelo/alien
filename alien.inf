@@ -9370,24 +9370,26 @@ ZIPI_Otro ZIPI_Salir
   tt_inicial5.visualiza();
   EsperarTecla(0, 600);
   DibujaLogoAlien();
-  glk($00D6, 500);                      ! request_timer_events
-  glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
-  while (1) {
-    glk($00C0, gg_arguments);           ! glk_select(gg_arguments);
-    switch (gg_arguments-->0) {
-      evtype_CharInput:
-        glk($00D3, gg_mainwin);         ! cancel_char_event
-        Damusix.SimpleFadeOut(Intro_ogg, 3000);
-        Damusix.PararCanal(CANAL_FONDO);
-        Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
-        jump Salir;
+  if (v ~= 0) {
+    glk($00D6, 500);                      ! request_timer_events
+    glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
+    while (1) {
+      glk($00C0, gg_arguments);           ! glk_select(gg_arguments);
+      switch (gg_arguments-->0) {
+        evtype_CharInput:
+          glk($00D3, gg_mainwin);         ! cancel_char_event
+          Damusix.SimpleFadeOut(Intro_ogg, 3000);
+          Damusix.PararCanal(CANAL_FONDO);
+          Damusix.VolumenCanal(CANAL_FONDO, v);
+          jump Salir;
 
-      evtype_Timer:
-        glk($00D6, 500);                ! request_timer_events
+        evtype_Timer:
+          glk($00D6, 500);                ! request_timer_events
 
-      evtype_SoundNotify:
-        glk($00D6, 0);                  ! request_timer_events
-        jump Salir;
+        evtype_SoundNotify:
+          glk($00D6, 0);                  ! request_timer_events
+          jump Salir;
+      }
     }
   }
 .Salir;
