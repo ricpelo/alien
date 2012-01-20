@@ -8476,6 +8476,7 @@ Object tt_final
 ! ====================================================================
 
 
+
 [ QuitarAcentos buffer parse x i word at len;
   for (x = 0: x < parse-->0: x++) { ! para cada palabra
     word = parse-->(x * 3 + 1);
@@ -8770,16 +8771,17 @@ ZIPI_Otro ZIPI_Tamano_Graficos
   with
     ZIPI_titulo [;
       switch (altoVentanaGrafica) {
-        GRAFICOS_PEQUENOS: "Gráficos: PEQUEÑOS";
-        GRAFICOS_MEDIANOS: "Gráficos: MEDIANOS (recomendado)";
-        GRAFICOS_GRANDES:  "Gráficos: GRANDES";
+        GRAFICOS_PEQUENOS: "Gráficos: ", GRAFICOS_PEQUENOS,  " px. (PEQUEÑOS)";
+        GRAFICOS_MEDIANOS: "Gráficos: ", GRAFICOS_MEDIANOS,  " px. (MEDIANOS, recomendado)";
+        GRAFICOS_GRANDES:  "Gráficos: ", GRAFICOS_GRANDES,   " px. (GRANDES)";
+        default:           "Gráficos: ", altoVentanaGrafica, " px.";          
       }
     ],
     ZIPI_cambiar [;
-      switch (altoVentanaGrafica) {
-        GRAFICOS_PEQUENOS: altoVentanaGrafica = GRAFICOS_MEDIANOS;
-        GRAFICOS_MEDIANOS: altoVentanaGrafica = GRAFICOS_GRANDES;
-        GRAFICOS_GRANDES:  altoVentanaGrafica = GRAFICOS_PEQUENOS;
+      if (altoVentanaGrafica < GRAFICOS_GRANDES) {
+        altoVentanaGrafica = altoVentanaGrafica + 50;
+      } else {
+        altoVentanaGrafica = 200;
       }
     ],
     ZIPI_ejecutar [; rtrue; ];
