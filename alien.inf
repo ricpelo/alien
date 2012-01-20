@@ -2022,6 +2022,7 @@ Object procesador "Procesador atmosférico"
           if (jason notin self) {
             remove comunicador;         ! Esto es para que Jason no hable
             give comunicador ausente;   ! cuando nos están matando
+            clearTextWindow();
             print "^El monstruo gira la cabeza hacia ti, y emite un chillido
                    insoportable, agudo, que te hiela la sangre nada más oirlo. Te quedas
                    petrificado ante tal visión, y sólo tienes fuerzas para observar
@@ -2041,6 +2042,7 @@ Object procesador "Procesador atmosférico"
             ArrancarReloj(ruido_puerta_rota, 2);
             Damusix.TocarV(Grito_Jason_ogg);
             viewImageCenter(Alien_Rapta_Jason_jpg);
+            clearTextWindow();
             print "^El monstruo gira la cabeza hacia vosotros, y emite un chillido
                    insoportable, agudo, que os hiela la sangre nada más oirlo. Tú te quedas
                    petrificado ante tal visión, pero Jason grita salvajemente y comienza
@@ -2050,7 +2052,7 @@ Object procesador "Procesador atmosférico"
                    puerta del procesador atmosférico. Comienzas a respirar de nuevo cuando
                    te das cuenta de que estás solo...^";
             EsperarTecla();
-            viewImageCenter(procesador.sgw_img);
+            <Mirar>;
           }
         }
       }
@@ -6929,7 +6931,9 @@ Object alien procesador
         self.primera_vez = false;
         viewImageCenter(procesador.sgw_img);
         Damusix.PararCanal(CANAL_FONDO);
+        EsperarTecla();
         Damusix.TocarV(Rugido_ogg);
+        clearTextWindow();
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
                terrorífico comienza a sobresalir entre un conglomerado de tuberías.
                Conforme se va incorporando, lo tienes más fácil para comprobar su enorme
