@@ -61,6 +61,7 @@ class Escritura
     sonido 0,
     volumen 0,
   with
+    hay_teletipo true,
     hazPausaLetra [;
       if ( self.pausaLetra > -1 ) {
         EsperarTimer(self.pausaLetra);
@@ -93,14 +94,14 @@ class Escritura
         if (tipo_letra & LETRA_FIJA)    glk_set_style(style_Preformatted);
         if (tipo_letra & LETRA_INVERSA) style reverse;
 
-        if (tipo_mensaje == POR_MENSAJE) {
-          print (string) self.elemento(n);          
+        if (tipo_mensaje == POR_MENSAJE || ~~(self.hay_teletipo)) {
+          print (string) self.elemento(n);
         } else {
-          timer = control_timer.timer_actual; 
+          timer = control_timer.timer_actual;
           ! Visualizar las letras una a una
           for (p = ESCR_PRIMERA_LETRA : p < (lon + ESCR_PRIMERA_LETRA) : p++) {
             print (char) escr_buffer_lib->p;
-                
+ 
             #ifdef TARGET_GLULX;
               ! Tocar un sonido, esperar a pulsar una tecla o que pase un tiempo
               if ( self.sonido ~= 0 ) {

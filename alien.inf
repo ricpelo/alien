@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=59840
+!% $MAX_PROP_TABLE_SIZE=60140
 !% $MAX_VERBS=200
 
 !
@@ -138,6 +138,7 @@ Global contextoHandleGlkEvent = false;
 
 ! Usado en VerboDesconocido:
 Global objetoVerboDesconocido = 0;
+
 
 
 ! ====================================================================
@@ -8594,6 +8595,9 @@ Object tt_final
 
 ! Rutina principal y obligatoria de todo juego InformATE
 [ Inicializar r v;
+  if (EsperarTecla(0, 30)) {
+    tt_computadora.hay_teletipo = false;
+  };
   IniciarGraficosSonidos();
   openGraphicWindow(250);
   clearGraphicWindow();
@@ -8644,7 +8648,7 @@ Object tt_final
     for (i = 0: i < count - 2: i++) {
       j = i + 3;
       ZIPI_setcursor(5,j);
-      if (ft) {
+      if (ft && tt_computadora.hay_teletipo) {
         tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
         tt_computadora.visualiza();
       } else {
@@ -8750,7 +8754,8 @@ ZIPI_Menu ZIPI_Configuracion
       ZIPI_Tamano_Graficos
       ZIPI_Sonido
       ZIPI_Sonido_Fondo
-      ZIPI_Sonido_Detector;
+      ZIPI_Sonido_Detector
+      ZIPI_Efecto_Teletipo;
 
 
 ZIPI_Otro ZIPI_Graficos
@@ -8845,6 +8850,21 @@ ZIPI_Otro ZIPI_Sonido_Detector
       } else {
         Damusix.VolumenCanal(CANAL_DETECTOR, 0);
       }
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Otro ZIPI_Efecto_Teletipo
+  with
+    ZIPI_titulo [;
+      if (tt_computadora.hay_teletipo) {
+        "Efecto teletipo: SÍ (recomendado)";
+      } else {
+        "Efecto teletipo: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      tt_computadora.hay_teletipo = ~~(tt_computadora.hay_teletipo);
     ],
     ZIPI_ejecutar [; rtrue; ];
 
