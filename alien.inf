@@ -368,21 +368,25 @@ Include "Acciones";
     }
   }
 
-  ! Ponemos a Madre al alcance para hablar y para que se ejecute su
-  ! rutina cada_turno:
-  if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
-      comunicador in jugador && comunicador has puesto) {
-    PonerAlAlcance(computadora);
-  }
 
-  ! Madre está físicamente en nave1 y en nave2. Aquí no preguntamos por
-  ! razon_al_alcance, por lo que Madre estará al alcance para cualquier
-  ! acción, como si se pusiera 'esta_en nave1, nave2'. Pero no uso la
-  ! propiedad esta_en porque entonces se ejecutaría dos veces su rutina
-  ! cada_turno:
-  if (LugarReal() == nave1 or nave2) {
-    PonerAlAlcance(computadora);
-  }
+! Ya no la ponemos al alcance. En su lugar, decimos que está en todas partes
+! (ver su propiedad esta_en). El motivo es que así ya podemos pedirle a
+! Madre que abra puertas cuando estemos delante de ellas:
+!  ! Ponemos a Madre al alcance para hablar y para que se ejecute su
+!  ! rutina cada_turno:
+!  if (razon_alcance == RAZON_HABLAR or RAZON_CADA_TURNO &&
+!      comunicador in jugador && comunicador has puesto) {
+!    PonerAlAlcance(computadora);
+!  }
+!
+!  ! Madre está físicamente en nave1 y en nave2. Aquí no preguntamos por
+!  ! razon_al_alcance, por lo que Madre estará al alcance para cualquier
+!  ! acción, como si se pusiera 'esta_en nave1, nave2'. Pero no uso la
+!  ! propiedad esta_en porque entonces se ejecutaría dos veces su rutina
+!  ! cada_turno:
+!  if (LugarReal() == nave1 or nave2) {
+!    PonerAlAlcance(computadora);
+!  }
   
   ! Ponemos la compuerta de la nave al alcance de la computadora, para que pueda abrirla
   ! aunque no estemos físicamente delante de la puerta:
@@ -6359,13 +6363,18 @@ Object computadora "Madre"
       }
     ],
 !    esta_en nave1 nave2,
-!    esta_en [; rtrue; ],                   ! Está en todas partes
+    esta_en [; rtrue; ],                   ! Está en todas partes
     genero G_FEMENINO,
     hablar true,
     gramatica [;
       return -'madre,';
     ],
     antes [;
+      ! Esto es para que no diga: "Madre está apagada." cuando la examinamos:
+      Examinar:
+        ImprimirOEjecutar(self, descripcion);
+        rtrue;
+
       Escuchar:
         self.mensaje_aleatorio();
         rtrue;
