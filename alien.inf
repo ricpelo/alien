@@ -8757,7 +8757,7 @@ ZIPI_Otro ZIPI_Graficos
   with
     ZIPI_titulo [;
       if (hayGraficos) {
-        "Gráficos: SI (recomendado)";
+        "Gráficos: SÍ (recomendado)";
       } else {
         "Gráficos: NO";
       }
@@ -8772,11 +8772,11 @@ ZIPI_Otro ZIPI_Tamano_Graficos
   with
     ZIPI_titulo [;
       switch (altoVentanaGrafica) {
-        GRAFICOS_MINUSCULOS: "Gráficos: ", GRAFICOS_MINUSCULOS, " px. (MINÚSCULOS)";
-        GRAFICOS_PEQUENOS:   "Gráficos: ", GRAFICOS_PEQUENOS,   " px. (PEQUEÑOS)";
-        GRAFICOS_MEDIANOS:   "Gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS, recomendado)";
-        GRAFICOS_GRANDES:    "Gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES)";
-        default:             "Gráficos: ", altoVentanaGrafica,  " px.";          
+        GRAFICOS_MINUSCULOS: "Tamaño de gráficos: ", GRAFICOS_MINUSCULOS, " px. (MINÚSCULOS)";
+        GRAFICOS_PEQUENOS:   "Tamaño de gráficos: ", GRAFICOS_PEQUENOS,   " px. (PEQUEÑOS)";
+        GRAFICOS_MEDIANOS:   "Tamaño de gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS, recomendado)";
+        GRAFICOS_GRANDES:    "Tamaño de gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES)";
+        default:             "Tamaño de gráficos: ", altoVentanaGrafica,  " px.";          
       }
     ],
     ZIPI_cambiar [;
@@ -8793,7 +8793,7 @@ ZIPI_Otro ZIPI_Sonido
   with
     ZIPI_titulo [;
       if (haySonido) {
-        "Sonido global: SI (recomendado)";
+        "Sonido global: SÍ (recomendado)";
       } else {
         "Sonido global: NO";
       }
@@ -8813,7 +8813,7 @@ ZIPI_Otro ZIPI_Sonido_Fondo
   with
     ZIPI_titulo [;
       if (haySonidoFondo) {
-        "Sonido de fondo: SI (recomendado)";
+        "Sonido de fondo: SÍ (recomendado)";
       } else {
         "Sonido de fondo: NO";
       }
@@ -8833,7 +8833,7 @@ ZIPI_Otro ZIPI_Sonido_Detector
   with
     ZIPI_titulo [;
       if (haySonidoDetector) {
-        "Sonido del detector: SI (recomendado)";
+        "Sonido del detector: SÍ (recomendado)";
       } else {
         "Sonido del detector: NO";
       }
