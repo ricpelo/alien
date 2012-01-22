@@ -936,7 +936,6 @@ Object nave1 "Interior de la nave"
     ! que hemos acabado la aventura:
     cada_turno [ t;
       if (jason in self && vaina has abierta) {
-        Damusix.Parar(Sirena_ogg);
         Bandera_Fin(2);
         t = false;
         if (hayGraficos) {
@@ -2277,6 +2276,10 @@ Object ascensor_arriba "ascensor de emergencia"
                  misión.",
     inicial "Sobresaliendo del suelo como una planta carnívora, permanece a tu lado el
              ascensor que os ha sacado a Jason y a ti del complejo colonial.",
+    reaccionar_antes [;
+      Entrar:
+        "¡Ni se te ocurra volver a entrar! ¡Huye!";
+    ],
     antes [;
       "Olvídate ahora de él. ¡Corre!";
     ],
@@ -4690,7 +4693,7 @@ Object laberinto28
                 EncenderGraficosSub(true);
               }
               ActivarTimer();               ! Para que vuelva a correr el tiempo
-              <<Mirar>>;
+              rtrue;
             } else {
               "¡No dejes a Jason aquí!";
             }
@@ -6145,13 +6148,14 @@ Object jason "Jason" nave1
 
       if (alien.comportamiento == 4) {
         if (random(100) < 60) {
-          switch (random(2)) {
+          switch (random(3)) {
             1: if (EsExterior(LugarReal())) {
                  HablaJason("¡Vamos a la nave, deprisa!");
                } else {
                  HablaJason("¡Vamos a la salida de emergencia!");
                }
             2: HablaJason("¡Rápido, salgamos de aquí!");
+            3: HablaJason("¡Vámonos!");
           }
         }
         rtrue;
@@ -8156,7 +8160,6 @@ Object autodestruccion
         self.tiempo--;
       } else {
         Bandera_Fin(1);
-        Damusix.PararCanal(CANAL_DETECTOR);
         Damusix.TocarV(Explosion_ogg);
 
         if (contextoHandleGlkEvent) {
@@ -9601,6 +9604,7 @@ Object tt_computadora
 [ Bandera_Fin bf;
   Damusix.PararCanal(CANAL_FONDO);
   Damusix.PararCanal(CANAL_DETECTOR);
+  Damusix.PararCanal(CANAL_SIRENA);
   control_timer.desactivar();
   
   if (bf == 1) {
