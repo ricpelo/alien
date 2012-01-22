@@ -10119,6 +10119,9 @@ Extend 'di' first
     EncenderGraficosSub(true);
   }
   clearTextWindow();
+  if (~~hayTiempoReal) {
+    timer = 0;
+  }
   control_timer.activar(timer);
   <<Mirar>>;
 ];
