@@ -851,7 +851,7 @@ Array InfixRV_commas --> 32;
 
 [ InfixExamineOSub;
     infix_data1 = metaclass(uno);
-    infix_term_type = INFIXTT_CONSTANT;
+    infix_term_type = INFIXTT_NAMEDOBJECT;  ! Antes era INFIXTT_CONSTANT
     InfixExamineP(false);
 ];
 
@@ -879,8 +879,8 @@ Array InfixRV_commas --> 32;
             nothing:
                 print "; Constant ", (InfixPrintConstant) infix_parsed_lvalue,
                 " == ", uno, "^";
-            Object: <<MostrarObjeto uno>>;
-            Class:
+            2: <<MostrarObjeto uno>>;      ! Object
+            1:                             ! Class
                 print "Class ", (name) uno, "^";
                 objectloop (a ofclass uno) {
                     if (flag) print ", "; else print "Contains: ";
