@@ -9291,7 +9291,7 @@ ZIPI_Otro ZIPI_Salir
         return 1;
       } else
       if (control_timer.timer_actual == TIMER_TRUENO) {
-        ReduceBateriaEnTimer(1);
+        if (hayTiempoReal) ReduceBateriaEnTimer(1);
         if (l == nave1 or nave2 && r < 35) {
           r = 20 * random(5);
           if (r >= 65) {
@@ -9338,28 +9338,27 @@ ZIPI_Otro ZIPI_Salir
             l.cada_turno();
             contextoHandleGlkEvent = false;
           }
-          if (hayTiempoReal) {
-            if (alien notin l) {
-              contextoHandleGlkEvent = true;
-              alien.seHaMovido = false;
-              if (alien.condicion_movimiento()) {
-                alien.movimiento();
-              }
-              if (alien.seHaMovido) {
-                detector_movimiento.cada_turno();
-                barra_estado.dibujar();
-              }
+          if (~~hayTiempoReal) return 1;
+          if (alien notin l) {
+            contextoHandleGlkEvent = true;
+            alien.seHaMovido = false;
+            if (alien.condicion_movimiento()) {
+              alien.movimiento();
             }
-            contextoHandleGlkEvent = false;
-            if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
-                (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
-              alien.ha_imprimido_algo = false;
-              detector_movimiento.ha_imprimido_algo = false;
-              if (l ofclass ZonaNorte) {
-                l.ha_imprimido_algo = false;
-              }
-              return RestaurarLineaOrdenes(buffer);
+            if (alien.seHaMovido) {
+              detector_movimiento.cada_turno();
+              barra_estado.dibujar();
             }
+          }
+          contextoHandleGlkEvent = false;
+          if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
+              (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
+            alien.ha_imprimido_algo = false;
+            detector_movimiento.ha_imprimido_algo = false;
+            if (l ofclass ZonaNorte) {
+              l.ha_imprimido_algo = false;
+            }
+            return RestaurarLineaOrdenes(buffer);
           }
         }
       } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION && hayTiempoReal) {
