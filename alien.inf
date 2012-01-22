@@ -2458,7 +2458,6 @@ Class Balcon
     ],
     posicion 0,
     nivel 0,
-    sgw_img Balcon_jpg,
     sgw_mus Balcon_ogg,
     antes [;
       Ir, Examinar:
@@ -3576,6 +3575,7 @@ Object balcon1
   with
     nivel 0,
     posicion obj_n,
+    sgw_img Balcon_Oeste_Norte_jpg,
     al_n entrada,
     al_e laberinto3,
     al_o laberinto1,
@@ -3599,6 +3599,7 @@ Object balcon2
   with
     nivel 0,
     posicion obj_o,
+    sgw_img Balcon_Oeste_Norte_jpg,
     al_n laberinto1,
     al_s laberinto11,
     al_o oficina;
@@ -3609,6 +3610,7 @@ Object balcon3
   with
     nivel 0,
     posicion obj_e,
+    sgw_img Balcon_Este_Sur_jpg,
     al_n laberinto3,
     al_s laberinto6,
     al_e laberinto7;
@@ -3619,6 +3621,7 @@ Object balcon4
   with
     nivel 0,
     posicion obj_s,
+    sgw_img Balcon_Este_Sur_jpg,
     al_e laberinto6,
     al_o laberinto11,
     abajo balcon8,
@@ -3648,6 +3651,7 @@ Object balcon6
   with
     nivel -1,
     posicion obj_o,
+    sgw_img Balcon_Oeste_Norte_jpg,
     al_n comedor1,
     al_s laberinto18,
     ! Al oeste hay un hábitat
@@ -3671,6 +3675,7 @@ Object balcon7
   with
     nivel -1,
     posicion obj_e,
+    sgw_img Balcon_Este_Sur_jpg,
     al_n cocina,
     al_s laberinto19,
     al_e enfermeria;
@@ -3681,6 +3686,7 @@ Object balcon8
   with
     nivel -1,
     posicion obj_s,
+    sgw_img Balcon_Este_Sur_jpg,
     adentro puerta_emergencia,
     al_e laberinto19,
     al_o laberinto18,
@@ -3721,6 +3727,7 @@ Object balcon12
   with
     nivel -2,
     posicion obj_s,
+    sgw_img Balcon_Este_Sur_jpg,
     no_puedes_ir "Este nivel aún está sin terminar. No hay más salidas.",    
     al_e laberinto36,
     al_o laberinto28,
@@ -3897,8 +3904,8 @@ Object puerta_emergencia "puerta" emergencia_pasillo
         if (self hasnt general) {
           give self general;
           "Insertas la tarjeta en la ranura... y tras un leve zumbido, el cierre
-           hidráulico de la puerta se desbloquea. Rápidamente abres la puerta y descubres
-           un estrecho y largo pasillo.";
+           hidráulico de la puerta se desbloquea. Rápidamente recoges la tarjeta,
+           abres la puerta y descubres un estrecho y largo pasillo.";
         }
 
       QuitarCerrojo:
@@ -4080,22 +4087,7 @@ Object boton_oeste "botón azul" emergencia_oeste
         }
         
         ! Se activa la autodestrucción:
-        remove alien;
-        give alien ausente;
-        alien.comportamiento = 4;
-        give ascensor abierto;
-        Damusix.PararCanal(CANAL_TICTAC);
-        Damusix.PararCanal(CANAL_DETECTOR);
-        Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, VOLUMEN_SIRENA,
-                             SONIDO_BUCLE_INFINITO);
-        Damusix.Tocar(Sirena_ogg);
-        ActivarTimer();
-        ArrancarDaemon(autodestruccion);
-        print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
-        self.pulsar = self.pulsar_ya_pulsado;
-        self.descripcion = self.descripcion_ya_pulsado;
-        boton_este.pulsar = boton_este.pulsar_ya_pulsado;
-        boton_este.descripcion = boton_este.descripcion_ya_pulsado;
+        QuintaParte();
       }
     ];
 
@@ -4768,7 +4760,7 @@ Object ascensor "ascensor de emergencia" laberinto28
                  es de unos cinco por cinco metros. Próximo a él, junto a la pared,
                  hay un cartel que dice: ~ASCENSOR DE EMERGENCIA: Apertura
                  automática~.",
-    si_cerrado "En un rincón del túnel hay un cubículo en forma de ascensor.",
+    si_cerrado "En un lateral del túnel hay un cubículo en forma de ascensor.",
     si_abierto "El ascensor de emergencia está abierto. ¡Yo que tú me andaría con prisas!",
     antes [;
       Abrir, Atacar:
@@ -9654,6 +9646,26 @@ Object tt_computadora
 ];
 
 
+[ QuintaParte;
+  remove alien;
+  give alien ausente;
+  alien.comportamiento = 4;
+  give ascensor abierto;
+  Damusix.PararCanal(CANAL_TICTAC);
+  Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, VOLUMEN_SIRENA,
+                       SONIDO_BUCLE_INFINITO);
+  Damusix.Tocar(Sirena_ogg);
+  ActivarTimer();
+  ArrancarDaemon(autodestruccion);
+  laberinto28.sgw_img = Ascensor_Abierto_jpg;
+  boton_oeste.pulsar = boton_oeste.pulsar_ya_pulsado;
+  boton_oeste.descripcion = boton_oeste.descripcion_ya_pulsado;
+  boton_este.pulsar = boton_este.pulsar_ya_pulsado;
+  boton_este.descripcion = boton_este.descripcion_ya_pulsado;
+  print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
+];
+
+
 ! Rutina para comprobar si una localidad es exterior o interior
 ! Devuelve true si es exterior
 [ EsExterior l;
@@ -9686,6 +9698,7 @@ Object tt_computadora
   alien.comportamiento = 1;
   PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
   entrada.sgw_img = Entrada_Sellada_jpg;
+  junto_puerta.sgw_img = Junto_Puerta_Sellada_jpg;
   if (localizacion == entrada) {
     viewImageCenter(entrada.sgw_img);
   }
@@ -10414,17 +10427,7 @@ Ifdef DEBUG;
 
 
 [ QuintaParteSub;
-  remove alien;
-  give alien ausente;
-  alien.comportamiento = 4;
-  give ascensor abierto;
-  Damusix.PararCanal(CANAL_TICTAC);
-  Damusix.AsignarCanal(Sirena_ogg, CANAL_DETECTOR, VOLUMEN_SIRENA,
-                       SONIDO_BUCLE_INFINITO);
-  Damusix.Tocar(Sirena_ogg);
-  ActivarTimer();
-  ArrancarDaemon(autodestruccion);
-  print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
+  QuintaParte();
 ];
 
 
