@@ -9658,6 +9658,7 @@ Object tt_computadora
   Damusix.Tocar(Sirena_ogg);
   ActivarTimer();
   ArrancarDaemon(autodestruccion);
+  PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
   laberinto28.sgw_img = Ascensor_Abierto_jpg;
   boton_oeste.pulsar = boton_oeste.pulsar_ya_pulsado;
   boton_oeste.descripcion = boton_oeste.descripcion_ya_pulsado;
