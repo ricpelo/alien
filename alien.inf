@@ -3797,13 +3797,17 @@ Object emergencia_pasillo "Pasillo de emergencia"
 Object decorado_pasillo emergencia_pasillo
   class DecoradoAmpliado
   with
-    desc_paredes "Las paredes están absolutamente desnudas, salvo por un diseño rayado
-                  cerca del suelo y una letra ~E~ tan alta como la pared misma,
-                  recordándote que estás en la zona de emergencia.",
+    desc_paredes "Las paredes están absolutamente desnudas, salvo por unas flechas
+                  dibujadas sobre un diseño rayado y una letra ~E~ tan alta como la
+                  pared misma, recordándote que estás en la zona de emergencia.",
+    desc_flechas "Apuntan a cada una de las dos salas de emergencia, situadas en
+                  los extremos del pasillo.",
     describir
       'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
       'pared'   [; return self.desc_paredes; ] G_FEMENINO
-      'pasillo' [; return emergencia_pasillo.descripcion; ] 0;
+      'pasillo' [; return emergencia_pasillo.descripcion; ] 0
+      'flechas' [; return self.desc_flechas; ] G_FEMENINO + G_PLURAL
+      'flecha'  [; return self.desc_flechas; ] G_FEMENINO;
 
 
 Object "letra ~E~" emergencia_pasillo
