@@ -7758,7 +7758,7 @@ Object detector_movimiento "detector de movimiento" rifle
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
-            if (self.primera_vez) {
+            if (self.primera_vez || ~~hayTiempoReal) {
               self.preparaHandleGlkEvent();
               t = true;
               print "^El detector capta movimiento a una distancia de ",
@@ -7772,15 +7772,10 @@ Object detector_movimiento "detector de movimiento" rifle
                 print ".";
               }
             }
-!          } else {
-!            if (alien has ausente) {
-!              self.preparaHandleGlkEvent();
-!            }
-!            print "";
           }
         }
-        if (t && self.primera_vez) {
-          if (hayTiempoReal) {
+        if (t) {
+          if (self.primera_vez && hayTiempoReal) {
             self.primera_vez = false;
             control_timer.desactivar();
             print (s_em) " [A partir de ahora, el detector de movimiento informará de la
@@ -7800,8 +7795,6 @@ Object detector_movimiento "detector de movimiento" rifle
             print "^";
           }
         }
-!      } else {
-!        print "";
       }
     ],
     despues [;
@@ -10132,6 +10125,9 @@ Extend 'di' first
     EncenderGraficosSub(true);
   }
   clearTextWindow();
+  if (~~hayTiempoReal) {
+    timer = 0;
+  }
   control_timer.activar(timer);
   <<Mirar>>;
 ];
