@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=60140
+!% $MAX_PROP_TABLE_SIZE=61140
 !% $MAX_VERBS=200
 
 !
@@ -114,6 +114,9 @@ Global hayGraficos = true;
 Global haySonido = true;
 Global haySonidoFondo = true;
 Global haySonidoDetector = true;
+
+! Hay eventos en tiempo real:
+Global hayTiempoReal = true;
 
 ! Si se ha activado el listado automático de salidas:
 Global mostrarSalidas = true;
@@ -7785,21 +7788,25 @@ Object detector_movimiento "detector de movimiento" rifle
           }
         }
         if (t && self.primera_vez) {
-          self.primera_vez = false;
-          control_timer.desactivar();
-          print (s_em) " [A partir de ahora, el detector de movimiento informará de la
-                        presencia de la criatura a través de la barra de estado, en la
-                        parte superior derecha, junto al contador de turnos. Por tanto,
-                        no volverás a ver mensajes de este tipo en lo sucesivo. Un
-                        consejo: consulta frecuentemente dicha información para intentar
-                        evitar a la criatura.]^";
-          print (s_b) "^[ Pulsa una tecla para continuar. ]^";
-          if (HayLuz(localizacion)) {
-            viewImageCenter(localizacion.sgw_img);
+          if (hayTiempoReal) {
+            self.primera_vez = false;
+            control_timer.desactivar();
+            print (s_em) " [A partir de ahora, el detector de movimiento informará de la
+                          presencia de la criatura a través de la barra de estado, en la
+                          parte superior derecha, junto al contador de turnos. Por tanto,
+                          no volverás a ver mensajes de este tipo en lo sucesivo. Un
+                          consejo: consulta frecuentemente dicha información para intentar
+                          evitar a la criatura.]^";
+            print (s_b) "^[ Pulsa una tecla para continuar. ]^";
+            if (HayLuz(localizacion)) {
+              viewImageCenter(localizacion.sgw_img);
+            }
+            barra_estado.dibujar();
+            EsperarTecla();
+            ActivarTimer();
+          } else {
+            print "^";
           }
-          barra_estado.dibujar();
-          EsperarTecla();
-          ActivarTimer();
         }
 !      } else {
 !        print "";
@@ -8764,7 +8771,8 @@ ZIPI_Menu ZIPI_Configuracion
       ZIPI_Sonido
       ZIPI_Sonido_Fondo
       ZIPI_Sonido_Detector
-      ZIPI_Efecto_Teletipo;
+      ZIPI_Separador
+      ZIPI_Accesibilidad;
 
 
 ZIPI_Otro ZIPI_Graficos
@@ -8863,6 +8871,14 @@ ZIPI_Otro ZIPI_Sonido_Detector
     ZIPI_ejecutar [; rtrue; ];
 
 
+ZIPI_Menu ZIPI_Accesibilidad
+  with
+    ZIPI_titulo "Opciones de accesibilidad",
+    ZIPI_item
+      ZIPI_Efecto_Teletipo
+      ZIPI_Tiempo_Real;
+
+    
 ZIPI_Otro ZIPI_Efecto_Teletipo
   with
     ZIPI_titulo [;
@@ -8874,6 +8890,21 @@ ZIPI_Otro ZIPI_Efecto_Teletipo
     ],
     ZIPI_cambiar [;
       tt_computadora.hay_teletipo = ~~(tt_computadora.hay_teletipo);
+    ],
+    ZIPI_ejecutar [; rtrue; ];
+
+
+ZIPI_Otro ZIPI_Tiempo_Real
+  with
+    ZIPI_titulo [;
+      if (hayTiempoReal) {
+        "Tiempo real: SÍ (recomendado)";
+      } else {
+        "Tiempo real: NO";
+      }
+    ],
+    ZIPI_cambiar [;
+      hayTiempoReal = ~~hayTiempoReal;
     ],
     ZIPI_ejecutar [; rtrue; ];
 
@@ -9286,7 +9317,7 @@ ZIPI_Otro ZIPI_Salir
           }
         }
       } else if (control_timer.timer_actual == TIMER_LABERINTO) {
-        ReduceBateriaEnTimer(2);
+        if (hayTiempoReal) ReduceBateriaEnTimer(2);
         if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
           if (l ofclass Laberinto || l ofclass Balcon) {
             r = 20 * random(3) + 40;
@@ -9302,38 +9333,40 @@ ZIPI_Otro ZIPI_Salir
                  }
             }
             Damusix.TocarV(snd, r);
-          } else if (l ofclass ZonaNorte) {
+          } else if (l ofclass ZonaNorte && hayTiempoReal) {
             contextoHandleGlkEvent = true;
             l.cada_turno();
             contextoHandleGlkEvent = false;
           }
-          if (alien notin l) {
-            contextoHandleGlkEvent = true;
-            alien.seHaMovido = false;
-            if (alien.condicion_movimiento()) {
-              alien.movimiento();
+          if (hayTiempoReal) {
+            if (alien notin l) {
+              contextoHandleGlkEvent = true;
+              alien.seHaMovido = false;
+              if (alien.condicion_movimiento()) {
+                alien.movimiento();
+              }
+              if (alien.seHaMovido) {
+                detector_movimiento.cada_turno();
+                barra_estado.dibujar();
+              }
             }
-            if (alien.seHaMovido) {
-              detector_movimiento.cada_turno();
-              barra_estado.dibujar();
+            contextoHandleGlkEvent = false;
+            if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
+                (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
+              alien.ha_imprimido_algo = false;
+              detector_movimiento.ha_imprimido_algo = false;
+              if (l ofclass ZonaNorte) {
+                l.ha_imprimido_algo = false;
+              }
+              return RestaurarLineaOrdenes(buffer);
             }
-          }
-          contextoHandleGlkEvent = false;
-          if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
-              (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
-            alien.ha_imprimido_algo = false;
-            detector_movimiento.ha_imprimido_algo = false;
-            if (l ofclass ZonaNorte) {
-              l.ha_imprimido_algo = false;
-            }
-            return RestaurarLineaOrdenes(buffer);
           }
         }
-      } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION) {
+      } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION && hayTiempoReal) {
         contextoHandleGlkEvent = true;
         autodestruccion.cuenta_atras();
         return RestaurarLineaOrdenes(buffer);
-      } else if (control_timer.timer_actual == TIMER_ALIEN) {
+      } else if (control_timer.timer_actual == TIMER_ALIEN && hayTiempoReal) {
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         alien.cada_turno();
         return RestaurarLineaOrdenes(buffer);
