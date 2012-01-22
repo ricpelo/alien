@@ -825,6 +825,11 @@ Array InfixRV_commas --> 32;
 #endif;
 ];
 
+[ InfixGiveNotSub;
+  otro = ~otro;
+  InfixGiveSub();
+];
+
 [ InfixMoveSub;
     print "; move (", (the) uno, ") to (", (the) otro, ")";
     move uno to otro;
@@ -1242,7 +1247,8 @@ Verb meta ';//'
     *                                           -> InfixWelcome
     * InfixRvalue                               -> InfixEval;
 Verb meta ';give'
-    * InfixRvalue InfixRvalue                   -> InfixGive;
+    * InfixRvalue InfixRvalue                   -> InfixGive
+    * InfixRvalue 'not' InfixRvalue             -> InfixGiveNot;
 Verb meta ';move'
     * InfixRvalue "to" InfixRvalue              -> InfixMove;
 Verb meta ';remove'
