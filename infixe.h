@@ -255,7 +255,9 @@ Array  infix_text -> 128;
                 ! The numero_interpretado will be found in the name_table but in glulx the number will be different
                 ! thant the real property number. We perform this operation to find its position
                 ! in the properties table.
-            numero_interpretado = (numero_interpretado -#identifiers_table-->1)+INDIV_PROP_START;
+            if (numero_interpretado > (#identifiers_table-->1) - 1)
+              numero_interpretado = (numero_interpretado -#identifiers_table-->1)+INDIV_PROP_START;
+!              numero_interpretado = numero_interpretado - (INDIV_PROP_START - (#identifiers_table-->1));
             #endif;
             np++; return 1;
             }
