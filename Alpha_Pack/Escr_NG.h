@@ -61,7 +61,6 @@ class Escritura
     sonido 0,
     volumen 0,
   with
-    hay_teletipo true,
     hazPausaLetra [;
       if ( self.pausaLetra > -1 ) {
         EsperarTimer(self.pausaLetra);
@@ -94,7 +93,8 @@ class Escritura
         if (tipo_letra & LETRA_FIJA)    glk_set_style(style_Preformatted);
         if (tipo_letra & LETRA_INVERSA) style reverse;
 
-        if (tipo_mensaje == POR_MENSAJE || ~~(self.hay_teletipo)) {
+        if (tipo_mensaje == POR_MENSAJE ||
+           (tipo_mensaje == POR_LETRA && ~~hayTeletipo)) {
           print (string) self.elemento(n);
         } else {
           timer = control_timer.timer_actual;

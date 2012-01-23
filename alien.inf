@@ -118,6 +118,9 @@ Global haySonidoDetector = true;
 ! Hay eventos en tiempo real:
 Global hayTiempoReal = true;
 
+! Hay efecto de teletipo:
+Global hayTeletipo = true;
+
 ! Si se ha activado el listado automático de salidas:
 Global mostrarSalidas = true;
 
@@ -1117,7 +1120,7 @@ Object compartimento_trajes "compartimento de trajes" nave1
   class EscenarioAbrible  
   with
     nombre 'compartimento',
-    adjetivos 'trajes',
+    adjetivos 'trajes' 'atmosfericos',
     descripcion_real "El compartimento donde se almacenan los trajes se encuentra
                       acoplado a una de las paredes de la nave.",
     antes [;
@@ -6494,6 +6497,9 @@ Object computadora "Madre"
           tema_madre_compuerta:
             HablaMadre("La compuerta de la nave está bloqueada por motivos de seguridad.
                         Si desea que la abra, sólo tiene que indicármelo.");
+          tema_madre_compuerta:
+            HablaMadre("El compartimento destinado a los trajes atmosféricos se puede abrir
+                        abrir y cerrar si lo desea. Tan sólo tiene que pedírmelo.");
           tema_madre_energia:
             if (circuito hasnt general) {
               HablaMadre("El suministro de energía ha sido interrumpido debido a un
@@ -7479,6 +7485,10 @@ Object TemasComputadora;
 Object tema_madre_compuerta "la compuerta" TemasComputadora
   with
     nombre 'puerta' 'compuerta' 'abierta' 'abrir';
+
+Object tema_madre_compartimento "la compuerta" TemasComputadora
+  with
+    nombre 'puerta' 'compartimento' 'trajes' 'atmosfericos' 'abierta' 'abrir';
 
 Object tema_madre_planeta "el planeta" TemasComputadora
   with
@@ -8622,7 +8632,7 @@ Object tt_final
 ! Rutina principal y obligatoria de todo juego InformATE
 [ Inicializar r v;
   if (EsperarTecla(0, 30)) {
-    tt_computadora.hay_teletipo = false;
+    hayTeletipo = false;
   };
   IniciarGraficosSonidos();
   openGraphicWindow(250);
@@ -8674,7 +8684,7 @@ Object tt_final
     for (i = 0: i < count - 2: i++) {
       j = i + 3;
       ZIPI_setcursor(5,j);
-      if (ft && tt_computadora.hay_teletipo) {
+      if (ft && hayTeletipo) {
         tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
         tt_computadora.visualiza();
       } else {
@@ -8892,14 +8902,14 @@ ZIPI_Menu ZIPI_Accesibilidad
 ZIPI_Otro ZIPI_Efecto_Teletipo
   with
     ZIPI_titulo [;
-      if (tt_computadora.hay_teletipo) {
+      if (hayTeletipo) {
         "Efecto teletipo: SÍ (recomendado)";
       } else {
         "Efecto teletipo: NO";
       }
     ],
     ZIPI_cambiar [;
-      tt_computadora.hay_teletipo = ~~(tt_computadora.hay_teletipo);
+      hayTeletipo = ~~hayTeletipo;
     ],
     ZIPI_ejecutar [; rtrue; ];
 
@@ -9765,6 +9775,40 @@ Object tt_computadora
 Include "Gramatica";
 Include "Decir";           ! Para poder usar DECIR ... A ...
 
+
+! Copio aquí (desde Gramatica.h) las gramáticas de los verbos en infinitivo
+! que se usan en temas de conversación. Si no lo hago, hay problemas cuando
+! el jugador intenta usar verbos en infinitivo:
+
+Verb 'abrir'
+    * noun                              -> Abrir
+    * 'a//' creature                    -> Abrir
+    * noun 'con' held                   -> QuitarCerrojo;
+
+Verb 'cerrar'
+    * noun                              -> Cerrar
+    * noun 'con' 'pestillo'             -> EcharCerrojo
+    * noun 'con' held                   -> EcharCerrojo;
+
+Verb 'cortar' 'rasgar'
+    * noun                              -> Cortar
+    * noun 'con' held                   -> Cortar;
+
+Verb 'sacar'
+  * multiinside 'de' noun             -> Sacar
+  * 'a//' creature 'de' noun          -> Sacar
+  *                                   -> SacarNadaDeNada
+  * 'a//'                             -> SacarNadaDeNada
+  * multiinside                       -> Sacar
+  * 'a//' multiinside                 -> Sacar;
+
+Verb 'salir'
+    *                                   -> Salir
+    * 'de' noun                         -> Salirse
+    * 'por' noun                        -> Meterse  ! [VERGIT] Descomentada
+    * 'fuera'                           -> Salir
+    * 'afuera'                          -> Salir;
+
 Verb 'gilipollas'
   *               -> Tacos;
 
@@ -9792,7 +9836,6 @@ Extend 'quitale' first
   * '-le' 'a//' 'jason' 'el' 'traje' 'atmosferico' 'de' 'jason'  -> QuitarleTraje
   * '-le' multiinside 'a//' creature                             -> QuitarleA
   * '-le' 'a//' creature multiinside                             -> Quitarle;
-
 
 Verb 'madre,'
   * 'semilla' number                                         -> Semilla
@@ -9934,7 +9977,12 @@ Verb meta 'xrecarga'
   * -> XRecargar;
 EndIf;
 
-Verb 'recarga' 'carga'
+Verb 'recarga' 'carga' 'recargar'
+  *                  -> Recargar
+  * noun             -> Recargar
+  * noun 'en' noun   -> RecargarEn;
+
+Extend 'cargar' last
   *                  -> Recargar
   * noun             -> Recargar
   * noun 'en' noun   -> RecargarEn;
@@ -9989,7 +10037,7 @@ Extend 'empuja' first
 Extend 'gira' first
   * 'a//' noun      -> Girar;
 
-Verb 'arregla' 'repara'
+Verb 'arregla' 'arreglar' 'repara' 'reparar'
   * noun            -> Arreglar
   * noun noun       -> Arreglar
   * noun 'con' noun -> Arreglar;
