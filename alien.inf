@@ -10404,6 +10404,7 @@ Ifdef DEBUG;
   linterna.encender();
   give detector_movimiento encendido;
   puerta_procesador.abrir();
+  junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
   move rifle to jugador;
   move bisturi to jugador;
   move tarjeta to jugador;
