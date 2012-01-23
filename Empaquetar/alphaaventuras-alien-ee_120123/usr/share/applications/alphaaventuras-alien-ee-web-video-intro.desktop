@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=A·L·I·E·N Intro Video
+Type=Application
+Name[es_ES]=Vídeo de introducción de A·L·I·E·N
+Exec=/usr/bin/x-www-browser http://es.youtube.com/watch?v=wRVj-0IThLk
+Categories=Alien;
+Icon=gnome-panel-launcher
+Comment=See the A·L·I·E·N introduction video on YouTube
+Comment[es_ES]=Ver el vídeo introductorio de A·L·I·E·N en YouTube

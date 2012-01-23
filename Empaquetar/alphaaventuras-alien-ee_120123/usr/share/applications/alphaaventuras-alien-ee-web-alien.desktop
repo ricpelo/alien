@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=A·L·I·E·N web site
+Type=Application
+Name[es_ES]=Sitio web de A·L·I·E·N - La aventura
+Exec=/usr/bin/x-www-browser http://sites.google.com/site/alphaaventuras/alien
+Categories=Alien;
+Icon=gnome-panel-launcher
+Comment=Visit the A·L·I·E·N web site
+Comment[es_ES]=Visitar el sitio web de A·L·I·E·N
+

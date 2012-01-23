@@ -1,0 +1,31 @@
+#!/bin/bash
+
+ACROREAD=/usr/bin/acroread
+EVINCE=/usr/bin/evince
+KPDF=/usr/bin/kpdf
+XPDF=/usr/bin/xpdf
+XDG_OPEN=/usr/bin/xdg-open
+
+if [ x"$1" == x ]
+then
+    echo "Usage: $0 <pdf_file>"
+    exit 1
+fi
+
+if [ -x $ACROREAD ]
+then
+    `$ACROREAD "$1"`
+elif [ -x $EVINCE ]
+then
+    `$EVINCE "$1"`
+elif [ -x $KPDF ]
+then
+    `$KPDF "$1"`
+elif [ -x $XPDF ]
+then
+    `$XPDF "$1"`
+elif [ -x $XDG_OPEN ]
+then
+    `$XDG_OPEN "$1"`
+fi
+

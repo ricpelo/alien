@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Instructions
+Type=Application
+Name[es_ES]=Instrucciones
+Exec=/usr/share/games/alphaaventuras-alien-ee/pdf-viewer-launcher /usr/share/doc/alphaaventuras-alien-ee/instrucciones.pdf
+Categories=Game;Alien;
+Icon=gnome-panel-launcher
+Comment=See the game manual
+Comment[es_ES]=Consultar el manual del juego
+

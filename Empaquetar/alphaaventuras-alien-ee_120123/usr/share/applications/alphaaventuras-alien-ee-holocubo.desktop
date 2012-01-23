@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Holocube (Password Required)
+Type=Application
+Name[es_ES]=Holocubo (requiere contraseña)
+Exec=/usr/share/games/alphaaventuras-alien-ee/pdf-viewer-launcher /usr/share/doc/alphaaventuras-alien-ee/holocubo.pdf
+Categories=Alien;
+Icon=gnome-panel-launcher
+Comment=Informational Document (can only be opened with the correct password)
+Comment[es_ES]=Documento informativo (sólo puede abrirse con la contraseña correcta)
+

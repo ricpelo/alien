@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -f /usr/games/gargoyle ]; then
+  GARGOYLE=/usr/games/gargoyle
+elif [ -f /usr/games/gargoyle-free ]; then
+  GARGOYLE=/usr/games/gargoyle-free
+else
+  exit 1
+fi
+
+$GARGOYLE /usr/share/games/alphaaventuras-alien-ee/alien.blb
+

@@ -12,6 +12,7 @@ cp Redist/instrucciones.pdf ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081
 cp Redist/copyright         ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/doc/alphaaventuras-alien-ee/
 cp Redist/copyright         ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/debian/
 cp Redist/README            ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/doc/alphaaventuras-alien-ee/
+cp doc/COPYING              ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/doc/alphaaventuras-alien-ee/
 cp Redist/FAQ               ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/doc/alphaaventuras-alien-ee/
 cp alien.blb                ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/games/alphaaventuras-alien-ee/
 cp garglk.ini               ~/IF/Empaquetar/Alien_EE/alphaaventuras-alien-ee_081124/usr/share/games/alphaaventuras-alien-ee/

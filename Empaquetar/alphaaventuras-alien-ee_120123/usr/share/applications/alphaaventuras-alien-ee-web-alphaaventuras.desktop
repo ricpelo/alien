@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Alpha Aventuras web site
+Type=Application
+Name[es_ES]=Sitio web de Alpha Aventuras
+Exec=/usr/bin/x-www-browser http://sites.google.com/site/alphaaventuras
+Categories=Alien;
+Icon=gnome-panel-launcher
+Comment=Visit the Alpha Aventuras web site
+Comment[es_ES]=Visitar el sitio web de Alpha Aventuras, el equipo creador de A·L·I·E·N
+

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=CAAD web site
+Type=Application
+Name[es_ES]=Sitio web del CAAD
+Exec=/usr/bin/x-www-browser http://www.caad.es
+Categories=Alien;
+Icon=gnome-panel-launcher
+Comment=Visit the CAAD web site to participate in the adventure world
+Comment[es_ES]=Visitar el sitio web del CAAD
+

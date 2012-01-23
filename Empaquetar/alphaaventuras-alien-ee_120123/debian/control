@@ -1,0 +1,18 @@
+Source: alphaaventuras-alien-ee
+Section: alien
+Priority: extra
+Maintainer: Ricardo Pérez López <ricpelo@gmail.com>
+
+Package: alphaaventuras-alien-ee
+Architecture: all
+Version: 120123-1
+Depends: ${shlibs:Depends}, gargoyle-free (>= 2010.1) | gargoyle (>= 2011.1), ttf-liberation, ttf-linux-libertine
+Conflicts: alphaaventuras-alien
+Description: A·L·I·E·N: La aventura - Edición Especial
+ La nave se posa suavemente en la superficie, y todo está en silencio.
+ Demasiado silencio... 
+ .
+ Aventura conversacional desarrollada con InformATE y preparada para
+ ejecutarse con Gargoyle.
+ .
+ Sitio web: http://sites.google.com/site/alphaaventuras
