@@ -1432,7 +1432,6 @@ Object decorado_nave2 nave2
       }
     ],
     describir
-      'nave'    [; return nave2.descripcion; ] G_FEMENINO
       'paredes' [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
       'pared'   [; return self.desc_paredes; ] G_FEMENINO;
 
@@ -2767,7 +2766,7 @@ Object decorado_oficina oficina
         rfalse;
     ],
     describir
-      'oficina'      [; oficina.descripcion(); return ""; ] G_FEMENINO
+      'oficina'      [; return oficina.descripcion; ] G_FEMENINO
       'archivadores' [; return self.desc_archivadores; ] G_PLURAL
       'archivador'   [; return self.desc_archivadores; ] 0
       'cuadros'      [; return self.desc_cuadros; ] G_PLURAL
@@ -2795,7 +2794,7 @@ Object "ordenadores de la oficina" oficina
     nombre_f 'computadora' 'consola',
     nombre_mp 'ordenadores' 'computadores' 'equipos',
     nombre_fp 'computadoras' 'consolas',
-    adjetivos 'oficina',
+!    adjetivos 'oficina',
     genero G_MASCULINO + G_PLURAL,
     descripcion "Estos equipos tan potentes no son fáciles de encontrar... Todos
                  están apagados.",
@@ -3151,6 +3150,7 @@ Object decorado_laboratorio laboratorio
       }
     ],
     describir
+      'laboratorio' [; return laboratorio.descripcion; ] G_FEMENINO
       'paredes'     [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
       'pared'       [; return self.desc_paredes; ] G_FEMENINO
       'tubos'       [; return self.desc_tubos; ] G_PLURAL
@@ -3447,6 +3447,7 @@ Object decorado_despensa despensa
     no_puedes_abrir "Lo intentas con todas tus fuerzas, pero te resulta imposible: está
                      herméticamente cerrado.",
     describir
+      'despensa'    [; return despensa.descripcion; ] G_FEMENINO
       'frigorifico' [; return self.desc_frigorifico; ] 0
       'armario'     [; return self.desc_frigorifico; ] 0
       'congelador'  [; return self.desc_frigorifico; ] 0
@@ -3520,6 +3521,7 @@ Object decorado_comedor comedor1
         }
     ],
     describir
+      'comedor'   [; return comedor1.descripcion; ] 0
       'mesas'     [; return self.desc_mesas; ] G_FEMENINO + G_PLURAL
       'mesa'      [; return self.desc_comida; ] G_FEMENINO
       'barra'     "Es una superficie rectangular, lisa y alargada, que tiene como finalidad
@@ -3564,6 +3566,7 @@ Object decorado_cocina cocina
                   desprende calor al poner algo encima, aunque estos de aquí no parecen
                   funcionar.",
     describir
+      'cocina'      [; return cocina.descripcion; ] G_FEMENINO
       'barras'      [; return self.desc_barras; ] G_FEMENINO + G_PLURAL
       'barra'       [; return self.desc_barras; ] G_FEMENINO
       'cacharros'   [; return self.desc_cacharros; ] G_PLURAL
@@ -4131,6 +4134,7 @@ Object decorado_aula aula
   with
     desc_patas "Son, sencillamente, las patas que sujetan la mesa del docente.",
     describir
+      'aula'  [; return aula.decorado; ] G_FEMENINO
       'patas' [; return self.desc_patas; ] G_FEMENINO + G_PLURAL
       'pata'  [; return self.desc_patas; ] G_FEMENINO;
 
@@ -4358,6 +4362,7 @@ Object decorado_seguridad seguridad
         }
     ],
     describir
+      'sala'      [; return seguridad.descripcion; ] G_FEMENINO
       'hendidura' [; return self.desc_agujero; ] G_FEMENINO
       'agujero'   [; return self.desc_agujero; ] 0
       'orificio'  [; return self.desc_agujero; ] 0
@@ -4841,6 +4846,7 @@ Object decorado_ventilacion1 ventilacion1
     ],
     desc_paredes "Las paredes son metálicas y lisas, sin ningún adorno.",
     describir
+      'sala'         [; return ventilacion1.descripcion; ] G_FEMENINO
       'paredes'      [; return self.desc_paredes; ] G_PLURAL
       'pared'        [; return self.desc_paredes; ] 0
       'ventiladores' [; return self.desc_ventiladores; ] G_PLURAL
@@ -4984,6 +4990,7 @@ Object decorado_hueco hueco_techo
         }
     ],
     describir
+      'sala'         [; return hueco_techo.descripcion; ] G_FEMENINO
       'ventiladores' [; return self.desc_ventiladores; ] G_PLURAL
       'ventilador'   [; return self.desc_ventiladores; ] 0
       'aspas'        [; return self.desc_ventiladores; ] G_FEMENINO + G_PLURAL
