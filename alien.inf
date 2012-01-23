@@ -6815,7 +6815,9 @@ Object computadora "Madre"
       self.hablar = false;
     ],
     cada_turno [;
-      if (self.hablar && banderafin == 0) {
+      ! No muestra mensajes aleatorios cuando alien.comportamiento >= 3, para
+      ! no molestar en momentos críticos:
+      if (self.hablar && banderafin == 0 && alien.comportamiento < 3) {
         if (random(100) < 5) {
           self.mensaje_aleatorio();
         }
@@ -6858,7 +6860,7 @@ Object alien_oscuridad laoscuridad
 !    (OJO: Jason puede estar o no en la vaina)
 ! 2: Va camino de la puerta para taparla (de aquí se pasa de nuevo al 1)
 ! 3: Va hacia ti corriendo (cuando vas a activar la autodestrucción)
-! 4: "Desaparece"
+! 4: "Desaparece" después de activar la autodestrucción
 
 Object alien procesador
   class Movil
