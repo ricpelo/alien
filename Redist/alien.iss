@@ -18,7 +18,6 @@ Name: escritorio; Description: Crear un acceso directo en el escritorio; GroupDe
 
 [Files]
 Source: alien.blb; DestDir: {app}
-Source: alien.cfg; DestDir: {app}
 Source: alien.ico; DestDir: {app}
 Source: Alien.url; DestDir: {app}
 Source: Alpha_Aventuras.url; DestDir: {app}
