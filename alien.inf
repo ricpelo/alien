@@ -421,6 +421,9 @@ Include "Acciones";
 ! simplemente el nombre de un objeto como sinónimo de 'examinar objeto' (copiado de
 ! Transilvania Corruption, de Alien Soft, y mejorado por mí):
 [ VerboDesconocido x obj;
+  ! Atención: ahora que copio y pego las líneas de gramática de los siguientes verbos
+  ! en infinitivo, CREO que ya no hace falta los siguientes 'if', pero los dejo por
+  ! si acaso:
   if (x == 'abrir')    return 'abre';
   if (x == 'cerrar')   return 'cierra';
   if (x == 'cortar')   return 'corta';
