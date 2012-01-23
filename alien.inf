@@ -10134,10 +10134,9 @@ Extend 'di' first
     EncenderGraficosSub(true);
   }
   clearTextWindow();
-  if (~~hayTiempoReal) {
-    timer = 0;
+  if (hayTiempoReal) {
+    control_timer.activar(timer);
   }
-  control_timer.activar(timer);
   <<Mirar>>;
 ];
 
