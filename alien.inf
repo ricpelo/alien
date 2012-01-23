@@ -2422,6 +2422,8 @@ Object decorado_laberinto
     desc_tubos "Son largos y sinuosos cilindros de varios tamaños que recorren las paredes
                 transportando quién sabe qué.",
     describir
+      'tuneles'  [; return self.desc_paredes; ] G_PLURAL
+      'tunel'    [; return self.desc_paredes; ] 0
       'tuberias' [; return self.desc_tubos; ] G_FEMENINO + G_PLURAL
       'tuberia'  [; return self.desc_tubos; ] G_FEMENINO
       'tubos'    [; return self.desc_tubos; ] G_PLURAL
