@@ -3,9 +3,9 @@
 AppName=A·L·I·E·N
 OutputBaseFilename=ALIEN
 OutputDir=..
-AppVerName=A·L·I·E·N: La aventura - Edición Especial (111028)
-DefaultDirName={pf}\Juegos Conversacionales\ALIEN - La aventura - Edición Especial
-DefaultGroupName=Juegos Conversacionales\A·L·I·E·N: La aventura - Edición Especial
+AppVerName=A·L·I·E·N: La aventura - Edición Especial (120123)
+DefaultDirName={pf}\Juegos Conversacionales\A·L·I·E·N - La aventura (Edición Especial)
+DefaultGroupName=Juegos Conversacionales\A·L·I·E·N - La aventura (Edición Especial)
 UninstallDisplayIcon={app}\Desinstalar.exe
 Compression=lzma
 SolidCompression=true
@@ -55,15 +55,15 @@ Source: Video.url; DestDir: {app}
 Source: zlib1.dll; DestDir: {app}
 
 [Icons]
-Name: {group}\Jugar a A·L·I·E·N: La aventura - Edición Especial; Filename: {app}\glulxe.exe; IconFilename: {app}\alien.ico; Parameters: alien.blb; WorkingDir: {app}\; IconIndex: 0; Comment: Juega a A·L·I·E·N: La aventura - Edición Especial
+Name: {group}\Jugar a A·L·I·E·N - La aventura (Edición Especial); Filename: {app}\glulxe.exe; IconFilename: {app}\alien.ico; Parameters: alien.blb; WorkingDir: {app}\; IconIndex: 0; Comment: Juega a A·L·I·E·N - La aventura (Edición Especial)
 Name: {group}\Instrucciones - Cómo jugar; Filename: {app}\instrucciones.pdf; Comment: Cómo jugar una aventura conversacional; IconFilename: {app}\Leame.ico; IconIndex: 0
 Name: {group}\Holocubo (requiere contraseña); Filename: {app}\holocubo.pdf; Comment: Documento informativo (sólo puede abrirse con la contraseña correcta); IconFilename: {app}\alien.ico; IconIndex: 0
 Name: {group}\Vídeo introductorio; Filename: {app}\Video.url; Comment: Vídeo de introducción a la aventura, en YouTube; IconFilename: {app}\alien.ico; IconIndex: 0
 Name: {group}\Visita la web del CAAD; Filename: {app}\CAAD Club de Aventuras AD.url; Comment: Visita la web del CAAD para participar en el mundo aventurero y resolver las dudas del juego en los foros; IconFilename: {app}\CAAD.ico; IconIndex: 0
 Name: {group}\Visita la web de A·L·I·E·N; Filename: {app}\Alien.url; Comment: Visita la web de A·L·I·E·N; IconFilename: {app}\CAAD.ico; IconIndex: 0
 Name: {group}\Visita la web de Alpha Aventuras; Filename: {app}\Alpha_Aventuras.url; Comment: Visita la web de Alpha Aventuras, el equipo creador de A·L·I·E·N; IconFilename: {app}\CAAD.ico; IconIndex: 0
-Name: {userdesktop}\Jugar a A·L·I·E·N: La aventura - Edición Especial; Filename: {app}\glulxe.exe; IconFilename: {app}\alien.ico; Parameters: alien.blb; WorkingDir: {app}\; IconIndex: 0; Comment: Juega a A·L·I·E·N: La aventura - Edición Especial; Tasks: escritorio
-Name: {group}\Desinstalar A·L·I·E·N: La aventura - Edición Especial; Filename: {uninstallexe}; Comment: Desinstala A·L·I·E·N - Esperamos que lo hayas disfrutado
+Name: {userdesktop}\Jugar a A·L·I·E·N - La aventura (Edición Especial); Filename: {app}\glulxe.exe; IconFilename: {app}\alien.ico; Parameters: alien.blb; WorkingDir: {app}\; IconIndex: 0; Comment: Juega a A·L·I·E·N: La aventura - Edición Especial; Tasks: escritorio
+Name: {group}\Desinstalar A·L·I·E·N - La aventura (Edición Especial); Filename: {uninstallexe}; Comment: Desinstala A·L·I·E·N - Esperamos que lo hayas disfrutado
 
 [Dirs]
 Name: {app}\
