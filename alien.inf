@@ -2636,6 +2636,10 @@ Object puerta_rara "puerta del complejo" entrada
       Examinar:
         ImprimirOEjecutar(self, descripcion);
         rtrue;
+      Tocar:
+        if (self has abierta) {
+          "Yo que tú no tocaría: ese ácido parece muy corrosivo.";
+        }
     ],
   has
     femenino;
@@ -2645,7 +2649,8 @@ Object puerta_viscosa "puerta del complejo"
   class PNJPuerta
   with
     ! La librería PnjPuertas ya incluye la palabra 'puerta' como nombre
-    nombre 'compuerta' 'enorme' 'grande' 'enorme' 'agujero' 'viscosa' 'viscosidad',
+    nombre 'compuerta' 'enorme' 'grande' 'enorme' 'agujero' 'viscosa' 'viscosidad' 'sustancia'
+           'gelatinosa',
     adjetivos 'complejo',
     descripcion "El monstruo ha sellado el agujero de la puerta, haciéndola de nuevo
                  infranqueable.",
@@ -2670,6 +2675,8 @@ Object puerta_viscosa "puerta del complejo"
       Examinar:
         ImprimirOEjecutar(self, descripcion);
         rtrue;
+      Tocar:
+        "Su tacto es desagradablemente gelatinoso y sólido al mismo tiempo.";
     ],
   has
     femenino abrible;
