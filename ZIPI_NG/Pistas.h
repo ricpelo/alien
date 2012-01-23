@@ -900,7 +900,7 @@ with
        font off;
        print "^";
        print "   Algunos lectores de pantalla usados por personas con deficiencias visuales^";
-       print "   tienen problemas para leer los mensajes que aperecen letra a letra (mensajes^";
+       print "   tienen problemas para leer los mensajes que aparecen letra a letra (mensajes^";
        print "   'teletipo'). En tal caso, puedes desactivar el efecto 'teletipo' usando el^";
        print "   comando:^";
        print "^";

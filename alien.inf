@@ -9301,6 +9301,7 @@ ZIPI_Otro ZIPI_Salir
 
 
 [ HandleGlkEvent ev context buffer snd r l p;
+  if (banderafin ~= 0) rtrue;
   SGW_HandleGlk(ev);
   context = context;  ! Para evitar el warning
   l = LugarReal();
