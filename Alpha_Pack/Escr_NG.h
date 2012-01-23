@@ -98,20 +98,16 @@ class Escritura
           print (string) self.elemento(n);
         } else {
           timer = control_timer.timer_actual;
+          if (self.sonido ~= 0) {
+            Damusix.TocarCanal(CANAL_TELETIPO);
+          }
           ! Visualizar las letras una a una
           for (p = ESCR_PRIMERA_LETRA : p < (lon + ESCR_PRIMERA_LETRA) : p++) {
             print (char) escr_buffer_lib->p;
- 
-            #ifdef TARGET_GLULX;
-              ! Tocar un sonido, esperar a pulsar una tecla o que pase un tiempo
-              if ( self.sonido ~= 0 ) {
-                Damusix.Tocar(Teletipo_ogg);
-              }
-              self.hazPausaLetra();
-            #endif;
-            #ifdef TARGET_ZCODE;
-              self.hazPausaLetra();
-            #endif;
+            self.hazPausaLetra();
+          }
+          if (self.sonido ~= 0) {
+            Damusix.PararCanal(CANAL_TELETIPO);
           }
           if (timer ~= 0) {
             control_timer.desactivar();

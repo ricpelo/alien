@@ -8988,7 +8988,7 @@ ZIPI_Otro ZIPI_Salir
 [ IniciarSonidos;
   Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
   Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
-  Damusix.AsignarCanal(Teletipo_ogg, CANAL_TELETIPO, VOLUMEN_TELETIPO, 1);
+  Damusix.AsignarCanal(Teletipo_ogg, CANAL_TELETIPO, VOLUMEN_TELETIPO, SONIDO_BUCLE_INFINITO);
   Damusix.AsignarCanal(Tic_ogg, CANAL_TICTAC, VOLUMEN_TICTAC, SONIDO_BUCLE_INFINITO);
 ];
 
