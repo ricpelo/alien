@@ -6,7 +6,7 @@
             <format>glulx</format>
         </identification>
         <bibliographic>
-            <title>A·L·I·E·N: La aventura</title>
+            <title>ALIEN: La aventura</title>
             <author>Alpha Aventuras</author>
             <language>ES</language>
             <headline>Edición Especial</headline>
@@ -39,7 +39,7 @@
         </contacts>
         <release>
             <version>1</version>
-            <releasedate>2012/01/19</releasedate>
+            <releasedate>2012/01/23</releasedate>
         </release>
         <colophon>
             <generator>Babble</generator>
