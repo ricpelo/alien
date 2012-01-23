@@ -258,7 +258,34 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
 
 
-8. ESTOY ATASCADO Y NO SÉ CÓMO CONTINUAR.
+8. TENGO DEFICIENCIAS VISUALES Y MI LECTOR DE PANTALLA NO LEE BIEN LOS MENSAJES
+   QUE APARECEN LETRA A LETRA.
+
+   Algunos lectores de pantalla usados por personas con deficiencias visuales
+   tienen problemas para leer los mensajes que aperecen letra a letra (mensajes
+   'teletipo'). En tal caso, puedes desactivar el efecto 'teletipo' usando el
+   comando:
+
+   > CONFIGURACIÓN
+
+   Entra en el submenú 'Accesibilidad' y desactiva la opción 'Efecto teletipo'.
+
+
+
+9. TENGO DIFICULTADES MOTRICES Y EL ALIEN SIEMPRE ME ALCANZA.
+
+   Si tienes dificultades para escribir con la velocidad necesaria para que el
+   alien no te alcance, puedes desactivar los eventos en tiempo real usando el
+   comando:
+
+   > CONFIGURACIÓN
+
+   Entra en el submenú 'Accesibilidad' y desactiva la opción 'Tiempo real'. De
+   esta forma, el juego no avanzará mientras no teclees ninguna orden.
+
+
+
+10. ESTOY ATASCADO Y NO SÉ CÓMO CONTINUAR.
 
    Si andas perdido y no sabes cómo resolver algún puzzle o situación en la
    aventura, puedes:

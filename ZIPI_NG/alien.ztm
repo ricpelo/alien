@@ -250,6 +250,34 @@
         </NOFONT>
       </TEXTO>
 
+      <TEXTO>Mi lector de pantalla para ciegos no lee bien los ~teletipo~
+        <NOFONT>
+
+   Algunos lectores de pantalla usados por personas con deficiencias visuales
+   tienen problemas para leer los mensajes que aperecen letra a letra (mensajes
+   'teletipo'). En tal caso, puedes desactivar el efecto 'teletipo' usando el
+   comando:
+
+   > CONFIGURACIÓN
+
+   Entra en el submenú ~Accesibilidad~ y desactiva la opción ~Efecto teletipo~.
+        </NOFONT>
+      </TEXTO>
+
+      <TEXTO>Tengo dificultades motrices y el alien siempre me alcanza
+        <NOFONT>
+
+   Si tienes dificultades para escribir con la velocidad necesaria para que el
+   alien no te alcance, puedes desactivar los eventos en tiempo real usando el
+   comando:
+
+   > CONFIGURACIÓN
+
+   Entra en el submenú ~Accesibilidad~ y desactiva la opción ~Tiempo real~. De
+   esta forma, el juego no avanzará mientras no teclees ninguna orden.
+        </NOFONT>
+      </TEXTO>
+
       <TEXTO>Estoy atascado y no sé cómo continuar
         <NOFONT>
 
