@@ -38,6 +38,7 @@ Constant Titular "^(c) 2008-2012 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
 Release 1;
+Serial "120123";
 
 ! Queremos usar el comando 'Salidas'
 Constant ADMITIR_COMANDO_SALIDAS;
@@ -1855,7 +1856,10 @@ Object panel_control "panel de control" junto_procesador
         print " Varios de sus cables están temporalmente unidos a los bornes de una
                batería. ";
         if (puerta_procesador hasnt abierta) {
-          print "En el display puedes leer ~", (s_in) "Semilla: 9957. ¿Código?", "~.";
+          print "En el display puedes leer ~";
+          tt_computadora.escribe(0, "Semilla: 9957. ¿Código?");
+          tt_computadora.visualiza();
+          print "~.";
         }
       } else {
         if (puerta_procesador hasnt abierta) {
@@ -1897,7 +1901,9 @@ Object panel_control "panel de control" junto_procesador
           viewImageCenter(junto_procesador.sgw_img);
           give self ~general;
           bateria.energia = 0;
-          print "El display dice: ~", (s_in) "Código correcto. Acceso permitido.";
+          print "El display dice: ~";
+          tt_computadora.escribe(0, "Código correcto. Acceso permitido.");
+          tt_computadora.visualiza();
           Damusix.TocarV(Chispazo_ogg, 100);
           "~^^La puerta se abre y, a continuación, una enorme chispa salta de los bornes de
           conexión de la batería. Finalmente, el panel de control se apaga por falta de
@@ -1907,7 +1913,9 @@ Object panel_control "panel de control" junto_procesador
           ! Código viejo: 759812
           if (self.codigo_viejo == 0) {
             self.codigo_viejo = 1;
-            print "El display dice: ~", (s_in) "Código incorrecto. Acceso denegado.";
+            print "El display dice: ~";
+            tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
+            tt_computadora.visualiza();
             print "~^^Parece que ese código ya no sirve, después de que el sistema de
                       control del panel se haya reiniciado.^";
             if (SeVen(jugador, jason)) {
@@ -1925,11 +1933,15 @@ Object panel_control "panel de control" junto_procesador
             }
             rtrue; 
           } else {
-            print "El display insiste: ~", (s_in) "Código incorrecto. Acceso denegado.";
+            print "El display insiste: ~";
+            tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
+            tt_computadora.visualiza();
             "~. Habrá que buscar el nuevo código.";
           }
         } else {
-          print "El display muestra: ~", (s_in) "Código incorrecto. Acceso denegado.";
+          print "El display muestra: ~";
+          tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
+          tt_computadora.visualiza();
           "~.";
         }
       Recibir:
@@ -1967,7 +1979,9 @@ Object panel_control "panel de control" junto_procesador
           print "provocando una lluvia de chispas. El display se enciende y suena un
                  zumbido. En la pantalla aparecen símbolos y caracteres que indican
                  que el sistema de control del panel se está reiniciando. Finalmente,
-                 en el display puedes leer: ~", (s_in) "Semilla: 9957. ¿Código?";
+                 en el display puedes leer: ~";
+          tt_computadora.escribe(0, "Semilla: 9957. ¿Código?");
+          tt_computadora.visualiza();
           "~.";
         }
       DejarSalir:
