@@ -9318,6 +9318,10 @@ ZIPI_Otro ZIPI_Salir
 
 [ HandleGlkEvent ev context buffer snd r l p;
   SGW_HandleGlk(ev);
+  if (banderafin ~= 0) {
+    control_timer.desactivar();
+    rtrue;
+  }
   context = context;  ! Para evitar el warning
   l = LugarReal();
   r = random(100);
