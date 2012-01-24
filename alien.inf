@@ -190,6 +190,7 @@ Include "EParser";
 Replace EsperarTecla;
 Replace InitGlkWindow;
 Replace HandleGlkEvent;
+
 Include "SGW+DMX_NG";    ! Entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
@@ -731,8 +732,17 @@ Class Contenedor
 
 Object control_timer
   with
-    ha_imprimido_algo false,
+    ha_imprimido_algo true,
     timer_actual 0,
+    preparar_impresion [;
+      if (hayTiempoReal && ~~(self.ha_imprimido_algo)) {
+        self.ha_imprimido_algo = true;
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+      }
+    ],
+    reiniciar_impresion [;
+      self.ha_imprimido_algo = false;
+    ],
     activar [ t;
       if (t ~= self.timer_actual) {
         self.timer_actual = t;
@@ -1565,11 +1575,11 @@ Object linterna "linterna" armario
         if (bateria.energia <= 0) {
           bateria.energia = 0;
           self.apagar();
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          control_timer.preparar_impresion();
           "^La linterna se ha quedado sin batería.";
         }
         if (bateria.nivel_carga() < 10) {
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          control_timer.preparar_impresion();
           "^La linterna se está quedando sin batería...";
         }
       }
@@ -3346,11 +3356,9 @@ Class ZonaNorte
           self.ZonaNorte::contador_muerte = 0;
         }
     ],
-!    ha_imprimido_algo false,
     cada_turno [;
       if (self.ZonaNorte::contador_muerte >= 15 && self == despensa) {
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        control_timer.ha_imprimido_algo = true;
+        control_timer.preparar_impresion();
         if (localizacion == laoscuridad) {
           print "^Sin apenas darte tiempo a reaccionar, algo blando, húmedo, frío y
                  repulsivo al tacto ";
@@ -3395,8 +3403,7 @@ Class ZonaNorte
       }
 
       if (self.ZonaNorte::contador_muerte == 10 or 12 or 14 or 16) {
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        control_timer.ha_imprimido_algo = true;
+        control_timer.preparar_impresion();
       }
       switch (self.ZonaNorte::contador_muerte) {
         10: Damusix.TocarV(Arana_Corto_ogg, 50);
@@ -6869,6 +6876,7 @@ Object alien_oscuridad laoscuridad
           if (alien.oportunidad < 4) {
             control_timer.activar(TIMER_ALIEN);
             if (alien.oportunidad > 0) {
+              control_timer.preparar_impresion();
               print "^¡Notas que algo se dirige rápidamente hacia ti!^";
               Damusix.TocarV(Rugido_ogg);
             }
@@ -6912,11 +6920,9 @@ Object alien procesador
       }
       "";
     ],
-!    ha_imprimido_algo false,
     llega [ dir;
       control_timer.activar(TIMER_ALIEN);
-      glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-      control_timer.ha_imprimido_algo = true;
+      control_timer.preparar_impresion();
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
         if (jason in LugarReal()) {
@@ -6942,24 +6948,24 @@ Object alien procesador
       if (self.tipo_de_movimiento == MOVIMIENTO_POR_META && self in entrada) {
         AlienBloqueaPuerta();
         if (LugarReal() == entrada) {
-            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          control_timer.preparar_impresion();
           "¡Ves al monstruo tapando la entrada con una sustancia viscosa que se vuelve
            inmediatamente rígida!";
         }
       }
     ],
 !    precamino RUTA_NINGUNA,
-    tras_abrir NO_PUEDE_ABRIR,   ! Comportamiento después de pasar por una puerta
-    capricho 50,    ! 50% de probabilidades de moverse en un turno (defecto = 20%)
-    distancia 0,    ! En cada turno, contiene la longitud de la ruta hasta el jugador
-    oportunidad 0,  ! Se le da una oportunidad al jugador para escapar del alien cuando
-                    ! los dos se encuentren en la misma localidad
+    tras_abrir NO_PUEDE_ABRIR,  ! Comportamiento después de pasar por una puerta
+    capricho 50,                ! 50% de probabilidades de moverse en un turno (defecto = 20%)
+    distancia 0,                ! En cada turno, contiene la longitud de la ruta hasta el jugador
+    oportunidad 0,              ! Se le da una oportunidad al jugador para escapar del alien cuando
+                                ! los dos se encuentren en la misma localidad
     comportamiento 0,
-    ! ¿Es la primera vez que lo vemos?
-    primera_vez true,
+    primera_vez true,           ! ¿Es la primera vez que lo vemos?
     muerte_final [;
       Bandera_Fin(1);
       viewImageCenter(Alien_Mata_jpg);
+      control_timer.preparar_impresion();
       "El monstruo salta sobre ti. Sientes sus afiladas garras hundirse en tu
        carne como si fuese mantequilla, y su poderosa boca se abre completamente
        alrededor de tu cabeza, que en pocos segundos deja de formar parte de tu
@@ -7003,6 +7009,7 @@ Object alien procesador
         if (self in LugarReal()) {
           control_timer.desactivar();
           control_timer.activar(TIMER_ALIEN);
+          control_timer.preparar_impresion();
           "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
         }
       }
@@ -7024,6 +7031,7 @@ Object alien procesador
         }
         Bandera_Fin(1);
         viewImageCenter(Alien_Mata_jpg);
+        control_timer.preparar_impresion();
         "Descargas una ráfaga de munición directamente en el ~corazón~ del monstruoso ser,
          provocando una lluvia verde de sangre ácida que cae directamente sobre tu cuerpo.
          Y mientras éste se disuelve, casi desintegrándose a marchas forzadas, pides por
@@ -7061,6 +7069,7 @@ Object alien procesador
           self.callado = false;
           rtrue;
         }
+        control_timer.preparar_impresion();
         if (self.comportamiento == 1) {
           ! Se le da dos oportunidades. Después lo mata.
           if (self.oportunidad < 4) {
@@ -7737,10 +7746,6 @@ Object detector_movimiento "detector de movimiento" rifle
           }
         }
     ],
-    preparaHandleGlkEvent [;
-      glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-      control_timer.ha_imprimido_algo = true;
-    ],
     primera_vez true,
     presencia [ t; 
       if (banderafin ~= 0) {
@@ -7748,7 +7753,7 @@ Object detector_movimiento "detector de movimiento" rifle
       }
 
       if (self hasnt encendido) {
-        self.preparaHandleGlkEvent();
+        control_timer.preparar_impresion();
         print "Está apagado.";
         rtrue;
       }
@@ -7774,7 +7779,7 @@ Object detector_movimiento "detector de movimiento" rifle
       if ((~~(self.primera_vez)) && alien.comportamiento == 3 &&
           alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente &&
           alien notin LugarReal()) {
-        self.preparaHandleGlkEvent();
+        control_timer.preparar_impresion();
         switch (random(2)) {
           1: print "^¡", (_El) alien, " se está acercando! ¡Corre!^";
           2: print "^¡", (_El) alien, " se acerca!^";
@@ -7786,14 +7791,14 @@ Object detector_movimiento "detector de movimiento" rifle
         self.sonar();
         if (alien in LugarReal()) {
           if (localizacion == laoscuridad) {
-            self.preparaHandleGlkEvent();
+            control_timer.preparar_impresion();
             t = true;
             print (s_b) "^¡El detector capta movimiento aquí mismo!^";
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
             if (self.primera_vez || ~~hayTiempoReal) {
-              self.preparaHandleGlkEvent();
+              control_timer.preparar_impresion();
               t = true;
               print "^El detector capta movimiento a una distancia de ",
                      (number) 10 * alien.distancia, " metros hacia ", (el) alien.sentido;
@@ -7818,12 +7823,12 @@ Object detector_movimiento "detector de movimiento" rifle
                           no volverás a ver mensajes de este tipo en lo sucesivo. Un
                           consejo: consulta frecuentemente dicha información para intentar
                           evitar a la criatura.]^";
-            print (s_b) "^[ Pulsa una tecla para continuar. ]^";
+!            print (s_b) "^[ Pulsa una tecla para continuar. ]^";
             if (HayLuz(localizacion)) {
               viewImageCenter(localizacion.sgw_img);
             }
             barra_estado.dibujar();
-            EsperarTecla();
+!            EsperarTecla();
             ActivarTimer();
           } else {
             print "^";
@@ -8130,7 +8135,7 @@ Object autodestruccion
 
           if (self.falta(self.tiempo - 1) ~= t) {
             if (t > 0) {
-              glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+              control_timer.preparar_impresion();
 
               print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8158,7 +8163,7 @@ Object autodestruccion
           
         } else {
           t = self.falta();
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+          control_timer.preparar_impresion();
 
           print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8182,8 +8187,7 @@ Object autodestruccion
       } else {
         Bandera_Fin(1);
         Damusix.TocarV(Explosion_ogg);
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-
+        control_timer.preparar_impresion();
         "^El complejo estalla en una gigantesca explosión, llevándose consigo todo lo que
          había en su interior y alrededores... incluyéndote a ti.^";
       }
@@ -9262,7 +9266,6 @@ ZIPI_Otro ZIPI_Salir
 
 
 [ RestaurarLineaOrdenes buffer;
-  control_timer.ha_imprimido_algo = false;
   if (banderafin == 1) {
     print "^^";
     M__L(##Miscelanea, 3);
@@ -9278,7 +9281,7 @@ ZIPI_Otro ZIPI_Salir
 
 
 [ ReduceBateriaEnTimer dec;
-  if (linterna has encendida && bateria.energia > 0) {
+  if (hayTiempoReal && linterna has encendida && bateria.energia > 0) {
     bateria.decremento = dec;
     linterna.pierde_energia();
     barra_estado.dibujar();
@@ -9299,13 +9302,16 @@ ZIPI_Otro ZIPI_Salir
   
   switch (ev-->0) {
     evtype_Timer:
+      control_timer.reiniciar_impresion();
+      ! Hemos dibujado un relámpago y ahora lo quitamos dibujando
+      ! la localidad actual:
       if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
         viewImageCenter(l.sgw_img);
         control_timer.activar(TIMER_TRUENO);
         return 1;
-      } else
-      if (control_timer.timer_actual == TIMER_TRUENO) {
-        if (hayTiempoReal) ReduceBateriaEnTimer(1);
+      ! Dibujamos un relámpago:
+      } else if (control_timer.timer_actual == TIMER_TRUENO) {
+        ReduceBateriaEnTimer(1);
         if (l == nave1 or nave2 && r < 35) {
           r = 20 * random(5);
           if (r >= 65) {
@@ -9330,8 +9336,9 @@ ZIPI_Otro ZIPI_Salir
             return 1;
           }
         }
+      ! Dentro del laberinto:
       } else if (control_timer.timer_actual == TIMER_LABERINTO) {
-        if (hayTiempoReal) ReduceBateriaEnTimer(2);
+        ReduceBateriaEnTimer(2);
         if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
           if (l ofclass Laberinto || l ofclass Balcon) {
             r = 20 * random(3) + 40;
@@ -9363,11 +9370,12 @@ ZIPI_Otro ZIPI_Salir
           }
           return RestaurarLineaOrdenes(buffer);
         }
+      ! Se ha activado la autodestrucción y suena la megafonía:
       } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION && hayTiempoReal) {
         autodestruccion.cuenta_atras();
         return RestaurarLineaOrdenes(buffer);
+      ! El alien está en nuestra misma localidad:
       } else if (control_timer.timer_actual == TIMER_ALIEN && hayTiempoReal) {
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
         alien.cada_turno();
         return RestaurarLineaOrdenes(buffer);
       }
