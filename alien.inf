@@ -240,7 +240,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 ];
 
 
-[ ImprimePrompt;
+[ ImprimirPrompt;
   print (s_in) "^> ";
 ];
 
@@ -282,7 +282,7 @@ Object MensajesLibreria
         if (localizacion == procesador) {
           procesador.comprobar_segunda_parte();
         }
-        ImprimePrompt();
+        ImprimirPrompt();
         rtrue;
 
       Ir:
@@ -8963,7 +8963,7 @@ ZIPI_Otro ZIPI_Restaurar
       StatusLineHeight(1);
       clearTextWindow();
       glk($002F, gg_mainwin);    ! set_window
-      ImprimePrompt();
+      ImprimirPrompt();
       fref = glk($0062, $01, $02, 0); ! fileref_create_by_prompt
       if (fref == 0)
         jump RFailed;
@@ -9272,7 +9272,7 @@ ZIPI_Otro ZIPI_Salir
     ActualizarEstatus();
     AfterGameOver();
   }
-  ImprimePrompt();
+  ImprimirPrompt();
   buffer-->0 = gg_event-->2;
   glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                          INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
