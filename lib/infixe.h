@@ -5,6 +5,8 @@
 !
 !   Copyright Graham Nelson 1993-2004 but freely usable (see manuals)
 !
+!   Cambios y mejoras de Saimazoom (Alien soft) y Sothoth (Alpha Aventuras)
+!
 !   This file is automatically Included in your game file by "Grammar" if you
 !   supply the -X compiler switch.
 ! ==============================================================================
@@ -1171,34 +1173,48 @@ Array InfixRV_commas --> 32;
 [ InfixInvSub i;
 
     print (string) Historia, (string) Titular;
-    print "  ", (number) #highest_object_number - #lowest_object_number + 1,
-        " objects;^";
+    style bold;
+    print "^- ", (number) #highest_object_number - #lowest_object_number + 1,
+        " objetos;^";
 
-    print "  non-library object-name constants:";
+    print "- Constantes nombres de objeto no-librería: ";
+    style roman;
     InfixList(#lowest_constant_number, #highest_constant_number, #constant_names_array, 2);
 
-    print "  ", (number) #highest_class_number - #lowest_class_number + 1, "  classes:^    ";
+    style bold;
+    print "- ", (number) #highest_class_number - #lowest_class_number + 1, " clases: ";
+    style roman;
     for (i=#lowest_class_number : i<=#highest_class_number : i++)
         print (name) #class_objects_array-->i, " ";
     new_line;
 
-    print "  non-library arrays:";
+    style bold;
+    print "- Arrays no-librería: ";
+    style roman;
     InfixList(#lowest_array_number, #highest_array_number, #array_names_array);
 
-    print "  non-library routines:";
+    style bold;
+    print "- Rutinas no-librería: ";
+    style roman;
     InfixList(#lowest_routine_number, #highest_routine_number, #routine_names_array);
 
-    print "  non-library constants:";
+    style bold;
+    print "- Constantes no-librería: ";
+    style roman;
     InfixList(#lowest_constant_number, #highest_constant_number, #constant_names_array, 0);
 
-    print "  (common) properties:";
+    style bold;
+    print "- Propiedades comunes: ";
+    style roman;
     #ifdef TARGET_ZCODE;
         InfixList(#lowest_property_number, 63, #property_names_array);!, Z fixed size.
     #ifnot;
         InfixList(#lowest_property_number, (#identifiers_table-->1)-1, #property_names_array);!, Z fixed size.
     #endif;
-    
-    print "  (individual) properties:";
+
+    style bold;
+    print "- Propiedades individuales: ";
+    style roman;
     #ifdef TARGET_ZCODE;
         InfixList(64, #highest_property_number, #property_names_array + 63*2); ! , Z, 1element = 2bytes
     #ifnot;
@@ -1218,18 +1234,26 @@ Array InfixRV_commas --> 32;
 
 ![ InfixList from to table filter i flag;
 
-    print "  attributes:";
+    style bold;
+    print "- Atributos: ";
+    style roman;
     InfixList(#lowest_attribute_number, #highest_attribute_number, #attribute_names_array);
 
     if (true) return;
 
-    print "  variables:";
+    style bold;
+    print "- Variables: ";
+    style roman;
     InfixList(#lowest_global_number, #highest_global_number, #global_names_array);
 
-    print "  actions:";
+    style bold;
+    print "- Acciones: ";
+    style roman;
     InfixList(#lowest_action_number, #highest_action_number, #action_names_array);
 
-    print "  fake actions:";
+    style bold;
+    print "- Acciones falsas: ";
+    style roman;
     InfixList(#lowest_fake_action_number, #highest_fake_action_number, #fake_action_names_array);
 ];
 
