@@ -139,10 +139,6 @@ Global dibujarEstado = false;
 ! La imagen que representa la oscuridad:
 Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 
-! Si vengo de HandleGlkEvent (ver detector_movimiento.presencia y
-! alien.llega):
-Global contextoHandleGlkEvent = false;
-
 ! Usado en VerboDesconocido:
 Global objetoVerboDesconocido = 0;
 
@@ -333,6 +329,9 @@ Object MensajesLibreria
            4: TextoLlamativo(" ¡Enhorabuena! Has acabado la aventura ");
               rtrue;
           10: rtrue;
+          13: ! Reactivamos timer en caso de UNDO:
+              glk_request_timer_events(control_timer.timer_actual);
+              "[Retrocediendo al turno anterior.]";
           17: switch (random(4)) {
                 1: "Está muy oscuro y no puedes ver nada.";
                 2: "Todo está demasiado oscuro y no aprecias nada con claridad.";
@@ -732,6 +731,7 @@ Class Contenedor
 
 Object control_timer
   with
+    ha_imprimido_algo false,
     timer_actual 0,
     activar [ t;
       if (t ~= self.timer_actual) {
@@ -1565,15 +1565,11 @@ Object linterna "linterna" armario
         if (bateria.energia <= 0) {
           bateria.energia = 0;
           self.apagar();
-          if (contextoHandleGlkEvent) {
-            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-          }
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
           "^La linterna se ha quedado sin batería.";
         }
         if (bateria.nivel_carga() < 10) {
-          if (contextoHandleGlkEvent) {
-            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-          }
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
           "^La linterna se está quedando sin batería...";
         }
       }
@@ -3350,13 +3346,11 @@ Class ZonaNorte
           self.ZonaNorte::contador_muerte = 0;
         }
     ],
-    ha_imprimido_algo false,
+!    ha_imprimido_algo false,
     cada_turno [;
       if (self.ZonaNorte::contador_muerte >= 15 && self == despensa) {
-        if (contextoHandleGlkEvent) {
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        }
-        self.ha_imprimido_algo = true;
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        control_timer.ha_imprimido_algo = true;
         if (localizacion == laoscuridad) {
           print "^Sin apenas darte tiempo a reaccionar, algo blando, húmedo, frío y
                  repulsivo al tacto ";
@@ -3401,10 +3395,8 @@ Class ZonaNorte
       }
 
       if (self.ZonaNorte::contador_muerte == 10 or 12 or 14 or 16) {
-        if (contextoHandleGlkEvent) {
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        }
-        self.ha_imprimido_algo = true;
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+        control_timer.ha_imprimido_algo = true;
       }
       switch (self.ZonaNorte::contador_muerte) {
         10: Damusix.TocarV(Arana_Corto_ogg, 50);
@@ -6920,13 +6912,11 @@ Object alien procesador
       }
       "";
     ],
-    ha_imprimido_algo false,
+!    ha_imprimido_algo false,
     llega [ dir;
       control_timer.activar(TIMER_ALIEN);
-      if (contextoHandleGlkEvent) {
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-      }
-      self.ha_imprimido_algo = true;
+      glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+      control_timer.ha_imprimido_algo = true;
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
         if (jason in LugarReal()) {
@@ -6941,9 +6931,6 @@ Object alien procesador
           print ".^";
         }
       }
-      if (contextoHandleGlkEvent) {
-        self.cada_turno();
-      }
     ],
     pnj_ha_llegado_default [;
       if (self.tipo_de_movimiento ~= MOVIMIENTO_PERSEGUIR) {
@@ -6955,9 +6942,7 @@ Object alien procesador
       if (self.tipo_de_movimiento == MOVIMIENTO_POR_META && self in entrada) {
         AlienBloqueaPuerta();
         if (LugarReal() == entrada) {
-          if (contextoHandleGlkEvent) {
             glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-           }
           "¡Ves al monstruo tapando la entrada con una sustancia viscosa que se vuelve
            inmediatamente rígida!";
         }
@@ -7752,13 +7737,9 @@ Object detector_movimiento "detector de movimiento" rifle
           }
         }
     ],
-    ha_imprimido_algo false,
     preparaHandleGlkEvent [;
-      if (contextoHandleGlkEvent && ~~alien.ha_imprimido_algo &&
-          ~~self.ha_imprimido_algo) {
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-      }
-      self.ha_imprimido_algo = true;
+      glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
+      control_timer.ha_imprimido_algo = true;
     ],
     primera_vez true,
     presencia [ t; 
@@ -8149,9 +8130,7 @@ Object autodestruccion
 
           if (self.falta(self.tiempo - 1) ~= t) {
             if (t > 0) {
-              if (contextoHandleGlkEvent) {
-                glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-              }
+              glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
 
               print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8179,10 +8158,7 @@ Object autodestruccion
           
         } else {
           t = self.falta();
-
-          if (contextoHandleGlkEvent) {
-            glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-          }
+          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
 
           print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8206,10 +8182,7 @@ Object autodestruccion
       } else {
         Bandera_Fin(1);
         Damusix.TocarV(Explosion_ogg);
-
-        if (contextoHandleGlkEvent) {
-          glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-        }
+        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
 
         "^El complejo estalla en una gigantesca explosión, llevándose consigo todo lo que
          había en su interior y alrededores... incluyéndote a ti.^";
@@ -9289,6 +9262,7 @@ ZIPI_Otro ZIPI_Salir
 
 
 [ RestaurarLineaOrdenes buffer;
+  control_timer.ha_imprimido_algo = false;
   if (banderafin == 1) {
     print "^^";
     M__L(##Miscelanea, 3);
@@ -9299,19 +9273,16 @@ ZIPI_Otro ZIPI_Salir
   buffer-->0 = gg_event-->2;
   glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
                          INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-  contextoHandleGlkEvent = false;
   return 1;
 ];
 
 
 [ ReduceBateriaEnTimer dec;
   if (linterna has encendida && bateria.energia > 0) {
-    contextoHandleGlkEvent = true;
     bateria.decremento = dec;
     linterna.pierde_energia();
     barra_estado.dibujar();
     bateria.decremento = 4;
-    contextoHandleGlkEvent = false;
   }
 ];
 
@@ -9377,13 +9348,10 @@ ZIPI_Otro ZIPI_Salir
             }
             Damusix.TocarV(snd, r);
           } else if (l ofclass ZonaNorte && hayTiempoReal) {
-            contextoHandleGlkEvent = true;
             l.cada_turno();
-            contextoHandleGlkEvent = false;
           }
           if (~~hayTiempoReal) return 1;
           if (alien notin l) {
-            contextoHandleGlkEvent = true;
             alien.seHaMovido = false;
             if (alien.condicion_movimiento()) {
               alien.movimiento();
@@ -9393,19 +9361,9 @@ ZIPI_Otro ZIPI_Salir
               barra_estado.dibujar();
             }
           }
-          contextoHandleGlkEvent = false;
-          if (alien.ha_imprimido_algo || detector_movimiento.ha_imprimido_algo ||
-              (l ofclass ZonaNorte && l.ha_imprimido_algo)) {
-            alien.ha_imprimido_algo = false;
-            detector_movimiento.ha_imprimido_algo = false;
-            if (l ofclass ZonaNorte) {
-              l.ha_imprimido_algo = false;
-            }
-            return RestaurarLineaOrdenes(buffer);
-          }
+          return RestaurarLineaOrdenes(buffer);
         }
       } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION && hayTiempoReal) {
-        contextoHandleGlkEvent = true;
         autodestruccion.cuenta_atras();
         return RestaurarLineaOrdenes(buffer);
       } else if (control_timer.timer_actual == TIMER_ALIEN && hayTiempoReal) {
