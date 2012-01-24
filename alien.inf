@@ -7308,9 +7308,9 @@ Object robot "robot de mantenimiento" exterior3,
                  comienza un peculiar traqueteo y las luces de la sala se encienden... ¡Está
                  funcionando! ¡Casi puedes oler el oxígeno a través de tu traje!^^
                  La peor parte se la lleva el robot: toda su energía se ha consumido en su
-                 última operación, y yace inerte en el suelo como un trasto más.";
+                 última operación, y yace inerte en el suelo como un trasto más.^";
           EsperarTecla();
-          " Ya no será necesario llevar trajes atmosféricos para poder respirar. Y en cuanto
+          "^Ya no será necesario llevar trajes atmosféricos para poder respirar. Y en cuanto
            a la linterna, una vez que has reestablecido la luz eléctrica en toda la
            instalación, está claro que no hace falta llevarla encendida.";
         } else {
