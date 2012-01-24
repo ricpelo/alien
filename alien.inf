@@ -9274,7 +9274,9 @@ ZIPI_Otro ZIPI_Salir
 
 [ ActivarTimer l;
   l = LugarReal();
-  if (l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3) {
+  if (banderafin ~= 0) {
+    control_timer.desactivar();
+  } else if (l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3) {
     control_timer.activar(TIMER_LABERINTO);
   } else if (alien.comportamiento == 4) {
     control_timer.activar(TIMER_AUTODESTRUCCION);
@@ -9316,10 +9318,6 @@ ZIPI_Otro ZIPI_Salir
 
 [ HandleGlkEvent ev context buffer snd r l p;
   SGW_HandleGlk(ev);
-  if (banderafin ~= 0) {
-    control_timer.desactivar();
-    rtrue;
-  }
   context = context;  ! Para evitar el warning
   l = LugarReal();
   r = random(100);
