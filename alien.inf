@@ -96,6 +96,8 @@ Constant TIMER_DURACION_ALIEN = 6;
 Constant TIMER_DURACION_ESPERA_TRUENO = 1;
 ! Timer de la autodestruccion:
 Constant TIMER_DURACION_AUTODESTRUCCION = 4;
+! Timer de la batería de la linterna:
+Constant TIMER_DURACION_BATERIA = 5;
 
 
 
@@ -4665,7 +4667,7 @@ Object laberinto28
                 ApagarGraficosSub(true);
               }
               clearMainWindow();
-              ControlTimer.DesactivarTick();    ! Para que no corra el tiempo ahora
+              ControlTimer.PausarTick();        ! Para que no corra el tiempo ahora
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
@@ -4676,7 +4678,7 @@ Object laberinto28
               if (t) {
                 EncenderGraficosSub(true);
               }
-              ControlTimer.ActivarTick();       ! Para que vuelva a correr el tiempo
+              ControlTimer.ReanudarTick();      ! Para que vuelva a correr el tiempo
               rtrue;
             } else {
               "¡No dejes a Jason aquí!";
@@ -7761,20 +7763,16 @@ Object detector_movimiento "detector de movimiento" rifle
         if (t) {
           if (self.primera_vez && hayTiempoReal) {
             self.primera_vez = false;
-            ControlTimer.DesactivarTick();
             print (s_em) " [A partir de ahora, el detector de movimiento informará de la
                           presencia de la criatura a través de la barra de estado, en la
                           parte superior derecha, junto al contador de turnos. Por tanto,
                           no volverás a ver mensajes de este tipo en lo sucesivo. Un
                           consejo: consulta frecuentemente dicha información para intentar
                           evitar a la criatura.]^";
-!            print (s_b) "^[ Pulsa una tecla para continuar. ]^";
             if (HayLuz(localizacion)) {
               viewImageCenter(localizacion.sgw_img);
             }
             barra_estado.dibujar();
-!            EsperarTecla();
-            ControlTimer.ActivarTick();
           } else {
             print "^";
           }
@@ -8559,7 +8557,8 @@ Object tt_final
   timer_trueno.AsignarGestor(1);
   timer_alien.AsignarGestor(2);
   timer_laberinto.AsignarGestor(3);
-  timer_autodestruccion.AsignarGestor(4);
+  timer_bateria.AsignarGestor(4);
+  timer_autodestruccion.AsignarGestor(5);
   ControlTimer.ActivarTick();
 ];
 
@@ -9234,7 +9233,6 @@ Object timer_trueno
       self.hay_trueno = true;
     ],
     evento [ l r p;
-      ReduceBateriaEnTimer(1);
       l = LugarReal();
       if (l == nave1 or nave2 && r < 35) {
         r = 20 * random(5);
@@ -9261,6 +9259,21 @@ Object timer_trueno
     ];
 
 
+Object timer_bateria
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_BATERIA,
+    condicion [;
+      return hayTiempoReal && linterna has encendida && bateria.energia > 0;
+    ],
+    evento [;
+      bateria.decremento = 2;
+      linterna.pierde_energia();
+      barra_estado.dibujar();
+      bateria.decremento = 4;
+    ];
+
+
 Object timer_laberinto
   class GestorTimer
   with
@@ -9270,7 +9283,6 @@ Object timer_laberinto
       return l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3;
     ],
     evento [ l r snd;
-      ReduceBateriaEnTimer(2);
       l = LugarReal();
       if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
         if (l ofclass Laberinto || l ofclass Balcon) {
@@ -9327,16 +9339,6 @@ Object timer_alien
     evento [;
       alien.cada_turno();
     ];
-
-
-[ ReduceBateriaEnTimer dec;
-  if (hayTiempoReal && linterna has encendida && bateria.energia > 0) {
-    bateria.decremento = dec;
-    linterna.pierde_energia();
-    barra_estado.dibujar();
-    bateria.decremento = 4;
-  }
-];
 
 
 [ HandleGlkEvent ev context buffer;
@@ -10108,7 +10110,7 @@ Extend 'di' first
 
 
 [ ConfiguracionSub v m;
-  ControlTimer.DesactivarTick();
+  ControlTimer.PausarTick();
   if (hayGraficos) {
     ApagarGraficosSub(true);
     hayGraficos = true;
@@ -10129,9 +10131,7 @@ Extend 'di' first
     EncenderGraficosSub(true);
   }
   clearTextWindow();
-  if (hayTiempoReal) {
-    ControlTimer.ActivarTick();
-  }
+  ControlTimer.ReanudarTick();
   <<Mirar>>;
 ];
 
@@ -10569,7 +10569,7 @@ Endif;
              (s_in) "PISTAS NO", (s_em) ", y eso te impedirá obtener ayuda en la
              sesión de juego actual. Si sigues queriendo una pista, pon ",
              (s_in) "PISTAS", (s_em) " otra vez.]^";
-    1: ControlTimer.DesactivarTick();
+    1: ControlTimer.PausarTick();
        t = false;
        if (hayGraficos) {
          t = true;
@@ -10590,7 +10590,7 @@ Endif;
          EncenderGraficosSub(true);
        }
        clearTextWindow();
-       ControlTimer.ActivarTick();
+       ControlTimer.ReanudarTick();
        <<Mirar>>;
     2: print (s_em) "[Las pistas han sido desactivadas.]^";
   }

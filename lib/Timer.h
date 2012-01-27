@@ -47,6 +47,7 @@ Object ControlTimer
     gestores 0 0 0 0 0 0 0 0 0 0,     ! Array de gestores de eventos
     duracion_maxima 0,                ! Duración máxima entre los gestores (en nº de ticks) 
     tick 0,                           ! Duración del tick (en ms)
+    tick_pausado 0,                   ! Aquí se guarda el tick cuando se pausa
     contador_ticks 1,                 ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                          ! Semáforo de exclusión mutua
     ha_imprimido_algo true,           ! Para saber si hay que restaurar la línea de órdenes
@@ -72,15 +73,6 @@ Object ControlTimer
       }
       self.duracion_maxima = max;
     ],
-!    ActivarTimer [ t;
-!      if (t ~= self.timer_actual) {
-!        self.timer_actual = t;
-!        glk_request_timer_events(t);
-!      }
-!    ],
-!    DesactivarTimer [;
-!      self.ActivarTimer(0);
-!    ],
   with
     CTEsperarTecla [ s delay;         ! Nuestra propia versión de EsperarTecla
       if (s) print (string) s;
@@ -201,6 +193,14 @@ Object ControlTimer
         self.AsignarTick(t);
       }
       glk_request_timer_events(self.tick);
+    ],
+    PausarTick [;                     ! Detiene el timer temporalmente
+      self.tick_pausado = self.tick;
+      self.DesactivarTick();
+    ],
+    ReanudarTick [;                   ! Reanuda el timer detenido
+      self.ActivarTick(self.tick_pausado);
+      self.tick_pausado = 0;
     ],
     DesactivarTick [;                 ! Desactiva el timer
       self.AsignarTick(0);
