@@ -8,6 +8,8 @@ System_file;
 #ifndef  ESCR_LIB;
 Constant ESCR_LIB;
 
+Include "Array";
+
 Message "Compilando librería de escritura letra a letra. Baltasar, el arquero.";
 
 Constant MAX_TAM_BUFFER = 310;
@@ -48,7 +50,7 @@ Constant LETRA_INVERSA = $$10000;
   while (1) {
     glk($00C0, gg_arguments);        ! glk_select(gg_arguments);
     if ((gg_arguments-->0) == 1) {
-      glk($00D6, 0);                 ! request_timer_events
+      ControlTimer.ReactivarTick();
       break;
     }
   }
@@ -73,7 +75,7 @@ class Escritura
     ],
     pausaLetra 1,
     pausaMensaje 150,
-    visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa timer;
+    visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa;
       escr_buffer_lib-->0 = MAX_TAM_BUFFER - ESCR_PRIMERA_LETRA;
 
       ! Para cada cadena a visualizar
@@ -81,7 +83,6 @@ class Escritura
         ! Para cada una de las cadenas
         ! Convertirlas a vector
         lon = PrintAnyToArray(escr_buffer_lib + WORDSIZE, MAX_TAM_BUFFER, (self.elemento(n)));
-!        lon = (self.elemento(n)).print_to_array(escr_buffer_lib);
 
         tipo_mensaje = self.elemento(n + 1);
         tipo_letra = self.elemento(n + 2);
@@ -97,7 +98,6 @@ class Escritura
            (tipo_mensaje == POR_LETRA && ~~hayTeletipo)) {
           print (string) self.elemento(n);
         } else {
-          timer = control_timer.timer_actual;
           if (self.sonido ~= 0) {
             Damusix.TocarCanal(CANAL_TELETIPO);
           }
@@ -108,10 +108,6 @@ class Escritura
           }
           if (self.sonido ~= 0) {
             Damusix.PararCanal(CANAL_TELETIPO);
-          }
-          if (timer ~= 0) {
-            control_timer.desactivar();
-            ActivarTimer();
           }
         }          
         switch (tipo_pausa) {

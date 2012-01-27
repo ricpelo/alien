@@ -3,6 +3,7 @@
 !% $MAX_STATIC_DATA=20000
 !% $MAX_PROP_TABLE_SIZE=61140
 !% $MAX_VERBS=200
+!% $MAX_ZCODE_SIZE=45000
 
 !
 ! "A·L·I·E·N" - Edición Especial
@@ -84,16 +85,17 @@ Constant CLR_GG_PERSBACK = CLR_GG_BLACK;
 ! Es importante que todos los timers tengan duración distinta, porque
 ! esa es la forma que tengo de distinguirlos (es muy cutre, pero va):
 
+Constant TIMER_TICK = 250;
 ! El timer a aplicar para el trueno:
-Constant TIMER_TRUENO = 3000;
+Constant TIMER_DURACION_TRUENO = 12;
 ! El timer para el laberinto es más largo:
-Constant TIMER_LABERINTO = 7000;
+Constant TIMER_DURACION_LABERINTO = 28;
 ! El timer para cuando el alien está en la misma localidad:
-Constant TIMER_ALIEN = 6000;
+Constant TIMER_DURACION_ALIEN = 24;
 ! Tiempo de espera desde que sale el rayo hasta que desaparece:
-Constant TIMER_ESPERA_TRUENO = 100;
+Constant TIMER_DURACION_ESPERA_TRUENO = 1;
 ! Timer de la autodestruccion:
-Constant TIMER_AUTODESTRUCCION = 4000;
+Constant TIMER_DURACION_AUTODESTRUCCION = 16;
 
 
 
@@ -187,13 +189,11 @@ Replace QuitarAcentos;
 
 Include "EParser";
 
-Replace EsperarTecla;
 Replace InitGlkWindow;
 Replace HandleGlkEvent;
 
 Include "SGW+DMX_NG";    ! Entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
-
 
 
 [ Curiosidades;
@@ -331,7 +331,7 @@ Object MensajesLibreria
               rtrue;
           10: rtrue;
           13: ! Reactivamos timer en caso de UNDO:
-              glk_request_timer_events(control_timer.timer_actual);
+              ControlTimer.ReactivarTick();
               "[Retrocediendo al turno anterior.]";
           17: switch (random(4)) {
                 1: "Está muy oscuro y no puedes ver nada.";
@@ -595,12 +595,6 @@ Class Lugar
           PNJ_Ruta(alien, MOVIMIENTO_PERSEGUIR, jugador);
         }
       }
-      
-      ! En el exterior, de vez en cuando suena un trueno. Usamos control_timer.activar()
-      ! porque ese método comprueba previamente si ya se había activado previamente el
-      ! mismo timer, con lo cual el timer no se reactiva si se vuelve a este punto antes
-      ! de que expire el timer anterior:
-      ActivarTimer();
     ],
   has
     ~luz;
@@ -612,9 +606,9 @@ Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
 Include "Decorado";       ! Objetos de decorado
-Include "Array";          ! Necesario para escr
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
+Include "Timer";
 
 
 Class DecoradoAmpliado
@@ -723,35 +717,6 @@ Class Contenedor
     ],
   has
     recipiente;
-
-
-! Controla el timer. Se usa sobre todo para el efecto del relámpago en el exterior,
-! pero también porque la rutina EsperarTecla desactiva el timer actual cuando
-! sale, así que aquí guardaremos el timer actual para que EsperarTecla pueda
-! restaurarlo:
-
-Object control_timer
-  with
-    ha_imprimido_algo true,
-    timer_actual 0,
-    preparar_impresion [;
-      if (hayTiempoReal && ~~(self.ha_imprimido_algo)) {
-        self.ha_imprimido_algo = true;
-        glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
-      }
-    ],
-    reiniciar_impresion [;
-      self.ha_imprimido_algo = false;
-    ],
-    activar [ t;
-      if (t ~= self.timer_actual) {
-        self.timer_actual = t;
-        glk_request_timer_events(t);
-      }
-    ],
-    desactivar [;
-      self.activar(0);
-    ];
 
 
 
@@ -967,9 +932,6 @@ Object nave1 "Interior de la nave"
           EncenderGraficosSub(true);
           viewImageCenter(Logo_Alien_jpg);
         }
-      }
-      if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
-        viewImageCenter(self.sgw_img);
       }
     ],
   has
@@ -1430,11 +1392,6 @@ Object nave2 "Parte posterior de la nave"
     al_e nave1,
     sgw_img Nave2_jpg,
     sgw_mus Nave_ogg,
-    cada_turno [;
-      if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) { 
-        viewImageCenter(self.sgw_img);
-      }
-    ],
   has
     luz;
 
@@ -1575,11 +1532,11 @@ Object linterna "linterna" armario
         if (bateria.energia <= 0) {
           bateria.energia = 0;
           self.apagar();
-          control_timer.preparar_impresion();
+          ControlTimer.PrepararImpresion();
           "^La linterna se ha quedado sin batería.";
         }
         if (bateria.nivel_carga() < 10) {
-          control_timer.preparar_impresion();
+          ControlTimer.PrepararImpresion();
           "^La linterna se está quedando sin batería...";
         }
       }
@@ -1627,12 +1584,6 @@ Object bateria "batería" linterna
 
 Class LugarExterior
   class Lugar,
-  with
-    cada_turno [;
-      if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
-        viewImageCenter(self.sgw_img);
-      }
-    ],
   has
     luz;
 
@@ -3358,7 +3309,7 @@ Class ZonaNorte
     ],
     cada_turno [;
       if (self.ZonaNorte::contador_muerte >= 15 && self == despensa) {
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         if (localizacion == laoscuridad) {
           print "^Sin apenas darte tiempo a reaccionar, algo blando, húmedo, frío y
                  repulsivo al tacto ";
@@ -3403,7 +3354,7 @@ Class ZonaNorte
       }
 
       if (self.ZonaNorte::contador_muerte == 10 or 12 or 14 or 16) {
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
       }
       switch (self.ZonaNorte::contador_muerte) {
         10: Damusix.TocarV(Arana_Corto_ogg, 50);
@@ -4714,7 +4665,7 @@ Object laberinto28
                 ApagarGraficosSub(true);
               }
               clearMainWindow();
-              control_timer.desactivar();    ! Para que no corra el tiempo ahora
+              ControlTimer.DesactivarTick();    ! Para que no corra el tiempo ahora
               tt_escape1.visualiza();
               Damusix.TocarV(Rugido_ogg);
               tt_escape2.visualiza();
@@ -4725,7 +4676,7 @@ Object laberinto28
               if (t) {
                 EncenderGraficosSub(true);
               }
-              ActivarTimer();               ! Para que vuelva a correr el tiempo
+              ControlTimer.ActivarTick();       ! Para que vuelva a correr el tiempo
               rtrue;
             } else {
               "¡No dejes a Jason aquí!";
@@ -6874,9 +6825,8 @@ Object alien_oscuridad laoscuridad
       if (alien in localizacion_real && localizacion_real ofclass Complejo) {
         if (alien.comportamiento == 1 or 3) {
           if (alien.oportunidad < 4) {
-            control_timer.activar(TIMER_ALIEN);
             if (alien.oportunidad > 0) {
-              control_timer.preparar_impresion();
+              ControlTimer.PrepararImpresion();
               print "^¡Notas que algo se dirige rápidamente hacia ti!^";
               Damusix.TocarV(Rugido_ogg);
             }
@@ -6921,8 +6871,7 @@ Object alien procesador
       "";
     ],
     llega [ dir;
-      control_timer.activar(TIMER_ALIEN);
-      control_timer.preparar_impresion();
+      ControlTimer.PrepararImpresion();
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == jugador && self.tiempo_restante > 0) {
         if (jason in LugarReal()) {
@@ -6948,7 +6897,7 @@ Object alien procesador
       if (self.tipo_de_movimiento == MOVIMIENTO_POR_META && self in entrada) {
         AlienBloqueaPuerta();
         if (LugarReal() == entrada) {
-          control_timer.preparar_impresion();
+          ControlTimer.PrepararImpresion();
           "¡Ves al monstruo tapando la entrada con una sustancia viscosa que se vuelve
            inmediatamente rígida!";
         }
@@ -6965,7 +6914,7 @@ Object alien procesador
     muerte_final [;
       Bandera_Fin(1);
       viewImageCenter(Alien_Mata_jpg);
-      control_timer.preparar_impresion();
+      ControlTimer.PrepararImpresion();
       "El monstruo salta sobre ti. Sientes sus afiladas garras hundirse en tu
        carne como si fuese mantequilla, y su poderosa boca se abre completamente
        alrededor de tu cabeza, que en pocos segundos deja de formar parte de tu
@@ -7007,9 +6956,7 @@ Object alien procesador
         self.oportunidad = 0;
         PNJ_Ruta(self, MOVIMIENTO_ALEATORIO);
         if (self in LugarReal()) {
-          control_timer.desactivar();
-          control_timer.activar(TIMER_ALIEN);
-          control_timer.preparar_impresion();
+          ControlTimer.PrepararImpresion();
           "^Vaya... Parece que ha dejado de seguirte... Aún no te ha visto...";
         }
       }
@@ -7031,7 +6978,7 @@ Object alien procesador
         }
         Bandera_Fin(1);
         viewImageCenter(Alien_Mata_jpg);
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         "Descargas una ráfaga de munición directamente en el ~corazón~ del monstruoso ser,
          provocando una lluvia verde de sangre ácida que cae directamente sobre tu cuerpo.
          Y mientras éste se disuelve, casi desintegrándose a marchas forzadas, pides por
@@ -7069,7 +7016,7 @@ Object alien procesador
           self.callado = false;
           rtrue;
         }
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         if (self.comportamiento == 1) {
           ! Se le da dos oportunidades. Después lo mata.
           if (self.oportunidad < 4) {
@@ -7082,7 +7029,6 @@ Object alien procesador
                    }
                  } else {
                    if (self.tiempo_restante ~= -1) {
-                     control_timer.activar(TIMER_ALIEN);
                      print "^¡El monstruo está aquí! Por suerte, parece que aún no ";
                      if (jason in LugarReal()) {
                        print "os ha visto...^";
@@ -7154,8 +7100,7 @@ Object alien procesador
         } else if (self.comportamiento == 3) {
           if (self.oportunidad < 4) {
             switch (self.oportunidad) {
-              0: control_timer.activar(TIMER_ALIEN);
-                 print "^¡El monstruo ";
+              0: print "^¡El monstruo ";
                  if (jason in LugarReal()) {
                    print "os";
                  } else {
@@ -7753,7 +7698,7 @@ Object detector_movimiento "detector de movimiento" rifle
       }
 
       if (self hasnt encendido) {
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         print "Está apagado.";
         rtrue;
       }
@@ -7779,7 +7724,7 @@ Object detector_movimiento "detector de movimiento" rifle
       if ((~~(self.primera_vez)) && alien.comportamiento == 3 &&
           alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente &&
           alien notin LugarReal()) {
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         switch (random(2)) {
           1: print "^¡", (_El) alien, " se está acercando! ¡Corre!^";
           2: print "^¡", (_El) alien, " se acerca!^";
@@ -7791,14 +7736,14 @@ Object detector_movimiento "detector de movimiento" rifle
         self.sonar();
         if (alien in LugarReal()) {
           if (localizacion == laoscuridad) {
-            control_timer.preparar_impresion();
+            ControlTimer.PrepararImpresion();
             t = true;
             print (s_b) "^¡El detector capta movimiento aquí mismo!^";
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
             if (self.primera_vez || ~~hayTiempoReal) {
-              control_timer.preparar_impresion();
+              ControlTimer.PrepararImpresion();
               t = true;
               print "^El detector capta movimiento a una distancia de ",
                      (number) 10 * alien.distancia, " metros hacia ", (el) alien.sentido;
@@ -7816,7 +7761,7 @@ Object detector_movimiento "detector de movimiento" rifle
         if (t) {
           if (self.primera_vez && hayTiempoReal) {
             self.primera_vez = false;
-            control_timer.desactivar();
+            ControlTimer.DesactivarTick();
             print (s_em) " [A partir de ahora, el detector de movimiento informará de la
                           presencia de la criatura a través de la barra de estado, en la
                           parte superior derecha, junto al contador de turnos. Por tanto,
@@ -7829,7 +7774,7 @@ Object detector_movimiento "detector de movimiento" rifle
             }
             barra_estado.dibujar();
 !            EsperarTecla();
-            ActivarTimer();
+            ControlTimer.ActivarTick();
           } else {
             print "^";
           }
@@ -8135,7 +8080,7 @@ Object autodestruccion
 
           if (self.falta(self.tiempo - 1) ~= t) {
             if (t > 0) {
-              control_timer.preparar_impresion();
+              ControlTimer.PrepararImpresion();
 
               print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8163,7 +8108,7 @@ Object autodestruccion
           
         } else {
           t = self.falta();
-          control_timer.preparar_impresion();
+          ControlTimer.PrepararImpresion();
 
           print (s_b) "^MEGAFONÍA: ", "~Falta";
 
@@ -8187,7 +8132,7 @@ Object autodestruccion
       } else {
         Bandera_Fin(1);
         Damusix.TocarV(Explosion_ogg);
-        control_timer.preparar_impresion();
+        ControlTimer.PrepararImpresion();
         "^El complejo estalla en una gigantesca explosión, llevándose consigo todo lo que
          había en su interior y alrededores... incluyéndote a ti.^";
       }
@@ -8609,7 +8554,13 @@ Object tt_final
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
-  ActivarTimer();
+  ControlTimer.AsignarTick(TIMER_TICK);
+  timer_espera_trueno.AsignarGestor();
+  timer_trueno.AsignarGestor();
+  timer_alien.AsignarGestor();
+  timer_laberinto.AsignarGestor();
+  timer_autodestruccion.AsignarGestor();
+  ControlTimer.ActivarTick();
 ];
 
 
@@ -9249,35 +9200,125 @@ ZIPI_Otro ZIPI_Salir
 ];
 
 
-[ ActivarTimer l;
-  l = LugarReal();
-  if (banderafin ~= 0) {
-    control_timer.desactivar();
-  } else if (l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3) {
-    control_timer.activar(TIMER_LABERINTO);
-  } else if (alien.comportamiento == 4) {
-    control_timer.activar(TIMER_AUTODESTRUCCION);
-  } else if (EsExterior(l) || l == nave1 or nave2) {
-    control_timer.activar(TIMER_TRUENO);
-  } else if (alien notin l) {
-    control_timer.desactivar();
-  }
-];
+Object timer_espera_trueno
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_ESPERA_TRUENO,
+    condicion [;
+      return timer_trueno.hay_trueno;
+    ],
+    evento [;
+      timer_trueno.hay_trueno = false;
+      ControlTimer.DesactivarMutex();
+      viewImageCenter(LugarReal().sgw_img);
+    ];
 
 
-[ RestaurarLineaOrdenes buffer;
-  if (banderafin == 1) {
-    print "^^";
-    M__L(##Miscelanea, 3);
-    ActualizarEstatus();
-    AfterGameOver();
-  }
-  ImprimirPrompt();
-  buffer-->0 = gg_event-->2;
-  glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
-                         INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
-  return 1;
-];
+Object timer_trueno
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_TRUENO,
+    condicion [ l;
+      if (self.hay_trueno) rfalse;
+      l = LugarReal();
+      return EsExterior(l) || l == nave1 or nave2;
+    ],
+    hay_trueno false,
+    evento [ l r p;
+      ReduceBateriaEnTimer(1);
+      l = LugarReal();
+      if (l == nave1 or nave2 && r < 35) {
+        r = 20 * random(5);
+        if (r >= 65) {
+          if (l == nave1) {
+            viewImageCenter(Nave1_Trueno_jpg);
+          } else {
+            viewImageCenter(Nave2_Trueno_jpg);
+          }
+          Damusix.TocarV(Trueno_ogg, random(4));
+          ControlTimer.ActivarMutex(timer_espera_trueno);
+          self.hay_trueno = true;
+        }
+      } else if (EsExterior(l) && r < 38) {
+        r = 20 * random(5);
+        p = 80;
+        if (r >= p) {
+          viewImageCenter(Fondo_Blanco_jpg);
+        }
+        Damusix.TocarV(Trueno_ogg, r);
+        if (r >= p) {
+          self.hay_trueno = true;
+        }
+      }
+    ];
+
+
+Object timer_laberinto
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_LABERINTO,
+    condicion [ l;
+      l = LugarReal();
+      return l ofclass Complejo && alien notin l && alien.comportamiento == 1 or 3;
+    ],
+    evento [ l r snd;
+      ReduceBateriaEnTimer(2);
+      l = LugarReal();
+      if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
+        if (l ofclass Laberinto || l ofclass Balcon) {
+          r = 20 * random(3) + 40;
+          switch (random(4)) {
+            1: snd = Gota_Oscura_ogg;
+            2: snd = Gotas_Agua_ogg;
+            3: snd = Cueva_Oscura_ogg;
+            4: if (alien notin l) {
+                 snd = Monstruo_ogg;
+                 r = 100 / alien.distancia;
+               } else {
+                 snd = Cueva_Oscura_ogg;
+               }
+          }
+          Damusix.TocarV(snd, r);
+        } else if (l ofclass ZonaNorte && hayTiempoReal) {
+          l.cada_turno();
+        }
+        if (~~hayTiempoReal) rtrue;
+        if (alien notin l) {
+          alien.seHaMovido = false;
+          if (alien.condicion_movimiento()) {
+            alien.movimiento();
+          }
+          if (alien.seHaMovido) {
+            detector_movimiento.cada_turno();
+            barra_estado.dibujar();
+          }
+        }
+      }
+    ];
+
+
+Object timer_autodestruccion
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_AUTODESTRUCCION,
+    condicion [;
+      return alien.comportamiento == 4 && hayTiempoReal;
+    ],
+    evento [;
+      autodestruccion.cuenta_atras();
+    ];
+
+
+Object timer_alien
+  class GestorTimer
+  with
+    duracion TIMER_DURACION_ALIEN,
+    condicion [;
+      return alien in LugarReal() && hayTiempoReal;
+    ],
+    evento [;
+      alien.cada_turno();
+    ];
 
 
 [ ReduceBateriaEnTimer dec;
@@ -9290,97 +9331,9 @@ ZIPI_Otro ZIPI_Salir
 ];
 
 
-[ HandleGlkEvent ev context buffer snd r l p;
+[ HandleGlkEvent ev context buffer;
   SGW_HandleGlk(ev);
-  if (banderafin ~= 0) {
-    control_timer.desactivar();
-    rtrue;
-  }
-  context = context;  ! Para evitar el warning
-  l = LugarReal();
-  r = random(100);
-  
-  switch (ev-->0) {
-    evtype_Timer:
-      control_timer.reiniciar_impresion();
-      ! Hemos dibujado un relámpago y ahora lo quitamos dibujando
-      ! la localidad actual:
-      if (control_timer.timer_actual == TIMER_ESPERA_TRUENO) {
-        viewImageCenter(l.sgw_img);
-        control_timer.activar(TIMER_TRUENO);
-        return 1;
-      ! Dibujamos un relámpago:
-      } else if (control_timer.timer_actual == TIMER_TRUENO) {
-        ReduceBateriaEnTimer(1);
-        if (l == nave1 or nave2 && r < 35) {
-          r = 20 * random(5);
-          if (r >= 65) {
-            if (l == nave1) {
-              viewImageCenter(Nave1_Trueno_jpg);
-            } else {
-              viewImageCenter(Nave2_Trueno_jpg);
-            }
-            Damusix.TocarV(Trueno_ogg, random(4));
-            control_timer.activar(TIMER_ESPERA_TRUENO);
-            return 1;
-          }
-        } else if (EsExterior(l) && r < 38) {
-          r = 20 * random(5);
-          p = 80;
-          if (r >= p) {
-            viewImageCenter(Fondo_Blanco_jpg);
-          }
-          Damusix.TocarV(Trueno_ogg, r);
-          if (r >= p) {
-            control_timer.activar(TIMER_ESPERA_TRUENO);
-            return 1;
-          }
-        }
-      ! Dentro del laberinto:
-      } else if (control_timer.timer_actual == TIMER_LABERINTO) {
-        ReduceBateriaEnTimer(2);
-        if (l ofclass Complejo && alien.comportamiento == 1 or 3) {
-          if (l ofclass Laberinto || l ofclass Balcon) {
-            r = 20 * random(3) + 40;
-            switch (random(4)) {
-              1: snd = Gota_Oscura_ogg;
-              2: snd = Gotas_Agua_ogg;
-              3: snd = Cueva_Oscura_ogg;
-              4: if (alien notin l) {
-                   snd = Monstruo_ogg;
-                   r = 100 / alien.distancia;
-                 } else {
-                   snd = Cueva_Oscura_ogg;
-                 }
-            }
-            Damusix.TocarV(snd, r);
-          } else if (l ofclass ZonaNorte && hayTiempoReal) {
-            l.cada_turno();
-          }
-          if (~~hayTiempoReal) return 1;
-          if (alien notin l) {
-            alien.seHaMovido = false;
-            if (alien.condicion_movimiento()) {
-              alien.movimiento();
-            }
-            if (alien.seHaMovido) {
-              detector_movimiento.cada_turno();
-              barra_estado.dibujar();
-            }
-          }
-          return RestaurarLineaOrdenes(buffer);
-        }
-      ! Se ha activado la autodestrucción y suena la megafonía:
-      } else if (control_timer.timer_actual == TIMER_AUTODESTRUCCION && hayTiempoReal) {
-        autodestruccion.cuenta_atras();
-        return RestaurarLineaOrdenes(buffer);
-      ! El alien está en nuestra misma localidad:
-      } else if (control_timer.timer_actual == TIMER_ALIEN && hayTiempoReal) {
-        alien.cada_turno();
-        return RestaurarLineaOrdenes(buffer);
-      }
-  }
-  return 1;
+  ControlTimer.HandleGlk(ev, context, buffer);
 ];
 
 
@@ -9404,25 +9357,6 @@ ZIPI_Otro ZIPI_Salir
   else                             move i to localizacion;
   if (tmp ~= localizacion && localizacion ~= laoscuridad)            ! (c) Alpha
     ImprimirOEjecutar(i, describir);                                 ! (c) Alpha
-];
-
-
-[ EsperarTecla s delay timer;
-  if (s) print (string) s;
-  timer = control_timer.timer_actual;   ! Guardamos timer actual (0 si no hay)
-  glk($00D6, delay * 5);                ! request_timer_events
-  glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
-  while (1) {
-    glk($00C0, gg_arguments);           ! glk_select(gg_arguments);
-    if ((gg_arguments-->0) == 2) break; ! 2=evType_CharInput
-    if ((gg_arguments-->0) == 1) {
-      glk($00D3, gg_mainwin);           ! cancel_char_event
-      glk($00D6, timer);                ! request_timer_events
-      return 0;
-    }
-  }
-  glk($00D6, timer);                    ! request_timer_events
-  return gg_arguments-->2;
 ];
 
 
@@ -9622,7 +9556,7 @@ Object tt_computadora
   Damusix.PararCanal(CANAL_FONDO);
   Damusix.PararCanal(CANAL_DETECTOR);
   Damusix.PararCanal(CANAL_SIRENA);
-  control_timer.desactivar();
+  ControlTimer.DesactivarTick();
   
   if (bf == 1) {
     autodestruccion.falta_en_barra = 0;
@@ -9673,7 +9607,6 @@ Object tt_computadora
   Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, VOLUMEN_SIRENA,
                        SONIDO_BUCLE_INFINITO);
   Damusix.Tocar(Sirena_ogg);
-  ActivarTimer();
   ArrancarDaemon(autodestruccion);
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, jugador);
   laberinto28.sgw_img = Ascensor_Abierto_jpg;
@@ -10166,9 +10099,8 @@ Extend 'di' first
 ];
 
 
-[ ConfiguracionSub timer v m;
-  timer = control_timer.timer_actual;
-  control_timer.desactivar();
+[ ConfiguracionSub v m;
+  ControlTimer.DesactivarTick();
   if (hayGraficos) {
     ApagarGraficosSub(true);
     hayGraficos = true;
@@ -10190,7 +10122,7 @@ Extend 'di' first
   }
   clearTextWindow();
   if (hayTiempoReal) {
-    control_timer.activar(timer);
+    ControlTimer.ActivarTick();
   }
   <<Mirar>>;
 ];
@@ -10619,7 +10551,7 @@ Endif;
 ];
 
 
-[ PistasSub t timer v;
+[ PistasSub t v;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
@@ -10629,8 +10561,7 @@ Endif;
              (s_in) "PISTAS NO", (s_em) ", y eso te impedirá obtener ayuda en la
              sesión de juego actual. Si sigues queriendo una pista, pon ",
              (s_in) "PISTAS", (s_em) " otra vez.]^";
-    1: timer = control_timer.timer_actual;
-       control_timer.desactivar();
+    1: ControlTimer.DesactivarTick();
        t = false;
        if (hayGraficos) {
          t = true;
@@ -10651,7 +10582,7 @@ Endif;
          EncenderGraficosSub(true);
        }
        clearTextWindow();
-       control_timer.activar(timer);
+       ControlTimer.ActivarTick();
        <<Mirar>>;
     2: print (s_em) "[Las pistas han sido desactivadas.]^";
   }
