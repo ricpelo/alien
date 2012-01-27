@@ -33,13 +33,15 @@ Class GestorTimer
     AsignarGestor [ pos;
       ControlTimer.AsignarGestor(self, pos);
     ],
+    EliminarGestor [ pos;
+      ControlTimer.EliminarGestor(self, pos);
+    ],
     ActivarMutex [;
       ControlTimer.ActivarMutex(self);
     ];
 
 Object ControlTimer
-!  private
-  with
+  private
     timers 0 0 0 0 0 0 0 0 0 0,
     timer_actual 0,
     timer_maximo 0,
@@ -78,7 +80,7 @@ Object ControlTimer
     DesactivarTimer [;
       self.ActivarTimer(0);
     ],
-!  with
+  with
     CTEsperarTecla [ s delay;
       if (s) print (string) s;
       glk($00D6, delay * 5);                ! request_timer_events
@@ -187,7 +189,10 @@ Object ControlTimer
     AsignarTick [ t;
       self.tick = t;
     ],
-    ActivarTick [;
+    ActivarTick [ t;
+      if (t ~= 0) {
+        self.AsignarTick(t);
+      }
       self.ActivarTimer(self.tick);
     ],
     DesactivarTick [;

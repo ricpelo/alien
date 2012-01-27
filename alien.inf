@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=61140
+!% $MAX_PROP_TABLE_SIZE=61440
 !% $MAX_VERBS=200
 !% $MAX_ZCODE_SIZE=45000
 
@@ -85,17 +85,17 @@ Constant CLR_GG_PERSBACK = CLR_GG_BLACK;
 ! Es importante que todos los timers tengan duración distinta, porque
 ! esa es la forma que tengo de distinguirlos (es muy cutre, pero va):
 
-Constant TIMER_TICK = 250;
+Constant TIMER_TICK = 1000;
 ! El timer a aplicar para el trueno:
-Constant TIMER_DURACION_TRUENO = 12;
+Constant TIMER_DURACION_TRUENO = 3;
 ! El timer para el laberinto es más largo:
-Constant TIMER_DURACION_LABERINTO = 28;
+Constant TIMER_DURACION_LABERINTO = 7;
 ! El timer para cuando el alien está en la misma localidad:
-Constant TIMER_DURACION_ALIEN = 24;
+Constant TIMER_DURACION_ALIEN = 6;
 ! Tiempo de espera desde que sale el rayo hasta que desaparece:
 Constant TIMER_DURACION_ESPERA_TRUENO = 1;
 ! Timer de la autodestruccion:
-Constant TIMER_DURACION_AUTODESTRUCCION = 16;
+Constant TIMER_DURACION_AUTODESTRUCCION = 4;
 
 
 
@@ -8555,11 +8555,11 @@ Object tt_final
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
   ControlTimer.AsignarTick(TIMER_TICK);
-  timer_espera_trueno.AsignarGestor();
-  timer_trueno.AsignarGestor();
-  timer_alien.AsignarGestor();
-  timer_laberinto.AsignarGestor();
-  timer_autodestruccion.AsignarGestor();
+!  timer_espera_trueno.AsignarGestor();
+  timer_trueno.AsignarGestor(1);
+  timer_alien.AsignarGestor(2);
+  timer_laberinto.AsignarGestor(3);
+  timer_autodestruccion.AsignarGestor(4);
   ControlTimer.ActivarTick();
 ];
 
@@ -9210,7 +9210,10 @@ Object timer_espera_trueno
     evento [;
       timer_trueno.hay_trueno = false;
       ControlTimer.DesactivarMutex();
+      self.EliminarGestor();
+      ControlTimer.ActivarTick(TIMER_TICK);
       viewImageCenter(LugarReal().sgw_img);
+      rtrue; ! Hace que el resto de los eventos se salten hasta el siguiente tick
     ];
 
 
@@ -9224,6 +9227,12 @@ Object timer_trueno
       return EsExterior(l) || l == nave1 or nave2;
     ],
     hay_trueno false,
+    preparar_espera_trueno [;
+      ControlTimer.AsignarGestor(timer_espera_trueno, 0);
+      ControlTimer.ActivarMutex(timer_espera_trueno);
+      ControlTimer.ActivarTick(100);
+      self.hay_trueno = true;
+    ],
     evento [ l r p;
       ReduceBateriaEnTimer(1);
       l = LugarReal();
@@ -9236,8 +9245,7 @@ Object timer_trueno
             viewImageCenter(Nave2_Trueno_jpg);
           }
           Damusix.TocarV(Trueno_ogg, random(4));
-          ControlTimer.ActivarMutex(timer_espera_trueno);
-          self.hay_trueno = true;
+          self.preparar_espera_trueno();
         }
       } else if (EsExterior(l) && r < 38) {
         r = 20 * random(5);
@@ -9247,7 +9255,7 @@ Object timer_trueno
         }
         Damusix.TocarV(Trueno_ogg, r);
         if (r >= p) {
-          self.hay_trueno = true;
+          self.preparar_espera_trueno();
         }
       }
     ];
