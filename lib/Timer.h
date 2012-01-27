@@ -1,6 +1,8 @@
 Include "infglk";
 
+
 System_file;
+
 
 #ifdef HandleGlkEvent;
   Message "[TIMER: Usando rutina HandleGlkEvent() proporcionada por el juego]";
@@ -8,15 +10,18 @@ System_file;
   Message "[TIMER: -> < ControlTimer.HandleGlk(ev, context, buffer) > ]";
 #endif; ! HandleGlkEvent
 
+
 ! Nuestra particular versión de HandleGlkEvent:
 [ HandleGlkEvent ev context buffer;
   ControlTimer.HandleGlk(ev, context, buffer);
 ];
 
+
 ! Nuestra particular versión de EsperarTecla:
 [ EsperarTecla s delay;
   return ControlTimer.CTEsperarTecla(s, delay);
 ];
+
 
 #ifndef VR;
   [ VR valor;
@@ -26,6 +31,7 @@ System_file;
       return valor;
   ];
 #endif;
+
 
 Class GestorTimer
   with
@@ -40,13 +46,17 @@ Class GestorTimer
     ],
     ActivarMutex [;          ! Activa el mutex sobre este gestor
       ControlTimer.ActivarMutex(self);
+    ],
+    PosicionDelGestor [;     ! En qué posición está dentro del array
+      return ControlTimer.BuscarPosicion(self);
     ];
+
 
 Object ControlTimer
   private
     gestores 0 0 0 0 0 0 0 0 0 0,     ! Array de gestores de eventos
     duracion_maxima 0,                ! Duración máxima entre los gestores (en nº de ticks) 
-    tick 0,                           ! Duración del tick (en ms)
+    tick 0,                           ! Duración del tick (en milisegundos)
     tick_pausado 0,                   ! Aquí se guarda el tick cuando se pausa
     contador_ticks 1,                 ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                          ! Semáforo de exclusión mutua
@@ -125,7 +135,17 @@ Object ControlTimer
           }
       }
     ],
-    AsignarGestor [ g pos i;          ! Asigna un gestor a una posición del array
+    BuscarPosicion [ g i pos;         ! Da la posición de un gestor en el array
+      pos = -1;
+      for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+        if (self.&gestores-->i == g) {
+          pos = i;
+          break;
+        }
+      }
+      return pos;                     ! Devuelve -1 si no se encuentra
+    ],
+    AsignarGestor [ g pos;            ! Asigna un gestor a una posición del array
       if (pos ~= 0) {
         if (pos < 0 || pos >= self.#gestores / WORDSIZE) {
           #ifdef DEBUG;
@@ -135,13 +155,10 @@ Object ControlTimer
             rtrue;
           #endif;
         }
-      } else {  
-        for (i = 0: i < self.#gestores / WORDSIZE: i++) {
-          if (self.&gestores-->i == 0) break;
-        }
-        if (i < self.#gestores / WORDSIZE) {
-          pos = i;
-        } else {
+      } else {
+        ! Si no se indica posición, buscamos el siguiente hueco vacío:
+        pos = self.BuscarPosicion(0);
+        if (pos < 0) {
           #ifdef DEBUG;
             "ERROR: Superado número máximo de gestores de timer.";
           #endif;
@@ -155,15 +172,9 @@ Object ControlTimer
         self.duracion_maxima = g.duracion;
       }
     ],
-    EliminarGestor [ g pos i d;       ! Elimina un gestor dados él o su posición en el array
-      if (g ~= 0 && g ofclass GestorTimer) {
-        pos = -1;
-        for (i = 0: i < self.#gestores / WORDSIZE: i++) {
-          if (self.&gestores-->i == g) {
-            pos = i;
-            break;
-          }
-        }
+    EliminarGestor [ g pos d;         ! Elimina un gestor dados él o su posición en el array
+      if (g ~= 0) {
+        pos = self.BuscarPosicion(g);
         if (pos == -1) {
           rfalse;
         }
