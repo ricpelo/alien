@@ -8,10 +8,12 @@ System_file;
   Message "[TIMER: -> < ControlTimer.HandleGlk(ev, context, buffer) > ]";
 #endif; ! HandleGlkEvent
 
+! Nuestra particular versión de HandleGlkEvent:
 [ HandleGlkEvent ev context buffer;
   ControlTimer.HandleGlk(ev, context, buffer);
 ];
 
+! Nuestra particular versión de EsperarTecla:
 [ EsperarTecla s delay;
   return ControlTimer.CTEsperarTecla(s, delay);
 ];
@@ -27,29 +29,28 @@ System_file;
 
 Class GestorTimer
   with
-    condicion true,
-    duracion  0,
-    evento [; rfalse; ],
-    AsignarGestor [ pos;
+    condicion true,          ! Si es false, no se ejecutará el evento
+    duracion  0,             ! Número de ticks necesarios para ejecutarse
+    evento [; rfalse; ],     ! El evento a ejecutar
+    AsignarGestor [ pos;     ! Añade este gestor a la lista de gestores
       ControlTimer.AsignarGestor(self, pos);
     ],
-    EliminarGestor [ pos;
-      ControlTimer.EliminarGestor(self, pos);
+    EliminarGestor [;        ! Elimina este gestor de la lista de gestores
+      ControlTimer.EliminarGestor(self, 0);
     ],
-    ActivarMutex [;
+    ActivarMutex [;          ! Activa el mutex sobre este gestor
       ControlTimer.ActivarMutex(self);
     ];
 
 Object ControlTimer
   private
-    timers 0 0 0 0 0 0 0 0 0 0,
-    timer_actual 0,
-    timer_maximo 0,
-    tick 0,
-    contador_ticks 1,
-    mutex 0,
-    ha_imprimido_algo true,
-    RestaurarLineaOrdenes [ buffer;
+    gestores 0 0 0 0 0 0 0 0 0 0,     ! Array de gestores de eventos
+    duracion_maxima 0,                ! Duración máxima entre los gestores (en nº de ticks) 
+    tick 0,                           ! Duración del tick (en ms)
+    contador_ticks 1,                 ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
+    mutex 0,                          ! Semáforo de exclusión mutua
+    ha_imprimido_algo true,           ! Para saber si hay que restaurar la línea de órdenes
+    RestaurarLineaOrdenes [ buffer;   ! Restaura la línea de órdenes
       if (banderafin == 1) {
         print "^^";
         M__L(##Miscelanea, 3);
@@ -62,26 +63,26 @@ Object ControlTimer
                              INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
       return 1;
     ],
-    RecalcularMaximo [ i max;
+    RecalcularMaximo [ i max;         ! Vuelve a calcular la duración máxima
       max = -1;
-      for (i = 0: i < self.#timers / WORDSIZE: i++) {
-        if (self.&timers-->i > max) {
-          max = self.&timers-->i;
+      for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+        if (self.&gestores-->i > max) {
+          max = self.&gestores-->i;
         }
       }
-      self.timer_maximo = max;
+      self.duracion_maxima = max;
     ],
-    ActivarTimer [ t;
-      if (t ~= self.timer_actual) {
-        self.timer_actual = t;
-        glk_request_timer_events(t);
-      }
-    ],
-    DesactivarTimer [;
-      self.ActivarTimer(0);
-    ],
+!    ActivarTimer [ t;
+!      if (t ~= self.timer_actual) {
+!        self.timer_actual = t;
+!        glk_request_timer_events(t);
+!      }
+!    ],
+!    DesactivarTimer [;
+!      self.ActivarTimer(0);
+!    ],
   with
-    CTEsperarTecla [ s delay;
+    CTEsperarTecla [ s delay;         ! Nuestra propia versión de EsperarTecla
       if (s) print (string) s;
       glk($00D6, delay * 5);                ! request_timer_events
       glk($00D2, gg_mainwin);               ! glk_request_char_event(gg_mainwin);
@@ -97,16 +98,20 @@ Object ControlTimer
       glk($00D6, self.tick);
       return gg_arguments-->2;
     ],
-    HandleGlk [ev context buffer i t;
+    HandleGlk [ev context buffer i t; ! Nuestra versión de HandleGlkEvent
       context = context;
       switch (ev-->0) {
         evtype_Timer:
           self.ReiniciarImpresion();
-          for (i = 0: i < self.#timers / WORDSIZE: i++) {
-            t = self.&timers-->i;
+          for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+            t = self.&gestores-->i;
+            ! Si hay gestor y su duración es múltiplo del tick:
             if (t ~= 0 && self.contador_ticks % t.duracion == 0) {
+              ! Si no hay mutex o lo tiene asignado el gestor t:
               if (self.mutex == 0 or t) {
+                ! Si la condición se cumple:
                 if (VR(t.condicion)) {
+                  ! Si el evento retorna true:
                   if (t.evento()) {
                     break;
                   }
@@ -114,11 +119,13 @@ Object ControlTimer
               }
             }
           }
-          if (self.contador_ticks >= self.timer_maximo) {
+          ! Contador cíclico entre 1 y duracion_maxima:
+          if (self.contador_ticks >= self.duracion_maxima) {
             self.contador_ticks = 1;
           } else {
             self.contador_ticks++;
           }
+          ! Si se ha imprimido algo en algún gestor, restauramos:
           if (self.ha_imprimido_algo) {
             return self.RestaurarLineaOrdenes(buffer);
           } else {
@@ -126,9 +133,9 @@ Object ControlTimer
           }
       }
     ],
-    AsignarGestor [ g pos i;
+    AsignarGestor [ g pos i;          ! Asigna un gestor a una posición del array
       if (pos ~= 0) {
-        if (pos < 0 || pos >= self.#timers / WORDSIZE) {
+        if (pos < 0 || pos >= self.#gestores / WORDSIZE) {
           #ifdef DEBUG;
             "ERROR: La posición para el gestor de timer sobrepasa los límites.";
           #endif;
@@ -137,10 +144,10 @@ Object ControlTimer
           #endif;
         }
       } else {  
-        for (i = 0: i < self.#timers / WORDSIZE: i++) {
-          if (self.&timers-->i == 0) break;
+        for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+          if (self.&gestores-->i == 0) break;
         }
-        if (i < self.#timers / WORDSIZE) {
+        if (i < self.#gestores / WORDSIZE) {
           pos = i;
         } else {
           #ifdef DEBUG;
@@ -151,16 +158,16 @@ Object ControlTimer
           #endif;
         }
       }
-      self.&timers-->pos = g;
-      if (g.duracion > self.timer_maximo) {
-        self.timer_maximo = g.duracion;
+      self.&gestores-->pos = g;
+      if (g.duracion > self.duracion_maxima) {
+        self.duracion_maxima = g.duracion;
       }
     ],
-    EliminarGestor [ g pos i d;
+    EliminarGestor [ g pos i d;       ! Elimina un gestor dados él o su posición en el array
       if (g ~= 0 && g ofclass GestorTimer) {
         pos = -1;
-        for (i = 0: i < self.#timers / WORDSIZE: i++) {
-          if (self.&timers-->i == g) {
+        for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+          if (self.&gestores-->i == g) {
             pos = i;
             break;
           }
@@ -168,56 +175,56 @@ Object ControlTimer
         if (pos == -1) {
           rfalse;
         }
-      } else if (pos < 0 || pos >= self.#timers / WORDSIZE) {
+      } else if (pos < 0 || pos >= self.#gestores / WORDSIZE) {
         rfalse;
       }
-      d = (self.&timers-->pos).duracion;
-      self.&timers-->pos = 0;
-      if (d == self.timer_maximo) {
+      d = (self.&gestores-->pos).duracion;
+      self.&gestores-->pos = 0;
+      if (d == self.duracion_maxima) {
         self.RecalcularMaximo();
       }
     ],
-    PrepararImpresion [;
+    PrepararImpresion [;              ! Llamada por los gestores antes de imprimir algo
       if (~~(self.ha_imprimido_algo)) {
         self.ha_imprimido_algo = true;
         glk_cancel_line_event(gg_mainwin, gg_event);    ! Cancelamos la entrada de usuario
       }
     ],
-    ReiniciarImpresion [;
+    ReiniciarImpresion [;             ! Reinicia el indicador de 'imprimido algo'
       self.ha_imprimido_algo = false;
     ],
-    AsignarTick [ t;
+    AsignarTick [ t;                  ! Asigna la duración del tick
       self.tick = t;
     ],
-    ActivarTick [ t;
+    ActivarTick [ t;                  ! Activa el timer (opcionalmente, asignando el tick antes)
       if (t ~= 0) {
         self.AsignarTick(t);
       }
-      self.ActivarTimer(self.tick);
+      glk_request_timer_events(self.tick);
     ],
-    DesactivarTick [;
-      self.ActivarTimer(0);
+    DesactivarTick [;                 ! Desactiva el timer
+      self.AsignarTick(0);
+      self.ActivarTick();
     ],
-    ReactivarTick [;
+    ReactivarTick [;                  ! Reactiva el timer (útil en algunos casos)
       self.DesactivarTick();
       self.ActivarTick();
     ],
-    ActivarMutex [ g;
+    ActivarMutex [ g;                 ! Activa el mutex sobre un gestor
       self.mutex = g;
     ],
-    DesactivarMutex [;
+    DesactivarMutex [;                ! Desactiva el mutex si lo hubiera
       self.mutex = 0;
     ],
-    Reiniciar [ i;
-      self.DesactivarTimer();
+    Reiniciar [ i;                    ! Pone todas las propiedades a sus valores por defecto
+      self.DesactivarTick();
       self.tick = 0;
-      self.timer_actual = 0;
-      self.timer_maximo = 0;
+      self.duracion_maxima = 0;
       self.contador_ticks = 1;
       self.mutex = 0;
       self.ha_imprimido_algo = true;
-      for (i = 0: i < self.#timers / WORDSIZE: i++) {
-        self.&timers-->i = 0;
+      for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+        self.&gestores-->i = 0;
       }
     ];
 
