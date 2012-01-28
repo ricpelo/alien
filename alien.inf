@@ -1658,6 +1658,7 @@ Object junto_procesador "Junto al procesador atmosférico"
             print "^Y devolviéndote la linterna, concluye...^";
             HablaJason("Y tome su linterna. Está muy oscuro ahí dentro.");
           }
+          viewImageCenter(self.sgw_img); ! Por si acaso coincide con un trueno
           EsperarTecla();
         }
     ],
@@ -9333,7 +9334,8 @@ Object timer_alien
   with
     duracion TIMER_DURACION_ALIEN,
     condicion [;
-      return alien in LugarReal() && hayTiempoReal;
+      return alien in LugarReal() && alien.comportamiento == 1 or 3 &&
+             hayTiempoReal;
     ],
     evento [;
       alien.cada_turno();
@@ -9909,9 +9911,9 @@ Verb meta 'xrecarga'
 EndIf;
 
 Verb 'recarga' 'carga' 'recargar'
-  *                  -> Recargar
-  * noun             -> Recargar
-  * noun 'en' noun   -> RecargarEn;
+  *                      -> Recargar
+  * noun                 -> Recargar
+  * noun 'en'/'con' noun -> RecargarEn;
 
 Extend 'cargar' last
   *                  -> Recargar
@@ -10230,10 +10232,12 @@ Extend 'di' first
   hayGraficos = true;
   openGraphicWindow(altoVentanaGrafica);
   clearGraphicWindow();
-  if (LugarReal() provides sgw_img) {
-    viewImageCenter(LugarReal().sgw_img);
-  } else {
-    viewImageCenter(Logo_Alpha_Aventuras_jpg);
+  if (localizacion ~= laoscuridad) {
+    if (LugarReal() provides sgw_img) {
+      viewImageCenter(LugarReal().sgw_img);
+    } else {
+      viewImageCenter(Logo_Alpha_Aventuras_jpg);
+    }
   }
   if (~~t) {
     glk_set_style(style_Emphasized);
@@ -10295,7 +10299,7 @@ Extend 'di' first
 
 
 [ RecargarEnSub;
-  if (uno ~= cargador) {
+  if (uno ~= cargador || cargador notin LugarReal()) {
     "Sólo se puede recargar si hay un recargador cerca.";
   }
 ];
