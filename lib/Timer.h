@@ -231,8 +231,10 @@ Object ControlTimer
     ActivarTick [ t;                      ! Activa el timer (opcionalmente, asignando el tick antes)
       if (t ~= 0) {
         self.AsignarTick(t);
+      } else {
+        t = self.tick;
       }
-      glk($00D6, self.tick);              ! glk_request_timer_events
+      glk($00D6, t);                      ! glk_request_timer_events
     ],
     PausarTick [;                         ! Detiene el timer temporalmente
       self.tick_pausado = self.tick;
@@ -246,9 +248,10 @@ Object ControlTimer
       self.AsignarTick(0);
       self.ActivarTick();
     ],
-    ReactivarTick [;                      ! Reactiva el timer (útil en algunos casos)
+    ReactivarTick [ t;                    ! Reactiva el timer (útil en algunos casos)
+      t = self.tick;
       self.DesactivarTick();
-      self.ActivarTick();
+      self.ActivarTick(t);
     ],
     ActivarMutex [ g;                     ! Activa el mutex sobre un gestor
       self.mutex = g;
