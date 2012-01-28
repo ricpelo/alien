@@ -5426,8 +5426,9 @@ Object jason "Jason" nave1
             rtrue;
           }
         }
+        self.hablar = false;
         HablaJason("No vuelva a hacerlo. En serio. No lo haga.");
-!        rtrue;
+        rtrue;
 
       Tocar:
         if (self.comprobar_inconsciencia()) {
