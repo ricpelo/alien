@@ -176,22 +176,18 @@ Object ControlTimer
       if (pos ~= 0) {
         if (pos < 0 || pos >= self.#gestores / WORDSIZE) {
           #ifdef DEBUG;
-            "ERROR: La posición para el gestor de timer sobrepasa los límites.";
+            print "ERROR: La posición para el gestor de timer sobrepasa los límites.^";
           #endif;
-          #ifndef DEBUG;
-            return -1;
-          #endif;
+          return -1;
         }
       } else {
         ! Si no se indica posición, buscamos el siguiente hueco vacío:
         pos = self.BuscarPosicion(0);
         if (pos < 0) {
           #ifdef DEBUG;
-            "ERROR: Superado número máximo de gestores de timer.";
+            print "ERROR: Superado número máximo de gestores de timer.^";
           #endif;
-          #ifndef DEBUG;
-            return -1;
-          #endif;
+          return -1;
         }
       }
       self.&gestores-->pos = g;
