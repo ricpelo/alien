@@ -92,8 +92,8 @@ Object ControlTimer
       }
       M__L(##Prompt);
       buffer-->0 = gg_event-->2;
-      glk_request_line_event(gg_mainwin, buffer + WORDSIZE,
-                             INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
+      glk($00D0, gg_mainwin, buffer + WORDSIZE,  ! glk_request_line_event
+          INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
       return 1;
     ],
     RecalcularMaximo [ i max;             ! Vuelve a calcular la duración máxima
@@ -127,7 +127,7 @@ Object ControlTimer
       context = context;
       self.contexto_handle_glk = true;
       switch (ev-->0) {
-        evtype_Timer:
+        1: ! evtype_Timer == 1
           self.ReiniciarImpresion();
           for (i = 0: i < self.#gestores / WORDSIZE: i++) {
             t = self.&gestores-->i;
