@@ -78,9 +78,11 @@ Object ControlTimer
     duracion_maxima 0,                    ! Duración máxima entre los gestores (en nº de ticks) 
     tick 0,                               ! Duración del tick (en milisegundos)
     tick_pausado 0,                       ! Aquí se guarda el tick cuando se pausa
+    tick_pospuesto -1,                    ! Tick asignado durante un evento
     contador_ticks 1,                     ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                              ! Semáforo de exclusión mutua
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
+    contexto_handle_glk false,            ! Estamos en un evento
     RestaurarLineaOrdenes [ buffer;       ! Restaura la línea de órdenes
       if (banderafin == 1) {
         print "^^";
@@ -123,6 +125,7 @@ Object ControlTimer
     ],
     HandleGlk [ev context buffer i t;     ! Nuestra versión de HandleGlkEvent
       context = context;
+      self.contexto_handle_glk = true;
       switch (ev-->0) {
         evtype_Timer:
           self.ReiniciarImpresion();
@@ -147,6 +150,11 @@ Object ControlTimer
             self.contador_ticks = 1;
           } else {
             self.contador_ticks++;
+          }
+          self.contexto_handle_glk = false;
+          if (self.tick_pospuesto ~= -1) {
+            self.ActivarTick(self.tick_pospuesto);
+            self.tick_pospuesto = -1;
           }
           ! Si se ha imprimido algo en algún gestor, restauramos:
           if (self.ha_imprimido_algo) {
@@ -222,7 +230,13 @@ Object ControlTimer
       self.ha_imprimido_algo = false;
     ],
     AsignarTick [ t;                      ! Asigna la duración del tick
-      self.tick = t;
+      ! Durante la ejecución de un evento, no se cambia el tick,
+      ! sino que se retrasa el cambio hasta terminar con el ciclo actual:
+      if (self.contexto_handle_glk) {
+        self.tick_pospuesto = t;
+      } else {
+        self.tick = t;
+      }
     ],
     ActivarTick [ t;                      ! Activa el timer (opcionalmente, asignando el tick antes)
       if (t ~= 0) {
@@ -230,7 +244,9 @@ Object ControlTimer
       } else {
         t = self.tick;
       }
-      glk($00D6, t);                      ! glk_request_timer_events
+      if (~~(self.contexto_handle_glk)) {
+        glk($00D6, t);                    ! glk_request_timer_events
+      }
     ],
     PausarTick [;                         ! Detiene el timer temporalmente
       self.tick_pausado = self.tick;
