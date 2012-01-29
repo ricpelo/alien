@@ -77,7 +77,7 @@ Object ControlTimer
     gestores 0 0 0 0 0 0 0 0 0 0,         ! Array de gestores de eventos
     duracion_maxima 0,                    ! Duración máxima entre los gestores (en nº de ticks) 
     tick 0,                               ! Duración del tick (en milisegundos)
-    tick_pausado 0,                       ! Aquí se guarda el tick cuando se pausa
+    tick_pausado -1                       ! Aquí se guarda el tick cuando se pausa
     tick_pospuesto -1,                    ! Tick asignado durante un evento
     contador_ticks 1,                     ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                              ! Semáforo de exclusión mutua
@@ -274,6 +274,8 @@ Object ControlTimer
     Reiniciar [ i;                        ! Pone todas las propiedades a sus valores por defecto
       self.DesactivarTick();
       self.tick = 0;
+      self.tick_pausado = -1;
+      self.tick_pospuesto = -1;
       self.duracion_maxima = 0;
       self.contador_ticks = 1;
       self.mutex = 0;
