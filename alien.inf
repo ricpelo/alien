@@ -469,7 +469,6 @@ Verb 'examinar.falso'
 
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
-!Include "BajoNivel";      ! Necesario para Barra:
 Include "barra";          ! Para cambiar la barra de estado
 
 
@@ -611,7 +610,8 @@ Include "Etemas";         ! Los temas de conversación
 Include "Decorado";       ! Objetos de decorado
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
-Include "Timer";
+Include "Timer";          ! Mi librería de eventos temporizados
+Include "IntNombre";      ! Poder usar adjetivos como en InformATE
 
 
 class DecoradoAmpliado
@@ -8521,6 +8521,9 @@ Object tt_final
 
   ! Usamos un parser más "tonto":
 !  parser_listo = 0;
+
+  ! Parseado estricto:
+  parseado_estricto = 1;
 
   ! Nombre de la oscuridad
   thedark.short_name = "Zona de oscuridad";
