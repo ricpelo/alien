@@ -1,9 +1,10 @@
 !% -G
 !% -~S~D
+!% +language_name=Spanish
 !%
 !===============================================================================
 !  DAMUSIX DEMO: UN EJEMPLO DE USO DE LA EXTENSION DAMUSIX
-!  Codigo Fuente --==[ Version Especial para Libreria Española InformATE! ]==--
+!  Codigo Fuente
 !===============================================================================
 !
 !  Archivo :  damusix_demo.inf
@@ -44,15 +45,6 @@
 !               You should have received a copy of the GNU Lesser General
 !               Public License along with this program. If not, see
 !               <http://www.gnu.org/licenses/>.
-!
-!===============================================================================
-!
-!  COMPATIBILIDAD - Lista de Cambios efectuados en Damusix para InformATE!
-!  respecto del codigo original en Damusix para Inform6 + Lib. 6/11:
-!
-!  (01) En InformATE! debe ejecutarse la rutina Damusix.InicializarGlk()
-!       al comienzo del juego, escribiendola como primera sentencia de
-!       rutina Inicializar() para lograr dicho efecto. MUY IMPORTANTE!
 !
 !===============================================================================
 !
@@ -159,20 +151,20 @@
 !-------------------------------------------------------------------------------
 
 !===============================================================================
-! (1) Constantes; Variables Globales; Replaces; Propertys; Incluir EParser.h
+! (1) Constantes; Variables Globales; Replaces; Propertys; Incluir Parser.h
 !-------------------------------------------------------------------------------
-Constant Historia "Damusix Demo";
-Constant Titular "Un ejemplo de las funcionalidades de Damusix.^^";
+Constant Story "Damusix Demo";
+Constant Headline "Un ejemplo de las funcionalidades de Damusix.^^";
 Constant VersionNum "3.3";
 
 ! para implementar un "fin del programa" con FadeOut de la musica de fondo
-Replace FinalizarSub;
+Replace QuitSub;
 
 ! para imprimir nuestro propio mensaje de version
 Replace VersionSub;
 
 ! para imprimir nuestra propia barra de estado
-Replace DibujarLineaEstado;
+Replace DrawStatusLine;
 
 ! formato de musica (MOD/Ogg Vorbis) que debe tocarse (al inicio, siempre Ogg)
 Global musica = MUSICA_OGG;
@@ -180,7 +172,7 @@ Global musica = MUSICA_OGG;
 ! volumen global de todos los sonidos de la demo (al inicio, siempre 100%)
 Global volglobal = 100;
 
-Include "EParser";
+Include "Parser";
 
 
 !===============================================================================
@@ -206,33 +198,33 @@ Global fade_aux; ! es un contador para la barrita
     ! Este bloque imprime la barrita de avance del Fade
     switch (ev-->0) {
       evtype_Timer:
-        DibujarLineaEstado(); ! redibujamos la barra de estado
-        fade_aux++;           ! incrementamos el movimiento de la barrita
+        DrawStatusLine(); ! redibujamos la barra de estado
+        fade_aux++;       ! incrementamos el movimiento de la barrita
     }
 ];
 
 
 !===============================================================================
-! (3) Modificar Mensajes de la Libreria; Otros Includes; Incluir Acciones.h
+! (3) Modificar Mensajes de la Libreria; Otros Includes; Incluir VerbLib.h
 !-------------------------------------------------------------------------------
-Object MensajesLibreria
+Object LibraryMessages
   with
-    antes [ ;
+    before [ ;
       Prompt:
         print (f)"^|DAMUSIX>"," ";
         rtrue;
-      Reiniciar:
-        if (ml_n == 1) {
+      Restart:
+        if (lm_n == 1) {
           print "¿Realmente quieres reiniciar la demostración? ";
           rtrue;
         }
-      Finalizar:
-        if (ml_n == 2) {
+      Quit:
+        if (lm_n == 2) {
           print "¿Realmente quieres abandonar la demostración? ";
           rtrue;
         }
-      Miscelanea:
-        switch(ml_n) {
+      Miscellany:
+        switch(lm_n) {
           ! mensaje "¿Perdón?"
           10: "Escribe un comando válido.";
           ! mensaje "No conozco ese verbo."
@@ -246,19 +238,16 @@ Object MensajesLibreria
 Include "Damusix";
 Include ">damusix_demo.bli"; ! el archivo de recursos multimedia
 
-Include "Acciones";
+Include "VerbLib";
 
 
 !===============================================================================
-! (4) Rutina Inicializar()
+! (4) Rutina Initialise()
 !-------------------------------------------------------------------------------
-[ Inicializar ;
-    ! PRIMERO INICIALIZAMOS DAMUSIX ANTES DE HACER NINGUNA OTRA ACTIVIDAD
-    Damusix.InicializarGlk(); ! EJECUTAR ESTA RUTINA ES MUY IMPORTANTE!!!
-
+[ Initialise ;
     ! Comportamientos del Parser
-    localizacion = Loc_ZonaDemo;  ! lugar de comienzo
-    modomirar = 2;                ! mira la localidad en todos los turnos
+    location = Loc_ZonaDemo;  ! lugar de comienzo
+    lookmode = 2;             ! mira la localidad en todos los turnos
 
     if (~~Damusix.TestAudio()) { ! si el interprete no soporta el Audio
       print (f)"^[ AVISO: TU INTÉRPRETE GLULX NO SOPORTA AUDIO!! ]";
@@ -293,8 +282,8 @@ Include "Acciones";
 ! (5) Rutinas de la Libreria Implementadas, Reemplazadas o Ampliadas
 !-------------------------------------------------------------------------------
 ! linea de estado personalizada para la demo (muestra titulo y barra animada)
-[ DibujarLineaEstado aux;
-    if (gg_statuswin == 0) { return; } ! si la barra no existe, no hacer nada
+[ DrawStatusLine aux;
+		if (gg_statuswin == 0) { return; } ! si la barra no existe, no hacer nada
     glk($002F, gg_statuswin); ! set_window
     glk($002A, gg_statuswin); ! window_clear
     aux = (AnchoBarraEstado() - 17) / 2; ! titulo completo tiene 17 caracteres
@@ -312,8 +301,8 @@ Include "Acciones";
 ];
 
 ! truquito para gestionar la musica durante el mensaje de "version"
-[ RutinaPreJuego ;
-    if (accion ~= ##Version) {
+[ GamePreRoutine ;
+    if (action ~= ##Version) {
       if (Loc_ZonaDemo has general) { ! si estamos en mensaje de "version"
         Loc_ZonaDemo.parar_version(); ! detenemos la musica de "version"
       }
@@ -323,10 +312,9 @@ Include "Acciones";
 
 
 !===============================================================================
-! (6) Incluir Mensajes.h; Incluir Gramatica.h; Otros Includes
+! (6) Incluir SpanishG.h; Otros Includes
 !-------------------------------------------------------------------------------
-Include "Mensajes";
-Include "Gramatica";
+Include "SpanishG";
 
 
 !===============================================================================
@@ -338,10 +326,10 @@ Include "Gramatica";
 ! (8) Objetos del Juego
 !-------------------------------------------------------------------------------
 Object Loc_ZonaDemo "En la Zona de Demostración"
-  has luz,
+  has light,
   with
     volaux 0,
-    descripcion [ ;
+    description [ ;
       "Bienvenido a la demostración de funcionalidades de la extensión ",
       (b)"Damusix", " para Inform. El presente programa es un sencillo ejemplo
       de algunas de las cosas que esta útil extensión te permite hacer con el
@@ -541,9 +529,9 @@ VerboIrregular "realizar efectos de Fade a la música de fondo"
 ! (11) Rutinas de Acciones Propias del Juego
 !-------------------------------------------------------------------------------
 ! para "fin del programa"
-[ FinalizarSub;
-    M__L(##Finalizar, 2);
-    if (SiONo() ~= 0) {
+[ QuitSub;
+    L__M(##Quit, 2);
+    if (YesOrNo() ~= 0) {
       print (b)"^¡Gracias por probar Damusix! =D^^"; ! capricho: despedida! =P
       ! si el audio esta activado...
       if (Damusix.HayAudio() == 1) {
@@ -572,13 +560,13 @@ VerboIrregular "realizar efectos de Fade a la música de fondo"
     }
 
     glk($0086, 3); ! set header style
-    spaces aux; print (string) Historia;
+    spaces aux; print (string) Story;
     print " v", (string) VersionNum;
 
     glk($0086, 0); ! set normal style
-    if (Titular ~= 0) {
+    if (Headline ~= 0) {
       new_line; spaces aux;
-      print (string) Titular;
+      print (string) Headline;
     }
 
     print "   (c) 2008 ",(b)"Eliuk Blau ",(f)"[eliukblau@@64gmail.com]^";
@@ -600,34 +588,6 @@ VerboIrregular "realizar efectos de Fade a la música de fondo"
     print (f)"^* Ogg Vorbis: ",(c)"First Flight",", de Vincent Diamante ",
       (c)"(espectacular BSO del juego libre ~Cloud~).";
     new_line;
-
-    ! ELIUK: ESTO ES UN MENSAJE ESPECIAL PARA INDICAR QUE SE USA INFORMATE
-    print "^Inform v"; inversion;
-    print " + ", (string) VersionIdioma, " (", (string) RevisionLib;
-    ! INICIO: Ahora viene el espacio antes de las letras de modo
-    #ifdef STRICT_MODE;
-      print " ";
-    #ifnot;
-      #ifdef INFIX;
-        print " ";
-      #ifnot;
-        #ifdef DEBUG;
-          print " ";
-        #endif; ! DEBUG
-      #endif; ! INFIX
-    #endif; ! STRICT_MODE
-    ! FIN: Se imprime un espacio si esta activo por lo menos uno de los tres modos
-    #ifdef STRICT_MODE;
-      print "S";
-    #endif; ! STRICT_MODE
-    #ifdef INFIX;
-      print "X";
-    #ifnot;
-      #ifdef DEBUG;
-        print "D";
-      #endif; ! DEBUG
-    #endif; ! INFIX
-    print ").^";
 ];
 
 ! imprime la ayuda de comandos de la demostracion
@@ -821,33 +781,33 @@ VerboIrregular "realizar efectos de Fade a la música de fondo"
 ! establece el volumen del efecto de sonido "principal"
 [ CambiarVolumenSub ;
     ! si el volumen no tiene dato numerico o si es menor a 0% o mayor a 100%
-    if ( (dat1 ~= 1) || ((uno < 0) || (uno > 100)) ) {
+    if ( (inp1 ~= 1) || ((noun < 0) || (noun > 100)) ) {
       "[El volumen debe ser un valor correcto entre 0 y 100]";
     }
-    Damusix.Volumen(FX_PRINCIPAL,uno);
-    "[Estableciendo el volumen del efecto de sonido ~principal~ en ",uno,"%]";
+    Damusix.Volumen(FX_PRINCIPAL,noun);
+    "[Estableciendo el volumen del efecto de sonido ~principal~ en ",noun,"%]";
 ];
 
 ! establece el volumen global para la salida de audio de Damusix (todos los sonidos)
 [ CambiarVolumenGlobalSub ;
     ! si el volumen no tiene dato numerico o si es menor a 0% o mayor a 100%
-    if ( (dat1 ~= 1) || ((uno < 0) || (uno > 100)) ) {
+    if ( (inp1 ~= 1) || ((noun < 0) || (noun > 100)) ) {
       "[El volumen global debe ser un valor correcto entre 0 y 100]";
     }
-    volglobal = uno;
-    Damusix.VolumenGlobal(uno);
-    "[Estableciendo el volumen global para todo el audio ",uno,"%]";
+    volglobal = noun;
+    Damusix.VolumenGlobal(noun);
+    "[Estableciendo el volumen global para todo el audio ",noun,"%]";
 ];
 
 ! establece el numero de repeticiones del efecto de sonido "principal"
 [ CambiarRepeticionSub ;
     ! si la repeticion no tiene dato numerico o si es menor a 1
-    if ( (dat1 ~= 1) || (uno < 1) ) {
+    if ( (inp1 ~= 1) || (noun < 1) ) {
       "[El número de repeticiones debe ser un valor correcto mayor a 0]";
     }
-    Damusix.Repeticion(FX_PRINCIPAL,uno);
-    print "[Estableciendo la repetición del efecto de sonido ~principal~ en ",uno;
-    if (uno == 1) { print " vez"; }
+    Damusix.Repeticion(FX_PRINCIPAL,noun);
+    print "[Estableciendo la repetición del efecto de sonido ~principal~ en ",noun;
+    if (noun == 1) { print " vez"; }
     else { print " veces"; }
     print "]^";
 ];

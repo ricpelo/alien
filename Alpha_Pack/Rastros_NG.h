@@ -73,9 +73,9 @@ Global indiceConRastro = 0;
 !  rastreado, por ejemplo, mediante diversos sentidos
 !
 Ifndef TipoRastro;
-Class TipoRastro
+class TipoRastro
   with
-    nombre 'rastro' 'rastros' 'olor',
+    name 'rastro' 'rastros' 'olor',
     !
     ! Multiplicador de la pérdida de rastro por el tipo
     !
@@ -92,25 +92,25 @@ Class TipoRastro
     ! Implementación de esta_en, para que aparezca el rastro
     ! en las localizaciones correctas
     !
-    esta_en [ numero;
+    found_in [ number;
       !
       ! Sólo en sitios 'marcables'
       !
-      if (localizacion ofclass LugarConRastro) {
+      if (location ofclass LugarConRastro) {
         !
         ! Si es oloroso está oculto
         !
         if (self.esOloroso)
-          give self oculto;
+          give self concealed;
 
-        numero = localizacion.numeroClase(self, nivelPerceptible);
+        number = location.numeroClase(self, nivelPerceptible);
 
-        if (numero > 1)
-          give self nombreplural;
+        if (number > 1)
+          give self pluralname;
         else
-          give self ~nombreplural;
+          give self ~pluralname;
 
-        if (numero > 0)
+        if (number > 0)
           rtrue;
       }
  
@@ -119,31 +119,31 @@ Class TipoRastro
     !
     ! Si es oloroso debe unirse al olfateo
     !
-    reaccionar_antes [;
-      Oler: 
-        if ((self.esOloroso) && (uno == 0)) {
+    react_before [;
+      Smell: 
+        if ((self.esOloroso) && (noun == 0)) {
           ! Sólo se huele el rastro más oloroso de todos
           if (parent(self).rastroMasOloroso() == self) {
-            <<Oler self>>;
+            <<Smell self>>;
           }
         }
     ],
     !
     ! Descripción del rastro
     !
-    nombre_corto [ padre numero;
+    short_name [ padre number;
       padre = parent(self); 
 
       if (padre ofclass LugarConRastro) {
-        numero = padre.numeroClase(self, nivelPerceptible);
-        if (numero > 1) {
-          give self nombreplural;
+        number = padre.numeroClase(self, nivelPerceptible);
+        if (number > 1) {
+          give self pluralname;
           if (self.nombre_plural ~= 0)
             print (string) VR(self.nombre_plural);
           else
             print (object) self;
         } else {
-          give self ~nombreplural;
+          give self ~pluralname;
           print (object) self;
         }
 
@@ -155,8 +155,8 @@ Class TipoRastro
     !
     describeIntensidad [ intensidad era_plural;
       ! print " ", intensidad, " ";
-      if (self has nombreplural) {
-        give self ~nombreplural;
+      if (self has pluralname) {
+        give self ~pluralname;
         era_plural = 1;
       }
       if (intensidad < nivelCasiInvisible) {
@@ -171,7 +171,7 @@ Class TipoRastro
         print " muy claramente";
       }
       if (era_plural == 1) {
-        give self nombreplural;
+        give self pluralname;
       }
     ],
     !
@@ -195,58 +195,58 @@ Class TipoRastro
     !
     ! Redefinición de varias acciones
     !
-    antes [ numero padre contador oloroso;
+    before [ number padre contador oloroso;
       !
       ! Antes de todas las acciones recalcular el género
       !
       padre = parent(self);
       
       if ((padre) && (padre ofclass LugarConRastro))
-        numero = padre.numeroClase(self, nivelPerceptible);
+        number = padre.numeroClase(self, nivelPerceptible);
       else
-       numero = 0;
+       number = 0;
 
-      if (numero > 1)
-        give self nombreplural;
+      if (number > 1)
+        give self pluralname;
       else
-        give self ~nombreplural;
+        give self ~pluralname;
 
-      Coger:
+      Take:
         "No se puede", (n) self, " coger.";
 
-      Oler:
+      Smell:
         !
         ! Si se trata de un rastro odorífero
         ! se pasa la pelota a la descripción
         !
         if (self.esOloroso)
-          <<Examinar self>>;
+          <<Examine self>>;
         else {
           ! Este no huele, pero ¿huele algo?
           oloroso = padre.rastroMasOloroso();
           if (oloroso ~= 0) {
-            <<Oler oloroso>>;
+            <<Smell oloroso>>;
           }
         }
 
-      Examinar:
+      Examine:
         !
         ! Ver si realmente queda algo aún
         !
-        if (numero == 0)
+        if (number == 0)
           "El rastro es tan poco definido que no se puede saber de qué se trata
            o hacia dónde se dirige.";
 
         !
         ! Poner la descripcion básica si hay alguna
         !
-        if (self.descripcion ~= 0)
-          ImprimirOEjecutar(self, descripcion);
+        if (self.description ~= 0)
+          PrintOrRun(self, description);
 
         !
         ! Describir la orientación usando el sistema del rastro
         !
-        if (numero > 1) {
+        if (number > 1) {
           print "Realmente hay varios ";
           if (self.nombre_plural ~= 0)
             print (string) self.nombre_plural;
@@ -259,10 +259,10 @@ Class TipoRastro
             if ((padre.&rastros-->(2 + contador * 5) == self) &&
                 (padre.&rastros-->(3 + contador * 5) >= nivelPerceptible)) {
               print "    ";
-              if (self has nombreplural) {
-                give self ~nombreplural;
+              if (self has pluralname) {
+                give self ~pluralname;
                 print "un", (o) self;
-                give self nombreplural;
+                give self pluralname;
               } else {
                 print "un", (o) self;
               }
@@ -294,7 +294,7 @@ Class TipoRastro
 
       rtrue;
     ],
-  has estatico;
+  has static;
 Endif;
 
 !
@@ -304,7 +304,7 @@ Endif;
 !  en los lugares en los que quedan rastros
 !
 Ifndef ObjetoRastreable;
-Class ObjetoRastreable
+class ObjetoRastreable
  with
    !
    ! Rastros que va 'dejando' tras de sí, cada
@@ -442,7 +442,7 @@ Endif;
 !  modificar correctamente las descripciones, etc...
 !
 Ifndef LugarConRastro;
-Class LugarConRastro
+class LugarConRastro
   with
     !
     ! Variables que modifican el comportamiento de los rastros
@@ -599,10 +599,10 @@ Object DisipadorDeRastros
       !
       ! Correción del número de cada rastro 'presente'
       !
-      if (localizacion ofclass LugarConRastro) {
-        objectloop(i in localizacion) {
+      if (location ofclass LugarConRastro) {
+        objectloop(i in location) {
           if (i ofclass TipoRastro) {
-            i.esta_en();
+            i.found_in();
           }
         }
       }
@@ -619,11 +619,11 @@ Endif;
       tablaConRastro-->indiceConRastro = lugar;
     } else {
       print "ERROR: superado el límite de lugares con rastros; ",
-             (_nombre_)lugar, " no será tratado como tal.";
+             (name)lugar, " no será tratado como tal.";
     }
   }
 
-  ArrancarDaemon(DisipadorDeRastros);
+  StartDaemon(DisipadorDeRastros);
 ];
 
 !
@@ -646,19 +646,19 @@ EndIf;
 Ifndef DirDada;
 [ DirDada i;
   switch(i) {
-    obj_n:       print "hacia el norte";
-    obj_s:       print "hacia el sur";
-    obj_e:       print "hacia el este";
-    obj_o:       print "hacia el oeste";
-    obj_ne:      print "hacia el noreste";
-    obj_no:      print "hacia el noroeste";
-    obj_se:      print "hacia el sureste";
-    obj_so:      print "hacia el suroeste";
-    obj_arriba:  print "hacia arriba";
-    obj_abajo:   print "hacia abajo";
-    obj_adentro: print "hacia el interior";
-    obj_afuera:  print "hacia el exterior";
-    default:     print "hacia ", (el) i;           ! (c) Alpha
+    n_obj:       print "hacia el norte";
+    s_obj:       print "hacia el sur";
+    e_obj:       print "hacia el este";
+    w_obj:       print "hacia el oeste";
+    ne_obj:      print "hacia el noreste";
+    nw_obj:      print "hacia el noroeste";
+    se_obj:      print "hacia el sureste";
+    sw_obj:      print "hacia el suroeste";
+    u_obj:  print "hacia arriba";
+    d_obj:   print "hacia abajo";
+    in_obj: print "hacia el interior";
+    out_obj:  print "hacia el exterior";
+    default:     print "hacia ", (the) i;           ! (c) Alpha
   }
 ];
 Endif;

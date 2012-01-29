@@ -82,9 +82,9 @@ Constant TARGET_ZCODE;
       style roman;
 ];
 
-[ Proporcional;
-      font off;
-];
+![ Proporcional;
+!      font off;
+!];
 #endif;
 
 #ifdef TARGET_GLULX;
@@ -135,7 +135,7 @@ Constant GLK_ESTILO_CITA 7;
       glk($0086, GLK_ESTILO_NOTA);
 ];
 
-[ Proporcional;
-     glk($0086, GLK_ESTILO_PREFORMATEADO);
-];
+![ Proporcional;
+!     glk($0086, GLK_ESTILO_PREFORMATEADO);
+!];
 #endif;

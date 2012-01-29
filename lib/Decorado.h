@@ -129,43 +129,43 @@ EndIf;
 !
 ! CLASE DECORADO
 !
-Class Decorado
+class Decorado
   with
-    descripcion 0,
-    cantidad 0,
-    describir 0,
-    genero 0,
-    nombre_corto [;
-      print (address) self.cantidad;
+    description 0,
+    number 0,
+    describe 0,
+    gender 0,
+    short_name [;
+      print (address) self.number;
       rtrue;
     ],
-    parse_nombre [ i n w c r;
-      self.descripcion = 0;
-      n = (self.#describir) / (3 * WORDSIZE);
+    parse_name [ i n w c r;
+      self.description = 0;
+      n = (self.#describe) / (3 * WORDSIZE);
       if (w == 'el' or 'la' or 'los' or 'las')
-        w = SiguientePalabra();
+        w = NextWord();
       c = r = 0;
       while (true) {
-        w = SiguientePalabraParar();
+        w = NextWordStopped();
         if (w == -1) return c;
         if (w == 'de' or 'del') {
-          w = SiguientePalabraParar();
+          w = NextWordStopped();
           if (w == -1) return c;
           r++;
         }
         if (w == 'el' or 'la' or 'los' or 'las') {
-          w = SiguientePalabraParar();
+          w = NextWordStopped();
           if (w == -1) return c;
           r++;
         }
         !print n, ": ";
         for (i = 0 : i < n : i++) {
-          if ((self.&describir)-->(i * 3) == w) {
+          if ((self.&describe)-->(i * 3) == w) {
             !print i, " <", (address)(self.&describir)-->(i * 3 + 1), "> ";
-            if (self.descripcion == 0) {
-              self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-              self.cantidad = w;
-              self.genero = (self.&describir)-->(i * 3 + 2);
+            if (self.description == 0) {
+              self.description = VR((self.&describe)-->(i * 3 + 1));
+              self.number = w;
+              self.gender = (self.&describe)-->(i * 3 + 2);
 !            } else {
 !              if (self.genero ~= ((self.&describir)-->(i * 3 + 2))) {
 !               return c;
@@ -180,10 +180,10 @@ Class Decorado
         }
       }
     ],
-    antes [;
-      Examinar: rfalse;
+    before [;
+      Examine: rfalse;
       default: "Déjalo, sólo es decorado.";
     ],
   has
-    escenario oculto;
+    scenery concealed;
 

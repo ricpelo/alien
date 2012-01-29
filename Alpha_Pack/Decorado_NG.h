@@ -150,45 +150,45 @@ EndIf;
 ! Si el jugador escribe EX GRANDE, el algoritmo se decidirá por el primero que encuentre
 ! en la lista de sinónimos (en este caso, la mesa).
 !
-Class Decorado
+class Decorado
   with
-    descripcion 0,
-    cantidad 0,
-    describir 0,
-    genero 0,
+    description 0,
+    number 0,
+    describe 0,
+    gender 0,
     sinonimos 0,
-    nombre_corto [;
-      print (address) self.cantidad;
+    short_name [;
+      print (address) self.number;
       rtrue;
     ],
-    parse_nombre [ i n w c r f m j p;
-      self.descripcion = 0;
-      n = (self.#describir) / (3 * WORDSIZE);
+    parse_name [ i n w c r f m j p;
+      self.description = 0;
+      n = (self.#describe) / (3 * WORDSIZE);
 
       if (w == 'el' or 'la' or 'los' or 'las')
-        w = SiguientePalabra();
+        w = NextWord();
 
       c = r = 0;
-      p = null;
+      p = NULL;
 
       while (true) {
-        w = SiguientePalabraParar(); if (w == -1) return c;
+        w = NextWordStopped(); if (w == -1) return c;
 
         if (w == 'de' or 'del') {
-          w = SiguientePalabraParar(); if (w == -1) return c;
+          w = NextWordStopped(); if (w == -1) return c;
           r++;
         }
 
         if (w == 'el' or 'la' or 'los' or 'las') {
-          w = SiguientePalabraParar(); if (w == -1) return c;
+          w = NextWordStopped(); if (w == -1) return c;
           r++;
         }
 
         f = false;
 
         for (i = 0 : i < n : i++) {
-          if ((self.&describir)-->(i * 3) == w) {
-            if (p == null) {
+          if ((self.&describe)-->(i * 3) == w) {
+            if (p == NULL) {
               p = w;
             } else {
               if (p ~= w) {
@@ -196,10 +196,10 @@ Class Decorado
               }
             }
             f = true;
-            if (self.descripcion == 0) {
-              self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-              self.cantidad = w;
-              self.genero = (self.&describir)-->(i * 3 + 2);
+            if (self.description == 0) {
+              self.description = VR((self.&describe)-->(i * 3 + 1));
+              self.number = w;
+              self.gender = (self.&describe)-->(i * 3 + 2);
             }
             c++;
             if (r > 0) {
@@ -216,21 +216,21 @@ Class Decorado
             if ((self.&sinonimos)-->(j * 3) == w) {
               f = false;
               for (i = 0 : i < n : i++) {
-                if ((self.&describir)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
-                  if (p == null) {
-                    p = (self.&describir)-->(i * 3);
+                if ((self.&describe)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
+                  if (p == NULL) {
+                    p = (self.&describe)-->(i * 3);
                   } else {
-                    if (p ~= (self.&describir)-->(i * 3)) {
+                    if (p ~= (self.&describe)-->(i * 3)) {
                       j++;
                       jump synonymContinue;
                     }
                   }
-                  if (self.descripcion == 0) {
-                    self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-                    self.cantidad = (self.&describir)-->(i * 3);
-                    self.genero = (self.&sinonimos)-->(j * 3 + 2);
-                    if (self.genero == -1) {
-                      self.genero = (self.&describir)-->(i * 3 + 2);
+                  if (self.description == 0) {
+                    self.description = VR((self.&describe)-->(i * 3 + 1));
+                    self.number = (self.&describe)-->(i * 3);
+                    self.gender = (self.&sinonimos)-->(j * 3 + 2);
+                    if (self.gender == -1) {
+                      self.gender = (self.&describe)-->(i * 3 + 2);
                     }
                   }
                   f = true;
@@ -252,10 +252,10 @@ Class Decorado
         }
       }
     ],
-    antes [;
-      Examinar: rfalse;
+    before [;
+      Examine: rfalse;
       default: "Déjalo, sólo es decorado.";
     ],
   has
-    escenario oculto;
+    scenery concealed;
 

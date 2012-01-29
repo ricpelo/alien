@@ -21,18 +21,18 @@ Constant DEJA_CERRADO_CON = 3;
 Constant NO_PUEDE_ABRIR = 4;
 
 
-Class PnjPuerta
+class PnjPuerta
   with
-    nombre_f 'puerta',
-    nombre_fp 'puertas',
+    name_f 'puerta',
+    name_fp 'puertas',
     interior 0,                     ! (c) Alpha
     exterior 0,                     ! (c) Alpha
-    direcc_puerta [;
+    door_dir [;
       if (parent(self) == self.ladoa)
         return self.dira;
       return self.dirb;
     ],
-    puerta_a [;
+    door_to [;
       if (parent(self) == self.ladoa)
         return self.ladob;
       return self.ladoa;
@@ -41,7 +41,7 @@ Class PnjPuerta
     dira 0,
     ladob 0,
     dirb 0,
-    esta_en 0 0,
+    found_in 0 0,
     lado_cierre 0,
     bloqueada false,
     entra_o_sale [;
@@ -59,23 +59,23 @@ Class PnjPuerta
       }
     ],
     pnj_abrir [ quien res x;
-      if (self has abierta)
+      if (self has open)
         res = 0;
       else  
         if (quien.tras_abrir == NO_PUEDE_ABRIR) {
-          if (PruebaDeAlcance(quien))
-            print "^", (_El) quien, " quiere abrir ", (el) self, ", pero no puede.^";
+          if (TestScope(quien))
+            print "^", (The) quien, " quiere abrir ", (the) self, ", pero no puede.^";
           else
-            if (PruebaDeAlcance(self))
-              print "^Se oyen ruidos al otro lado de ", (el) self,
+            if (TestScope(self))
+              print "^Se oyen ruidos al otro lado de ", (the) self,
                     ", como si algo intentara abrirla.^";
           rfalse;
         } else
-          if (self hasnt cerrojoechado)
+          if (self hasnt locked)
             res = 7;
           else
-            if (self provides con_llave) 
-              if (self.con_llave in quien) 
+            if (self provides with_key) 
+              if (self.with_key in quien) 
                 if (self.lado_cierre == 0 || quien in self.lado_cierre)
                   res = 1;
                 else
@@ -113,35 +113,35 @@ Class PnjPuerta
 ! pasan.
 !************* AHORA DESCRIBIMOS LA ACCION -SI SE VE EL PNJ O LA PUERTA...
 
-      if (PruebaDeAlcance(quien)) {
+      if (TestScope(quien)) {
         print "^";
         switch (res) {
-          0: print (_El) quien, " ", (string) self.entra_o_sale(), " por ", (el) self, ".^";
-        1: print (_El) quien, " abre con ", (un) self.con_llave, " ", (el) self,
+          0: print (The) quien, " ", (string) self.entra_o_sale(), " por ", (the) self, ".^";
+        1: print (The) quien, " abre con ", (a) self.with_key, " ", (the) self,
                  " y ", (string) self.entra_o_sale(), " por ell", (o) self, ".^";
-        2, 3, 4, 6: print (_El) quien, " intenta abrir ", (el) self, " pero parece cerrad",
+        2, 3, 4, 6: print (The) quien, " intenta abrir ", (the) self, " pero parece cerrad",
                           (o) self, ".^";
-        5: print (_El) quien, " abre ", (el) self, " accionando el pestillo, y ",
+        5: print (The) quien, " abre ", (the) self, " accionando el pestillo, y ",
                  (string) self.entra_o_sale(), " por ell", (o) self, ".^";
-        7: print (_El) quien, " abre ", (el) self, " y ", (string) self.entra_o_sale(), " por ell",
+        7: print (The) quien, " abre ", (the) self, " y ", (string) self.entra_o_sale(), " por ell",
                  (o) self, ".^";
-        8: print (_El) quien, " intenta abrir con ", (un) self.con_llave, " ", (el) self,
+        8: print (The) quien, " intenta abrir con ", (a) self.with_key, " ", (the) self,
                  ", pero parece que algo la atranca.";
-          9: print (_El) quien, " acciona el pestillo de ", (el) self, " pero algo impide que l",
+          9: print (The) quien, " acciona el pestillo de ", (the) self, " pero algo impide que l",
                    (o)self, " abra.";
-         10: print (_El) quien, " intenta abrir ", (el) self, " pero parece atascada con algo.^";
+         10: print (The) quien, " intenta abrir ", (the) self, " pero parece atascada con algo.^";
         }
       } else
-        if (PruebaDeAlcance(self)) {
+        if (TestScope(self)) {
           print "^";
           switch (res) {
-            0: print (_El) quien, " ", (string) self.entra_o_sale(), " por ", (el) self, ".^";
-            1: print "Oyes abrirse una cerradura, y  ", (el) self, " se abre ",
-                     (string) self.entrando_o_saliendo(), " ", (el) quien, ".^";
-            2, 3, 4, 6, 8, 9, 10: print "Alguien intenta abrir ", (el) self, " sin conseguirlo.^";
-            5: print "Oyes descorrer un pestillo, y ", (el) self, " se abre ",
-                     (string) self.entrando_o_saliendo(), " ", (el) quien, ".^";
-            7: print (_El) self, " se abre y ", (string) self.entra_o_sale(), " ", (el) quien,
+            0: print (The) quien, " ", (string) self.entra_o_sale(), " por ", (the) self, ".^";
+            1: print "Oyes abrirse una cerradura, y  ", (the) self, " se abre ",
+                     (string) self.entrando_o_saliendo(), " ", (the) quien, ".^";
+            2, 3, 4, 6, 8, 9, 10: print "Alguien intenta abrir ", (the) self, " sin conseguirlo.^";
+            5: print "Oyes descorrer un pestillo, y ", (the) self, " se abre ",
+                     (string) self.entrando_o_saliendo(), " ", (the) quien, ".^";
+            7: print (The) self, " se abre y ", (string) self.entra_o_sale(), " ", (the) quien,
                      " por ell", (o)self, ".^";
           }
         }
@@ -149,7 +149,7 @@ Class PnjPuerta
 !*********************** ESTADO DE LA PUERTA TRAS ABRIRLA ******************************
 ! EN FUNCION DE LA PROPIEDAD TRAS_ABRIR DEL PNJMovil... 
 
-    if (res == 0 && self hasnt abrible)
+    if (res == 0 && self hasnt openable)
       rtrue;
  
     !si la puerta estaba abierta y no es abrible - no es necesario ejecutar codigo de cierre...
@@ -165,24 +165,24 @@ Class PnjPuerta
 
     ! PRIMERO IMPRIMIMOS EL MENSAJE SI LA ACCION ES VISIBLE POR EL JUGADOR
  
-    if (PruebaDeAlcance(self) || PruebaDeAlcance(quien)) {
+    if (TestScope(self) || TestScope(quien)) {
       if (x == DEJA_CERRADO && res == 0 or 1 or 5 or 7)
-        print (_El) quien, " cierra ", (el)self, ".^";
+        print (The) quien, " cierra ", (the)self, ".^";
 
       if (x == DEJA_CERRADO_CON && res == 0 or 1 or 5 or 7) {
-        print (_El)quien, " cierra ", (el)self;
+        print (The)quien, " cierra ", (the)self;
 
         if (self.lado_cierre == parent(quien))
           print".^";
         else
           switch (res) {
-            0, 7: if (self provides con_llave)
-                    if (self.con_llave in quien) {
+            0, 7: if (self provides with_key)
+                    if (self.with_key in quien) {
                       print " con llave.^";
                     } else
                       print".^";
                   else
-                    if (self has cerrojo)
+                    if (self has lockable)
                       print " echándole el pestillo.^";
                     else
                       print ".^";
@@ -198,111 +198,111 @@ Class PnjPuerta
 
     switch (res) {
       0: if (x == DEJA_CERRADO or DEJA_CERRADO_CON)
-           give self ~abierta;
+           give self ~open;
          if (x == DEJA_CERRADO_CON && self.lado_cierre ~= parent(quien))
-           if (self provides con_llave)
-             if (self.con_llave in quien)
-               give self cerrojoechado;
+           if (self provides with_key)
+             if (self.with_key in quien)
+               give self locked;
              else
                rtrue;
            else
-             if (self has cerrojo)
-               give self cerrojoechado;
+             if (self has lockable)
+               give self locked;
        rtrue;
       1, 5: if (x == DEJA_ABIERTO or DEJA_CERRADO)
-              give self ~cerrojoechado;
+              give self ~locked;
             if (x == DEJA_ABIERTO)
-              give self abierta;
+              give self open;
             if (x == DEJA_CERRADO_CON && self.lado_cierre ~= 0)
-              give self ~cerrojoechado;
+              give self ~locked;
             rtrue;
-      7: if (x == DEJA_ABIERTO) give self abierta;
+      7: if (x == DEJA_ABIERTO) give self open;
          if (x == DEJA_CERRADO_CON && self.lado_cierre ~= parent(quien))
-         if (self provides con_llave)
-           if (self.con_llave in quien)
-             give self cerrojoechado;
+         if (self provides with_key)
+           if (self.with_key in quien)
+             give self locked;
            else
              rtrue;
          else
-           if (self has cerrojo)
-             give self cerrojoechado;
+           if (self has lockable)
+             give self locked;
          rtrue;
       default:
         rfalse;
   }
   ],   
- antes [;
-  Abrir, Cerrar: 
+ before [;
+  Open, Close: 
       if (self.bloqueada) {
-        print "^Algo bloquea ", (el)self, " impidiendo que l", (o)self;
-        if (accion == ##Abrir)
+        print "^Algo bloquea ", (the)self, " impidiendo que l", (o)self;
+        if (action == ##Open)
           " abras.";
         else
           " cierres.";
       }
-    Abrir:
-      if (self provides con_llave)
+    Open:
+      if (self provides with_key)
         rfalse;
       else
-        if (self has cerrojo && self has cerrojoechado)
+        if (self has lockable && self has locked)
           "^Está cerrad", (o) self, " con un pestillo.^";
     
     ! Corrige un defecto de la libreria.- en puertas cerradas con pestillo, al intentar
     ! abrirlas te informaba que estaban cerradas con llave.
     ! (supongo que un problema de traduccion (...lock)
 
-    EcharCerrojo, QuitarCerrojo:
-      if (self.lado_cierre == 0 || self.lado_cierre == localizacion)
+    Lock, Unlock:
+      if (self.lado_cierre == 0 || self.lado_cierre == location)
         rfalse;
       else {
-        if (self provides con_llave)
+        if (self provides with_key)
           "No hay cerradura a este lado ", (del) self, ".";
           "No existe pestillo a este lado ", (del) self, ".";
       }
 
     !el lado_cierre afecta tanto a los Pnjs como al jugador
   
-    Examinar:
-      if (self provides descripcion)
-        ImprimirOEjecutar(self, descripcion);
+    Examine:
+      if (self provides description)
+        PrintOrRun(self, description);
       else        print "^";
    
-      if (self.lado_cierre == 0 || localizacion == self.lado_cierre)
-        if (self provides con_llave)
-          print (_El) self, " puede abrirse y cerrarse desde aquí con una llave.^";
+      if (self.lado_cierre == 0 || location == self.lado_cierre)
+        if (self provides with_key)
+          print (The) self, " puede abrirse y cerrarse desde aquí con una llave.^";
         else
-          if (self has cerrojo)
-            print (_El) self, " puede abrirse y cerrarse desde aquí con un pestillo.^";
+          if (self has lockable)
+            print (The) self, " puede abrirse y cerrarse desde aquí con un pestillo.^";
             
-      if (self has abrible)
-        if (self has abierta)
+      if (self has openable)
+        if (self has open)
           "Ahora está abiert", (o) self, ".^";
         else
           "Está cerrad", (o) self, ".^";
       rtrue;    
     ],
   has
-    puerta estatico;
+    door static;
 
 
 [ IniciarPuertas o i j;
   objectloop (j ofclass PnjPuerta) { 
-    objectloop (o in brujula) {
-      i = o.direcc_puerta;
+    objectloop (o in compass) {
+      i = o.door_dir;
       if (j provides i) {
         j.ladoa = j.i;
         j.dirb = i;
       }
     }
-    objectloop (o in brujula) {
-      i = o.direcc_puerta;
+    objectloop (o in compass) {
+      i = o.door_dir;
       if ((j provides i) && (j.dirb ~= i)) {
         j.ladob = j.i;
         j.dira = i;
       }
     }
-    j.&esta_en-->0 = j.ladoa;
-    j.&esta_en-->1 = j.ladob;
+    j.&found_in-->0 = j.ladoa;
+    j.&found_in-->1 = j.ladob;
   }
 ];
 

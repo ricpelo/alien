@@ -1,0 +1,48 @@
+SINFORM SCRIPT	by Sarganar   Agosto 2006
+----------------
+Desarrollado con DevC++4.9.8, trabajando en Windows XP
+
+**Los tokens no deben ser mayor al buffer interno (1024bytes)
+Solo se chekea en caso de STRINGS y NO_WORD_ELEMENT y resuelve partiendo
+    la state_machine en subestados.
+    
+    
+
+
+**Los archivos Inlcude no se cambian, pues estan entrecomillados.
+Dammed! Hay q hacerlos a mano.
+
+** el parametro 'nombre del archivo' se toma completo
+sin inteligencia que separe archivo de path. Esto no es problema en 
+la lectura, si en el renombre del archivo de salida (actualmente
+antepone 'translate_' al nombre (incluido path)
+Fixed: ahora agrega al final .eng/.spa segun idioma de llegada
+
+
+
+*** traduciendo inform to informATE
+
+problema con algunas palabras:
+
+noun--uno: es identica al noun como linea de gramatica. Habra que retocar a mano
+Abrir--open--abierto--Open: como se trabaja pasando todo a minuscula, no se diferencian
+
+
+*******
+Las rutinas de acciones no traduce, pues hay que ponerles el Sub final.
+Fixed: agregando mas entradas a las listas de palabras (accionesSub)
+
+*******
+Object --- (object)
+
+AL traducir a inform; la directiva print (object) se traduce a print (Object), 
+generando un warning
+
+
+Class  ---  Class
+
+Con mayuscula no anda. Da error al compilar:
+
+Object objeto1 "objeto1"
+	Class objeto_generico, <-- da error
+	

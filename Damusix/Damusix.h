@@ -1,6 +1,6 @@
 !===============================================================================
 !  DREAMBYTES ADVENTURES: AD(M)INISTRADOR (U)NIFICADO DE (S)ON(I)DO EN GLUL(X)
-!  Codigo Fuente --==[ Version Especial para Libreria Española InformATE! ]==--
+!  Codigo Fuente
 !===============================================================================
 !
 !  Archivo :  damusix.h
@@ -71,7 +71,7 @@
 !
 !               Damusix requiere para funcionar correctamente:
 !                 - Compilador Inform v6.30 o superior
-!                 - Libreria Española InformATE! 6/10
+!                 - Libreria Inform 6/11
 !                 - Libreria "infglk.h"
 !
 !               Si modificas la extension Damusix, estare muy agradecido si
@@ -96,26 +96,6 @@
 !               Public License along with this program. If not, see
 !               <http://www.gnu.org/licenses/>.
 !
-!===============================================================================
-!
-!  COMPATIBILIDAD - Lista de Cambios efectuados en Damusix para InformATE!
-!  respecto del codigo original en Damusix para Inform6 + Lib. 6/11:
-!
-!  (01) La comprobacion de la existencia de la Libreria 6/11 oficial es
-!       removida por ser inaplicable en el caso de InformATE!, eliminando
-!       asi las sentencias de la compilacion condicional y el mensaje de
-!       error en caso de no existencia de la constante LIBRARY_VERSION o
-!       si acaso existe, pero LIBRARY_VERSION < 611.
-!
-!  (02) No se usa el metodo de inicializacion de extensiones de Lib. 6/11
-!       oficial, ya que no tiene equivalente en InformATE! (6/10). En su
-!       lugar ahora tendra que ser el propio programador el que procure
-!       ejecutar la rutina Damusix.InicializarGlk() al comienzo del
-!       juego como primera sentencia de la rutina Inicializar().
-!
-!  (03) La llamada a DrawStatusLine() en la rutina Damusix.HacerPausa()
-!       se cambia por su equivalente DibujarLineaEstado() de InformATE!
-!
 !-------------------------------------------------------------------------------
 
 #ifndef _DAMUSIX_H_;  ! se ha incluido ya?
@@ -132,6 +112,18 @@ System_file; Constant _DAMUSIX_H_;
   Message "[DAMUSIX: -> Se necesita el Compilador Inform v6.30 o superior]";
   Message fatalerror "";
 #endif; ! VN_1630
+
+! ERROR: Se necesita la Libreria Inform 6/11 o superior
+#ifndef LIBRARY_VERSION;
+  Message "[DAMUSIX: ERROR - No se puede compilar el codigo del juego]";
+  Message "[DAMUSIX: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif;
+#iftrue (LIBRARY_VERSION < 611);
+  Message "[DAMUSIX: ERROR - No se puede compilar el codigo del juego]";
+  Message "[DAMUSIX: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif; ! LIBRARY_VERSION
 
 !-------------------------------------------------------------------------------
 ! ERROR SI SE ACTIVA COMPILACION PARA MAQUINA-Z
@@ -195,6 +187,20 @@ Include "Dainunek";
 
 ! LIBRERIA ABSOLUTAMENTE NECESARIA (para el trabajo con Glk)
 Include "infglk";
+
+!===============================================================================
+
+! APROVECHAMOS METODO DE LA LIB. 6/11 PARA LA INICIALIZACION DE EXTENSIONES:
+! en este caso, llamamos siempre en inicio del juego [justo antes de rutina
+! Initialise()] a Damusix.InicializarGlk() para que se creen correctamente
+! los todos los canales de audio y se preparen adecuadamente para su uso
+Object "(Damusix_Ext)" LibraryExtensions
+  with
+    ext_initialise [ ;
+      ! INICIALIZA GESTOR DE AUDIO DAMUSIX Y CANALES (NORMALES/VIRTUALES/LISTA)
+      Damusix.InicializarGlk();
+    ],
+;
 
 !===============================================================================
 
@@ -425,7 +431,7 @@ Object Damusix
             jump Damusix_HacerPausaFin; ! entonces debemos salir del bucle
           !---------------------------------------------------------------------
           evtype_Arrange,evtype_Redraw: ! se produjo cambio en las Ventanas?
-            DibujarLineaEstado(); ! entonces debemos redibujar la barra de estado y...
+            DrawStatusLine(); ! entonces debemos redibujar la barra de estado y...
             HandleGlkEvent(gg_damusix_event,1,gg_arguments); ! actualizar ventanas
         }
       }

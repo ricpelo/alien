@@ -1,8 +1,9 @@
 !% -~S~D
+!% +language_name=Spanish
 !%
 !===============================================================================
 !  SGW+DMX DEMO
-!  Codigo Fuente --==[ Version Especial para Libreria Española InformATE! ]==--
+!  Codigo Fuente
 !===============================================================================
 !
 !  Archivo :  sgw+dmx_demo.inf
@@ -57,8 +58,8 @@
 !
 !-------------------------------------------------------------------------------
 
-Constant Historia "^SGW+DMX Demo v1.2 @00";
-Constant Titular  "^Extensión ~Simple Glulx Wrapper con Damusix~ de Eliuk Blau.
+Constant Story "^SGW+DMX Demo v1.2 @00";
+Constant Headline "^Extensión ~Simple Glulx Wrapper con Damusix~ de Eliuk Blau.
                    ^- SGW+DMX está basada en SGW v1.6.1 de Alessandro Schillaci.
                    ^- Demo inspirada en el ~Test para SGW~ de Mapache y Depresiv.^^";
 
@@ -81,14 +82,14 @@ Constant SCINPU = $DDEEFF;      ! estilo input del jugador
 Constant SCUSR1 = CLR_GG_GREEN; ! estilo configurable User1
 Constant SCUSR2 = CLR_GG_AZURE; ! estilo configurable User2
 
-Include "EParser";
+Include "Parser";
 
 Include "sgw+dmx";           ! Incluir la extension SGW+DMX
 Include ">sgw+dmx_demo.bli"; ! Incluir recursos multimedia (imagenes y sonidos)
 
-Include "Acciones";
+Include "VerbLib";
 
-[ Inicializar ;
+[ Initialise ;
     ! INICIALIZAMOS SGW+DMX para mostrar imagenes con 200px de altura.
     initializeSGW(200);
     !---------------------------------------------------------------------------
@@ -119,22 +120,21 @@ Include "Acciones";
     !---------------------------------------------------------------------------
 
     ! Lugar de comienzo.
-    localizacion = Localidad_01;
+    location = Localidad_01;
 
     ! Activamos esta variable para que la descripción de los lugares
     ! se repita siempre, incluso si el jugador ya ha estado alli.
-    modomirar = 2;
+    lookmode = 2;
 
     ! mostramos titulo y subtitulo del juego con los estilos de SGW+DMX
-    print (s_head) Historia;
-    print (string) Titular;
+    print (s_head) Story;
+    print (string) Headline;
 
     ! para que no se muestre el Banner con el mensaje de version
     return 2;
 ];
 
-Include "Mensajes";
-Include "Gramatica";
+Include "SpanishG";
 
 
 !===============================================================================
@@ -142,37 +142,37 @@ Include "Gramatica";
 !-------------------------------------------------------------------------------
 
 Object Localidad_01 "Lejos del Final"
-  has luz,
+  has light,
   with
     sgw_img LOC_01,       ! el grafico de la localidad
     sgw_mus MUSICA_FONDO, ! la musica de la localidad
     sgw_vol VOLUMEN_BAJO, ! el volumen de la musica
-    descripcion "En el norte hay algo que ves realmente muy borroso.
+    description "En el norte hay algo que ves realmente muy borroso.
       Una extraña melodía proviene desde ese mismo lugar y
       parece muy lejana.",
-    al_n Localidad_02,
+    n_to Localidad_02,
 ;
 
 Object Localidad_02 "Más cerca del Final"
-  has luz,
+  has light,
   with
     sgw_img LOC_02,       ! el grafico de la localidad
     sgw_mus MUSICA_FONDO, ! la musica de la localidad
     sgw_vol VOLUMEN_MEDIO, ! el volumen de la musica
-    descripcion "En el norte hay algo que ves un poco borroso.
+    description "En el norte hay algo que ves un poco borroso.
       Una extraña melodía proviene desde ese mismo lugar y
       parece cercana.",
-    al_n Localidad_03,
-    al_s Localidad_01,
+    n_to Localidad_03,
+    s_to Localidad_01,
 ;
 
 Object Localidad_03 "Casi en el Final"
-  has luz,
+  has light,
   with
     sgw_img LOC_03,       ! el grafico de la localidad
     sgw_mus MUSICA_FONDO, ! la musica de la localidad
     sgw_vol VOLUMEN_ALTO, ! el volumen de la musica
-    descripcion [ ;
+    description [ ;
       print "¡Vaya! La música proviene de aquí... Y lo que se veía borroso
         era nada menos que el logo de ~";
       print (s_user1)"SGW+DMX: ";
@@ -181,27 +181,27 @@ Object Localidad_03 "Casi en el Final"
         Te mira desde un lado como esperando que le hables.^^";
       print "Hacia el norte parece que se encuentra el final.^";
     ],
-    al_n Localidad_04,
-    al_s Localidad_02,
+    n_to Localidad_04,
+    s_to Localidad_02,
 ;
 
 Object Localidad_04 "Casi en el Final"
-  has luz,
+  has light,
   with
     sgw_img LOC_04,       ! el grafico de la localidad
     sgw_mus MUSICA_DMX,   ! la musica de la localidad
     sgw_vol VOLUMEN_ALTO, ! el volumen de la musica
-    descripcion [ ;
+    description [ ;
       print "¡Jejeje! Aquí está el reluciente logo de ";
       print (s_user2)"Damusix";
       print "... ¡Y su pegajosa musiquita! ¡Yeah! @@94_@@94^^
         Si vas hacia el norte terminará todo...^";
     ],
-    al_s Localidad_03,
-    al_n [;
-      banderafin = 2;
+    s_to Localidad_03,
+    n_to [;
+      deadflag = 2;
       #ifdef _DAMUSIX_H_; ! si usamos Damusix
-        Damusix.SimpleFadeOut(localizacion.sgw_mus,50);
+        Damusix.SimpleFadeOut(location.sgw_mus,50);
         Damusix.PararTodo();
         Damusix.TocarV(VICTORIA);
       #ifnot; ! si usamos audio nativo de SGW+DMX
@@ -216,11 +216,11 @@ Object Localidad_04 "Casi en el Final"
 Object Peluche_Wookie "peluche de wookie" Localidad_02
   with
     sgw_img WOOKIE, ! el grafico del objeto
-    nombre 'peluche' 'wookie',
-    descripcion "El peluche producirá un curioso sonido si
+    name 'peluche' 'wookie',
+    description "El peluche producirá un curioso sonido si
       lo aprietas o golpeas.",
-    antes [ ;
-      Retorcer, Atacar:
+    before [ ;
+      Squeeze, Attack:
         #ifdef _DAMUSIX_H_; ! si usamos Damusix
           Damusix.TocarV(GRITO);
         #ifnot; ! si usamos audio nativo de SGW+DMX
@@ -231,16 +231,16 @@ Object Peluche_Wookie "peluche de wookie" Localidad_02
 ;
 
 Object Chica_Intelectual "chica" Localidad_03
-  has femenino animado oculto,
+  has female animate concealed,
   with
     sgw_img CHICA, ! el grafico del objeto
-    nombre 'chica',
-    adjetivos 'guapa' 'intelectual',
-    descripcion "La chica está promoviendo la Librería INFSP.",
-    vida [;
-      Responder, Hablar:
+    name 'chica',
+    adjectives 'guapa' 'intelectual',
+    description "La chica está promoviendo la Librería INFSP.",
+    life [;
+      Answer, Tell:
         clearMainWindow(); ! limpamos ventana principal (textos e imagen superior)
-        viewImageCenter(localizacion.sgw_img); ! re-pintamos la imagen de la localidad
+        viewImageCenter(location.sgw_img); ! re-pintamos la imagen de la localidad
         viewImageSlide(self.sgw_img,1); ! sin Slide para mantener abierta la ventana
         print "^^La chica te mira y dice:^^";
         if(self hasnt general) {
@@ -257,22 +257,22 @@ Object Chica_Intelectual "chica" Localidad_03
         EjecutarDemo();    ! EJECUTAMOS LA DEMOSTRACION
         closeImageSlide(); ! cerramos la ventana grafica pequeña
         clearMainWindow(); ! limpiamos toda la ventana principal
-        viewImageCenter(localizacion.sgw_img); ! re-pintamos imagen de localidad
+        viewImageCenter(location.sgw_img); ! re-pintamos imagen de localidad
         !-----------------------------------------------------------------------
         ! ... y volvemos a reproducir la musica de fondo de la localidad...
         !-----------------------------------------------------------------------
         #ifdef _DAMUSIX_H_; ! si usamos Damusix
           Damusix.SimpleFadeOut(MUSICA_DEMO,50);
           Damusix.Parar(MUSICA_DEMO); ! muy importante: paramos musica de demo
-          Damusix.Volumen(localizacion.sgw_mus,100); ! por el SimpleFadeOut del comienzo
-          Damusix.Tocar(localizacion.sgw_mus); ! tocamos musica de localidad actual
+          Damusix.Volumen(location.sgw_mus,100); ! por el SimpleFadeOut del comienzo
+          Damusix.Tocar(location.sgw_mus); ! tocamos musica de localidad actual
         #ifnot; ! si usamos audio nativo de SGW+DMX
           silenceChannel(music); ! silenciamos todo y tocamos musica...
-          playSound(music,localizacion.sgw_mus,-1,100); ! ... de localidad actual
+          playSound(music,location.sgw_mus,-1,100); ! ... de localidad actual
         #endif; ! _DAMUSIX_H_;
         !-----------------------------------------------------------------------
         new_line;
-        <<Mirar>>; ! descripcion de localidad y devuelve 'true' (necesario)
+        <<Look>>; ! descripcion de localidad y devuelve 'true' (necesario)
     ],
 ;
 
@@ -281,7 +281,7 @@ Object Chica_Intelectual "chica" Localidad_03
 [ EjecutarDemo ;
     wait("Pero primero quitemos la música de fondo... ");
     #ifdef _DAMUSIX_H_; ! si usamos Damusix
-      Damusix.SimpleFadeOut(localizacion.sgw_mus,50);
+      Damusix.SimpleFadeOut(location.sgw_mus,50);
       Damusix.PararTodo();
     #ifnot; ! si usamos audio nativo de SGW+DMX
       silenceAll();
@@ -311,7 +311,7 @@ Object Chica_Intelectual "chica" Localidad_03
     wait("Mejor volvemos a abrir la ventana gráfica superior... ");
     openGraphicWindow(200); ! abrimos de nuevo la vent. grafica con 200px
     clearMainWindow(); ! limpiamos el texto por puro gusto, la verdad =P
-    viewImageCenter(localizacion.sgw_img); ! re-pintamos imagen de localidad
+    viewImageCenter(location.sgw_img); ! re-pintamos imagen de localidad
     wait("^^¡Mucho más acogedor! @@94_@@94 ");
     wait("^^¡Ups! No aparezco yo. Tengo que abrir mi ventana también... ");
     viewImageSlide(Chica_Intelectual.sgw_img,1);

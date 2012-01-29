@@ -1,6 +1,6 @@
 !===============================================================================
 !  DREAMBYTES ADVENTURES: (IN)ICIALIZACION (UN)IFICADA DE (E)XTENSIONES EN GL(K)
-!  Codigo Fuente --==[ Version Especial para Libreria Española InformATE! ]==--
+!  Codigo Fuente
 !===============================================================================
 !
 !  Archivo :  dainunek.h
@@ -62,7 +62,7 @@
 !
 !               Dainunek requiere para funcionar correctamente:
 !                 - Compilador Inform v6.30 o superior
-!                 - Libreria Española InformATE! 6/10
+!                 - Libreria Inform 6/11
 !
 !               Si modificas la extension Dainunek, estare muy agradecido si
 !               me mandas el codigo fuente por e-Mail.
@@ -85,17 +85,6 @@
 !               You should have received a copy of the GNU Lesser General
 !               Public License along with this program. If not, see
 !               <http://www.gnu.org/licenses/>.
-!
-!===============================================================================
-!
-!  COMPATIBILIDAD - Lista de Cambios efectuados en Dainunek para InformATE!
-!  respecto del codigo original en Dainunek para Inform6 + Lib. 6/11:
-!
-!  (01) La comprobacion de la existencia de la Libreria 6/11 oficial es
-!       removida por ser inaplicable en el caso de InformATE!, eliminando
-!       asi las sentencias de la compilacion condicional y el mensaje de
-!       error en caso de no existencia de la constante LIBRARY_VERSION o
-!       si acaso existe, pero LIBRARY_VERSION < 611.
 !
 !===============================================================================
 !
@@ -141,6 +130,18 @@ System_file; Constant _DAINUNEK_H_;
   Message "[DAINUNEK: -> Se necesita el Compilador Inform v6.30 o superior]";
   Message fatalerror "";
 #endif; ! VN_1630
+
+! ERROR: Se necesita la Libreria Inform 6/11 o superior
+#ifndef LIBRARY_VERSION;
+  Message "[DAINUNEK: ERROR - No se puede compilar el codigo del juego]";
+  Message "[DAINUNEK: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif;
+#iftrue (LIBRARY_VERSION < 611);
+  Message "[DAINUNEK: ERROR - No se puede compilar el codigo del juego]";
+  Message "[DAINUNEK: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif; ! LIBRARY_VERSION
 
 !-------------------------------------------------------------------------------
 ! ERROR SI SE ACTIVA COMPILACION PARA MAQUINA-Z

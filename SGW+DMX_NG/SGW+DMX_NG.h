@@ -1,6 +1,6 @@
 !===============================================================================
 !  SGW+DMX: Simple Glulx Wrapper con Damusix (MEJORAS DE ELIUK BLAU)
-!  Codigo Fuente --==[ Version Especial para Libreria Española InformATE! ]==--
+!  Codigo Fuente
 !===============================================================================
 !
 !  Archivo :  sgw+dmx.h
@@ -77,24 +77,23 @@
 !  Tan sencillo como seguir las siguientes instrucciones:
 !
 !  1) Incluye SGW+DMX en el codigo fuente de tu juego despues de incluir
-!     el propio Parser de InformATE! (pero antes del archivo de Gramatica).
+!     el propio Parser de Inform (pero antes del archivo de Gramatica).
 !     Ejemplo:
 !
-!       Include "EParser";
+!       Include "Parser";
 !       Include "sgw+dmx";       ! Incluir la extension SGW+DMX
 !       Include ">aventura.bli"; ! Incluir los recursos (imagenes y sonidos)
-!       Include "Acciones";
+!       Include "VerbLib";
 !       !--------------------
 !       ! ... mas codigo ...
 !       !--------------------
-!       Include "Mensajes";
-!       Include "Gramatica";
+!       Include "SpanishG";
 !
 !     SGW+DMX utiliza la extension "infglk.h" para compilar correctamente.
 !     Viene incluida en el paquete de SGW+DMX, asi que recuerda copiarla
-!     en el directorio de tus librerias para InformATE!
+!     en el directorio de tus librerias para Inform6.
 !
-!  2) En la rutina Inicializar(), llama a la rutina initializeSGW(x) para
+!  2) En la rutina Initialise(), llama a la rutina initializeSGW(x) para
 !     indicarle a SGW+DMX que prepare las ventanas graficas y el sistema
 !     de audio. El argumento 'x' corresponde a la altura que debera tener
 !     la ventana superior para imagenes grandes (por ejemplo, para las
@@ -107,12 +106,6 @@
 !     que la imagen realmente tenga esa altura, pues si tiene una altura
 !     mayor que la indicada para la ventana entonces dicha imagen sera
 !     "redimensionada" para ajustarse a la altura de la ventana.
-!
-!     Si vas a ocupar Damusix, la rutina initializeSGW() tambien se encargara
-!     de inicializar el Gestor de Audio, ejecutando automaticamente la rutina
-!     Damusix.InicializarGlk(), por lo que no tienes que preocuparte de
-!     hacerlo tu mismo, a mano, en la rutina Inicializar() de tu juego.
-!     SGW+DMX lo hara por ti.
 !
 !  3) Una vez que SGW+DMX este inicializada ya puedes intentar reproducir
 !     un sonido o mostrar alguna imagen. La rutina playSound() sirve para
@@ -191,13 +184,12 @@
 !
 !       Constant SGW_CON_DAMUSIX;
 !
-!     Ahora SGW+DMX incluira e inicializara automaticamente la
-!     extension Damusix. Todas las funciones nativas de audio de
-!     SGW+DMX seran inhabilitadas con este cambio y ya podras usar
-!     sin problemas las rutinas de Damusix. Ademas, SGW+DMX hara
-!     todos los ajustes necesarios en el Marco de Trabajo (ver
-!     siguiente item) para que se usen las rutinas de Damusix
-!     que son mucho mas potentes.
+!     Ahora SGW+DMX incluira automaticamente la extension Damusix.
+!     Todas las funciones nativas de audio de SGW+DMX seran inhabilitadas
+!     con este cambio y ya podras usar sin problemas las rutinas de
+!     Damusix. Ademas, SGW+DMX hara todos los ajustes necesarios en
+!     el Marco de Trabajo (ver siguiente item) para que se usen las
+!     rutinas de Damusix que son mucho mas potentes.
 !
 !  8) SGW+DMX implementa automaticamente un simple "Marco de Trabajo"
 !     que te hara la vida mas facil a la hora de programar tu juego.
@@ -217,18 +209,18 @@
 !     Ejemplos:
 !
 !       Object La_Localidad "Una Localidad Cualquiera"
-!         has luz,
+!         has light,
 !         with
 !           sgw_img grafico_localidad, ! el grafico de la localidad
 !           sgw_mus musica_localidad,  ! la musica de la localidad
 !           sgw_vol VOLUMEN_ALTO,      ! el volumen de la musica
-!           descripcion "Yeah. Imagen y Musica de Fondo.",
+!           description "Yeah. Imagen y Musica de Fondo.",
 !       ;
 !
 !       Object El_Objeto "Un Objeto Cualquiera"
 !         with
 !           sgw_img grafico_objeto, ! el grafico del objeto
-!           descripcion "Cool. Este objeto tiene una Imagen.",
+!           description "Cool. Este objeto tiene una Imagen.",
 !       ;
 !
 !     Si una localidad no tiene luz, el Marco de Trabajo no mostrara
@@ -248,24 +240,24 @@
 !     impide asignarle una nueva imagen en cualquier otra parte
 !     del juego.
 !
-!     El Marco de Trabajo hace uso de las rutinas TrasElPrompt()
-!     y RutinaPostJuego(). Si necesitas implementar una version
+!     El Marco de Trabajo hace uso de las rutinas AfterPrompt()
+!     y GamePostRoutine(). Si necesitas implementar una version
 !     propia de estas rutinas en tu juego, simplemente escribelas
 !     antes de incluir SGW+DMX. No olvides que debes llamar en
 !     alguna parte de ellas a la rutina del Marco de Trabajo. Asi,
-!     dentro de TrasElPrompt() debes llamar a SGW_MarcoDeTrabajo(1) y
-!     dentro de RutinaPostJuego() debes llamar a SGW_MarcoDeTrabajo(2).
+!     dentro de AfterPrompt() debes llamar a SGW_MarcoDeTrabajo(1) y
+!     dentro de GamePostRoutine() debes llamar a SGW_MarcoDeTrabajo(2).
 !     Con esto, el Marco de Trabajo seguira funcionando normalmente.
 !     Ejemplos:
 !
-!       [ TrasElPrompt ;
+!       [ AfterPrompt ;
 !           SGW_MarcoDeTrabajo(1);
 !           !---------------------------------------------------------
 !           ! ... todo el codigo tuyo que necesites poner aqui ...
 !           !---------------------------------------------------------
 !       ];
 !
-!       [ RutinaPostJuego ;
+!       [ GamePostRoutine ;
 !           SGW_MarcoDeTrabajo(2);
 !           !---------------------------------------------------------
 !           ! ... todo el codigo tuyo que necesites poner aqui ...
@@ -357,47 +349,6 @@
 !
 !    wait("txt",x) : espera una pulsacion de tecla, con un texto y un tiempo
 !                    de espera opcionales (x=0, no temporizar la espera).
-!
-!===============================================================================
-!
-!  COMPATIBILIDAD - Lista de Cambios efectuados en SGW+DMX para InformATE!
-!  respecto del codigo original en SGW+DMX para Inform6 + Lib. 6/11:
-!
-!  (01) La comprobacion de la existencia de la Libreria 6/11 oficial es
-!       removida por ser inaplicable en el caso de InformATE!, eliminando
-!       asi las sentencias de la compilacion condicional y el mensaje de
-!       error en caso de no existencia de la constante LIBRARY_VERSION o
-!       si acaso existe, pero LIBRARY_VERSION < 611.
-!
-!  (02) La llamada a DrawStatusLine() en la rutina slideViewPausa()
-!       se cambia por su equivalente DibujarLineaEstado() de InformATE!
-!
-!  (03) La rutina initializeSGW(), si se compila con Damusix, llamara
-!       automaticamente a Damusix.InicializarGlk() ya que en InformATE!
-!       el Gestor de Damusix debe ser inicializado explicitamente porque
-!       no existe el mecanismo de inicializacion automatica de extensiones
-!       que proporciona la Lib. 6/11 (ver Doc de 'Damusix para InformATE!')
-!
-!  (04) Se hacen varios cambios en el codigo del Marco de Trabajo y en
-!       la rutina SGW_IdentifyGlk() para adaptar variables y acciones
-!       a sus nombres españolizados de InformATE! Estos cambios son:
-!         - Se cambia 'noun' por 'uno'
-!         - Se cambia 'action' por 'accion'
-!         - Se cambia 'thedark' por 'laoscuridad'
-!         - Se cambia 'location' por 'localizacion'
-!         - Se cambia 'real_location' por 'localizacion_real'
-!         - Se cambia AfterPrompt() por TrasElPrompt()
-!         - Se cambia GamePostRoutine() por RutinaPostJuego()
-!         - Se cambia '##Examine' por '##Examinar'
-!
-!  (05) Se portan algunas rutinas propias de la Lib. 6/11 y utilizadas
-!       en SGW+DMX que no existen en InformATE! (porque usa Lib. 6/10):
-!         - Rutina ClearScreen()      [version Z y Glulx]
-!         - Rutina KeyDelay()         [version Z y Glulx]
-!         - Rutina KeyCharPrimitive() [solo Z; InformATE! ya la trae en Glulx]
-!
-!  (06) Se adapta la documentacion para ser coherente con la sintaxis
-!       españolizada de InformATE!
 !
 !===============================================================================
 !
@@ -552,6 +503,18 @@ System_file; Constant _SGWDMX_H_;
   Message "[SGW+DMX: -> Se necesita el Compilador Inform v6.30 o superior]";
   Message fatalerror "";
 #endif; ! VN_1630
+
+! ERROR: Se necesita la Libreria Inform 6/11 o superior
+#ifndef LIBRARY_VERSION;
+  Message "[SGW+DMX: ERROR - No se puede compilar el codigo del juego]";
+  Message "[SGW+DMX: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif;
+#iftrue (LIBRARY_VERSION < 611);
+  Message "[SGW+DMX: ERROR - No se puede compilar el codigo del juego]";
+  Message "[SGW+DMX: -> Se necesita la Libreria Inform 6/11 o superior]";
+  Message fatalerror "";
+#endif; ! LIBRARY_VERSION
 
 !===============================================================================
 ! IMPLEMENTACION AUTOMATICA DE LOS PUNTOS DE ENTRADA GLK MEDIANTE DAINUNEK
@@ -733,83 +696,6 @@ Default LITEXT  = SCBACK; ! se invierte el color
 
 
 !===============================================================================
-! FUNCIONES PORTADAS DESDE LIB. INFORM 6/11 (porque no existen en InformATE!)
-!-------------------------------------------------------------------------------
-! ELIUK: Las siguientes rutinas estan copiadas directamente de la Lib. 6/11
-! con los retoques oportunos (InformATE! no las tiene porque usa la Lib. 6/10)
-
-! Algunas constantes utilizadas por las rutinas portadas
-Default WIN_ALL     = 0;
-Default WIN_STATUS  = 1;
-Default WIN_MAIN    = 2;
-
-! Limpia el contenido de la ventana principal, la barra de estado o ambas
-[ ClearScreen window;
-   #ifdef TARGET_GLULX;
-     if (window == WIN_ALL or WIN_MAIN) {
-       glk($002A, gg_mainwin);
-       if (gg_quotewin) {
-         glk($0024, gg_quotewin, 0); ! close_window
-         gg_quotewin = 0;
-       }
-     }
-     if (gg_statuswin && window == WIN_ALL or WIN_STATUS) {
-       glk($002A, gg_statuswin);
-     }
-   #ifnot; ! COMPILACION PARA MAQUINA Z
-     switch (window) {
-       WIN_ALL:    @erase_window -1;
-       WIN_STATUS: @erase_window 1;
-       WIN_MAIN:   @erase_window 0;
-     }
-   #endif; ! TARGET_
-];
-
-! Rutina 'tonta' requerida por la version Z de KeyDelay()
-[ KeyTimerInterrupt;
-    rtrue;
-];
-
-! Espera X decimas de segundo por la pulsacion de una tecla
-[ KeyDelay tenths  key done ix;
-   #ifdef TARGET_GLULX;
-     glk($00D2, gg_mainwin); ! request_char_event
-     glk($00D6, tenths*100); ! request_timer_events
-     while (~~done) {
-       glk($00C0, gg_event); ! select
-       ix = HandleGlkEvent(gg_event, 1, gg_arguments);
-       if (ix == 2) {
-         key = gg_arguments-->0;
-         done = true;
-       }
-       else if (ix >= 0 && gg_event-->0 == 1 or 2) {
-         key = gg_event-->2;
-         done = true;
-       }
-     }
-     glk($00D3, gg_mainwin); ! cancel_char_event
-     glk($00D6, 0); ! request_timer_events
-     return key;
-   #ifnot; ! COMPILACION PARA MAQUINA Z
-     done = ix; ! para evitar warning de variables no usadas
-     @read_char 1 tenths KeyTimerInterrupt -> key;
-     return key;
-   #endif; ! TARGET_
-];
-
-#ifdef TARGET_ZCODE;
-! Espera por la pulsacion de una tecla.
-! NOTA: Solo es necesaria la version Z de esta rutina, porque InformATE!
-! curiosamente trae la version Glulx, pero no una version para Maquina-Z
-[ KeyCharPrimitive win key;
-    if (win) { @set_window win; }
-    @read_char 1 -> key;
-    return key;
-];
-#endif; ! TARGET_ZCODE
-
-
-!===============================================================================
 ! FUNCIONES DE ESTILOS DE TEXTO - added by Vincenzo Scarpa
 !-------------------------------------------------------------------------------
 
@@ -974,8 +860,6 @@ Default WIN_MAIN    = 2;
           if (chan2 == 0) { chan2 = glk_schannel_create(GG_MUSICCHANSOUND2_ROCK); }
           silenceAll(); ! Silence all audio channels
         }
-      #ifnot; ! SI COMPILAMOS CON DAMUSIX...
-        Damusix.InicializarGlk(); ! INICIALIZAMOS GESTOR DE DAMUSIX (IMPORTANTE!)
       #endif; ! SGW_CON_DAMUSIX
       !-------------------------------------------------------------------------
     #ifnot; ! TARGET_ZCODE
@@ -1293,9 +1177,9 @@ Default WIN_MAIN    = 2;
               jump FinSlideViewPausa; ! entonces debemos salir del bucle
             !-------------------------------------------------------------------
             evtype_Redraw, evtype_Arrange: ! cambios en las Ventanas Graficas?
-              viewImageSGW();       ! repintamos ventana grande
-              drawImageSlide(pos);  ! repintamos ventana chica (slide)
-              DibujarLineaEstado(); ! repintamos barra de estado (por si acaso)
+              viewImageSGW();      ! repintamos ventana grande
+              drawImageSlide(pos); ! repintamos ventana chica (slide)
+              DrawStatusLine();    ! repintamos barra de estado (por si acaso)
           }
         }
         .FinSlideViewPausa; ! etiqueta para salir del bucle
@@ -1640,12 +1524,12 @@ Default WIN_MAIN    = 2;
            silenceAll(); ! se detienen canales 'music', 'chan1', 'chan2'
            #ifndef SGW_SIN_MARCO_DE_TRABAJO;
              ! este codigo corrige Bug si se hace UNDO y localidad tiene propiedad 'sgw_mus'
-             if (localizacion_real provides sgw_mus) {
-               if (localizacion_real provides sgw_vol) {
-                 playSound(music,localizacion_real.sgw_mus,-1,localizacion_real.sgw_vol);
+             if (real_location provides sgw_mus) {
+               if (real_location provides sgw_vol) {
+                 playSound(music,real_location.sgw_mus,-1,real_location.sgw_vol);
                }
                else {
-                 playSound(music,localizacion_real.sgw_mus,-1,VOLUMEN_ALTO);
+                 playSound(music,real_location.sgw_mus,-1,VOLUMEN_ALTO);
                }
              }
            #endif; ! SGW_SIN_MARCO_DE_TRABAJO
@@ -1746,26 +1630,26 @@ Default WIN_MAIN    = 2;
     Object with sgw_img, sgw_mus, sgw_vol; ! objeto 'tonto' para evitar warnings
   !-------------------------------------------------------------------------------
 
-  #ifdef TrasElPrompt; ! el programador a definido su propia rutina TrasElPrompt()
-    Message "[SGW+DMX: Usando rutina TrasElPrompt() proporcionada por el juego......]";
+  #ifdef AfterPrompt; ! el programador a definido su propia rutina AfterPrompt()
+    Message "[SGW+DMX: Usando rutina AfterPrompt() proporcionada por el juego.......]";
     Message "[SGW+DMX: -> SI QUIERES IMAGEN Y MUSICA AUTOMATICAS PARA CADA LOCALIDAD]";
     Message "[SGW+DMX: -> NO OLVIDES LLAMAR EN TU RUTINA A < SGW_MarcoDeTrabajo(1) >]";
   #ifnot; ! si no, la implementa el propio Marco de Trabajo
-    [ TrasElPrompt ;
+    [ AfterPrompt ;
         SGW_MarcoDeTrabajo(1);
     ];
-  #endif; ! TrasElPrompt
+  #endif; ! AfterPrompt
 
-  #ifdef RutinaPostJuego; ! el programador a definido su propia rutina RutinaPostJuego()
-    Message "[SGW+DMX: Usando rutina RutinaPostJuego() proporcionada por el juego...]";
+  #ifdef GamePostRoutine; ! el programador a definido su propia rutina GamePostRoutine()
+    Message "[SGW+DMX: Usando rutina GamePostRoutine() proporcionada por el juego...]";
     Message "[SGW+DMX: -> SI QUIERES MOSTRAR AUTOMATICAMENTE IMAGENES DE LOS OBJETOS]";
     Message "[SGW+DMX: -> NO OLVIDES LLAMAR EN TU RUTINA A < SGW_MarcoDeTrabajo(2) >]";
   #ifnot; ! si no, la implementa el propio Marco de Trabajo
-    [ RutinaPostJuego ;
+    [ GamePostRoutine ;
         SGW_MarcoDeTrabajo(2);
         rfalse; ! MUY IMPORTANTE: SIN ESTO NO SE MUESTRA NINGUN TEXTO
     ];
-  #endif; ! RutinaPostJuego
+  #endif; ! GamePostRoutine
 
   ! Centraliza las Actividades del Marco de Trabajo (aux == numero de actividad)
   [ SGW_MarcoDeTrabajo aux;
@@ -1775,11 +1659,11 @@ Default WIN_MAIN    = 2;
         ! ACTIVIDAD 1: Imagenes y Musica de Fondo automaticas para cada Localidad
         !------------------------------------------------------------------------
         1:
-          if (current_loc == localizacion_real) { return; }
+          if (current_loc == real_location) { return; }
           else {
-            current_loc = localizacion_real;
+            current_loc = real_location;
             #ifndef SGW_SIN_GRAFICOS;
-              if (localizacion == laoscuridad) {
+              if (location == thedark) {
                 #ifdef SGW_IMAGEN_OSCURIDAD;
                   viewImageCenter(SGW_IMAGEN_OSCURIDAD);
                 #ifnot;
@@ -1788,8 +1672,8 @@ Default WIN_MAIN    = 2;
                 #endif; ! SGW_IMAGEN_OSCURIDAD
               }
               else {
-                if (localizacion provides sgw_img) {
-                  viewImageCenter(localizacion.sgw_img);
+                if (location provides sgw_img) {
+                  viewImageCenter(location.sgw_img);
                 }
                 else {
                   glk_window_set_background_color(gg_bigwin,SCBACK);
@@ -1798,27 +1682,27 @@ Default WIN_MAIN    = 2;
               }
             #endif; ! SGW_SIN_GRAFICOS
 
-            if (localizacion_real provides sgw_mus) {
-              if (localizacion_real provides sgw_vol) {
+            if (real_location provides sgw_mus) {
+              if (real_location provides sgw_vol) {
                 #ifndef SGW_CON_DAMUSIX;
-                  playSound(music,localizacion_real.sgw_mus,-1,localizacion_real.sgw_vol);
+                  playSound(music,real_location.sgw_mus,-1,real_location.sgw_vol);
                 #ifnot;
-                  if (Damusix.SonandoDeFondo(localizacion_real.sgw_mus) == 0) {
-                    Damusix.AsignarCanal(localizacion_real.sgw_mus,DAMUSIX_NCANALMAX-1,CalcVol(localizacion_real.sgw_vol),-1);
+                  if (Damusix.SonandoDeFondo(real_location.sgw_mus) == 0) {
+                    Damusix.AsignarCanal(real_location.sgw_mus,DAMUSIX_NCANALMAX-1,CalcVol(real_location.sgw_vol),-1);
                     Damusix.TocarCanal(DAMUSIX_NCANALMAX-1);
                   }
-                  else { Damusix.Volumen(localizacion_real.sgw_mus,CalcVol(localizacion_real.sgw_vol)); }
+                  else { Damusix.Volumen(real_location.sgw_mus,CalcVol(real_location.sgw_vol)); }
                 #endif; ! SGW_CON_DAMUSIX
               }
               else {
                 #ifndef SGW_CON_DAMUSIX;
-                  playSound(music,localizacion_real.sgw_mus,-1,VOLUMEN_ALTO);
+                  playSound(music,real_location.sgw_mus,-1,VOLUMEN_ALTO);
                 #ifnot;
-                  if (Damusix.SonandoDeFondo(localizacion_real.sgw_mus) == 0) {
-                    Damusix.AsignarCanal(localizacion_real.sgw_mus,DAMUSIX_NCANALMAX-1,CalcVol(VOLUMEN_ALTO),-1);
+                  if (Damusix.SonandoDeFondo(real_location.sgw_mus) == 0) {
+                    Damusix.AsignarCanal(real_location.sgw_mus,DAMUSIX_NCANALMAX-1,CalcVol(VOLUMEN_ALTO),-1);
                     Damusix.TocarCanal(DAMUSIX_NCANALMAX-1);
                   }
-                  else { Damusix.Volumen(localizacion_real.sgw_mus,CalcVol(VOLUMEN_ALTO)); }
+                  else { Damusix.Volumen(real_location.sgw_mus,CalcVol(VOLUMEN_ALTO)); }
                 #endif; ! SGW_CON_DAMUSIX
               }
             }
@@ -1838,13 +1722,13 @@ Default WIN_MAIN    = 2;
         ! ACTIVIDAD 2: Imagenes automaticas al EXAMINAR cada Objeto
         !-----------------------------------------------------------------------
         2:
-          if(accion == ##Examinar && uno provides sgw_img) {
-            viewImageSlide(uno.sgw_img);
+          if(action == ##Examine && noun provides sgw_img) {
+            viewImageSlide(noun.sgw_img);
           }
           else {
             closeImageSlide();
           }
-          ! NOTA: 'rfalse' necesario lo hacemos en la propia RutinaPostJuego()
+          ! NOTA: 'rfalse' necesario lo hacemos en la propia GamePostRoutine()
         !-----------------------------------------------------------------------
         ! = = = = = = = = = = = = = FIN DE ACTIVIDAD 2 = = = = = = = = = = = = =
         !-----------------------------------------------------------------------
