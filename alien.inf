@@ -748,7 +748,7 @@ Object nave1 "Interior de la nave"
     sgw_img Nave1_jpg,
     sgw_mus Nave_ogg,
     Close [;
-      puerta_nave.Close();
+      puerta_nave.cerrar();
       HablaMadre("Cerrando compuerta de la nave.");
     ],
     before [ i k t;
@@ -904,7 +904,7 @@ Object nave1 "Interior de la nave"
             print "Entras ";
           }
           print "al interior de la nave a través del compartimento de descompresión.^";
-          self.Close();
+          self.cerrar();
           if (jason in self && jason.tipo_de_movimiento ~= MOVIMIENTO_PERSEGUIR) {
             PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
           } else {
@@ -1614,7 +1614,7 @@ Object exterior1 "Junto a la nave"
       Go:
         ! Si venimos de dentro de la nave, Madre cierra la puerta automáticamente
         if (noun == out_obj) {
-          nave1.Close();
+          nave1.cerrar();
         }
     ];
 
@@ -1857,7 +1857,7 @@ Object panel_control "panel de control" junto_procesador
         if (WordLength(2) == 6 && t->0 == '2' && t ->1 == '6' &&
             t->2 == '8' && t->3 == '7' && t->4 == '4' && t->5 == '1') {
           ! Código nuevo: 268741
-          puerta_procesador.Open();
+          puerta_procesador.abrir();
           junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
           viewImageCenter(junto_procesador.sgw_img);
           give self ~general;
@@ -3893,7 +3893,7 @@ Object puerta_emergencia "puerta" emergencia_pasillo
     ],
     after [;
       Open:
-        self.Open();
+        self.abrir();
         if (self hasnt general) {
           give self general;
           "Insertas la tarjeta en la ranura... y tras un leve zumbido, el cierre
@@ -5592,7 +5592,7 @@ Object jason "Jason" nave1
       if (self in exterior1) {
         if (puerta_nave has open) {
           move self to nave1;
-          puerta_nave.Close();
+          puerta_nave.cerrar();
           if (player in nave1 or nave2) {
             PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
           } else {
@@ -5637,7 +5637,7 @@ Object jason "Jason" nave1
           }          
         }
         move self to exterior1;
-        puerta_nave.Close();
+        puerta_nave.cerrar();
         PNJ_Ruta(self, MOVIMIENTO_NINGUNO);
         "Jason sale al exterior protegido por su traje espacial. A continuación,
          Madre cierra la compuerta de la nave.";
@@ -6643,7 +6643,7 @@ Object computadora "Madre"
               noun = puerta_nave;
             }
             if (noun hasnt open) {
-              noun.Open();
+              noun.abrir();
               move descompresion to nave1;
               HablaMadre("Abriendo compuerta de la nave.");
               if (LugarReal() == nave1 or nave2 or exterior1) {
@@ -6659,7 +6659,7 @@ Object computadora "Madre"
             }
           compartimento_trajes:
             if (noun hasnt open) {
-              noun.Open();
+              noun.abrir();
               HablaMadre("Abriendo compartimento de trajes atmosféricos.");
               if (LugarReal() == nave1 or exterior1) {
                 "^Un sonido hidráulico en una pared lateral llama tu atención hacia la
@@ -6715,7 +6715,7 @@ Object computadora "Madre"
               noun = puerta_nave;
             }
             if (noun has open) {
-              noun.Close();
+              noun.cerrar();
               remove descompresion;
               HablaMadre("Cerrando compuerta de la nave.");
               rtrue;
@@ -6726,7 +6726,7 @@ Object computadora "Madre"
             }
           compartimento_trajes:
             if (noun has open) {
-              noun.Close();
+              noun.cerrar();
               HablaMadre("Cerrando compartimento de trajes atmosféricos.");
               rtrue;
             } else {
@@ -9602,7 +9602,7 @@ Object tt_computadora
   ! El alien empieza a moverse aleatoriamente
   PNJ_Ruta(alien, MOVIMIENTO_ALEATORIO);
   ! La puerta ahora está rota
-  puerta_rara.Open();
+  puerta_rara.abrir();
   junto_puerta.sgw_img = Junto_Puerta_Abierta_jpg;
 !  give puerta_rara abierta;
   ! Pero no ya no permite abrirla. Esto se hace para que los PNJ no abran ni cierren la
@@ -10389,7 +10389,7 @@ Ifdef DEBUG;
   move linterna to player;
   linterna.SwitchOn();
   give detector_movimiento on;
-  puerta_procesador.Open();
+  puerta_procesador.abrir();
   junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
   move rifle to player;
   move bisturi to player;
@@ -10419,7 +10419,7 @@ Ifdef DEBUG;
   DejarRastros();
   remove tu_traje;
   give tu_traje absent;
-  puerta_procesador.Open();
+  puerta_procesador.abrir();
   move bisturi to player;
   give circuito general;
   give player light;
