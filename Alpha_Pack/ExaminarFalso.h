@@ -1,9 +1,9 @@
 !
 ! ExaminarFalso.h
 !
-! Permite usar simplemente el nombre de un objeto como sinÃ³nimo de
+! Permite usar simplemente el nombre de un objeto como sinónimo de
 ! 'examinar objeto' (copiado de Transilvania Corruption, de Alien Soft,
-! y mejorado por mÃ­ para dar soporte a objetos decorado):
+! y mejorado por mí para dar soporte a objetos decorado):
 !
 
 

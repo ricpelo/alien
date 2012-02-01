@@ -551,57 +551,17 @@ Class Lugar
     ~luz;
 
 
-Include "Moviles_NG";     ! La librería Moviles retocada por mí
-Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
-Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
-Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
-Include "Etemas";         ! Los temas de conversación
-Include "Decorado_NG";    ! Objetos de decorado (antes de ExaminarFalso)
-Include "ExaminarFalso";  ! Examinar objetos con sólo poner su nombre (tras Decorado_NG)
-Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
-Include "Pistas";         ! Las pistas creadas con ZIPI
-Include "Timer";
-
-
-Class EscenarioAbrible
-  with
-    si_abierto [; print (_El) self, " está abiert", (o) self, ".^"; rtrue; ],
-    si_cerrado [; print (_El) self, " está cerrad", (o) self, ".^"; rtrue; ],
-    ! Cuando está abierto, pasa de ser escenario a ser estático. Esto se hace para que
-    ! se muestre cuando está abierto, usando la propiedad si_abierto. En realidad, la
-    ! propiedad si_cerrado no se usa, porque cuando está cerrado es un escenario, y por
-    ! tanto no se describe.
-    abrir [;
-      self.sonido_abrir_cerrar();
-      give self abierto;
-      give self ~escenario;
-      give self estatico;
-    ],
-    cerrar [;
-      self.sonido_abrir_cerrar();
-      give self ~abierto;
-      give self escenario;
-      give self ~estatico;
-    ],
-    sonido_abrir_cerrar [ snd;
-      if (self notin LugarReal()) rfalse;
-      snd = 0;
-      switch (self) {
-        puerta_nave:          snd = Puerta2_ogg;
-        puerta_procesador:    snd = Puerta2_ogg;
-        puerta_emergencia:    snd = Puerta2_ogg;
-        compartimento_trajes: snd = Puerta1_ogg;
-      }
-      if (snd ~= 0) Damusix.TocarV(snd);
-    ],
-    despues [;
-      Abrir:
-        self.abrir();
-      Cerrar:
-        self.cerrar();
-    ],
-  has
-    escenario abrible;
+Include "Moviles_NG";       ! La librería Moviles retocada por mí
+Include "PnjPuertas_NG";    ! La librería PnjPuertas retocada por mí (muy poco)
+Include "PNJactor_NG";      ! Librerías que hacen que un PNJ pueda coger y dejar
+Include "PNJacciones_NG";   ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
+Include "Etemas";           ! Los temas de conversación
+Include "Decorado_NG";      ! Objetos de decorado (antes de ExaminarFalso)
+Include "ExaminarFalso";    ! Examinar objetos con sólo poner su nombre (tras Decorado_NG)
+Include "EscenarioAbrible"; ! Objetos de escenario que se pueden abrir y cerrar
+Include "Escr_NG";          ! Teletipo para sacar mensajes letra a letra
+Include "Pistas";           ! Las pistas creadas con ZIPI
+Include "Timer";            ! Librería de eventos temporizados
 
 
 ! Un contenedor que, cuando se examina, describe su contenido. Un objeto de esta clase
@@ -983,6 +943,10 @@ Object puerta_nave "compuerta de la nave" nave1
     adentro nave1,
     interior nave1,
     exterior exterior1,
+    gancho [;
+      if (self notin LugarReal()) rfalse;
+      Damusix.TocarV(Puerta2_ogg);
+    ],
     antes [;
       Abrir:
         if (self hasnt abierta) {
@@ -1013,6 +977,10 @@ Object compartimento_trajes "compartimento de trajes" nave1
     adjetivos 'trajes' 'atmosfericos',
     descripcion_real "El compartimento donde se almacenan los trajes se encuentra
                       acoplado a una de las paredes de la nave.",
+    gancho [;
+      if (self notin LugarReal()) rfalse;
+      Damusix.TocarV(Puerta1_ogg);
+    ],
     antes [;
       Abrir, Cerrar:
         "No puede hacerse directamente. Pide ayuda a la computadora.";
@@ -1693,7 +1661,11 @@ Object puerta_procesador "puerta del procesador atmosférico" junto_procesador
     adentro procesador,
     afuera junto_procesador,
     interior procesador,
-    exterior puerta_procesador,     
+    exterior puerta_procesador,
+    gancho [;
+      if (self notin LugarReal()) rfalse;
+      Damusix.TocarV(Puerta2_ogg);
+    ],
     antes [;
       Abrir:
         if (self hasnt abierta) {
@@ -3754,6 +3726,10 @@ Object puerta_emergencia "puerta" emergencia_pasillo
     con_llave tarjeta,
     lado_cierre balcon8,
     tras_abrir NO_PUEDE_ABRIR,
+    gancho [;
+      if (self notin LugarReal()) rfalse;
+      Damusix.TocarV(Puerta2_ogg);
+    ],
     antes [;
       Abrir:
         if (self has cerrojoechado) {
