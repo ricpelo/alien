@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=61840
+!% $MAX_PROP_TABLE_SIZE=62840
 !% $MAX_VERBS=200
 !% $MAX_ZCODE_SIZE=45000
 
@@ -424,20 +424,22 @@ Include "Acciones";
 ! y mejorado por mí):
 [ VerboDesconocido x obj;
   objectloop (obj ofclass Object && PruebaDeAlcance(obj)) {
-    if (obj ofclass DecoradoAmpliado && obj.interpretar_nombre(x)) {
-      return 'examinar.falso';
+    if (obj ofclass Decorado && obj.buscar_nombre(x)) {
+      jump PalabraEncontrada;
     } else if (obj ~= jugador) {
       if (PalabraEnPropiedad(x, obj, nombre) ||
           PalabraEnPropiedad(x, obj, nombre_m) ||
           PalabraEnPropiedad(x, obj, nombre_f) ||
           PalabraEnPropiedad(x, obj, nombre_mp) ||
           PalabraEnPropiedad(x, obj, nombre_fp)) {
-        objetoVerboDesconocido = obj;
-        return 'examinar.falso';
+        jump PalabraEncontrada;
       }
     }
   }
   rfalse;
+.PalabraEncontrada;
+  objetoVerboDesconocido = obj;
+  return 'examinar.falso';
 ];
 
 
@@ -453,7 +455,6 @@ Verb 'examinar.falso'
 
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
-!Include "BajoNivel";      ! Necesario para Barra:
 Include "barra";          ! Para cambiar la barra de estado
 
 
@@ -592,42 +593,10 @@ Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
-Include "Decorado";       ! Objetos de decorado
+Include "Decorado_NG";    ! Objetos de decorado
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
 Include "Timer";
-
-
-Class DecoradoAmpliado
-  class Decorado
-  with
-    interpretar_nombre [ x i n;
-      n = (self.#describir) / (3 * WORDSIZE);
-      for (i = 0: i < n: i++) {
-        if ((self.&describir)-->(i * 3) == x) {
-          self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-          self.genero = (self.&describir)-->(i * 3 + 2);
-          self.cantidad = x;
-          objetoVerboDesconocido = self;
-          rtrue;
-        }
-      }
-    ],
-    antes [;
-      ! Esto hay que ponerlo, o no se podrá examinar nada:
-      Examinar:
-        rfalse;
-
-      Coger: "No puedes hacerlo, ya que está", (n) self, " fij", (o) self,
-             " en su sitio.";
-      Empujar: print_ret (_El) self,
-               " no parece que pueda", (n) self, " ser empujad", (o) self, ".";
-      Oler: "No parece que huela", (n) self, " a nada especial.";
-      Escuchar: "No produce", (n) self, " ningún sonido.";
-      BuscarEn: "No hay nada que buscar en eso.";
-      Tocar: "No notas nada especial al tacto.";
-      default: "No hay ninguna razón para hacer eso.";
-  ];
 
 
 Class EscenarioAbrible
@@ -926,58 +895,54 @@ Object nave1 "Interior de la nave"
 
 
 Object decorado_nave1 nave1
-  class DecoradoAmpliado
+  class Decorado
   with
-    desc_instrumentos "Los paneles de instrumentación están llenos de indicadores y
-                       botones por todas partes. En un lateral también se aprecia
-                       un cargador de baterías.",
     desc_ventanales "A través de las ventanas que dan al exterior únicamente se
                      aprecia una densa luz blanco-amarillenta, proveniente de los
                      focos que iluminan el lugar de aterrizaje con un fulgor
                      fantasmagórico de un tono uniforme ocasionalmente roto por el
                      tintinear de la lluvia impactando en el cristal y la cegadora
                      luminiscencia de los relámpagos.",
-    desc_asientos "Son unos asientos mullidos y cómodos. Algo que contrasta mucho con
-                   la deshumanización del resto del decorado.",
-    desc_paredes "En una de las paredes puedes observar un compartimento destinado a
-                  almacenar los trajes atmosféricos.",
     antes [;
       Tocar:
-        switch (self.cantidad) {
-          'ventanales', 'ventanal',
-          'cristales', 'cristal',
-          'ventanas', 'ventana': "Una superficie lisa que, sin embargo, traspasa la
-                                  humedad del exterior.";
-          'paneles', 'panel',
-          'instrumentos', 'instrumento',
-          'indicadores', 'indicador': "La mayoría de las funciones de la nave están
-                                       gobernadas por Madre, así que lo mejor será
-                                       tocar lo menos posible.";
-          'asientos', 'asiento': "Son mullidos y confortables, pero ahora no es el
-                                  momento de sentarse.";
-          'paredes', 'pared': "Son frías y sólidas al tacto.";
+        print "La cantidad es ", (address) self.cantidad, ".^";
+        print "El sinónimo es ", (address) self.sinonimo, ".^";
+        switch (self.sinonimo) {
+          'ventana': "Una superficie lisa que, sin embargo, traspasa la
+                      humedad del exterior.";
+          'panel':   "La mayoría de las funciones de la nave están
+                      gobernadas por Madre, así que lo mejor será
+                      tocar lo menos posible.";
+          'asiento': "Son mullidos y confortables, pero ahora no es el
+                      momento de sentarse.";
+          'pared':   "Son frías y sólidas al tacto.";
         }
     ],
+    sinonimos
+      'paneles'      'panel'   G_PLURAL
+      'instrumentos' 'panel'   G_PLURAL
+      'instrumento'  'panel'   0
+      'indicadores'  'panel'   G_PLURAL
+      'indicador'    'panel'   0
+      'botones'      'panel'   G_PLURAL
+      'boton'        'panel'   0
+      'ventanales'   'ventana' G_PLURAL
+      'ventanal'     'ventana' 0
+      'ventanas'     'ventana' G_FEMENINO + G_PLURAL
+      'cristales'    'ventana' G_PLURAL
+      'cristal'      'ventana' 0
+      'lluvia'       'ventana' G_FEMENINO
+      'asientos'     'asiento' G_PLURAL
+      'paredes'      'pared'   G_FEMENINO + G_PLURAL,
     describir
-      'paneles'      [; return self.desc_instrumentos; ] G_PLURAL
-      'panel'        [; return self.desc_instrumentos; ] 0
-      'instrumentos' [; return self.desc_instrumentos; ] G_PLURAL
-      'instrumento'  [; return self.desc_instrumentos; ] 0
-      'indicadores'  [; return self.desc_instrumentos; ] G_PLURAL
-      'indicador'    [; return self.desc_instrumentos; ] 0
-      'botones'      [; return self.desc_instrumentos; ] G_PLURAL
-      'boton'        [; return self.desc_instrumentos; ] 0
-      'ventanales'   [; return self.desc_ventanales; ] G_PLURAL 
-      'ventanal'     [; return self.desc_ventanales; ] 0
-      'ventanas'     [; return self.desc_ventanales; ] G_FEMENINO + G_PLURAL
-      'ventana'      [; return self.desc_ventanales; ] G_FEMENINO
-      'cristales'    [; return self.desc_ventanales; ] G_PLURAL
-      'cristal'      [; return self.desc_ventanales; ] 0
-      'lluvia'       [; return self.desc_ventanales; ] G_FEMENINO
-      'asientos'     [; return self.desc_asientos; ] G_PLURAL
-      'asiento'      [; return self.desc_asientos; ] 0
-      'paredes'      [; return self.desc_paredes; ] G_FEMENINO + G_PLURAL
-      'pared'        [; return self.desc_paredes; ] G_FEMENINO;
+      'panel'   "Los paneles de instrumentación están llenos de indicadores y
+                 botones por todas partes. En un lateral también se aprecia
+                 un cargador de baterías." 0
+      'ventana' [; return self.desc_ventanales; ] G_FEMENINO
+      'asiento' "Son unos asientos mullidos y cómodos. Algo que contrasta mucho con
+                 la deshumanización del resto del decorado." 0
+      'pared'   "En una de las paredes puedes observar un compartimento destinado a
+                 almacenar los trajes atmosféricos." G_FEMENINO;
 
 
 Object nave "nave"
@@ -1288,7 +1253,7 @@ Object traje_jason "traje de Jason" compartimento_trajes
 ! El decorado de los trajes:
 
 Object decorado_traje
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_guantes "Sujetos firmemente al resto del traje, son flexibles y muy cómodos.",
     desc_botas "Recias y fuertes, para su uso en cualquier entorno.",
@@ -1346,7 +1311,7 @@ Object traje_inutil "restos del traje de Jason"
     
 
 Object decorado_traje_inutil
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_guantes "Los guantes han perdido su estanqueidad con el resto del traje.",
     desc_botas "Las botas están llenas de barro y de la misma sustancia pegajosa que
@@ -1384,7 +1349,7 @@ Object nave2 "Parte posterior de la nave"
 
 
 Object decorado_nave2 nave2
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes en esta zona de la nave resultan más austeras y frías.",
     antes [;
@@ -1604,7 +1569,7 @@ Object exterior1 "Junto a la nave"
 
 
 Object decorado_exterior1 exterior1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_niebla "Es un efecto provocado por la intensa lluvia, que te impide ver con
                  claridad los límites exteriores de la colonia.",
@@ -1691,7 +1656,7 @@ Object junto_procesador "Junto al procesador atmosférico"
 
 
 Object decorado_junto_procesador junto_procesador
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "La lluvia y otros fenómenos atmosféricos han hecho mella en la otrora
                   lisa y pulida superficie de la pared del complejo.",
@@ -2040,7 +2005,7 @@ Object unidad_central "unidad central" procesador
 
 
 Object decorado_procesador procesador
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_cables "Los cables entran y salen por decenas de la unidad central.",
     desc_tubos "Metros y metros de tubos lisos y estriados serpentean por la sala y hacia
@@ -2195,7 +2160,7 @@ Object exterior3 "Exterior de la colonia"
 
 
 Object decorado_exterior3 exterior3
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_lodo "Una superficie de polvo y arena forma el barro que se acumula en las
                suelas de tus botas. Y sobre dicha superficie, montones de tuercas y
@@ -2266,7 +2231,7 @@ Object junto_puerta "Junto a la entrada de acceso al complejo"
 
 
 Object decorado_junto_puerta junto_puerta
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_edificio "Desde aquí te parece enorme, frío y estéril. Nadie diría que es una
                    estructura diseñada para albergar vida.",
@@ -2374,7 +2339,7 @@ Class Laberinto
 
 
 Object decorado_laberinto
-  class DecoradoAmpliado
+  class Decorado
   with
     esta_en [;
       return LugarReal() ofclass Laberinto;
@@ -2443,7 +2408,7 @@ Class Balcon
 
 
 Object decorado_balcon
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_mineral "El Vibrantium es un mineral muy valioso y escaso. Esta veta es
                   particularmente rica; no hay más que ver el brillo tan puro que emite.",
@@ -2683,7 +2648,7 @@ Object oficina "Oficina"
 
 
 Object decorado_oficina oficina
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_cuadros [;
       print "Se ve que al responsable le encantaba la antigua práctica, habitual en los
@@ -2906,7 +2871,7 @@ Object enfermeria "Enfermería"
 
 
 Object decorado_enfermeria enfermeria
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_armarios "Los armarios tienen puertas en su parte superior y cajones en la
                    inferior, y están salpicados de sangre.",
@@ -3074,7 +3039,7 @@ Object laboratorio "Laboratorio"
 
 
 Object decorado_laboratorio laboratorio
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_tubos "La mayor variedad de probetas y tubos de ensayo que hayas visto nunca
                 en una misma sala. No queda ninguno en pie... Todos están rodando por
@@ -3380,7 +3345,7 @@ Object despensa "Despensa"
 
 
 Object decorado_despensa despensa
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_frigorifico "Los alimentos se congelan en esa especie de gigantesco armario
                       frigorífico. Está cerrado, y no parece abrirse.",
@@ -3463,7 +3428,7 @@ Object comedor1 "Comedor"
 
 
 Object decorado_comedor comedor1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_mesas "Las mesas se alinean ordenadamente, fijas como están al suelo y, salvo una,
                 todas se encuentran bastante limpias.",
@@ -3512,7 +3477,7 @@ Object cocina "Cocina"
 
 
 Object decorado_cocina cocina
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_barras "Es una superficie rectangular, lisa y alargada, que tiene como finalidad
                  la de servir de soporte a las bandejas de comida. Se pierde por el
@@ -3768,7 +3733,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
 
 
 Object decorado_pasillo emergencia_pasillo
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes están absolutamente desnudas, salvo por unas flechas
                   dibujadas sobre un diseño rayado y una letra ~E~ tan alta como la
@@ -4090,7 +4055,7 @@ Object aula "Aula"
 
 
 Object decorado_aula aula
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_patas "Son, sencillamente, las patas que sujetan la mesa del docente.",
     describir
@@ -4287,7 +4252,7 @@ Object seguridad "Sala de seguridad"
 
 
 Object decorado_seguridad seguridad
-  class DecoradoAmpliado
+  class Decorado
   with
     visto_en_seguridad,
     desc_cables [;
@@ -4793,7 +4758,7 @@ Object ventilacion1
 
 
 Object decorado_ventilacion1 ventilacion1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_ventiladores [;
       print "Pequeños pero potentes ingenios que giran veloces absorbiendo aire
@@ -4921,7 +4886,7 @@ Object abrazacaras "araña" hueco_techo
 
 
 Object decorado_hueco hueco_techo
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes están prácticamente cubiertas por esa sustancia viscosa tan
                   desagradable.",
