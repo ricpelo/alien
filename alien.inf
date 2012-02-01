@@ -905,8 +905,6 @@ Object decorado_nave1 nave1
                      luminiscencia de los relámpagos.",
     antes [;
       Tocar:
-        print "La cantidad es ", (address) self.cantidad, ".^";
-        print "El sinónimo es ", (address) self.sinonimo, ".^";
         switch (self.sinonimo) {
           'ventana': "Una superficie lisa que, sin embargo, traspasa la
                       humedad del exterior.";
