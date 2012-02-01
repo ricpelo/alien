@@ -254,7 +254,15 @@ Class Decorado
     ],
     antes [;
       Examinar: rfalse;
-      default: "Déjalo, sólo es decorado.";
+      Coger:    "No puedes hacerlo, ya que está", (n) self, " fij", (o) self,
+                " en su sitio.";
+      Empujar:  print_ret (_El) self, " no parece que pueda", (n) self,
+                " ser empujad", (o) self, ".";
+      Oler:     "No parece que huela", (n) self, " a nada especial.";
+      Escuchar: "No produce", (n) self, " ningún sonido.";
+      BuscarEn: "No hay nada que buscar en eso.";
+      Tocar:    "No notas nada especial al tacto.";
+      default:  "No hay ninguna razón para hacer eso.";
     ],
   has
     escenario oculto;

@@ -419,24 +419,10 @@ Include "Acciones";
 ! Include "Mensajes";
 ! Include "Msg1P";
 
-! Esto es para poder usar las palabras 'abrir', 'cerrar',... como temas de conversación,
-! y, al mismo tiempo, poder usarlas como infinitivos de verbos. Además, permite usar
-! simplemente el nombre de un objeto como sinónimo de 'examinar objeto' (copiado de
-! Transilvania Corruption, de Alien Soft, y mejorado por mí):
+! Permite usar simplemente el nombre de un objeto como sinónimo de
+! 'examinar objeto' (copiado de Transilvania Corruption, de Alien Soft,
+! y mejorado por mí):
 [ VerboDesconocido x obj;
-  ! Atención: ahora que copio y pego las líneas de gramática de los siguientes verbos
-  ! en infinitivo, CREO que ya no hace falta los siguientes 'if', pero los dejo por
-  ! si acaso:
-  if (x == 'abrir')    return 'abre';
-  if (x == 'cerrar')   return 'cierra';
-  if (x == 'cortar')   return 'corta';
-  if (x == 'sacar')    return 'saca';
-  if (x == 'cargar')   return 'carga';
-  if (x == 'recargar') return 'recarga';
-  if (x == 'salir')    return 'sal';
-  if (x == 'arreglar') return 'arregla';
-  if (x == 'reparar')  return 'repara';
-
   objectloop (obj ofclass Object && PruebaDeAlcance(obj)) {
     if (obj ofclass DecoradoAmpliado && obj.interpretar_nombre(x)) {
       return 'examinar.falso';
@@ -466,9 +452,8 @@ Verb 'examinar.falso'
 ];
 
 
-
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
-Include "BajoNivel";      ! Necesario para Barra:
+!Include "BajoNivel";      ! Necesario para Barra:
 Include "barra";          ! Para cambiar la barra de estado
 
 
@@ -9709,39 +9694,15 @@ Object tt_computadora
 Include "Gramatica";
 Include "Decir";           ! Para poder usar DECIR ... A ...
 
-
-! Copio aquí (desde Gramatica.h) las gramáticas de los verbos en infinitivo
-! que se usan en temas de conversación. Si no lo hago, hay problemas cuando
-! el jugador intenta usar verbos en infinitivo:
-
-Verb 'abrir'
-    * noun                              -> Abrir
-    * 'a//' creature                    -> Abrir
-    * noun 'con' held                   -> QuitarCerrojo;
-
-Verb 'cerrar'
-    * noun                              -> Cerrar
-    * noun 'con' 'pestillo'             -> EcharCerrojo
-    * noun 'con' held                   -> EcharCerrojo;
-
-Verb 'cortar' 'rasgar'
-    * noun                              -> Cortar
-    * noun 'con' held                   -> Cortar;
-
-Verb 'sacar'
-  * multiinside 'de' noun             -> Sacar
-  * 'a//' creature 'de' noun          -> Sacar
-  *                                   -> SacarNadaDeNada
-  * 'a//'                             -> SacarNadaDeNada
-  * multiinside                       -> Sacar
-  * 'a//' multiinside                 -> Sacar;
-
-Verb 'salir'
-    *                                   -> Salir
-    * 'de' noun                         -> Salirse
-    * 'por' noun                        -> Meterse  ! [VERGIT] Descomentada
-    * 'fuera'                           -> Salir
-    * 'afuera'                          -> Salir;
+! Aquí hay que poner los verbos en infinitivo que se usan en temas de
+! conversación. Si no lo hago, hay problemas cuando el jugador intenta
+! usar verbos en infinitivo:
+Verb 'abrir'  = 'abre';
+Verb 'cerrar' = 'cierra';
+Verb 'cortar' = 'corta';
+Verb 'rasgar' = 'rasga';
+Verb 'sacar'  = 'saca';
+Verb 'salir'  = 'sal';
 
 Verb 'gilipollas'
   *               -> Tacos;
