@@ -143,9 +143,6 @@ Global dibujarEstado = false;
 ! La imagen que representa la oscuridad:
 Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 
-! Usado en VerboDesconocido:
-Global objetoVerboDesconocido = 0;
-
 
 
 ! ====================================================================
@@ -419,40 +416,6 @@ Include "Acciones";
 ! Include "Mensajes";
 ! Include "Msg1P";
 
-! Permite usar simplemente el nombre de un objeto como sinónimo de
-! 'examinar objeto' (copiado de Transilvania Corruption, de Alien Soft,
-! y mejorado por mí):
-[ VerboDesconocido x obj;
-  objectloop (obj ofclass Object && PruebaDeAlcance(obj)) {
-    if (obj ofclass Decorado && obj.buscar_nombre(x)) {
-      jump PalabraEncontrada;
-    } else if (obj ~= jugador) {
-      if (PalabraEnPropiedad(x, obj, nombre) ||
-          PalabraEnPropiedad(x, obj, nombre_m) ||
-          PalabraEnPropiedad(x, obj, nombre_f) ||
-          PalabraEnPropiedad(x, obj, nombre_mp) ||
-          PalabraEnPropiedad(x, obj, nombre_fp)) {
-        jump PalabraEncontrada;
-      }
-    }
-  }
-  rfalse;
-.PalabraEncontrada;
-  objetoVerboDesconocido = obj;
-  return 'examinar.falso';
-];
-
-
-Verb 'examinar.falso'
-   *                   -> ExaminarFalso;
-
-
-[ ExaminarFalsoSub;
-  uno = objetoVerboDesconocido;
-  ActualizarPronombre(uno);
-  <<Examinar uno>>;
-];
-
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
 Include "barra";          ! Para cambiar la barra de estado
@@ -593,7 +556,8 @@ Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
-Include "Decorado_NG";    ! Objetos de decorado
+Include "Decorado_NG";    ! Objetos de decorado (antes de ExaminarFalso)
+Include "ExaminarFalso";  ! Examinar objetos con sólo poner su nombre (tras Decorado_NG)
 Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
 Include "Timer";
@@ -905,7 +869,7 @@ Object decorado_nave1 nave1
                      luminiscencia de los relámpagos.",
     antes [;
       Tocar:
-        switch (self.sinonimo) {
+        switch (self.palabra) {
           'ventana': "Una superficie lisa que, sin embargo, traspasa la
                       humedad del exterior.";
           'panel':   "La mayoría de las funciones de la nave están
@@ -1260,7 +1224,7 @@ Object decorado_traje
         if (PruebaDeAlcance(traje_jason) && ObjetoEsIntocable(traje_jason)) rtrue;
         if (ObjetoEsIntocable(tu_traje)) rtrue;
 
-        switch (self.cantidad) {
+        switch (self.palabra) {
           'guantes', 'guante': "Son guantes fuertes y resistentes.";
           'botas', 'bota': "Las botas son gruesas, y tienen una suela dura como el
                             granito.";
@@ -1316,7 +1280,7 @@ Object decorado_traje_inutil
                 se puede apreciar en toda la estancia.",
     antes [;
       Tocar:
-        switch (self.cantidad) {
+        switch (self.palabra) {
           'guantes', 'guante': "Son guantes fuertes y resistentes.";
           'botas', 'bota': "Están pegajosas debido a la asquerosa sustancia que las
                             recubre.";
@@ -1351,7 +1315,7 @@ Object decorado_nave2 nave2
   with
     desc_paredes "Las paredes en esta zona de la nave resultan más austeras y frías.",
     antes [;
-      if (self.cantidad == 'paredes' or 'pared') {
+      if (self.palabra == 'paredes' or 'pared') {
         "Frías y secas al tacto.";
       }
     ],
@@ -2416,7 +2380,7 @@ Object decorado_balcon
     ],
     antes [;
       Tocar:
-        "No alcanzas a tocarl", (o) self.cantidad, " desde el balcón.";
+        "No alcanzas a tocarl", (o) self.palabra, " desde el balcón.";
     ],
     describir
       'veta'       [; return self.desc_mineral; ] G_FEMENINO
@@ -2677,15 +2641,15 @@ Object decorado_oficina oficina
                   una esquina, pegada casi al techo, hay una cámara de seguridad.",
     antes [;
       Coger, Empujar, Tirar, Tocar:
-        if (self.cantidad == 'cuadro' or 'cuadros') {
+        if (self.palabra == 'cuadro' or 'cuadros') {
           print "¿Cuál tengo que ";
           IdiomaVerbo(palabra_verbo);
           "? ¡Hay decenas!";
-        } else if (self.cantidad == 'papeles' or 'papel' or 'folios' or 'folio' or
+        } else if (self.palabra == 'papeles' or 'papel' or 'folios' or 'folio' or
                                     'documentos' or 'documento' &&
                    accion == ##Coger or ##Tocar) {
           "No merece la pena... Básicamente, son listados de cuentas y gastos.";
-        } else if (self.cantidad == 'iluminacion' or 'luz' or 'luces') {
+        } else if (self.palabra == 'iluminacion' or 'luz' or 'luces') {
           print "¿Lo dices en serio? ¿Quieres ";
           IdiomaVerbo(palabra_verbo);
           " la luz?";
@@ -2889,29 +2853,29 @@ Object decorado_enfermeria enfermeria
                   el acceso al interior de los armarios.",
     desc_sabanas "Sábanas blancas manchadas de sangre.",
     antes [;
-      if (self.cantidad == 'iluminacion' or 'luz' or 'luces' &&
+      if (self.palabra == 'iluminacion' or 'luz' or 'luces' &&
           accion == ##Coger or ##Tocar or ##Tirar or ##Empujar) {
         print "¿Lo dices en serio? ¿Quieres ";
         IdiomaVerbo(palabra_verbo);
         " la luz?";
       }
       Tocar:
-        if (self.cantidad == 'sabanas' or 'sabana') {
+        if (self.palabra == 'sabanas' or 'sabana') {
           "No quieres mancharte las manos de sangre.";
         }
       Abrir, Empujar, Tirar:
-        if (self.cantidad == 'armarios' or 'armario' or 'puertas' or 'puerta') {
+        if (self.palabra == 'armarios' or 'armario' or 'puertas' or 'puerta') {
           "Imposible... No ves ningún pomo o cerradura que puedas usar para poder
            abrir ninguna de las puertas.";
-        } else if (self.cantidad == 'cajones') {
+        } else if (self.palabra == 'cajones') {
           "Hay muchos, pero sólo uno tiene pinta de poder abrirse.";
         }
       Empujar, Tirar, EmpujarDir:
-        if (self.cantidad == 'camillas' or 'camilla') {
+        if (self.palabra == 'camillas' or 'camilla') {
           "No merece la pena.";
         }
       Cerrar:
-        if (self.cantidad == 'armarios' or 'armario' or 'puertas' or 'puerta') {
+        if (self.palabra == 'armarios' or 'armario' or 'puertas' or 'puerta') {
           "Los armarios ya están bastante cerrados. ¿No lo ves?";
         }
     ],
@@ -3070,7 +3034,7 @@ Object decorado_laboratorio laboratorio
     desc_sangre 
     antes [;
       Tocar, Probar:
-        switch (self.cantidad) {
+        switch (self.palabra) {
           'tubos', 'tubo',
           'probetas', 'probeta',
           'botes', 'bote',
@@ -3356,13 +3320,13 @@ Object decorado_despensa despensa
     desc_comida "Nada por lo que perderías el apetito.",
     antes [;
       Coger, Tocar, Probar, Comer:
-        if (self.cantidad == 'carne' or 'trozos' or 'cerdo' or 'frutas' or 'fruta' or
+        if (self.palabra == 'carne' or 'trozos' or 'cerdo' or 'frutas' or 'fruta' or
             'manzanas' or 'manzana' or 'naranjas' or 'naranja' or
             'comidas' or 'comida' or 'alimentos' or 'alimento') {
           "Será mejor que no pruebes nada. Ni toque siquiera. Nunca se sabe...";
         }
       Abrir, Tirar, Empujar:
-        if (self.cantidad == 'frigorifico' or 'armario' or 'congelador') {
+        if (self.palabra == 'frigorifico' or 'armario' or 'congelador') {
           ImprimirOEjecutar(self, no_puedes_abrir);
           rtrue;
         }
@@ -3435,11 +3399,11 @@ Object decorado_comedor comedor1
     desc_comida "Es sólo comida putrefacta.", 
     antes [;
       Comer, Coger:
-        if (self.cantidad == 'comida') {
+        if (self.palabra == 'comida') {
           "Es evidente que no está en buen estado.";
         }
       Coger:
-        if (self.cantidad == 'bandejas' or 'bandeja') {
+        if (self.palabra == 'bandejas' or 'bandeja') {
           "No hay nada que merezca la pena.";
         }
     ],
@@ -4275,11 +4239,11 @@ Object decorado_seguridad seguridad
                   que salen dos cables de distinto color.",
     antes [;
       Coger, Tocar:
-        if (self.cantidad == 'tubos' or 'tubo') {
+        if (self.palabra == 'tubos' or 'tubo') {
           "Los tubos están muy sujetos a las paredes, y su tacto es frío y seco.";
-        } else if (self.cantidad == 'cables' or 'cable') {
+        } else if (self.palabra == 'cables' or 'cable') {
           "Mejor no tocarlos demasiado. Podrías llevarte una buena descarga...";
-        } else if (self.cantidad == 'hendidura' or 'agujero' or 'orificio') {
+        } else if (self.palabra == 'hendidura' or 'agujero' or 'orificio') {
           "El agujero está muy alto y no alcanzas. Pero está claro que tampoco es demasiado
            importante...";
         }
@@ -4892,18 +4856,18 @@ Object decorado_hueco hueco_techo
                        pedazos.",
     antes [;
       Cortar:
-        if (self.cantidad == 'huevo') {
+        if (self.palabra == 'huevo') {
           "No es necesario cortarlo: ya está abierto por arriba.";
         }
       Tocar:
-        switch (self.cantidad) {
+        switch (self.palabra) {
           'sustancia': <<Examinar self>>;
           'huevo': "Es algo membranoso al tacto... aunque muy duro.";
           'cola': "Tiene el tacto y la dureza de una serpiente.";
           'luz': "¿Tocar algo inmaterial? ¿Te encuentras bien?";
         }
       Coger:
-        switch (self.cantidad) {
+        switch (self.palabra) {
           'ventiladores', 'ventilador',
           'aspas', 'aspa': "No serviría de nada. Las aspas están rotas y son inservibles.";
           'cola': "La tomas en tus manos, pero un miedo irracional te obliga a soltarla

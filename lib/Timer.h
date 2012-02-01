@@ -22,9 +22,9 @@ System_file;
 
 
 #ifdef HandleGlkEvent;
-  Message "[TIMER: Usando rutina HandleGlkEvent() proporcionada por el juego]";
-  Message "[TIMER: -> IMPORTANTISIMO: NO OLVIDES LLAMAR EN ESA RUTINA A...]";
-  Message "[TIMER: -> < ControlTimer.HandleGlk(ev, context, buffer) > ]";
+  Message "[Timer: Usando rutina HandleGlkEvent() proporcionada por el juego]";
+  Message "[Timer: IMPORTANTE: NO OLVIDES LLAMAR EN ESA RUTINA A...]";
+  Message "[Timer: ControlTimer.HandleGlk(ev, context, buffer) ]";
 #endif; ! HandleGlkEvent
 
 

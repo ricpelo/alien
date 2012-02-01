@@ -45,7 +45,7 @@
 !  referenciado, y asi se lo notificara al parser, actualizando ademas
 !   los siguientes campos del objeto decorado_celda:
 !
-!   cantidad  -> Toma el valor de la palabra usada por el jugador
+!   palabra -> Toma el valor de la palabra usada por el jugador
 !               ('pared')
 !   descripcion -> Toma el valor de la cadena que sigue a 'pared', en
 !              la propiedad describir es decir "Paredes lugubres y
@@ -78,10 +78,10 @@
 !  Deja las paredes en paz, no son mas que decorado.
 !
 !  Incluso, si quisieras particularizar para un objeto concreto,
-!  podrias examinar la propiedad cantidad, que te dira que palabra ha
+!  podrias examinar la propiedad palabra, que te dira que palabra ha
 !  usado el jugador. Por ejemplo:
 !
-!  Empujar: if (self.cantidad=='techo') "No llegas.",
+!  Empujar: if (self.palabra=='techo') "No llegas.",
 !           "Deja ", (el) self, " en paz.";
 !
 !
@@ -93,8 +93,8 @@
 !  Puede evitarse redefiniendo habilmente la rutina nombre_corto en el
 !  objeto derivado de la clase, y cambiandolo por algo como:
 !
-!     if (self.cantidad=='instalacion') print "instalacion";
-!     else print (address) self.cantidad;
+!     if (self.palabra=='instalacion') print "instalacion";
+!     else print (address) self.palabra;
 !     rtrue;
 !
 !  Pero evidentemente habria que particularizarlo para cada caso.
@@ -153,14 +153,14 @@ EndIf;
 Class Decorado
   with
     descripcion 0,  ! La descripción del objeto
-    cantidad 0,     ! La palabra exacta que ha usado el jugador
+    palabra_real 0, ! La palabra exacta que ha usado el jugador
     genero 0,       ! El género del objeto
     describir 0,    ! El array de descripciones
     sinonimos 0,    ! El array de sinónimos
-    sinonimo 0,     ! Si es un sinónimo, la palabra correspondiente en 'describir'.
-                    ! Si no lo es, vale lo mismo que 'cantidad'
+    palabra 0,      ! Si es un sinónimo, la palabra correspondiente en 'describir'.
+                    ! Si no lo es, vale lo mismo que 'palabra_real'
     nombre_corto [;
-      print (address) self.cantidad;
+      print (address) self.palabra;
       rtrue;
     ],
     buscar_nombre [ x i j;   ! Se usa en ExaminarFalso
@@ -168,8 +168,8 @@ Class Decorado
         if ((self.&describir)-->(i * 3) == x) {
           self.descripcion = VR((self.&describir)-->(i * 3 + 1));
           self.genero = (self.&describir)-->(i * 3 + 2);
-          self.cantidad = self.sinonimo = x;
-          objetoVerboDesconocido = self;
+          self.palabra = x;
+          self.palabra_real = x;
           rtrue;
         }
       }
@@ -179,13 +179,12 @@ Class Decorado
           for (i = 0: i < n: i++) {
             if ((self.&describir)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
               self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-              self.sinonimo = (self.&describir)-->(i * 3);
-              self.cantidad = (self.&sinonimos)-->(j * 3);
+              self.palabra = (self.&describir)-->(i * 3);
+              self.palabra_real = (self.&sinonimos)-->(j * 3);
               self.genero = (self.&sinonimos)-->(j * 3 + 2);
               if (self.genero == -1) {
                 self.genero = (self.&describir)-->(i * 3 + 2);
               }
-              objetoVerboDesconocido = self;
               rtrue;
             }
           }
@@ -227,8 +226,8 @@ Class Decorado
             f = true;
             if (self.descripcion == 0) {
               self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-              self.sinonimo = w;
-              self.cantidad = w;
+              self.palabra = w;
+              self.palabra_real = w;
               self.genero = (self.&describir)-->(i * 3 + 2);
             }
             c++;
@@ -256,8 +255,8 @@ Class Decorado
                   }
                   if (self.descripcion == 0) {
                     self.descripcion = VR((self.&describir)-->(i * 3 + 1));
-                    self.sinonimo = (self.&describir)-->(i * 3);
-                    self.cantidad = (self.&sinonimos)-->(j * 3);
+                    self.palabra = (self.&describir)-->(i * 3);
+                    self.palabra_real = (self.&sinonimos)-->(j * 3);
                     self.genero = (self.&sinonimos)-->(j * 3 + 2);
                     if (self.genero == -1) {
                       self.genero = (self.&describir)-->(i * 3 + 2);
