@@ -318,7 +318,7 @@ Object MensajesLibreria
 
       Sacar:
         if (ml_n == 3) {
-          if (palabra_verbo == 'quita') {
+          if (palabra_verbo == 'quita' or 'quitar') {
             "Quitas ", (el) ml_o, " ", (del) otro, ".";
           } else {
             "Sacas ", (el) ml_o, " ", (del) otro, ".";
