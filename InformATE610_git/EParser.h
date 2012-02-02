@@ -4066,7 +4066,7 @@ Constant SCORE__DIVISOR = 20;
           if (parser_uno==0)
             parser_uno = EjecutarRutinas(thing,reaccionar_despues);
       RAZON_CADA_TURNO:
-          if (thing.cada_turno == 0 or NULL) return;
+          if (thing.&cada_turno == 0) return;
 #Ifdef DEBUG;
           if (parser_trace>=2)
               print "[cada_turno para ", (the) thing, "]^";
