@@ -415,6 +415,31 @@ Global ml_o;                         ! mechanism
                                      ! in scope
 #Endif; ! DEBUG
 
+! five for colour control
+! see http://www.inform-fiction.org/patches/L61007.html
+Global clr_fg = 1;                  ! foreground colour
+Global clr_bg = 1;                  ! background colour
+Global clr_fgstatus = 1;            ! foreground colour of statusline
+Global clr_bgstatus = 1;            ! background colour of statusline
+Global clr_on;                      ! has colour been enabled by the player?
+Global statuswin_current;           ! if writing to top window
+
+Constant CLR_DEFAULT 1;
+Constant CLR_BLACK   2;
+Constant CLR_RED     3;
+Constant CLR_GREEN   4;
+Constant CLR_YELLOW  5;
+Constant CLR_BLUE    6;
+Constant CLR_MAGENTA 7;
+Constant CLR_CYAN    8;
+Constant CLR_WHITE   9;
+Constant CLR_PURPLE  7;
+Constant CLR_AZURE   8;
+
+Constant WIN_ALL     0;
+Constant WIN_STATUS  1;
+Constant WIN_MAIN    2;
+
 ! ------------------------------------------------------------------------------
 !   Action processing
 ! ------------------------------------------------------------------------------
@@ -1062,6 +1087,21 @@ Object ParserInform "(Parser de Inform)"
   read a_buffer a_table;
 ];
 
+[ KeyCharPrimitive win  key;
+    if (win) @set_window win;
+    @read_char 1 -> key;
+    return key;
+];
+
+[ KeyTimerInterrupt;
+    rtrue;
+];
+
+[ KeyDelay tenths  key;
+    @read_char 1 tenths KeyTimerInterrupt -> key;
+    return key;
+];
+
 #Ifnot; ! TARGET_GLULX
 
 [ KeyCharPrimitive win nostat done res ix jx ch;
@@ -1157,6 +1197,26 @@ Object ParserInform "(Parser de Inform)"
   }
 .KCPContinue;
   return res;
+];
+
+[ KeyDelay tenths  key done ix;
+    glk($00D2, gg_mainwin); ! request_char_event
+    glk($00D6, tenths*100); ! request_timer_events
+    while (~~done) {
+        glk($00C0, gg_event); ! select
+        ix = HandleGlkEvent(gg_event, 1, gg_arguments);
+        if (ix == 2) {
+            key = gg_arguments-->0;
+            done = true;
+        }
+        else if (ix >= 0 && gg_event-->0 == 1 or 2) {
+            key = gg_event-->2;
+            done = true;
+        }
+    }
+    glk($00D3, gg_mainwin); ! cancel_char_event
+    glk($00D6, 0); ! request_timer_events
+    return key;
 ];
 
 [ KeyboardPrimitive  a_buffer a_table done ix;
@@ -1327,6 +1387,7 @@ Object ParserInform "(Parser de Inform)"
     if (i==0) bandera_deshacer=1;
     if (i==2)
     {
+        RestaurarColores();
 #Ifdef TARGET_ZCODE;
         style bold;
 #Ifnot; ! TARGET_GLULX
@@ -1560,7 +1621,29 @@ Object ParserInform "(Parser de Inform)"
         if (buffer3-->0==0)
         {   M__L(##Miscelanea,21); jump ReType; }
 #Endif; ! TARGET_
-        for (i=0:i<INPUT_BUFFER_LEN:i++) buffer->i=buffer3->i;
+        if (DireccionDePalabra(palabra_verbonum) == buffer + WORDSIZE) { ! not held back
+            ! splice rest of buffer onto end of buffer3
+            #Ifdef TARGET_ZCODE;
+            i = buffer3->1;
+            #Ifnot; ! TARGET_GLULX
+            i = buffer3-->0;
+            #Endif;
+            while (buffer3->(i + WORDSIZE - 1) == ' ' or '.')
+                i--;
+            j = i - LongitudDePalabra(palabra_verbonum);  ! amount to move buffer up by
+            if (j > 0) {
+                for (m=INPUT_BUFFER_LEN-1 : m>=WORDSIZE+j : m--)
+                    buffer->m = buffer->(m-j);
+                #Ifdef TARGET_ZCODE;
+                buffer->1 = buffer->1 + j;
+                #Ifnot; ! TARGET_GLULX
+                buffer-->0 = buffer-->0 + j;
+                #Endif;
+            }
+            for (m=WORDSIZE : m<WORDSIZE+i : m++) buffer->m = buffer3->m;
+            if (j < 0) for (:m<WORDSIZE+i-j : m++) buffer->m = ' ';
+        } else
+            for (i=0:i<INPUT_BUFFER_LEN:i++) buffer->i=buffer3->i;
         jump ReParse;
     }
 
@@ -3504,7 +3587,7 @@ Constant SCORE__DIVISOR = 20;
   for (i=0:i<numero_de_encajados:i++)
   {   while (lista_encajan-->i == -1)
       {   if (i == numero_de_encajados-1) { numero_de_encajados--; break; }
-          for (j=i:j<numero_de_encajados:j++)
+          for (j=i:j<numero_de_encajados-1:j++)
           {   lista_encajan-->j = lista_encajan-->(j+1);
               encajan_puntos-->j = encajan_puntos-->(j+1);
           }
@@ -4228,6 +4311,7 @@ Constant SCORE__DIVISOR = 20;
            return k;
        }
        if (k==0) jump NoWordsMatch;
+       np = j;
    }
 
 !  The default algorithm is simply to count up how many words pass the
@@ -4313,7 +4397,7 @@ Constant SCORE__DIVISOR = 20;
 #Ifdef TARGET_ZCODE;
 ! Tremendo bug corregido. Antes usaba el buffer buf2, el cual usa
 ! tambien el parser para leer comandos incompletos del estilo de "¿a
-! cual te refieres exactamente?
+! cual te refieres exactamente?"
 ! Este bug estaba en la libreria original, pero nunca aparecia porque
 ! apenas se usa BuscarEnDiccionario. En cambio InformATE lo usa para
 ! comprobar si quitando la R a un verbo se obtiene una palabra válida.
@@ -5572,6 +5656,230 @@ Object LibreriaInform "(Librería Inform)"
 ];
 #Endif;
 
+#Ifdef TARGET_ZCODE;
+
+[ ClearScreen window;
+    switch (window) {
+      WIN_ALL:    @erase_window -1;
+      WIN_STATUS: @erase_window 1;
+      WIN_MAIN:   @erase_window 0;
+    }
+];
+
+#Iftrue (#version_number == 6);
+[ MoveCursorV6 line column  charw;  ! 1-based postion on text grid
+    @get_wind_prop 1 13 -> charw; ! font size
+    charw = charw & $FF;
+    line = 1 + charw*(line-1);
+    column = 1 + charw*(column-1);
+    @set_cursor line column;
+];
+#Endif;
+
+#Ifndef MoveCursor;
+[ MoveCursor line column;  ! 1-based postion on text grid
+    if (~~statuswin_current) {
+         @set_window 1;
+         if (clr_on && clr_bgstatus > 1) @set_colour clr_fgstatus clr_bgstatus;
+         else                            style reverse;
+    }
+    if (line == 0) {
+        line = 1;
+        column = 1;
+    }
+    #Iftrue (#version_number == 6);
+    MoveCursorV6(line, column);
+    #Ifnot;
+    @set_cursor line column;
+    #Endif;
+statuswin_current = true;
+];
+#Endif;
+
+[ MainWindow;
+    if (statuswin_current) {
+        if (clr_on && clr_bgstatus > 1) @set_colour clr_fg clr_bg;
+        else                            style roman;
+        @set_window 0;
+        }
+    statuswin_current = false;
+];
+
+#Iftrue (#version_number == 6);
+[ ScreenWidth  width charw;
+    @get_wind_prop 1 3 -> width;
+    @get_wind_prop 1 13 -> charw;
+    charw = charw & $FF;
+    return (width+charw-1) / charw;
+];
+#Ifnot;
+[ ScreenWidth;
+    return (HDR_SCREENWCHARS->0);
+];
+#Endif;
+
+[ ScreenHeight;
+    return (HDR_SCREENHLINES->0);
+];
+
+#Iftrue (#version_number == 6);
+[ StatusLineHeight height  wx wy x y charh;
+    ! Split the window. Standard 1.0 interpreters should keep the window 0
+    ! cursor in the same absolute position, but older interpreters,
+    ! including Infocom's don't - they keep the window 0 cursor in the
+    ! same position relative to its origin. We therefore compensate
+    ! manually.
+    @get_wind_prop 0 0 -> wy; @get_wind_prop 0 1 -> wx;
+    @get_wind_prop 0 13 -> charh; @log_shift charh $FFF8 -> charh;
+    @get_wind_prop 0 4 -> y; @get_wind_prop 0 5 -> x;
+    height = height * charh;
+    @split_window height;
+    y = y - height + wy - 1;
+    if (y < 1) y = 1;
+    x = x + wx - 1;
+    @set_cursor y x 0;
+    gg_statuswin_cursize = height;
+];
+#Ifnot;
+[ StatusLineHeight height;
+    if (gg_statuswin_cursize ~= height)
+        @split_window height;
+    gg_statuswin_cursize = height;
+];
+#Endif;
+
+[ SetColour f b window;
+    if (clr_on && f && b) {
+        if (window == 0) {  ! if setting both together, set reverse
+            clr_fgstatus = b;
+            clr_bgstatus = f;
+            }
+        if (window == 1) {
+            clr_fgstatus = f;
+            clr_bgstatus = b;
+        }
+        if (window == 0 or 2) {
+            clr_fg = f;
+            clr_bg = b;
+        }
+        if (statuswin_current)
+            @set_colour clr_fgstatus clr_bgstatus;
+        else
+            @set_colour clr_fg clr_bg;
+    }
+];
+
+
+#Ifnot; ! TARGET_GLULX
+
+[ ClearScreen window;
+    if (window == WIN_ALL or WIN_MAIN) {
+        glk($002A, gg_mainwin);
+        if (gg_quotewin) {
+            glk($0024, gg_quotewin, 0); ! close_window
+            gg_quotewin = 0;
+        }
+    }
+    if (gg_statuswin && window == WIN_ALL or WIN_STATUS) glk($002A, gg_statuswin);
+];
+
+[ MoveCursor line column;  ! 0-based postion on text grid
+    if (gg_statuswin) {
+        glk($002F, gg_statuswin); ! set_window
+    }
+    if (line == 0) {
+        line = 1;
+        column = 1;
+    }
+    glk($002B, gg_statuswin, column-1, line-1); ! window_move_cursor
+    statuswin_current=1;
+];
+
+[ MainWindow;
+    glk($002F, gg_mainwin); ! set_window
+    statuswin_current=0;
+];
+
+[ MakeColourWord c;
+    if (c > 9) return c;
+    c = c-2;
+    return $ff0000*(c&1) + $ff00*(c&2 ~= 0) + $ff*(c&4 ~= 0);
+];
+
+[ ScreenWidth  id;
+    id=gg_mainwin;
+    if (gg_statuswin && statuswin_current) id = gg_statuswin;
+    glk($0025, id, gg_arguments, 0); ! window_get_size
+    return gg_arguments-->0;
+];
+
+[ ScreenHeight;
+    glk($0025, gg_mainwin, 0, gg_arguments); ! window_get_size
+    return gg_arguments-->0;
+];
+
+[ SetColour f b window doclear  i fwd bwd swin;
+    if (clr_on && f && b) {
+        if (window) swin = 5-window; ! 4 for TextGrid, 3 for TextBuffer
+
+        fwd = MakeColourWord(f);
+        bwd = MakeColourWord(b);
+        for (i=0 : i<=10: i++) {
+            if (f == CLR_DEFAULT || b == CLR_DEFAULT) {  ! remove style hints
+                glk($00B1, swin, i, 7);
+                glk($00B1, swin, i, 8);
+            }
+            else {
+                glk($00B0, swin, i, 7, fwd);
+                glk($00B0, swin, i, 8, bwd);
+            }
+        }
+
+        ! Now re-open the windows to apply the hints
+        if (gg_statuswin) glk($0024, gg_statuswin, 0); ! close_window
+
+        if (doclear || ( window ~= 1 && (clr_fg ~= f || clr_bg ~= b) ) ) {
+            glk($0024, gg_mainwin, 0);
+            gg_mainwin = glk($0023, 0, 0, 0, 3, GG_MAINWIN_ROCK); ! window_open
+            if (gg_scriptstr ~= 0)
+                glk($002D, gg_mainwin, gg_scriptstr); ! window_set_echo_stream
+        }
+
+        gg_statuswin = glk($0023, gg_mainwin, $12, gg_statuswin_cursize,
+           4, GG_STATUSWIN_ROCK); ! window_open
+        if (statuswin_current && gg_statuswin) MoveCursor(); else MainWindow();
+
+        if (window ~= 2) {
+            clr_fgstatus = f;
+            clr_bgstatus = b;
+        }
+        if (window ~= 1) {
+            clr_fg = f;
+            clr_bg = b;
+        }
+    }
+];
+
+#Endif;
+
+[ SetClr f b w;
+    SetColour (f, b, w);
+];
+
+[ RestaurarColores;    ! L61007
+    gg_statuswin_cursize = -1;
+    if (clr_on) { ! check colour has been used
+        SetColour(clr_fg, clr_bg, 2); ! make sure both sets of variables are restored
+        SetColour(clr_fgstatus, clr_bgstatus, 1, true);
+        ClearScreen();
+    }
+    #Ifdef TARGET_ZCODE;
+    #Iftrue (#version_number == 6); ! request screen update
+    (0-->8) = (0-->8) | $$00000100;
+    #Endif;
+    #Endif;
+];
+
 ! ----------------------------------------------------------------------------
 !  Except in Version 3, the DibujarLineaEstado routine does just that: this is
 !  provided explicitly so that it can be Replace'd to change the style, and
@@ -5966,8 +6274,146 @@ Array AnyToStrArr --> GG_ANYTOSTRING_LEN;
 ];
 
 #IfV5;
-Array StorageForShortName --> 161;
+
+#Ifdef VN_1630;
+Array StorageForShortName buffer 161;
+#Ifnot;
+Array StorageForShortName -> 161 + WORDSIZE;
+#Endif; ! VN_1630
+
 #Endif;
+
+#Ifdef TARGET_ZCODE;
+
+! Platform-independent way of printing strings and properties to a
+! buffer (defined as length word followed by byte characters).
+
+[ PrintToBuffer buf len a b c;
+    @output_stream 3 buf;
+    switch (metaclass(a)) {
+      String:
+        print (string) a;
+      Routine:
+        a(b, c);
+      Object,Class:
+        if (b)
+            ImprimirOEjecutar(a, b, true);
+        else
+            print (_nombre_) a;
+    }
+    @output_stream -3;
+    if (buf-->0 > len) print "Error: Overflow in PrintToBuffer.^";
+    return buf-->0;
+];
+
+#Ifnot; ! TARGET_GLULX
+
+[ PrintToBuffer buf len a b;
+    if (b) {
+        if (metaclass(a) == Object && a.#b == WORDSIZE
+            && metaclass(a.b) == String)
+            buf-->0 = PrintAnyToArray(buf+WORDSIZE, len, a.b);
+        else
+            buf-->0 = PrintAnyToArray(buf+WORDSIZE, len, a, b);
+    }
+    else
+        buf-->0 = PrintAnyToArray(buf+WORDSIZE, len, a);
+    if (buf-->0 > len) buf-->0 = len;
+    return buf-->0;
+];
+
+#Endif; ! TARGET_
+
+! None of the following functions should be called for zcode if the
+! output exceeds the size of the buffer.
+
+[ Length a b;
+    PrintToBuffer(StorageForShortName, 160, a, b);
+    return StorageForShortName-->0;
+];
+
+#Ifdef TARGET_ZCODE;
+
+[ LowerCase c;
+   switch (c) {
+     'A' to 'Z':
+       c = c + 32;
+     202, 204, 212, 214, 221:
+       c--;
+     217, 218:
+       c = c - 2;
+     158 to 160, 167 to 169, 208 to 210:
+       c = c - 3;
+     186 to 190, 196 to 200:
+       c = c - 5 ;
+     175 to 180:
+       c = c - 6;
+   }
+   return c;
+];
+
+[ UpperCase c;
+   switch (c) {
+     'a' to 'z':
+       c = c - 32;
+     201, 203, 211, 213, 220:
+       c++;
+     215, 216:
+       c = c + 2;
+     155 to 157, 164 to 166, 205 to 207:
+       c = c + 3;
+     181 to 185, 191 to 195:
+       c = c + 5 ;
+     169 to 174:
+       c = c + 6;
+   }
+   return c;
+];
+
+#Ifnot; ! TARGET_GLULX
+
+[ LowerCase c; return glk($00A0, c); ];
+[ UpperCase c; return glk($00A1, c); ];
+
+#Endif; ! TARGET_
+
+[ PrintCapitalised obj prop flag nocaps centred  length i width;
+    ! a variation of PrintOrRun, capitalising the first letter and returning nothing
+
+    if (obj ofclass String || prop == 0) {
+        PrintToBuffer (StorageForShortName, 160, obj);
+        flag = 1;
+    }
+    else
+        if (obj.#prop > WORDSIZE || metaclass(obj.prop) == Routine or String) {
+            PrintToBuffer(StorageForShortName, 160, obj, prop);
+        }
+        else
+            if (obj.prop == NULL) rfalse;
+            else                  return ErrorDeEjecucion(2, obj, prop);
+
+    length = StorageForShortName-->0;
+    width = ScreenWidth();
+    if (centred && length<width)
+        spaces ( (width-length)/2 );
+    if (~~nocaps)
+        StorageForShortName->WORDSIZE = UpperCase(StorageForShortName->WORDSIZE);
+
+    for (i=WORDSIZE: i<length+WORDSIZE: i++) print (char) StorageForShortName->i;
+
+    if (flag == 0 && obj.#prop == WORDSIZE && metaclass(obj.prop) == String)
+        new_line;
+    return;
+];
+
+[ Centre a b;
+    PrintCapitalised(a, b, 0, 1, 1);
+];
+
+[ Cap str nocaps;
+    if (nocaps) print (string) str;
+    else        PrintCapitalised(str);
+];
 
 [ PonerArticuloDelante o acode pluralise  i artform findout;
 
@@ -6050,7 +6496,9 @@ Array StorageForShortName --> 161;
 
 [ Indefart o i;
    i = modo_indef; modo_indef = true;
-   if (o has propio) { modo_indef = NULL; print (PSN__) o; return; }
+   if (o has propio) {
+      modo_indef = NULL; print (PSN__) o; modo_indef = i; return;
+   }
    if (o provides articulo)
    {   ImprimirOEjecutar(o,articulo,1); print " ", (PSN__) o; modo_indef = i; return;
    }

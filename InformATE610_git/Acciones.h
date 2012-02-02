@@ -1093,7 +1093,8 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   switch (flag) {
       0: M__L(##Salvar,1);
       1: M__L(##Salvar,2);
-      2: M__L(##Restaurar,2);
+      2: RestaurarColores();
+         M__L(##Restaurar,2);
   }
   #Ifnot;
   save Smaybe;
@@ -1625,7 +1626,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   ! which the jugador is not in.
 
   i=parent(item);
-  if (i ~= ancestor && (i has recipiente || i has soporte))
+  if (i && i ~= ancestor && (i has recipiente || i has soporte))
   {   after_recipient=i;
       k=accion; accion=##DejarSalir;
       if (EjecutarRutinas(i,antes)~=0) { accion=k; rtrue; }
@@ -2057,66 +2058,65 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
       ActualizarPronombre(o);
 ];
 
-[ Local descin text1 text2 o k p j f2 flag;
+[ Local descin text_without_ALSO text_with_ALSO
+    o p num_objs must_print_ALSO;
 
-  objectloop (o in descin) give o ~banderaux;
+    objectloop (o in descin) give o ~banderaux;
+    num_objs = 0;
+    objectloop (o in descin)
+        if (o hasnt oculto && NoSoportaAlJugador(o)) {
+            if (o has escenario) {
+                if (o has soporte && child(o)) DecirQueHaySobre(o);
+            } else {
+                give o banderaux; num_objs++;
+                p = inicial;
+                if ((o has puerta or contenedor) && o has abierto && o provides si_abierto) {
+                    p = si_abierto; jump Prop_Chosen;
+                }
+                if ((o has puerta or contenedor) && o hasnt abierto && o provides si_cerrado) {
+                    p = si_cerrado; jump Prop_Chosen;
+                }
+                if (o has conmutable && o has encendido && o provides si_encendido) {
+                    p = si_encendido; jump Prop_Chosen;
+                }
+                if (o has conmutable && o hasnt encendido && o provides si_apagado) {
+                    p = si_apagado;
+                }
 
-  k=0;
-  objectloop (o in descin)
-      if (o hasnt oculto && NoSoportaAlJugador(o))
-      {
-         if (o hasnt escenario)
-         {   give o banderaux; k++;
-             p=inicial; f2=0;
-             if ((o has puerta || o has recipiente)
-                 && o has abierto && o provides si_abierto)
-             {   p = si_abierto; f2 = 1; jump Prop_Chosen; }
-             if ((o has puerta || o has recipiente)
-                 && o hasnt abierto && o provides si_cerrado)
-             {   p = si_cerrado; f2 = 1; jump Prop_Chosen; }
-             if (o has conmutable
-                 && o has encendido && o provides si_encendido)
-             {   p = si_encendido; f2 = 1; jump Prop_Chosen; }
-             if (o has conmutable
-                 && o hasnt encendido && o provides si_apagado)
-             {   p = si_apagado; f2 = 1; }
+                .Prop_Chosen;
 
-             .Prop_Chosen;
+                if (o.&describir && EjecutarRutinas(o, describir)) {
+                    must_print_ALSO = true;
+                    give o ~banderaux; num_objs--;
+                    continue;
+                }
+                if (o.p && (o hasnt movido || p ~= inicial)) {
+                    new_line;
+                    ImprimirOEjecutar(o, p);
+                    must_print_ALSO = true;
+                    give o ~banderaux; num_objs--;
+                    if (o has soporte && child(o)) DecirQueHaySobre(o);
+                }
+            }
 
-             if (o hasnt movido || o.describir~=NULL || f2==1)
-             {   if (o.describir~=NULL && EjecutarRutinas(o,describir)~=0)
-                 {   flag=1;
-                     give o ~banderaux; k--;
-                 }
-                 else
-                 {   j=o.p;
-                     if (j~=0)
-                     {   new_line;
-                         ImprimirOEjecutar(o,p);
-                         flag=1;
-                         give o ~banderaux; k--;
-                         if (o has soporte && child(o)~=0) DecirQueHaySobre(o);
-                     }
-                 }
-             }
-         }
-         else
-             if (o has soporte && child(o)~=0) DecirQueHaySobre(o);
-      }
+        }
 
-  if (k==0) return 0;
+    if (num_objs == 0) return 0;
 
-  if (text1~=0)
-  {   new_line;
-      if (flag==1) text1=text2;
-      print (string) text1, " ";
-      EscribirListaDesde(child(descin),
-          ESPANOL_BIT + RECURSIVO_BIT + INFOPARCIAL_BIT + BREVE_BIT +
-          OCULTAR_BIT + BANDERAUX_BIT);
-      return k;
-  }
-
-  if (flag==1) M__L(##Mirar,5,descin); else M__L(##Mirar,6,descin);
+    if (actor ~= jugador) give actor oculto;
+    if (text_without_ALSO) {
+        new_line;
+        if (must_print_ALSO) print (string) text_with_ALSO, " ";
+        else                 print (string) text_without_ALSO, " ";
+        EscribirListaDesde(child(descin),
+            ESPANOL_BIT + RECURSIVO_BIT + INFOPARCIAL_BIT + BREVE_BIT +
+            OCULTAR_BIT + BANDERAUX_BIT);
+    } else {
+        if (must_print_ALSO) M__L(##Mirar, 5, descin);
+        else                 M__L(##Mirar, 6, descin);
+    }
+    if (actor ~= jugador) give actor ~oculto;
+    return num_objs; 
 ];
 
 ! ----------------------------------------------------------------------------
@@ -2132,9 +2132,9 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 [ ModoM3Sub; modomirar=3; print (string) Historia; M__L(##ModoM3); ];  ! Superbrief
 
 [ AnotarLlegada descin;
-  if (localizacion == LaOscuridad) { ultimadesc = LaOscuridad; return; }
   if (localizacion~=ultimadesc)
   {   if (localizacion.inicial~=0) ImprimirOEjecutar(localizacion, inicial);
+      if (localizacion == LaOscuridad) { ultimadesc = LaOscuridad; return; }
       descin = localizacion;
       LugarNuevo();
       ultimadesc = descin;

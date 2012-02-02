@@ -111,7 +111,7 @@ Constant PARTICULA_TE = "te";
 !  4) Mensajes "Miscelanea", donde están todos los errores de parsing
 !  y otros. Algunos son fáciles de cambiar, otros son más complejos.
 
-[ MLIdioma ml_n ml_o;
+[ MLIdioma ml_n ml_o  aux;
   Prompt:
     print "^>";
     ! El prompt aparece justo antes de pedir una nueva línea al
@@ -138,7 +138,7 @@ Constant PARTICULA_TE = "te";
     ! Tocar genera tres mensajes diferentes
     !  1: Si se intenta tocar a un ser animado
     !  2: Tocar un objeto normal del juego
-    !  3: Tocarse a si mismo
+    !  3: Tocarse a sí mismo
     switch(ml_n)
     {
       1: "¡Las manos quietas!";
@@ -388,7 +388,7 @@ Constant PARTICULA_TE = "te";
      4: "Dejad", (o) ml_o, ".";
     }
 
- Sacar:
+  Sacar:
     ! 2 mensajes de error y 1 de éxito
     !   1: El recipiente que contiene el objeto que el jugador quiere
     !      sacar, está cerrado. (ml_o apunta al objeto, no al
@@ -398,8 +398,8 @@ Constant PARTICULA_TE = "te";
     !   3: Éxito
     switch(ml_n)
     {
-     1: "Por desgracia ", (el) parent(ml_o), " ",(esta) parent(ml_o),
-	 " cerrad", (o) parent(ml_o), ".";
+     1: aux = parent(ml_o);
+       "Por desgracia ", (el) aux, " ", (esta) aux, " cerrad", (o) aux, ".";
      2: print "¡Pero si no ";
 	if (otro has animado) print (lo)   ml_o, " tiene", (n) otro;
 	else                  print (esta) ml_o, " ahí ahora";
@@ -675,7 +675,7 @@ Constant PARTICULA_TE = "te";
      6: "No puedes ir porque ", (el) ml_o, " no lleva", (n) ml_o, " a ningún sitio.";
     }
 
- Mirar:
+  Mirar:
     ! La acción Mirar se genera cuando el jugador pone MIRAR, pero
     ! también de forma automática al entrar en una localidad nueva, o
     ! cuando el jugador sale/se baja de un objeto en el que estaba.
@@ -712,17 +712,17 @@ Constant PARTICULA_TE = "te";
                       + BREVE_BIT + HAY_BIT + OCULTAR_BIT);
 	".";
      default:
-	if (ml_o~=localizacion)
-     	{   if (ml_o has soporte) print "^Sobre "; else print "^En ";
-	    print (el) ml_o;
-	    print " puedes ver ";
-	}
-	else print "^Puedes ver ";
-	if (n==5) print "también ";
-	EscribirListaDesde(child(ml_o),
-                      ESPANOL_BIT + BANDERAUX_BIT + RECURSIVO_BIT
-                      + INFOPARCIAL_BIT + BREVE_BIT + OCULTAR_BIT);
-	".";
+       if (ml_o ~= localizacion) {
+         if (ml_o has soporte) print "^Sobre ";
+         else print "^En ";
+         print (el) ml_o, " p";
+       } else print "^P";
+       print "uedes ver ";
+       if (n == 5) print "también ";
+       EscribirListaDesde(child(ml_o),
+           ESPANOL_BIT + BANDERAUX_BIT + RECURSIVO_BIT
+           + INFOPARCIAL_BIT + BREVE_BIT + OCULTAR_BIT);
+       ".";
     }
 
   Examinar:
@@ -799,7 +799,7 @@ Constant PARTICULA_TE = "te";
 	".";
     }
 
- EcharCerrojo:
+  EcharCerrojo:
     ! EcharCerrojo se genera con CIERRA <objeto> CON <objeto2>, o
     ! también ante ECHA CERROJO A <objeto>. (sin especificar un
     ! segundo objeto en este caso)
@@ -1033,29 +1033,29 @@ Constant PARTICULA_TE = "te";
 #Endif; ! NO_PUNTUACION
 
 #Ifndef NO_LUGARES;
- Lugares:
+  Lugares:
     ! El verbo "LUGARES" muestra un listado de los lugares que el
     ! jugador ha visitado. Aquí debemos escribir el texto
     ! introductorio a esa lista.
     print "Has visitado: ";
 #Endif; ! NO_LUGARES
 
- ModoM1:
+  ModoM1:
     ! La acción ModoM1 se genera ante el comando BREVE (o NORMAL). La
     ! librería imprime la constante Historia y a continuación este
     ! mensaje.
-    " está ahora en su modo normal ~breve~, que da solo descripciones
+    " está ahora en su modo normal ~breve~, que da sólo descripciones
     largas de los lugares la primera vez que son visitadas, y
     descripciones cortas en otro caso.";
 
- ModoM2:
+  ModoM2:
     ! La acción ModoM2 se genera ante el comando LARGO. La
     ! librería imprime la constante Historia y a continuación este
     ! mensaje.
     " está ahora en su modo ~largo~, que siempre da descripciones
     largas de los lugares (incluso si ya habías estado antes).";
 
- ModoM3:
+  ModoM3:
     ! La acción ModoM3 se genera ante el comando SUPERBREVE. La
     ! librería imprime la constante Historia y a continuación este
     ! mensaje.
@@ -1063,7 +1063,7 @@ Constant PARTICULA_TE = "te";
     cortas de los lugares (incluso si nunca habías estado antes).";
 
 #Ifndef NO_LUGARES;
- Objetos:
+  Objetos:
     ! Ante el verbo "OBJETOS" se genera esta acción, que muestra una
     ! lista de todos los objetos que el jugador ha manipulado a lo
     ! largo del juego, junto con una indicación de qué hizo con ellos.
@@ -1095,7 +1095,7 @@ Constant PARTICULA_TE = "te";
 #Endif; ! NO_LUGARES
 
 #Ifndef NO_PUNTUACION;
- Puntuacion:
+  Puntuacion:
     ! Puntuación del juego. Puede activarse porque el jugador lo pide
     ! (con el verbo "PUNTUACION") o porque el juego ha terminado. En
     ! este ultimo caso, la variable "banderafin" valdrá true.
@@ -1105,7 +1105,7 @@ Constant PARTICULA_TE = "te";
 	", en ", turnos, " turno";
     if (turnos>1) print "s"; return;
 
- PuntuacionTotal:
+  PuntuacionTotal:
     ! Puntuación en modo "explicativo". Puede activarse porque el
     ! jugador lo pida con el verbo "PUNTUACION LARGA" o porque el
     ! juego haya terminado (y la constante HAY_TAREAS está definida).
@@ -1124,12 +1124,11 @@ Constant PARTICULA_TE = "te";
 	" de la siguiente manera:^";
      2: "por encontrar objetos importantes";
      3: "por visitar lugares importantes";
-     4: print "total (de ", PUNTUACION_MAX
-	 ; ")";
+     4: "total (de ", PUNTUACION_MAX, ")";
     }
 #Endif; ! NO_PUNTUACION
 
- Inv:
+  Inv:
     ! Inventario
     !  1: Mensaje si el inventario está vacío
     !  2: Encabezado del inventario, antes de la lista de objetos
@@ -1151,7 +1150,7 @@ Constant PARTICULA_TE = "te";
 ! Debajo de cada mensaje un comentario indica en qué condiciones se
 ! genera.
 
- Miscelanea:
+  Miscelanea:
     switch(ml_n)
     {
      1: "(Sólo considero los dieciséis primeros objetos)^";
@@ -1376,19 +1375,18 @@ Constant PARTICULA_TE = "te";
 	"No entendí la última parte de la orden.";
 
      42: ! El jugador ha solicitado un numero de objetos en una lista
-	! de objetos múltiples, pero el parser no es capaz de
-	! encontrar tantos. Por ejemplo: COGE SEIS MONEDAS.
-	! En ml_o se recibe el número de objetos hallados por el
-	! parser.
- 	if (ml_o==0) "No hay suficientes.";
-         else if (ml_o==1){
-	 print "Aquí sólo hay un";
-	 if (objeto_multiple-->1) print (o) objeto_multiple-->1;
-	 else print "o";
-	 " disponible.";
-        }
-	else
-	   "Sólo hay ", (number) ml_o, " disponibles para esa acción.";
+         ! de objetos múltiples, pero el parser no es capaz de
+         ! encontrar tantos. Por ejemplo: COGE SEIS MONEDAS.
+         ! En ml_o se recibe el número de objetos hallados por el
+         ! parser.
+       if (ml_o == 0) "No hay suficientes.";
+       if (ml_o == 1) {
+         print "Aquí sólo hay un";
+         if (objeto_multiple-->1) print (o) objeto_multiple-->1;
+         else print "o";
+         " disponible.";
+       }
+       "Sólo hay ", (number) ml_o, " disponibles para esa acción.";
 
      43: ! El jugador ha puesto TODO como objeto múltiple, pero el
 	! parser no ha encontrado ningún objeto. En realidad este

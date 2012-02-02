@@ -7,6 +7,11 @@ más reciente es la primera que aparece.
 ======================================================================
 Versión del repositorio
 
+ - Corregida y mejorada la traza de grupos de objetos idénticos, con
+   lo que ahora, no sólo se mostrarán todos los objetos de cada grupo
+   equivalente, sino que además se mostrarán de manera más compacta.
+   [Morgul]
+
  - Modificado el mensaje que se muestra al intentar dejar un objeto
    que no lleva el jugador pero que está en su misma localidad, para
    que tenga en cuenta si el objeto es animado, en cuyo caso ahora
