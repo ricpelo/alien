@@ -43,6 +43,7 @@ Array  infix_text buffer 126;
 Array  infix_text -> 128;
 #Endif; ! VN_
 
+#ifndef PrintToBuffer;
 [ PrintToBuffer buf len a b;
   if (b) {
     if (metaclass(a) == Object && a.#b == WORDSIZE
@@ -55,6 +56,7 @@ Array  infix_text -> 128;
   if (buf-->0 > len) buf-->0 = len;
   return buf-->0;
 ];
+#endif; ! PrintToBuffer
 
 [ InfixPrintAttribute x; print (string) #attribute_names_array-->x; ];
 

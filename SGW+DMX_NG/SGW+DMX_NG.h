@@ -743,6 +743,7 @@ Default WIN_ALL     = 0;
 Default WIN_STATUS  = 1;
 Default WIN_MAIN    = 2;
 
+#ifndef ClearScreen;
 ! Limpia el contenido de la ventana principal, la barra de estado o ambas
 [ ClearScreen window;
    #ifdef TARGET_GLULX;
@@ -764,12 +765,14 @@ Default WIN_MAIN    = 2;
      }
    #endif; ! TARGET_
 ];
+#endif; ! ClearScreen
 
 ! Rutina 'tonta' requerida por la version Z de KeyDelay()
 [ KeyTimerInterrupt;
     rtrue;
 ];
 
+#ifndef KeyDelay;
 ! Espera X decimas de segundo por la pulsacion de una tecla
 [ KeyDelay tenths  key done ix;
    #ifdef TARGET_GLULX;
@@ -796,6 +799,7 @@ Default WIN_MAIN    = 2;
      return key;
    #endif; ! TARGET_
 ];
+#endif; ! KeyDelay
 
 #ifdef TARGET_ZCODE;
 ! Espera por la pulsacion de una tecla.
