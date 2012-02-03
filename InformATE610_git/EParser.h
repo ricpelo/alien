@@ -3480,7 +3480,7 @@ Constant SCORE__DIVISOR = 20;
 
   if (multi_contexto==TOKEN_MULTI && accion_que_seria == ##Coger)
   {   for (i=1, low=0:i<=objeto_multiple-->0:i++)
-          if (TopeAlcanzable(objeto_multiple-->i)==TopeAlcanzable(actor))
+          if (PruebaDeAlcance(objeto_multiple-->i, actor))
               low++;
 #Ifdef DEBUG;
       if (parser_trace>=4)
@@ -3488,7 +3488,7 @@ Constant SCORE__DIVISOR = 20;
 #Endif;
       if (regla_coger_todo==2 || low>0)
       {   for (i=1, low=0:i<=objeto_multiple-->0:i++)
-          {   if (TopeAlcanzable(objeto_multiple-->i)==TopeAlcanzable(actor))
+          {   if (PruebaDeAlcance(objeto_multiple-->i, actor))
               {   low++; objeto_multiple-->low = objeto_multiple-->i;
               }
           }

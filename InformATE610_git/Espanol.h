@@ -708,6 +708,76 @@ Array IdiomaNumeros table
     	EliminarDuplicados(buf, pars);
     }
 
+    ! Corrige el poblema siguiente:
+    ! > SACA TODO
+    ! ¿De dónde quieres sacar esas cosas?
+    ! > DEL ARMARIO
+    ! [Aquí la tokenización quedaría: 'saca' 'todo' 'de' 'del' 'armario']
+    ! Lo que hacemos es poner un espacio en la 'd' de 'del', para
+    ! convertirlo en 'el', y así la tokenización quedaría:
+    ! 'saca' 'todo' 'de' 'el' 'armario'
+    retokenise = 0;
+    for (x = 0: x < pars->1: x++) {
+        word = pars-->(x * 2 + 1);
+        at   = pars->(x * 4 + 5);
+        len  = pars->(x * 4 + 4);
+        if (word == 'de' && x < pars->1 - 1) {
+            siguiente = pars-->((x + 1) * 2 + 1);
+            if (siguiente == 'del') {
+                at = pars->((x + 1) * 4 + 5);
+                buf->at = ' '; ! Ponemos un ' ' encima de la 'd' de 'del'
+                retokenise = 1;
+                break;
+            }
+        }
+    }
+
+    ! Corrige el problema del uso de reflexivos, tipo:
+    ! > EXAMINATE A TI MISMO
+    ! > EXAMINATE A TI
+    for (x = 0: x < pars->1: x++) {
+        word = pars-->(x * 2 + 1);
+        at   = pars->(x * 4 + 5);
+        len  = pars->(x * 4 + 4);
+        if (word == YO1__WD or YO2__WD or YO3__WD && x < pars->1 - 1) {
+            siguiente = pars-->((x+1) * 2 + 1);
+            at = pars->((x+1) * 4 + 5);
+            if (siguiente == 'a//' && (x+1) < pars->1 - 1) {
+                siguiente = pars-->((x+2) * 2 + 1);
+                if (((word == YO1__WD && siguiente == 'mi') ||
+                    (word == YO2__WD && siguiente == 'ti') ||
+                    (word == YO3__WD && siguiente == 'si'))) {
+                    if ((x+2) < pars->1 - 1) {
+                        siguiente = pars-->((x+3) * 2 + 1);
+                        retokenise = 1;
+                        if (siguiente == 'mismo') {
+                            ! Hay que borrar tres palabras:
+                            for (i = at: i < pars->((x+3) * 4 + 5) + pars->((x+3) * 4 + 4) + 1: i++) {
+                                buf->i = ' ';
+                            }
+                        } else {
+                            ! Hay que borrar dos palabras:
+                            for (i = at: i < pars->((x+2) * 4 + 5) + 1: i++) {
+                                buf->i = ' ';
+                            }
+                        }
+                        break;
+                    } else {
+                        ! No hay más palabras; se queda en "-te a ti":
+                        for (i = at: i < pars->((x+2) * 4 + 5) + pars->((x+1) * 4 + 4) + 1: i++) {
+                            buf->i = ' ';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    if (retokenise == 1)
+        tokenise__(buf, pars);
+
 #Ifdef DEBUG;
     if (parser_trace>=7)
     {
@@ -893,6 +963,74 @@ Array IdiomaNumeros table
 	PreguntaCualExactamente=0;
     	EliminarDuplicados(buf, pars);
     }
+
+    ! Corrige el poblema siguiente:
+    ! > SACA TODO
+    ! ¿De dónde quieres sacar esas cosas?
+    ! > DEL ARMARIO
+    ! [Aquí la tokenización quedaría: 'saca' 'todo' 'de' 'del' 'armario']
+    ! Lo que hacemos es poner un espacio en la 'd' de 'del', para
+    ! convertirlo en 'el', y así la tokenización quedaría:
+    ! 'saca' 'todo' 'de' 'el' 'armario'
+    retokenise = 0;
+    for (x = 0: x < pars-->0: x++) {
+        word = pars-->(x * 3 + 1);
+        len  = pars-->(x * 3 + 2);
+        at   = pars-->(x * 3 + 3);
+        if (word == 'de' && x < pars-->0 - 1) {
+            siguiente = pars-->((x + 1) * 3 + 1);
+            if (siguiente == 'del') {
+                at = pars-->((x + 1) * 3 + 3);
+                buf->at = ' '; ! Ponemos un ' ' encima de la 'd' de 'del'
+                retokenise = 1;
+                break;
+            }
+        }
+    }
+
+    ! Corrige el problema del uso de reflexivos, tipo:
+    ! > EXAMINATE A TI MISMO
+    ! > EXAMINATE A TI
+    for (x = 0: x < pars-->0: x++) {
+        word = pars-->(x * 3 + 1);
+        len  = pars-->(x * 3 + 2);
+        at   = pars-->(x * 3 + 3);
+        if (word == YO1__WD or YO2__WD or YO3__WD && x < pars-->0 - 1) {
+            siguiente = pars-->((x+1) * 3 + 1);
+            at = pars-->((x+1) * 3 + 3);
+            if (siguiente == 'a//' && (x+1) < pars-->0 - 1) {
+                siguiente = pars-->((x+2) * 3 + 1);
+                if (((word == YO1__WD && siguiente == 'mi') ||
+                    (word == YO2__WD && siguiente == 'ti') ||
+                    (word == YO3__WD && siguiente == 'si'))) {
+                    if ((x+2) < pars-->0 - 1) {
+                        siguiente = pars-->((x+3) * 3 + 1);
+                        retokenise = 1;
+                        if (siguiente == 'mismo') {
+                            ! Hay que borrar tres palabras:
+                            for (i = at: i < pars-->((x+3) * 3 + 3) + pars-->((x+3) * 3 + 2) + 1: i++) {
+                                buf->i = ' ';
+                            }
+                        } else {
+                            ! Hay que borrar dos palabras:
+                            for (i = at: i < pars-->((x+2) * 3 + 3) + 1: i++) {
+                                buf->i = ' ';
+                            }
+                        }
+                        break;
+                    } else {
+                        ! No hay más palabras; se queda en "-te a ti":
+                        for (i = at: i < pars-->((x+2) * 3 + 3) + pars-->((x+1) * 3 + 2) + 1: i++) {
+                            buf->i = ' ';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (retokenise == 1)
+        tokenise__(buf, pars);
 
 #Ifdef DEBUG;
     if (parser_trace>=7)
