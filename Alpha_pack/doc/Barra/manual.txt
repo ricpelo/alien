@@ -1,0 +1,385 @@
+Módulo barra.h 2.0 para inform 6/7E o 6/10E
+   adpatado a INFSP  by sarganar
+
+(C) 2001 Presi (Enrique D. Bosch) [kifcu@confluencia.net]
+Puede distribuirse libremente bajo licencia GNU LGPL
+
+
+                            MANUAL DE REFERENCIA
+                            --------------------
+
+Este es el manual de referencia que explica con detalle cada una de las
+opciones, parámetros, etc. existe un tutorial rápido (fichero rapido.txt)
+que explica lo básico para crear barras de estado rápidamente, si no le has
+echado un vistazo aun, te recomiendo que lo hagas.
+
+
+1. Introducción
+---------------
+
+Implementa lo necesario para crear barras de estado (lineas de estado
+en argot inform) potentes de manera sencilla.
+
+El módulo es biplataforma, asi que puede compilar tanto para Z como para
+Glulx.
+
+Lo primero de todo es redefinir la función "DrawStatusLine" de
+inform:
+
+replace DrawStatusLine;
+
+declaración que se debe hacer antes de incluir los ficheros de inform, y
+la inclusion de barra.h (y si procede de hora24.h) debe hacerse después de
+los includes de inform.
+
+include "hora24";
+include "barra";
+
+si hay que usar hora24.h, debe ser incluido antes que barra.h
+si trabajas con estos modulos en el mismo directorio que tu juego
+ponlos como ">hora24.h"  y ">barra.h"
+
+La barra de estado se implementa como una clase de nombre
+"objeto_barra_estado", y se declara asi
+
+objeto_barra_estado barra_estado
+
+redefiniendo las propiedades que sean necesarias
+
+obviamente se le puede poner cualquier nombre distinto a "barra_estado" en
+este caso, siempre y cuando todas la menciones a propiedades se hagan con el
+nuevo nombre
+
+asi mismo sería posible declarar varios objetos distintos de la clase cada
+uno con propiedades distintas e independientes de modo que se podrían
+seleccionar las distintas barras predefinidas en tiempo de ejecución
+dependiendo de condiciones, esto se realiza cambiando la declaración
+habitual de DibujarLineaEstado:
+
+[ DrawStatusLine; barra_estado.dibujar(); ];
+
+por ejemplo, supongamos que tenemos ya declarada una segunda barra de estado
+"barra_estado2" y que queremos utilizarla solo en el caso de que estemos en
+la localidad "casa":
+
+[ DrawStatusLine;
+
+  if (localization==casa) barra_estado2.dibujar();
+  else barra_estado.dibujar();
+];
+
+
+
+2. Propiedades del modo simple
+-----------------------------
+
+modo BE_SIMPLE     Indica que es el modo simple, si no se pone es modo
+                   simple por defecto.
+
+item               Declara el elemento a utilizar, que puede ser uno de
+                   la siguiente lista:
+
+  BE_TEXTO              texto de usuario en la propiedad "texto"
+                        (si no se especifica item este será usado por defecto)
+  BE_LOCALIDAD          nombre de la localidad actual
+  BE_AVENTURA           nombre de la aventura (constante historia)
+  BE_HORA_24            hora en formato 24h con el texto "Hora:" delante
+  BE_SOLO_HORA_24       hora en formato 24h
+  BE_HORA_AMPM          hora en formato AM/PM con el texto "Hora:" delante
+  BE_SOLO_HORA_AMPM     hora en formato AM/PM
+  BE_TURNOS             número de turnos empleados (movimientos) con el 
+                        texto "Movim.:" delante
+  BE_SOLO_TURNOS        número de turnos empleados (movimientos)
+  BE_PUNTUACION         puntuación actual con el texto "Punt.:" delante
+  BE_SOLO_PUNTUACION    puntuación actual
+  BE_SALIDAS            puntos cardinales que son salidas visibles con
+                        el texto "Salidas:" delante
+  BE_SOLO_SALIDAS       puntos cardinales que son salidas visibles
+
+  Nota 1: Para el uso de la hora (tato en formato 24h como en AM/PM) debe
+          estar incluido el módulo hora24.h, si no está incluido, barra.h
+          compilará y funcionará correctamente excepto que ignorará las
+          opciones de hora.
+  Nota 2: Para el uso de las salidas o las brújulas (ver BE_BRUJULA en el modo
+          compuesto) debe estar definida la constante ADMITIR_COMANDO_SALIDAS
+          de inform, si no lo está no dará error, simplemente se ignorarán
+          esos items.
+
+alineacion         Establece el tipo de alineación o justificación del item
+                   dentro de la línea de estado, los valores pueden ser:
+                   BE_IZQUIERDA (por defecto si no se especifica)
+                   BE_CENTRO
+                   BE_DERECHA
+                   para estos dos últimos es necesario especificar la longitud
+                   aproximada del item para que el módulo pueda centrar o
+                   justificar a la derecha el texto.
+
+longitud           Indica la longitud en caracteres (debe ser aproximada si es
+                   un item no fijo que puede variar, como p. ej. el nombre de
+                   localidades), es necesario para alineacion central y
+                   derecha, por defecto es 0 que significa no-especificado en
+                   cuyo caso el módulo ignorará la alineación central y
+                   derecha y justificará a la izquierda.
+
+posicion           Es la posición vertical del item en la barra, 1 para la
+                   primera línea de la barra, 2 para la segunda, etc. en el
+                   caso de que se tenga una barra multilínea, si no no hace
+                   falta especificarlo ya que por defecto es 1, ver la
+                   propiedad común "lineas_inv" para barras multilínea.
+
+
+3. Propiedades del modo compuesto
+--------------------------------
+
+modo BE_COMPUESTO    Activa el modo compuesto.
+
+
+disposicion
+   <posción horizontal> <posición vertical> <invertido> <item>
+
+   La propiedad disposición permite establecer múltiples elementos en una
+   barra de estado, las características de cada elemento se expresan en
+   cuatro parámetros, cada línea de cuatro parémtros equivalen a un
+   elemento. Los parámetros son:
+
+   posición horizontal   Es la posición horizontal dentro de la barra
+                         expresado en tanto por 80, es decir 40 siempre será
+                         el carácter central y 80 el último carácter
+                         independientemente del ancho real, siempre que la
+                         propiedad "proporcional" esté a true (valor por
+                         defecto) si no, en lugar de tanto por 80 se tomará
+                         la posición como absoluta en caracteres.
+                         "Posición horizontal" puede ser también el valor
+                         BE_JUNTO que significa que el item debe ir a
+                         continuación del anterior; nota: los textos que
+                         lleven a continuación un item con posición
+                         horizontal BE_JUNTO no deben llevar salto de línea
+                         al final, se debe utilizar 'print' el lugar de
+                         su abreviatura solo con comillas ("").
+
+   posición vertical     Es la posición vertical dentro de la barra: 1 para
+                         la primera línea de la barra, 2 para la segunda,
+                         etc. en el caso de que se tenga una barra
+                         multilínea, ver la propiedad común "lineas_inv"
+                         para barras multilínea.
+
+   invertido             Puede ser true o false e indica si el elemento debe
+                         ir en texto invertido o no, el modo invertido se
+                         refiere solo al elemento, para poner en invertido
+                         el resto de la línea ver la propiedad común
+                         "lineas_inv".  El modo invertido solo funciona
+                         compilando para Z, pero aunque no se use en Glulx
+                         hay que especificarlo (irá mal si se omite).
+
+   item                  Es el elemento a incluir, los items deben ser los
+                         mismos que para la propiedad "item" del modo simple
+                         (excepto BE_BRUJULA que es exclusivo del modo
+                         compuesto).  Si se especifica más de un item de
+                         tipo BE_TEXTO la propiedad común "texto" explicada
+                         más adelante debe ser una estructura switch.
+
+          BE_BRUJULA            dibuja una especie de brújula (en modo
+                                texto) que señala las salidas visibles, este
+                                item solo funciona en el modo compuesto y
+                                ocupa tres líneas de la barra a partir de la
+                                posición vertical especificada, asi que la
+                                barra de estado debe tener las suficientes
+                                líneas para albergar la brújula
+          BE_BRUJULA_BONITA     Igual que BE_BRUJULA pero añadiéndole un
+                                marco y las inscripciones N, S, E y O.
+ 
+   Ejemplo:
+
+   disposicion
+     1  1 true  BE_AVENTURA
+     20 1 true  BE_LOCALIDAD
+     60 1 true  BE_TURNOS
+     30 2 false BE_TEXTO,
+
+
+numero_items         Especifica el número de items (líneas de la propiedad
+                     disposición) que deben tenerse en cuenta, normalmente
+                     esta propiedad no se suele usar ya que el módulo
+                     detecta cuantos items hay en la propiedad "disposicion"
+                     que es lo que hace cuando "numero_items" está a 0
+                     (valor por defecto); solo se utilizará en el caso de
+                     que se quieran variar el número de items en tiempo de
+                     ejecución, si incialmente hay 4 por ejemplo pero se
+                     quieren utilizar luego 5, hay que 'reservar' espacio en
+                     la propiedad "disposicion" para ese quinto item (con
+                     ceros o con los valores reales que adoptará ese item)
+                     pero si no se quiere que se tenga en cuenta aun ese
+                     último item es necesario poner el "numero_items" a 4
+                     asi el módulo lo ignorará ya que no queremos que se
+                     represente inicialmente.
+
+
+cambiar_disposicion  Es una rutina que en tiempo de ejecución permite
+                     cambiar los valores de la propiedad disposición, si
+                     bien también pueden cambiarse utilizando la
+                     nomenclatura habitual de acceso a vectores de Inform,
+                     entiendo que es mucho más fácil proporcionar una rutina
+                     que lo haga.  Los valores que hay que pasarle a son
+                     (n,x,y,inv,item), "cambiar_disposicion" permite cambiar
+                     los valores de un solo item en cada llamada, n es el
+                     número de item que queremos cambiar siguiendo el orden
+                     en que fueron declarados inicialmente, 1 equivaldrá al
+                     primero, 2 al segundo, etc., (x,y,inv,item) equivalen a
+                     los valores de la propiedad disposición posición
+                     horizontal (x), posición vertical (y), invertido [true
+                     o flase] (inv) y el item (item). No es necesario
+                     cambiar todos los valores de un elemento
+                     obligatoriamente, si hay alguno que no se quiere
+                     cambiar se le debe dar el valor BE_NO_CAMBIAR y
+                     conservará el valor que tenía hasta el momento.
+
+                     Ejemplo:
+                     barra_estado.cambiar_disposicion(2,10,1,true,BE_TURNOS);
+
+                     pone el segundo item a horizontal 10, vertical 1
+                     (primera línea), invertido a true, y mostrará los
+                     turnos.
+
+
+proporcional         Puede ser true (por defecto) o false, si es true el
+                     valor horizontal de "disposicion" se toma como tanto
+                     por 80, y se coloca proporcionalmente al ancho real, si
+                     es false la posición se toma en caracteres absolutos.
+
+
+
+4. Propiedades comunes a ambos modos (simple y compuesto)
+---------------------------------------------------------
+
+texto               Cuando existe el item BE_TEXTO significa que se debe
+                    insertar un texto fijo de usuario que se almacena en la
+                    propiedad "texto", lo que se especifique ahi puede ser
+                    un texto o una rutina que imprima algo (o que haga
+                    cualquier otra cosa). En el modo compuesto si existe más
+                    de un item de tipo BE_TEXTO hay que especificar que
+                    cadena de texto corresponde a cada item, en ese caso la
+                    rutina "texto" debe ser una estructura switch indicando
+                    1 para el primer item BE_TEXTO, 2 para el segundo, etc.
+                    Ejemplo:
+
+                    texto
+                     [ x;
+                       switch(x)
+                        {
+                          1: "Primer texto";
+                          2: "Segundo texto";
+                          3: "Tercer texto";
+                        }
+                     ];
+
+                    Nota: La variable "x" puede cambiarse por cualquier otra
+                    siempre que sea la misma en la cabecera de la función y
+                    en el switch.
+
+dibujar             Es la rutina (llamada sin parámetros) que se encarga de
+                    mostrar (actualizar) la barra de estado. Si se quiere
+                    que se comporte como una barra de estado normal (que se
+                    actualice a cada turno) hay que llamarla desde la rutina
+                    de inform "DibujarLineaEstado" que ha sido redefinida
+                    en nuestro programa.
+
+lineas_inv          Establece el número de líneas de las que se compone una
+                    barra (barra.h soporta barras de varias líneas) y el
+                    modo de texto invetido de cada una de ellas, cada valor
+                    de "lineas_inv" equivale a una línea en la barra
+                    expresando su modo, los valores pueden ser:
+
+                    BE_INV_TOTAL     La línea completa en modo invertido.
+
+                    BE_INV_PARCIAL   Solo invertido el texto del item, no
+                                     toda la línea, este valor solo es
+                                     válido para el modo de barra simple
+                                     (BE_SIMPLE) ya que en el compuesto cada
+                                     item individualmente especifica si es
+                                     invertido o no.
+
+                    BE_INV_NO        Línea no invertida.
+
+                    Ejemplo:
+
+                    lineas_inv
+                      BE_INV_TOTAL
+                      BE_INV_NO,
+
+                    especifica una barra con dos líneas, la primera de ellas
+                    invertida total y la segunda no invertida, por defecto
+                    se define una sola línea invertida.
+
+                    Nota: compilando para Z, en la mayoría de intérpretes el
+                    marco de la barra de estado no está totalmente
+                    diferenciada de la región de texto principal, esto puede
+                    hacer que al inicio de ejecución la barra de estado, si
+                    contiene más de una línea, sobreescriba parte del texto
+                    incial, normalmente el anuncio de la aventura (el
+                    título, el autor, revisión, número de serie, etc.), para
+                    evitar esto, es conveniente insertar en la función
+                    "Initialise" un print con tantos saltos de línea como
+                    líneas contenga la barra para garantizar la
+                    visualización del anuncio.
+                    Por ejemplo, si se definiden 6 líneas:
+
+                    lineas_inv
+                      BE_INV_TOTAL
+                      BE_INV_TOTAL
+                      BE_INV_TOTAL
+                      BE_INV_TOTAL
+                      BE_INV_TOTAL
+                      BE_INV_TOTAL,
+
+                    al final de la función "Initialise" se debería añadir:
+
+                    #ifdef TARGET_ZCODE;
+                    print "^^^^^^";
+                    #endif;
+
+                    encerrado entre el ifdef de la máquina Z para que solo
+                    compile para esta ya que para Glulx no se da el
+                    problema.
+
+numero_lineas       Declara el número de líneas que va a haber en la barra,
+                    análogamente a la propiedad "numero_items", si
+                    "numero_lineas" es cero, barra.h detecta cuantos valores
+                    hay en la propiedad "lineas_inv", solo en el caso de que
+                    queramos utilizar más durante el juego y no inicialmente
+                    (o viceversa) tiene sentido la utilización
+                    "numero_lineas" ya que habrá que reservar espacio en la
+                    propiedad "lineas_inv" y especificar cuantas líneas son
+                    válidas en cada momento.
+
+cambiar_lineas_inv  Rutina que permite cambiar los valores de la propiedad
+                    "lineas_inv", que también puede hacerse accediendo a la
+                    propiedad como vector pero asi es más fácil. A
+                    "cambiar_lineas_inv" se le pasan dos parámetros: el
+                    primero indica a que valor de la propiedad se refiere: 1
+                    al primero, 2 al segundo, etc., el segundo valor es al
+                    que hay que cambiar, que pueden ser los posibles de
+                    BE_INV_TOTAL, BE_INV_PARCIAL o BE_INV_NO.
+
+anchura             Si es cero (valor por defecto) la anchura (largaria) de
+                    la barra se toma del ancho total de la pantalla
+                    proporcionada por el intérprete en ejecución.  Si se
+                    pone un valor distinto de cero en esta propiedad, en
+                    caracteres, fuerza que se utilice ese valor en lugar del
+                    del intérprete para especificar la anchura de la barra.
+                    Sobre esta anchura es sobre la que se aplican los
+                    cálculos para las posiciones proporcionales.  Es
+                    peligroso usar esta propiedad porque en tiempo de
+                    compilación nunca sabremos con que ancho de pantalla se
+                    ejecutará el programa, pero puede ser util en algunos
+                    casos.
+
+
+5. Agradecimientos
+------------------
+
+A todos los entusiastas de la aventura en general y a Zak (gracias por el
+código de la brújula) y a los de la lista inform en particular por sus
+buenas ideas.
+
+* Nota final: si compilando da warnings sobre variables declaradas pero no
+usadas, no pasa nada, es completamente normal.

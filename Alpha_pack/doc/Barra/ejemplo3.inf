@@ -1,0 +1,107 @@
+! INFSP VERSION
+
+Constant Story "Sin Rumbo";
+Constant Headline "^(C) 2000 El Presi (Enrique D. Bosch)^
+                  Usado ahora como ejemplo para las brújulas de barra.h^
+                  Puede distribuirse libremente bajo licencia GPL^";
+
+! compilar con Inform e INFSP
+
+!Constant ADMITIR_INFINITIVOS;
+Constant ADMITIR_COMANDO_SALIDAS;
+Constant NO_PLACES;
+
+replace DrawStatusLine;
+replace LMode1Sub;
+replace LMode2Sub;
+replace LMode3Sub;
+
+Include "Parser";
+Include "Verblib";
+
+Include ">barra.h";
+
+objeto_barra_estado barra_estado
+  with
+    modo BE_COMPUESTO,
+    lineas_inv
+      BE_INV_TOTAL
+      BE_INV_TOTAL
+      BE_INV_TOTAL
+      BE_INV_TOTAL
+      BE_INV_TOTAL
+      BE_INV_TOTAL,
+    disposicion
+      1  1 true BE_BRUJULA
+      20 1 true BE_BRUJULA_BONITA
+      1  6 true BE_SALIDAS;
+
+[ DrawStatusLine; barra_estado.dibujar(); ];
+
+
+class estancia
+  with
+     n_to   otra,
+     ne_to  otra,
+     e_to   otra,
+     se_to  otra,
+     s_to   otra,
+     sw_to  otra,
+     w_to   otra,
+     nw_to  otra,
+     u_to otra,
+     d_to  otra,
+     in_to otra,
+     out_to otra,
+     description
+     [;
+        print "Estás en ",(string) self.est," estancia.^^";
+        <<salidas>>;
+     ],
+  has light;
+
+
+estancia una "Una estancia"
+  with 
+     est "una";
+
+estancia otra "Otra estancia"
+  with
+     est "otra";
+
+
+Object descripcionestancia
+  with
+     name 'estancia' 'habitacion' 'localidad' 'localizacion',
+     found_in una otra,
+     description
+       "Es una especie de habitación amplia y blanca, con salidas
+        por dondequiera que mires.",
+  has scenery female;
+
+
+[ Initialise;
+
+   location=una;
+   lookmode=2;
+#ifdef TARGET_ZCODE;
+   print "^^^^^^";
+#endif;
+];
+
+[ LMode1Sub;
+
+  "No conozco ese verbo.";
+];
+
+[ LMode2Sub;
+
+  LMode1Sub();
+];
+
+[ LMode3Sub;
+
+  LMode1Sub();
+];
+
+Include "SpanishG";

@@ -1,0 +1,51 @@
+! INFSP VERSION
+
+replace DrawStatusLine;
+
+Include "Parser";
+Include "Verblib";
+
+Include ">barra.h";
+
+objeto_barra_estado barra_estado
+  with
+    alineacion BE_CENTRO,
+    lineas_inv
+       BE_INV_PARCIAL
+       BE_INV_NO
+       BE_INV_NO,
+    longitud 32,
+    texto "Ejemplo de barra.h (modo simple)";
+
+[ DrawStatusLine; barra_estado.dibujar(); ];
+
+
+Object hab " "
+ with
+  description "Pon esperar, a cada turno aparecerá una barra de
+               estado nueva con solo cambiando unos parámetros
+               aleatoriamente.",
+  each_turn
+   [num Inv;
+      barra_estado.alineacion=random(BE_IZQUIERDA,BE_CENTRO,BE_DERECHA);
+      num=random(1,2,3);
+      Inv=random(BE_INV_PARCIAL,BE_INV_TOTAL,BE_INV_NO);
+      barra_estado.cambiar_lineas_inv(num,Inv);
+      barra_estado.posicion=random(1,2,3);
+#ifdef TARGET_ZCODE;
+      @erase_window -1;
+#ifnot;
+      glk($002A, gg_mainwin);
+#endif;
+      print "^^";
+      <Look>;
+   ],
+ has light;
+
+
+[ Initialise;
+
+  location=hab;
+];
+
+Include "SpanishG";

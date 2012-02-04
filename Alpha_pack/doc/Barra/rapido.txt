@@ -1,0 +1,212 @@
+Módulo barra.h 2.0 para InformatE 6/7E o 6/10E (original)
+   adpatado a INFSP  by sarganar
+(C) 2001 Presi (Enrique D. Bosch) [kifcu@confluencia.net]
+Puede distribuirse libremente bajo licencia GNU LGPL
+
+
+                               TUTORIAL RÁPIDO
+                               ---------------
+
+El módulo es biplataforma, asi que puede compilar tanto para Z como para
+Glulx.
+
+Implementa lo necesario para crear barras de estado (lineas de estado
+en argot Inform) potentes de manera sencilla.
+
+Primero que nada, hay que saber que existen dos modos de funcionamiento:
+modo simple y modo compuesto.
+
+* Modo simple
+-------------
+
+Permite crear barras de estado con un solo item (elemento), para crear una
+barra que ponga el texto "Mi aventura", hay que hacer las siguientes
+declaraciones:
+
+
+replace DrawStatusLine;
+
+include "Parser";		! estos son los includes habituales de la 
+include "Verblib";          ! libreria Inform que deben estar entre 
+				! el replace y el include "barra"
+include "barra"; 		! debes poner ">barra.h" si trabajas con la extension en el
+				!   mismo directorio que tu juego	
+
+objeto_barra_estado barra_estado
+  with
+    texto "Mi aventura";
+
+[  DrawStatusLine; barra_estado.dibujar(); ];
+
+
+asi de fácil ya tendríamos una barra de estado (en modo invertido en Z), que
+muestra el texto "Mi aventura" justificado a la izquierda, que son las
+opciones por defecto, pero si quisieramos incluir un elemento que no fuera
+un texto fijo, por ejemplo el nombre de localidad en la que se esté en cada
+momento y centrada sustuimos la declaración de objeto_barra_estado por la
+siguiente:
+
+objeto_barra_estado barra_estado
+  with
+    item BE_LOCALIDAD,
+    alineacion BE_CENTRO,
+    longitud 10;
+
+
+la propiedad alineacion es por defecto BE_IZQUIERDA, puede ser también
+BE_CENTRO y BE_DERECHA, con estos dos últimos valores es necesario
+especificar "a mano" la longitud aproximada del texto con la propiedad
+"longitud"
+
+los items disponibles son los siguientes:
+
+BE_TEXTO              texto de usuario en la propiedad "texto"
+                      (si no se especifica item este será usado por defecto)
+BE_LOCALIDAD          nombre de la localidad actual
+BE_AVENTURA           nombre de la aventura (constante historia)
+BE_HORA_24            hora en formato 24h con el texto "Hora:" delante
+BE_SOLO_HORA_24       hora en formato 24h
+BE_HORA_AMPM          hora en formato AM/PM con el texto "Hora:" delante
+BE_SOLO_HORA_AMPM     hora en formato AM/PM
+BE_TURNOS             número de turnos empleados (movimientos) con el 
+                      texto "Movim.:" delante
+BE_SOLO_TURNOS        número de turnos empleados (movimientos)
+BE_PUNTUACION         puntuación actual con el texto "Punt.:" delante
+BE_SOLO_PUNTUACION    puntuación actual
+BE_SALIDAS            puntos cardinales que son salidas visibles con
+                      el texto "Salidas:" delante
+BE_SOLO_SALIDAS       puntos cardinales que son salidas visibles
+
+Nota 1: La propiedad texto puede contener una rutina.
+Nota 2: Para el uso de la hora (tato en formato 24h como en AM/PM) debe
+        estar incluido el módulo hora24.h, si no está incluido, barra.h
+        compilará y funcionará correctamente excepto que ignorará las
+        opciones de hora.
+Nota 3: Para el uso de las salidas o la brújula (ver BE_BRUJULA en el modo
+        compuesto) debe estar definida la constante ADMITIR_COMANDO_SALIDAS
+        de INFSP
+
+Para otras opciones como multilínea o texto invertido ver el manual (fichero
+manual.txt).
+
+
+* Modo compuesto
+----------------
+
+Permite crear una barra de estado con múltiples items, definiendo en que
+posición debe ir cada elemento; por ejemplo, imaginemos que queremos una
+barra que en el extremo izquierdo ponga el nombre de la aventura, más o
+menos a mitad de barra el texto de usuario "XYZZY" y más a la derecha los
+turnos empleados (movimientos) y la hora en formato 24h, la declaración
+completa sería:
+
+
+replace DrawStatusLine;
+
+Include "Parser";               ! includes habituales de la librería
+Include "Verblib";              ! Inform
+
+Include "hora24";
+Include "barra";
+
+objeto_barra_estado barra_estado
+  with
+    modo BE_COMPUESTO,
+    disposicion
+      1  1 true BE_AVENTURA
+      40 1 true BE_TEXTO
+      50 1 true BE_TURNOS
+      61 1 true BE_HORA_24,
+    texto "XYZZY";
+
+[ DrawStatusLine; barra_estado.dibujar(); ];
+
+La propiedad "modo" puesta al valor "BE_COMPUESTO" indica que debe
+utilizarse el modo compuesto. En el simple no hace falta ponerlo porque es
+por defecto, pero la clave está en la propiedad disposición que es la que
+define donde va cada elemento, cada línea de disposición se divide en cuatro
+parámetros que conforman un elemento de la barra, notar que todos los datos
+forman parte de la propiedad disposición y que no hay comas entre una línea
+y la siguiente, solo al final de la propiedad.
+
+Explicaremos ahora parámetro por parámetro qué es cada cosa:
+
+      1  1 true BE_AVENTURA
+      40 1 true BE_TEXTO
+      50 1 true BE_TURNOS
+      61 1 true BE_HORA_24,
+      ^^
+El primer parámetro es la posición horizontal del elemento en la línea
+expresado en tanto por 80, si el ancho real de pantalla (o ventana) es de 80
+caracteres entonces equivale exactamente a la posición en caracteres, si no,
+el módulo calcula el equivalente proporcional al ancho real, en este caso 1
+es el primer carácter, o sea, todo a la izquierda y en los demás 40 es la
+mitad y 50 y 61 más a la derecha. Notar que 40 simempre equivaldrá a la
+mitad y 80 al último (el de más a la derecha) carácter sea cual sea el ancho
+real. También puede ponerse el valor BE_JUNTO que significa que el item debe
+ir a continuación del anterior.
+
+
+      1  1 true BE_AVENTURA
+      40 1 true BE_TEXTO
+      50 1 true BE_TURNOS
+      61 1 true BE_HORA_24,
+         ^
+El segundo parámetro es la posición vertical, en nuestro caso todos son la
+primera línea ya que nuestra barra solo tiene una línea, podría ser más de 1
+en caso de que la barra tuviera más de una línea, para obetener información
+sobre multilínea ver el manual (fichero manual.txt).
+
+      1  1 true BE_AVENTURA
+      40 1 true BE_TEXTO
+      50 1 true BE_TURNOS
+      61 1 true BE_HORA_24,
+           ^^^^
+
+El tercer parámetro indica si el elemento se visualiza en texto invertido
+(true) o no (false), en nuestro caso todo es invertido ya que la barra es
+invertida. Para obtener más información sobre barra y texto invertido ver el
+manual (fichero manual.txt).
+
+      1  1 true BE_AVENTURA
+      40 1 true BE_TEXTO
+      50 1 true BE_TURNOS
+      61 1 true BE_HORA_24,
+                ^^^^^^^^^^
+Y el cuatro y último parámetro indica qué elemento es el que queremos
+introducir, es la misma lista que en el modo simple, descrita arriba,
+excepto BE_BRUJULA que solo funciona en el modo compuesto:
+
+BE_BRUJULA            dibuja una especie de brújula (en modo texto) que
+                      señala las salidas visibles, este item solo funciona
+                      en el modo compuesto y ocupa tres líneas de la barra a
+                      partir de la posición vertical especificada, asi que
+                      barra de estado debe tener las suficientes líneas para
+                      albergar la brújula
+BE_BRUJULA_BONITA     Igual que BE_BRUJULA pero añadiéndole un marco y las
+                      inscripciones N, S, E y O.
+
+Si hay más de un item de texto (BE_TEXTO) entonces la rutina texto debe ser
+un switch, en donde se especifique el primer item de texto, el segundo, etc.
+asi:
+
+texto
+ [ x;
+   switch(x)
+    {
+      1: "Primer texto";
+      2: "Segundo texto";
+      3: "Tercer texto";
+    }
+ ];
+
+Por último existen funciones para cambiar la barra en tiempo de ejecución,
+es decir durante el juego, para obtener información sobre ello ver el
+manual (fichero manual.txt).
+
+Se incluyen también tres ficheros en inform de ejemplo de uso de barra.h, el
+primero en modo simple, el segundo en modo compuesto, y el tercero de
+salidas y brújulas.
+
+Nota: si compilando da warnings sobre variables declaradas pero no usadas,
+no pasa nada, es completamente normal.

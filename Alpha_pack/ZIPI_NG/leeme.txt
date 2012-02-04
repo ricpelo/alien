@@ -1,0 +1,36 @@
+ZIPI es una utilidad para crear pistas sobre juegos de aventuras
+organizadas en forma de menus. Las pistas se escriben en un sencillo
+lenguaje (ZTML) que es convertido automáticamente en Inform.
+
+El programa Inform así obtenido se compila para obtener una versión
+"ejecutable" que puede verse después en cualquier ordenador para el
+cual exista un "intérprete Z" (es decir, practicamente todos).
+
+Los ficheros que componen Zipi son:
+
+zipi.doc      - Breve introducción a Zipi
+lenguaje.doc  - Descripción del lenguaje usado para escribir las
+                pistas (ZTML) 
+zipi.awk      - Programa que convierte de ZTML a Inform
+zipi.inf      - Librería necesaria para obtener la versión final
+                ejecutable
+ejemplo.ztm   - Un ejemplo del lenguaje ZTML
+ejemplo.z5    - El ejemplo anterior convertido a código Z
+
+Ten en cuenta que para usar esta herramienta necesitarás:
+
+ AWK Este lenguaje forma parte del unix y no es difícil de conseguir
+      para otros operativos)
+
+ Inform Este compilador existe para una gran variedad de
+         plataformas. Puedes encontrarlo en
+         http://www.geocities.com/TimesSquare/Fortress/9939 
+
+Y para visualizar el código resultante necesitarás un íntérprete
+Z. Puedes encontrar gran variedad de ellos en la web antes mencionada.
+
+Si utilizas Zipi para crear algún fichero de pistas y quieres que lo
+publique en la web anterior, mándamelo a:
+
+spinf@geocities.com
+

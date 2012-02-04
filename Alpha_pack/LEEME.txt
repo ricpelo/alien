@@ -1,0 +1,279 @@
+
+INFORMATE - ALPHA PACK
+======================
+
+El "Alpha pack" es una serie de modificaciones de librerías creadas
+por otros aventureros para trabajar con InformATE. Tales modificaciones
+corrigen defectos o amplían de alguna manera su funcionalidad original.
+En todo momento se ha intentado mantener la compatibilidad hacia atrás
+con las versiones originales, de forma que no sea necesario volver a
+reescribir el código de una aventura que use estas nuevas versiones.
+Algo muy importante a destacar es que estas librerías modificadas se han
+comprobado que funcionan en la máquina Glulx, pero no se conoce su correcto
+funcionamiento en la máquina Z, lo cual debe tenerse muy en cuenta.
+
+El copyright y la autoría de cada librería modificada pertenece a su
+respectivo creador, y los fallos que se encuentren serán con toda seguridad
+sólo míos.
+
+Si quieres hacer alguna sugerencia, o informar de cualquier fallo o mal
+funcionamiento, puedes hacerlo en el foro del CAAD (http://www.caad.es/foro)
+o bien mediante un correo electrónico a alpha.aventuras@gmail.com. Te lo
+agradezco de antemano :).
+
+
+Decorado_NG:
+------------
+
+Ampliación de la librería Decorado, de Mel Hython. Tiene los siguientes
+cambios:
+
+- Permite crear objetos decorado con nombres de varias palabras.
+- Facilita la creación de sinónimos sin tener que repetir la descripción.
+  Para ello, se usa la nueva propiedad "sinonimos".
+
+Ejemplo de ambas cosas:
+
+Object decorado_salon salon
+  with
+    sinonimos
+      'ventanas'   'ventana' G_FEMENINO + G_PLURAL
+      'madera'     'ventana' -1
+      'escritorio' 'mesa'    G_MASCULINO,
+    describir
+      'ventana' "Es una ventana preciosa, de madera de roble." G_FEMENINO
+      'mesa'    "La mesa es sólida y robusta."                 G_FEMENINO;
+      
+El jugador podría intentar ahora: EX VENTANA, EX VENTANA DE MADERA,
+EX VENTANAS, EX MESA, EX ESCRITORIO, etc...
+
+La propiedad "sinonimos" es una lista de tripletes. Cada triplete está
+formado por los siguientes tres elementos:
+
+  1. Una palabra (que no debe aparecer en la propiedad "describir").
+  2. Una palabra que SÍ debe aparecer en "describir". Con ello estamos
+     indicando que la primera palabra es un sinónimo de ésta segunda palabra.
+  3. El género de la primera palabra. Puede tomar el valor que tomaría la
+     propiedad "genero" (es decir, combinaciones de los valores G_MASCULINO,
+     G_FEMENINO y G_PLURAL), o bien puede tomar el valor -1, que indicaría
+     que el género de la primera palabra sería el mismo que tenga la segunda
+     palabra en la propiedad "describir". En el ejemplo anterior, la palabra
+     'madera' es un sinónimo de 'ventana', y tiene el mismo género que ésta.
+     Sin embargo, 'ventanas' es sinónimo de 'ventana' y su género es
+     G_FEMENINO + G_PLURAL, a diferencia de 'ventana' que sólo es G_FEMENINO.
+
+El algoritmo es el siguiente: se permiten varias palabras seguidas (o
+separadas por las partículas el, la, los, las, de o del), siempre que dichas
+palabras sean sinónimas. Se permite que una misma palabra sea sinónima de dos
+o más palabras distintas, lo cual se usaría sobre todo para crear adjetivos.
+Ejemplo:
+
+sinonimos
+  'grande'   'mesa'    -1
+  'grande'   'ventana' -1
+  'ventanas' 'ventana' G_FEMENINO + G_PLURAL,
+describir
+  'mesa'    "Una mesa muy bonita."          G_FEMENINO
+  'ventana' "Una ventana abierta al mundo." G_FEMENINO
+
+Este ejemplo crea dos elementos en el decorado: la mesa y la ventana. Ambas
+tienen como sinónimo la palabra 'grande' (que en realidad aquí actuaría como
+adjetivo de ambas). Se puede usar EX MESA, EX MESA GRANDE, EX VENTANA,
+EX VENTANA GRANDE... pero NO puede usarse EX MESA VENTANA o EX VENTANA MESA,
+ya que 'mesa' y 'ventana' no son sinónimos (si A es sinónimo de B y de C, eso
+no significa que B y C también lo sean). Aunque parece que no tiene demasiado
+sentido, sí es práctico para el caso de que el sinónimo sea un adjetivo (como
+el 'mesa' de este caso).
+
+El jugador también puede escribir EX VENTANAS GRANDE, porque hemos puesto que
+'ventanas' es sinónimo de 'ventana'.
+
+Si el jugador escribe EX GRANDE, el algoritmo se decidirá por el primero que
+encuentre en la lista de sinónimos (en este caso, la mesa).
+
+Moviles_NG:
+-----------
+
+Ampliación de la librería Moviles, de Mel Hython. Tiene los siguientes cambios:
+
+- Corrección de varios errores.
+- Mejoras en el comportamiento del PNJ en el caso de MOVIMIENTO_PERSEGUIR.
+- Mejoras en las rutinas pnj_bloqueado, pnj_ha_llegado y llega.
+- Definida la propiedad "sentido", que es la dirección por la que se puede
+  alcanzar al PNJ.
+- Cuando no se alcanza el objetivo, pnj.longitud_precamino vale 0.
+- Mejora en la rutina DirDada, para que permita una dirección que no sea un
+  punto cardinal ni arriba, abajo, dentro o fuera.
+  
+
+PNJactor_NG:
+------------
+
+Ampliación de la librería PNJactor, de Zak y Carlos. Tiene los siguientes
+cambios:
+
+- Pequeñas correcciones de errores.
+- RutinasAntesPNJ ahora también llama a antesPNJ del propio actor, por si éste
+  quiere impedir la acción.
+- RutinasDespuesPNJ ahora también llama a despuesPNJ del propio actor, por si
+  se desea cambiar el mensaje por defecto.
+- Se crean nuevas constantes de error.
+- Se mejora la rutina PuedeTocar para tratar más casos: si se intenta coger a
+  sí mismo, si se intenta coger al jugador, si se intenta coger un objeto
+  escenario o estático, etc.
+
+
+PNJacciones_NG:
+---------------
+
+Ampliación de la librería PNJacciones, de Zak y Carlos. Tiene los siguientes
+cambios:
+
+- Pequeñas correcciones de errores.
+- Se añade la acción PNJIr. Para esa acción se require el uso de la librería
+  Moviles_NG y PnjPuertas_NG.
+
+
+PnjPuertas_NG:
+--------------
+
+Ampliación de la librería PnjPuertas, de Jaevius. Tiene los siguientes
+cambios:
+
+- Pequeñas correcciones de errores y mensajes.
+- Se incluyen las propiedades "interior" y "exterior", para indicar qué lado
+  de la puerta representa el interior y cuál el exterior. Esto se aplica en
+  la rutina pnj_abrir de la puerta para indicar correctamente si el PNJ
+  "entra" o "sale" por la puerta.
+
+
+Escr_NG:
+--------
+
+Ampliación de la librería Escr, de Baltasar el arquero. Tiene los siguientes
+cambios:
+
+- Permite cinco estilos de letra: normal, negrita, cursiva, monoespaciada e
+  inversa.
+- Permite dos tipos de dibujado: por mensaje o letra a letra.
+- Permite cuatro tipos de pausa: sin pausa, esperar tecla, pausa normal y
+  pausa doble.
+
+Ejemplo:
+
+Object mensajes
+  class Escritura
+  private
+    pausaMensaje 500
+    elementos
+      "> Aproximación a planeta 2003 UB313...^"
+        POR_LETRA LETRA_FIJA PAUSA_NORMAL
+      "^> Atmósfera irrespirable... Posible daño en el procesador
+       atmosférico...^"
+        POR_LETRA LETRA_FIJA PAUSA_NORMAL
+      "^El objetivo de la misión está bien claro:^"
+        POR_MENSAJE LETRA_CURSIVA PAUSA_NORMAL
+      "^~Elaborar un informe completo de la situación.~^"
+        POR_MENSAJE LETRA_NEGRITA SIN_PAUSA
+      "^[...]"
+        POR_MENSAJE LETRA_NEGRITA ESPERAR_TECLA;
+
+La propiedad "elementos" es una lista de ternas. Cada terna está formada por
+los siguientes cuatro elementos:
+
+  1. El mensaje en sí (una cadena).
+  2. El tipo de dibujado: POR_MENSAJE o POR_LETRA.
+  3. El estilo: LETRA_NORMAL, LETRA_NEGRITA, LETRA_CURSIVA, LETRA_FIJA o
+     LETRA_INVERSA.
+  4. La pausa: SIN_PAUSA, ESPERAR_TECLA, PAUSA_NORMAL o PAUSA_DOBLE.
+
+
+Rastros_NG:
+-----------
+
+Ampliación de la librería Rastros, de Mel Hython. Tiene los siguientes
+cambios:
+
+- Pequeñas correcciones de mensajes.
+- Se permite la creación de "rastros bidireccionales", es decir, rastros
+  que provienen de una dirección y se dirigen a otra. Para ello, se modifica
+  la rutina marcaRastro con un parámetro adicional (opcional) que indica la
+  otra dirección.
+  
+  Ej: sala.marcaRastro(gato, rastro_pelos, obj_e, nivelClaro, obj_s);
+  
+  Marcaría un rastro de pelos que proviene del este y va hacia el sur.
+  
+  También se modifican convenientemente las rutinas dejaRastros y describeRastro.
+  Ambas rutinas incorporan el parámetro adicional opcional que indica la otra
+  dirección.
+  
+- Permite marcar rastros que se dirijan no sólo a un punto cardinal, sino a
+  cualquier objeto (por ejemplo, un rastro que se dirige hacia el frigorífico).
+  Para ello, se modifica convenientemente la rutina DirDada.
+  
+  Ej: sala.marcaRastro(gato, rastro_pelos, frigorifico, nivelClaro);
+
+
+ZIPI_NG:
+--------
+
+Ampliación de la herramienta ZIPI, de Zak. Tiene los siguientes cambios:
+
+- Facilita la incorporación de las invisipistas dentro del juego.
+- Se añade la etiqueta <NADA> al lenguaje ZTM, para poder incoporar espacios
+  entre opciones del menú de pistas.
+- Por contra, no funciona correctamente el modo texto original para mostrar
+  las pistas. Sólo funciona el método guiado por menús.
+
+* Cómo incorporar las pistas dentro del juego:
+..............................................
+
+- Se crea el archivo aventura.ztm con las pistas en lenguaje ZTM.
+- Se compila mediante: awk -f aventura.awk aventura.ztm > Pistas.h
+- En el archivo .inf del juego, se incluye la librerías Barra, y a continuación
+  se incluye el archivo Pistas.h recién generado. Esa librería no es imprescindible,
+  pero sí MUY recomendable, pues facilita enormemente la incorporación y
+  visualización de las pistas. Quedaría así:
+  
+  Include "Barra";
+  Include "Pistas";
+  
+- Crear una línea de gramática para las pistas. Por ejemplo:
+
+  Verb meta 'pistas'
+    *                -> Pistas;
+    
+- La correspondiente rutina PistasSub deberá llamar a la rutina ZIPI_Empezar(),
+  pero antes tendrá que ajustar la barra de estado para que ocupe la altura
+  necesaria para mostrar correctamente las pistas. Esto se hace así porque las
+  pistas se dibujan en la ventana de estado, y no en la ventana principal.
+  Por ejemplo:
+  
+  [ PistasSub;
+    barra_estado.numero_lineas = 26;  ! La ventana de las pistas tendrá 26 filas
+    barra_estado.dibujar();           ! Aplicamos el cambio
+    ZIPI_Empezar();                   ! Arrancamos las pistas
+    barra_estado.numero_lineas = 1;   ! Volvemos a una barra de estado con 1 fila
+    barra_estado.dibujar();           ! Aplicamos el cambio
+    <<Mirar>>;                        ! Redescribimos la localidad
+  ];
+  
+* Uso de la etiqueta <NADA>:
+............................
+
+La etiqueta <NADA> se usa para dejar líneas en blanco entre varias opciones.
+Con ello se aumenta la legibilidad del menú de pistas. Se usa así:
+
+  <NADA>texto opcional
+
+Básicamente se mostrará como una opción más del menú, con la diferencia de que
+al intentar entrar en dicha opción el sistema no hará nada (será como una opción
+desactivada). El texto es opcional, y se puede poner cualquier cosa, pero lo
+habitual es dejarlo en blanco o poner algo así:
+
+  <NADA>-------------------------
+
+para que actúe de separador. Para más información y ejemplos de uso, consulta el
+archivo alien.ztm que contiene las pistas del juego A·L·I·E·N, de Alpha Aventuras.
+

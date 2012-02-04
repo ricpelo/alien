@@ -1,0 +1,238 @@
+****** PNJPUERTAS. DOCUMENTACION. ***************************	
+
+	Una libreria para InformATE complementaria a PNJMovil
+	para la codificación sencilla de puertas
+	utilizables por los PNJs.
+	Escrita por Jævius. <jaevius@teleline.es>
+
+
+**** INTRODUCCION
+
+	PnjPuertas surge a raiz de la traducción de la libreria puertas
+	de L. Ross Raszewski, mediante la que ya se simplificaba
+	notablemente el manejo de las puertas en los programas Inform.
+	La idea es adaptar el metodo utilizado por dicho autor en su
+	clase "connect" haciendolo compatible con la librería PNJMovil y
+	con los personajes moviles que esta genera. Se consigue así
+	simplificar dos tareas a un tiempo; la programación de las
+	puertas utilizables por el jugador y la correcta implementación
+	de estas en relacion a los "PNJmoviles" que las utilicen en el
+	juego.
+	
+	La libreria está diseñada para el manejo de los siguientes tipos
+	de puertas:
+	
+	* Con llave (y por tanto, dotadas de cerradura)
+	* Sin llave y con cerrojo o pestillo.
+	* Sin llave y sin cerrojo.
+	
+	Los dos primeros tipos pueden definirse de modo que la cerradura
+	o pestillo se encuentre solo a uno de los lados de la puerta (y 
+	solo pueda abrirse-cerrarse desde este lado)o a	ambos.
+	
+	* Portales del tipo de arcos, dinteles o similar que no tengan
+	puerta propiamente dicha. (No dotandolos del atributo abrible 
+	y si del abierto) La libreria en este caso describirá cuando un
+	personaje entra o sale por ellos.
+	
+	
+	
+**** UTILIZACION DE LA LIBRERIA 
+
+	La utilización de la librería requiere los siguientes pasos:
+	
+	* Incluirla detrás de la inclusión de PNJMovil (dado que utiliza
+	a ésta) < Include "PNJPuertas"; >
+	
+	* Definir las puertas en el modo que analizamos en la sección
+	siguiente derivandolas de la clase PNJPuerta.
+	< PNJPuerta Mipuerta "Mi propia puerta" ...>
+	
+	* En la rutina Inicializar hacer una llamada a IniciarPuertas
+	< IniciarPuertas(); >
+	
+	
+**** DEFINICION DE UNA PNJPUERTA
+
+	La definicion de una PNJPuerta se realiza conforme la siguiente
+	estructura básica:
+	
+	PNJpuerta nombre "nombre" habitacion_uno
+	   with nombre '...',
+	   
+	 ! la libreria ya define el nombre por defecto 'puerta', por lo
+	 ! que aquí debe definirse el especifico o característico de la 
+	 ! puerta en cuestion. Debe tenerse en cuenta que a un mismo lugar
+	 ! pueden dar varias puertas y el nombre servirá para poder
+	 ! diferenciarlas al referirse el jugador a ellas. Si creamos
+	 ! una puerta roja, el nombre definido en nuestro codigo deberá
+	 ! ser 'roja'.
+	 
+	  descripcion"...",
+	  ...
+	  !aqui pueden incluirse todas aquellas
+	  !propiedades que se estime oportuno... si_abierta, si_cerrada,
+	  !reaccionar_antes, etc
+	  
+	  al_e habitacion_uno,
+	  al_o habitacion_dos,
+	  
+	  !Esta es la gran ventaja de la libreria DOORS original. La
+	  !creación de una puerta en dos localidades se simplifica indicando 
+	  !la direccion hacia la que enlaza y la habitación con la que
+	  !lo hace. Debe recordarse tambien la libreria PNJMovil exige
+	  !que las puertas se incluyan dentro de una de las dos
+	  !habitaciones a las que conduce, y no olvidar definir las
+	  !conexiones de dirección de ambas localidades para enlazarlas
+	  !con la puerta.
+	  
+	  lado_cierre habitacion_uno,
+	  
+	  !mediante esta propiedad se situa desde donde será accesible
+	  !la cerradura o pestillo. En caso de no definirse la
+	  !propiedad, será accesible desde ambos lados de la puerta.
+	  
+	  con_llave millave,
+	  
+	  !si se quiere que tenga llave. La libreria incluye en este
+	  !caso en la descripcion la cerradura en el lado visible en su
+	  !caso.
+	  
+	  has...
+	  
+	  !la libreria define las puertas con los atributos puerta y
+	  !estatico, por lo que no deberán volverse a definir.
+	  !Podrán utilizarse ahora:
+	  	*abrible.- existe la "puerta fisica" para abrirse o
+	  	cerrarse
+	  	
+	  	*cerrojo.- si existe llave la libreria describe la
+	  	cerradura, y si no el pestillo en el lado adecuado.
+	  	
+	  	*otras para definir su situación inicial, como abierta,
+	  	cerrojoechado, etc.
+
+	Además la librería define la propiedad BLOQUEADA, que por
+	defecto tendrá el valor false, para permitir, si se activa a
+	true que la puerta no pueda abrirse ni cerrarse por nadie hasta
+	que no se desbloquee. (La idea es permitir atascar las puertas
+	con un objeto por otro lado, o con silicona en la cerradura,
+	o cualquier otra perrada que se os ocurra!!!)
+
+
+
+**** COMPORTAMIENTO DE LOS PNJMOVILES
+
+	Las puertas definidas tal como hemos visto son funcionales tanto
+	para el jugador como para los pnjs, pero todavía es necesario
+	determinar que pasa con la puerta despues que un PNJ la
+	atraviese (si puede). Para ello he definido una nueva propiedad
+	en estos para controlar su comportamiento posible.
+	
+	Esta propiedad podrá incluirse en los PNJMovil opcionalmente, ya
+	que por defecto la libreria, en caso de no definirse considera
+	su comportamiento aleatorio.
+	
+	La propiedad es TRAS_ABRIR, y podrá contener alguna de las
+	siguientes constantes:
+	
+	
+	*DEJA_ABIERTO.- tras atravesar una puerta la deja abierta aunque
+	pudiera cerrarla.
+	
+	*DEJA_CERRADO.- la cierra, pero sin echar la llave o el pestillo
+	aunque pueda.
+	
+	*DEJA_CERRADO_CON.- la cierra y con llave (si la tiene en sus
+	posesiones) o con pestillo (si la puerta lo tiene y es accesible
+	desde donde está el pnj)
+	
+	*DEJA_ALEATORIO.- por defecto si no se define, cualquiera de los
+	tres anteriores. (Debe tenerse en cuenta que esta propiedad
+	puede cambiarse durante el juego, para obtener distintos
+	comportamientos depende del momento. Por eso existe tambien como
+	constante.)
+	
+	*NO_PUEDE_ABRIR.- definida para pnjs como animales u otros
+	bichos que no tengan porqué acceder a abrir o cerrar una puerta.
+	
+	
+**** CODIGO DE EJEMPLO.
+
+	Para más claridad, incluiremos el codigo de definición de una
+	puerta de ejemplo. Partiremos de dos habitaciones, un pasillo y
+	una mazmorra comunicadas en dirección Norte-Sur y separadas por 
+	una puerta de hierro. La puerta solo se puede abrir desde el pasillo
+	( está feo que las celdas se abran desde dentro!) y por supuesto
+	con la correspondiente llave.
+	
+	
+	Include "PNJMovil";
+	Include "PNJPuertas";
+	
+	....
+	
+	
+	lugar pasillo "El pasillo"
+		with 
+		descripcion "Humedo y sombrio, solo el ritmico
+		repiqueteo de las goteras rompe el silencio de este
+		pasillo que conduce a las celdas de la prisión.",
+		al_s puerta_hierro;
+		
+	lugar celda "La celda"
+		with
+		descripcion "¡Pobre del condenado a pudrirse entre estos
+		muros! La fria piedra de las paredes de la mazmorra, la 
+		oscuridad que reina en su interior sin un hueco por el 
+		que ver la luz del día te hace estremecerte de pensar lo 
+		que sería estar encerrado en su interior.",
+		al_n puerta_hierro;
+		
+	PNJPuerta -> puerta_hierro "puerta de hierro"
+		with 
+		nombre 'hierro',
+		descripcion "Una solida puerta de hierro, mugrosa y
+		oxidada por el tiempo y la humedad de estas estancias.",
+		al_n pasillo,
+		al_s celda,
+		lado_cierre pasillo,
+		con_llave llave_celda,
+		has femenino abrible ~abierta cerrojo;
+		
+	object llave_celda "llave de la celda" 
+		with nombre 'llave',
+		descripcion "Pequeña y de hierro como la puerta a la que
+		abre.",
+		has femenino;
+		
+	...
+	
+	[Inicializar;
+	 IniciarPuertas();
+	 ...
+	 ];
+	 
+	 
+	 (Creo que el ejemplo me ha salido algo tetrico.)
+	
+		
+	
+	
+**** 	Espero que la librería sea de utilidad y que contribuya a que
+pronto tengamos muchas aventuras en informATE (¡Aunque no usen esta
+librería!)
+
+	En cuanto a los términos legales, esta librería es de dominio 
+	público, por lo que podeis utilizarla, entera o por trocitos 
+	como os apetezca, agradeciendoos eso sí, que citarais la fuente
+	(o sea a mi !) en futuras modificaciones  y que me hagais llegar 
+	los comentarios o sugerencias que merezca.
+	
+	Agradecer especialmente el excelente trabajo realizado por Zak
+	McKracken en su traducción al español del Inform y de la
+	libreria PNJMovil a la que intento complementar, sin el cual,
+	evidentemente no estaría yo haciendo estas cosas.
+	
+	
+			*************************

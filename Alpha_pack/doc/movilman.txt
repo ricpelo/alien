@@ -1,0 +1,687 @@
+ PNJMovil  v9.0E     por Zak McKraken
+                      spinf@geocities.com
+
+ Una traducción (y revisión) de
+
+ MoveClass  v8.01    by Neil James Brown        and         Alan Trewartha
+                     neil@highmount.demon.co.uk     alan@alant.demon.co.uk
+
+ MoveClass.h can be found at the ftp site ftp.gmd.de in the location:
+   if-archive/infocom/compilers/inform6/library/contributions/moveclass.h
+
+ and also at the URLs:
+   http://www.highmount.demon.co.uk/
+   http://www.alant.demon.co.uk/
+
+ PNJMovil puede encontrarse en:
+  http://www.geocities.com/TimesSquare/Fortress/9939/informate/PNJMovil9.zip
+
+___________________________________________________________________________
+
+DIFERENCIA MAS IMPORTANTE CON LA VERSION ANTERIOR:
+
+* En el movimiento de tipo "prefijado", el array que contiene las
+direcciones en que el PNJ debe moverse, tiene que ser un array
+de tipo word (-->) y no de tipo byte (->) como en la versión anterior.
+
+* El resto de la librería permanece compatible con la versión anterior.
+
+---------------------------------------------------------------------------
+
+  Indice
+  ------
+ 1. Introducción
+ 2. Movimiento de los PNJ
+ 3. Preparación             - Cómo usar PNJMovil en tu juego
+ 4. MOVIMIENTO_CON_META     - Buscando un camino de un lugar a otro
+ 5. MOVIMIENTO_PREFIJADO    - Usando rutas predeterminadas
+ 6. Programando puertas     - Consejos útiles
+ 7. PNJs y puertas          - Detalles sobre la propiedad pnj_abrir
+ 8. Caminos bloqueados      - Detalles sobre la propiedad pnj_bloqueado
+ 9. Variables, atributos,
+    propiedades y rutinas
+10. Problemas
+11. Actualizaciones
+
+! **Aviso sobre versiones**
+! El manual original de MoveClass contiene gran cantidad de estos
+! avisos para señalar las diferencias entre la versión 7 y la 8 de
+! esta librería. Puesto que en español la versión 8 es la primera que
+! aparece, y la versión 9 no tiene nigún cambio que afecte al programador, 
+! resulta innecesario compararla con la versión 7, por lo que
+! he eliminado todos estos avisos. [Zak]
+
+
+ 1. Introducción
+    ------------
+
+PNJMovil es una librería de ampliación (compatible con InformatE! 6/10)
+que facilita la creación de PNJs que puedan moverse de una forma
+relativamente sofisticada. En pocas palabras, permite con el mínimo de
+programación que un PNJ perteneciente a la clase PNJMovil pueda:
+
+  * Dar paseos aleatorios
+  * Moverse según una ruta pre-programada
+  * Planificar una ruta dado el lugar al que quiere ir
+  * Permanecer estacionario (quieto)
+
+
+ 2. Movimiento de los PNJ
+    ---------------------
+
+El movimiento no aleatorio de los PNJs en los juegos conversaciones se
+logra normalmente almacenando una secuencia de direcciones dentro de
+un array, y después leyendo las entradas del array de una en una y
+moviendo al PNJ en las direcciones allí especificadas. Esta técnica es
+rápida y efectiva (por ejemplo, véanse muchos de los personajes de
+Christminster), pero restringe al autor a caminos predeterminados. Es
+decir, el autor tiene que decidir, mientras escribe el juego, a dónde
+irá el PNJ y también qué camino seguirá.
+
+PNJMovil también admite este tipo de movimiento - ver la sección 5
+para más detalles.
+
+A veces, el autor puede necesitar un enfoque más dinámico, en el cual
+la ruta sea decidida durante el juego. Por ejemplo, puede haber un
+perro vagabundeando cerca del jugador, y el jugador puede llamarlo con
+un silbato, o quizás un miembro de la tripulación de una nave espacial
+está comprobando el casco cuando el capitán le llama al puente de
+mando. Definir cómo se llega de una localidad a cualquier otra a base
+de rutas prefijadas no es práctico, a menos que haya muy pocas
+localidades en el juego.
+
+PNJMovil es capaz de calcular una ruta entre dos localidades
+cualesquiera dadas, siempre que esta ruta exista dentro de los límites
+de la profundidad máxima de búsqueda.
+
+El propósito de este módulo de librería es aislar al programador de la
+compleja codificación que es necesaria para un movimiento de PNJs de
+este tipo, y para mejorar la eficiencia evitando duplicar el código
+que los mueve. Se supone que el lector tiene un nivel básico de
+competencia en la programación con Inform, ya que el módulo
+proporciona varios "puntos de acceso". El programador necesitará
+también suministrar algunas rutinas (específicas del juego que esté
+haciendo) para que la librería funcione, aunque la librería no
+presupone que estas rutinas hayan sido suministradas, y no el juego no
+"se colgará" si no están.
+
+En el resto de este manual, las palabras 'autor' y 'programador' se
+refierene a la persona que desea utilizar este módulo de ampliación.
+
+
+ 3. Preparación
+    -----------
+
+A) Incluir el fichero con el módulo
+   Debes incluirlo después de 'include Acciones.h', o después de
+   'include Perseguir.h' si estás usando este módulo 
+
+   La librería admite el uso de la clase 'perseguidor' de Andew Clover y
+   Gareth Rees. Esta clase, como el nombre sugiere, permite al jugador
+   perseguir a cualquier PNJ. Debe de ser incluido en el listado
+   *antes* de PNJMovil, ya que PNJMovil comprueba si la clase
+   'perseguidor' ha sido declarada y actúa en consecuencia.
+
+   [NdelT: Este módulo no existe todavía en español. El original es
+   Follower.h]
+
+
+B) Haz que los lugares del juego sean de la clase 'Lugar', y los PNJ
+   de la clase PNJMovil. Los lugares que no sean de la clase 'Lugar'
+   son zonas en realidad prohibidas para los PNJ. El movimiento y el
+   cálculo de rutas sólo mira a los lugares de la clase 'Lugar'.
+
+   Este módulo define una clase 'Lugar'. Si tú tienes tu propia clase
+   'Lugar', asegúrate de que tu definición proporciona la propiedad
+   'cantidad' y de que la declaras antes de incluir este módulo.
+
+C) Arranca el daemon del PNJ
+   Se recomienda que esto sólo se haga cuando se necesite el PNJ, así
+   si el PNJ no aparece hasta transcurrido medio juego, la llamada a
+   ArrancarDaemon(PNJ) no debe hacerse hasta entonces. Si el PNJ
+   necesita ponerse en marcha desde el principio, puedes llamar a
+   ArrancarDaemon(PNJ) desde la rutina Inicializar, por ejemplo:
+
+      [ Inicializar;
+        ArrancarDaemon(Thorin);
+        ArrancarDaemon(Gandalf);
+        "^^Bienvenido a este juego...^";
+      ];
+    
+    Tu programa no podrá usar el daemon de un objeto de la clase
+    PNJMovil. En lugar de esto deberás usar las nuevas propiedades
+    accion_antes y accion_despues. (Ver sección 9).
+
+D) Llama a PNJ_Ruta()
+   Los dos primeros parámetros que debes pasarle a PNJ_Ruta son
+   siempre el personaje y el tipo de movimiento deseado. El tipo que
+   elijas se guardará en la propiedad tipo_de_movimiento de ese
+   personaje. Algunos tipos de movimiento requieren que pases
+   parámetros adicionales:
+
+ PNJ_Ruta(pnj, MOVIMIENTO_NINGUNO)
+   Esto hará que ese PNJ permanezca quieto.
+
+ PNJ_Ruta(pnj, MOVIMIENTO_ALEATORIO, [capricho]) 
+  Esto hará que ese PNJ camine en direcciones aleatorias. Si
+  proporcionas el tercer parámetro (opcional), cambiarás la propiedad
+  'capricho' de ese personaje. El capricho de un pnj es la
+  probabilidad en tanto por ciento de que el pnj se mueva en un turno
+  dado. 
+
+ PNJ_Ruta(pnj, MOVIMIENTO_POR_META, lugar_destino, [tipo_ruta])
+   Esto hará que ese personaje se mueva tratando de llegar al
+   lugar_destino indicado. Ver sección 4 para más detalles.
+
+ PNJ_Ruta(pnj, MOVIMIENTO_PREFIJADO, array_ruta, longitud_ruta)
+   Esto hará que ese personaje se mueva siguiendo el camino
+   pre-programado en el array 'array_ruta'. Ver la sección 5 para más
+   detalles. 
+
+Esto es todo. Hay más detalles, por supuesto, y deberás leer la
+sección 9 para ver todas las propiedades que gobiernan el
+movimiento. Además, necesitarás poner cuidado especial en la
+programación de puertas, ver secciones 6 y 7, de modo que los PNJ
+puedan atravesarlas (o no) de forma adecuada.
+
+
+
+ 4. MOVIMIENTO_POR_META
+    -------------------
+
+  PNJ_Ruta(pnj, MOVIMIENTO_POR_META, lugar_destino, [tipo_ruta])
+
+Donde:
+  lugar_destino - a dónde quieres que vaya el PNJ
+  tipo_ruta     - las restricciones sobre el tipo de ruta a seguir:
+                  CAMINO_CUALQUIERA "atraviesa" las puertas (por defecto)
+                CAMINO_SIN_CERROJOS no atravesará puertas cerradas con llave
+                     CAMINO_ABIERTO no atravesará puertas cerradas
+                 CAMINO_SIN_PUERTAS no atravesará ninguna puerta (ni
+                                    las abiertas siquiera)
+
+Si lo necesitas, puedes combinar tipos de ruta, por ejemplo:
+CAMINO_ABIERTO+CAMINO_SIN_CERROJOS. Si omites tipo_ruta, el defecto es
+CAMINO_CUALQUIERA.
+
+Si se encuentra un camino, PNJ_Ruta retorna true, si no retorna
+false. Se recomienda que el código del juego consulte el valor
+retornado y actúe en consecuencia.
+
+Por defecto, el algoritmo buscará sólo hasta una profundidad prefijada
+en la variable global (por defecto 10). El autor puede cambiar esto en
+cualquier momento, si bien no se le deben asignar valores fuera del
+rango 2 a 32 (o el juego puede colgarse). Los valores altos pueden
+traer consigo retrasos importantes en el proceso de juego
+(especialmente en juegos con muchas localidades). El mejor modo de
+encontrar un buen valor es experimentando.
+
+
+ 5. MOVIMIENTO_PREFIJADO
+    --------------------
+
+  PNJ_Ruta(pnj, MOVIMIENTO_PREFIJADO, array_ruta, longitud_ruta)
+
+Donde:
+  array_ruta    - el nombre del array que contiene las direcciones a
+                  seguir
+  longitud_ruta - el número de entradas a usar en el array anterior
+
+Para hacer que un PNJ camine siguiendo una ruta predeterminada, hay
+que definir esta ruta como un array de palabras. Deben usarse los nombres
+de las direcciones de la brújula, tal como aparecen en 'Espanol.h', o
+bien el número 0 para indicar que en ese turno no hay movimiento
+(téngase en cuenta además que la propiedad accion_despues del PNJ sólo
+es llamada cuando el PNJ se mueve). Un array de ejemplo sería:
+
+  Array AlTesoroEnterrado --> 
+     obj_n obj_n obj_o  0 obj_arriba obj_adentro obj_se obj_abajo;
+
+Esto detalla la ruta 'norte, norte, oeste, esperar un turno, subir,
+entrar, sureste y bajar'. Para hacer que un PNJ siga esta ruta
+deberás usar:
+
+  PNJ_Ruta(BarbaAzul, MOVIMIENTO_PREFIJADO, AlTesoroEnterrado, 8);
+
+
+
+ 6. Programando puertas
+    -------------------
+
+PNJMovil, evidentemente tiene que habérselas con las puertas. Para
+ello se crea una propiedad nueva 'pnj_abrir' (ver sección 7) que
+maneje los detalles específicos de como el PNJ interactúa con cada
+puerta (pueden ser abiertas, abiertas con llave, etc). El autor debe
+estar alerta también de las siguiente pifias típicas al programar
+puertas:
+
+PIFIA 1
+Hay que tener cuidado con la creación inicial de las puertas. En las
+propiedades direcc_puerta y puerta_a, asegúrate de que no hay código
+que dependa de la variable 'localizacion', que es el lugar donde se
+halla el jugador. En vez de eso usa 'parent(self)' o de lo contrario
+los PNJs no podrían abrir ninguna puerta a menos que el jugador esté
+en la misma habitación.
+
+PIFIA 2
+Las puertas deben también estar *dentro* de una localización. Esto
+puede parecer obvio, pero es corriente definir una puerta sin padre y
+dejar que la librería la lleve a la habitación correcta haciendo uso
+de la propiedad 'esta_en'. Esto es perfecto para el jugador, pero no
+lo es para los PNJs.
+
+PIFIA 3
+PNJMovil consulta las propiedades al_<direccion> de las habitaciones
+(por ejemplo, al_n, al_s, etc.) para ver cuáles están disponibles y a
+dónde llevan. Si esta propiedad está definida como una rutina,
+entonces PNJMovil la ejecutará y esperará que ésta retorne la
+habitación a la que lleva, o el valor falso (si no puede salirse por
+ahí). Esto significa que la rutina sólo debe contener condicionales, y
+ningún comando de acción o de imprimir. Por ejemplo:
+
+   al_n [; if (self.cantidad==1) return Habitacion_Alta;
+           return Habitacion_Baja;
+        ],
+
+
+Si solías usar esta rutina para imprimir diferentes textos, ya no
+podrás hacerlo, pero puedes lograr lo mismo capturando el verbo 'Ir'
+en la propiedad 'antes' de la habitación, y comprobando en qué
+dirección se intenta mover el jugador. Por ejemplo, si quieres lograr
+algo como esto:
+
+   al_e "Las rocas te bloquean el paso.",
+   al_o [; if (self hasnt general)
+           { give self general;
+             move huellas to localizacion;
+           }
+           return Lugar_Oeste;
+        ],
+   <etc>
+
+Deberás programarlo de esta otra forma:
+
+   before [;
+      Ir: 
+          if (noun==obj_o)
+          { if (self hasnt general)
+            { give self general;
+              move huellas to location;
+            }
+          }
+   ],
+   al_e "Las rocas te bloquean el paso.",
+   al_o Lugar_Oeste,
+    <etc>
+
+
+
+ 7. PNJs y Puertas
+    --------------
+
+Si el autor quiere hacer posible que un PNJ abra o abra con llave una
+puerta, puede darle a esa puerta la propiedad 'pnj_abrir'. Esto
+también puede usarse para imprimir mensajes que indiquen un
+comportamiento específico ante esa puerta. Una puerta que no tenga la
+propiedad 'pnj_abrir' sólo podrá ser atravesada por un PNJ si la
+puerta está abierta.
+
+Cuando un PNJ quiere atravesar una puerta (porque está en su camino),
+comprueba primero si la puerta proporciona la propiedad 'pnj_abrir', y
+si es así la llama, pasándole como parámetro el identificador del
+PNJ. La propiedad debe retornar 0, 1 ó 2, lo que significará:
+
+           2 - El PNJ puede atravesar esta puerta. El módulo mostrará
+	   el mensaje estándar "Manolo se marcha hacia el norte" (u
+	   otro mensaje similar si manolo proporciona otro).
+
+    (true) 1 - El PNJ puede atravesar esta puerta, pero la librería no
+           mostrará ningún mensaje (se supone que la rutina pnj_abrir
+           ya ha escrito algo).
+
+   (false) 0 - El PNJ no puede atravesar esta puerta.
+
+La rutina no necesita darle a la puerta el atributo 'abierta'. Si lo
+hace, la puerta queda abierta tras ser atravesada por el PNJ, pero si
+no lo hace, queda cerrada (en realidad el PNJ la "atraviesa" sin
+abrirla, pero podemos hacer que la rutina imprima un mensaje como "y
+cierra la puerta tras de sí"). En general, con un comando como
+print_ret "Bla" o simplemente "Bla"; la rutina puede mostrar un
+mensaje más sofisticado describiendo el movimiento a través de la
+puerta. [La rutina debe comprobar antes de imprimir algo que la acción
+sea visible para el jugador, lo cual puede hacerse usando
+PruebaDeAlcance como muestran los ejemplos siguientes]
+
+Una rutina pnj_abrir sencilla podría ser la siguiente:
+
+    pnj_abrir [ quien;        ! parámetro pasado por la librería
+        give la_puerta abierta;
+        if (PruebaDeAlcance(quien)) ! Si el jugador puede ver a 'quien'
+            print_ret (_El) quien, " abre la puerta de roble y se va.";
+        rtrue;                      ! si no puede verlo, retornar true
+      ],
+
+
+Una rutina pnj_abrir ligeramente más complicada (tomada de un juego
+real) sería la siguiente:
+
+    pnj_abrir [ quien;
+      if (self hasnt abierta)
+      {   give self abierta;
+          ArrancarReloj(self,3);
+          if (PruebaDeAlcance(quien))
+            "^", (_El) quien, " sacude la mano ante la luz roja de la
+	    puerta. La luz se vuelve verde y con un cirrido
+	    electrónico la puerta corredera se abre y ", (el)
+            quien, " pasa a través.";
+           if (PruebaDeAlcance(self)) ! La puerta puede verse
+            "^Se oye un chirrido electrónico, la puerta corredera se
+             abre y ", (el) quien, " entra.";
+          rtrue;
+      }
+      if (PruebaDeAlcance(quien))
+        "^",(_El) quien, " se marcha por la puerta abierta.";
+      if (PruebaDeAlcance(self))
+        "^", (_El) quien, " llega a través de la puerta abierta.";
+      return 2;
+    ],
+
+Observar que en este ejemplo la puerta 'esta_en' dos
+localidades. PruebaDeAlcance(quien) se usa para ver si el PNJ está en
+la misma localidad que el jugador, en cuyo caso éste puede verle
+marchar. Si no, a continuacíón se comprueba PruebaDeAlcance(self) que
+verifica si la puerta está en la misma localidad que el jugador, en
+cuyo caso éste puede verle llegar.
+
+Una puerta puede usarse también como una barrera que impida a los PNJs
+(o a ciertos PNJs) pasar en ciertas direcciones, barrera invisible
+para el jugador. Por ejemplo, si el jugador y todos los PNJs, excepto
+uno especialmente supersticioso, pueden entrar a una cueva embrujada,
+puede ser útil crear una puerta (de la que no se informa al jugador)
+que impida a la persona supersticiosa pasar, mediante el uso de la
+propiedad pnj_abrir.
+
+
+
+ 8. Caminos Bloqueados
+    ------------------
+
+Hay tres casos en los que un PNJ, que intenta seguir una ruta
+(prefijada o bien calculada por la librería) puede ver su avance
+bloqueado:
+
+   * La siguiente localidad en su camino parece ser 'ninguna' (0)
+   * Debe pasar por una puerta cuya propiedad pnj_abrir retorna false
+   * Debe pasar por una puerta cerrada que no tiene propiedad
+     pnj_abrir
+
+En estos tres casos será llamada la propiedad pnj_bloqueado de ese
+personaje. Por defecto, esta propiedad es una rutina que llama a 
+PNJ_Ruta(self, MOVIMIENTO_ALEATORIO). Otro enfoque sencillo sería no
+hacer nada especial, con lo que el personaje esperaría hasta que el
+camino se desbloqueara y continuaría recorriendolo después. Un enfoque
+más sofisticado podría ser buscar una nueva ruta.
+
+
+Hay una propiedad en todo PNJMovil, llamada 'pnj_sibloqueado' que
+puede ser usada por el autor para lo que quiera (en particular para
+responder más inteligentemente a los casos de bloqueo). Un buen uso de
+esta propiedad podría ser almacenar en ella el tipo_ruta que fue usado
+para calcular el camino actual. En este caso puede intentarse
+recalcular una ruta con tipo_ruta menos restrictivo (por ejemplo, que
+pueda atravesar puertas), hasta que se hayan agotado las posibilidades
+y haya que probar otra cosa [movimiento aleatorio en el ejemplo que
+sigue]. Por ejemplo: 
+
+    do
+    {   switch (self.pnj_sibloqueado)
+        { CAMINO_CUALQUIERA: self.pnj_sibloqueado=CAMINO_SIN_CERROJOS;
+        CAMINO_SIN_CERROJOS: self.pnj_sibloqueado=    CAMINO_ABIERTO;
+             CAMINO_ABIERTO: self.pnj_sibloqueado=CAMINO_SIN_PUERTAS;
+         CAMINO_SIN_PUERTAS: self.pnj_sibloqueado=-1;
+        }
+    }
+    until (self.pnj_sibloqueado==-1 ||
+           PNJ_Ruta(self, MOVIMIENTO_POR_META, target, pnj_sibloqueado))
+    if (self.pnj_sibloqueado==-1) PNJ_Ruta(self,MOVIMIENTO_ALEATORIO);
+
+Otra variación sobre este tema podría ser andar cambiando (es decir,
+incrementar) la variable global 'max_longitud_camino' y volver a
+intentar el tipo de ruta preferido. En realidad depende de cómo estén
+conectadas tus habitaciones.
+
+Y aqui tienes otro truco: ¿Cuando una puerta no es una puerta?
+
+Si quieres encontrar un camino que evite ciertas puertas concretas,
+puedes hacer que temporalmente éstas no sean puertas (es decir,
+quitarles el atributo puerta, por ejemplo: give puerta_mala
+~puerta) y después buscar una ruta usando CAMINO_CUALQUIERA
+normalmente. De este modo, la librería pensará que esas puertas son
+habitaciones, pero como no pertenecen a la clase 'Lugar', ¡no podrá
+atravesarlas! Una vez que el camino haya sido calculado, simplemente
+vuelve a ponerles el atributo a esas puertas (give puerta_mala
+puerta). ¡Ta chan!
+
+
+
+ 9. Variables, Atributos, Propiedades y Rutinas
+    -------------------------------------------
+
+VARIABLES GLOBALES:===================================================
+max_longitud_camino - Límite a la profundidad de la búsqueda usada por
+              la rutina PNJ_Ruta(). Puede subirse o bajarse durante el
+              juego, pero sólo afecta a la búsqueda de ruta que se
+              hace en la llamada a PNJ_Ruta(), y no al posterior
+              movimiento del personaje siguiendo esa ruta. Puede tomar
+              cualquier valor entre 2 y 32. El valor por defecto es
+              10.
+
+ATRIBUTOS=============================================================
+en_ruta      - Usado por el algoritmo de búsqueda para seguir el
+             rastro de las habitaciones que podrían formar parte de la
+	     ruta calculada.
+
+PROPIEDADES============================================================
+tipo_de_movimiento - Contiene cómo se está moviendo el PNJ (si se
+             mueve). Su valor es asignado por la rutina
+	     PNJ_Ruta(), aunque el autor puede cambiar 'manualmente'
+	     este valor y ponerlo a  MOVIMIENTO_ALEATORIO o
+	     MOVIMIENTO_NINGUNO en cualquier momento. En cambio, darle
+	     'a mano' el valor MOVIMIENTO_POR_META o
+	     MOVIMIENTO_PREFIJADO puede llevar a resultados
+	     impredecibles (errores y cuelgues).
+
+capricho     - El tanto por ciento de probabilidad de que un PNJ
+             decida movers en un turno dado, cuando su
+             tipo_de_movimiento = MOVIMIENTO_ALEATORIO. Valor por
+             defecto 20.
+
+accion_antes  - Esta propiedad debe ser usada por los autores en lugar
+             del daemon del PNJ (la propiedad daemon de un PNJMovil no
+             está disponible porque es usada por esta librería). La
+             propiedad accion_antes, si existe, se ejecuta antes de
+             intentar mover al PNJ, en cada turno *incluso si el PNJ
+             no se mueve*. Si esta propiedad retorna true, entonces el
+             PNJ no se moverá ese turno.
+
+accion_despues  - Si esta propiedad existe en un PNJMovil, será
+             llamada sólo después de que el personaje se haya movido
+             con éxito de una localización a otra. Es útil para los
+             casos en los que el PNJ tiene que reaccionar
+             instantáneamente a los objetos, eventos u otros PNJs que
+             encuentre en la nueva habitación. *No es llamada si el
+             PNJ no se mueve*.
+
+marcha       - El mensaje que se mostrará cuando el PNJ abandone la
+             localización en la que se encuentra el jugador. El valor
+             por defecto es "se marcha". El autor puede darle como
+             valor una cadena de texto (en cuyo caso la librería
+             automáticamente pone delante el nombre del PNJ y "hacia
+             <direccion>" detrás, ver más detalles en DirDada, más
+             abajo) o una rutina. Si se define una rutina, la librería
+             le pasará como parámetro la dirección (objeto brújula)
+             hacia la que se ha movido el PNJ. El autor debe imprimir
+             un mensaje apropiado, con un retorno de carro antes y
+             otro detrás (p.ej: "^El PNJ se las pira.").
+
+llega        - Como 'marcha', pero en este caso es el mensaje mostrado
+             cuando un PNJ entra en la localización en la que se halla
+             el jugador. Puede definirse como una cadena de la forma
+             "entra en la habitación" (la librería añade delante el
+             nombre del PNJ y detrás la dirección desde la que
+             llega, si es capaz de determinarla) o una rutina, a la
+             cual la librería le pasa como parámetro la dirección
+             desde la que llega (si ha podido determinarla) o el valor
+             NULL (si no ha podido). [Puesto que los mapas en Inform no
+             son "simétricos", puede ocurrir que una habitación A
+             tenga una salida al Norte hacia una habitación B, pero en
+             cambio ésta no tenga conexiones con la A. En este caso si
+             un PNJ desde A va al norte, aparecerá en B, pero es
+             imposible decir desde dónde ha llegado (no es desde el
+             sur, pues esto implicaría que al sur puede salirse hacia
+             A). En este caso el mensaje habrá de ser deliberadamente
+             ambiguo: "Llega Manolo" o "Manolo aparece de no se sabe
+             dónde". Zak] 
+
+pnj_dirs      - Propiedad usada internamente por PNJMovil para
+             almacenar direcciones.
+
+nombre_precamino  - El nombre del último array usado por este PNJ como
+              ruta predefinida (o el que está usando actualmente)
+
+longitud_precamino  - El número de pasos en el camino prefijado o
+calculado.
+
+estado_pnj    - Mantiene la cuenta de en qué punto de su ruta se
+              encuentra el PNJ. El autor no debe cambiarlo.
+
+objetivo_pnj  - Usado internamente por la librería para almacenar el
+              lugar de destino de un PNJ.
+
+pnj_bloqueado - Una rutina que es llamada cuando un PNJ encuentra su
+              camino bloqueado 
+
+pnj_sibloqueado - Una propiedad no usada por la librería, que el autor
+              puede usar para decidir qué hacer cuando sea llamada la
+              rutina pnj_bloqueado
+
+pnj_ha_llegado - Esta rutina es llamada cuando un PNJ llega finalmente
+              a su destino, ya sea siguiendo una ruta predefinida o
+              una calculada. Esta rutina debe terminar con una llamada
+              a PNJ_Ruta(), ya sea para darle una nueva ruta al PNJ,
+              para cambiar su tipo de movimiento (por ejemplo hacerlo
+              aleatorio), o para hacer que se pare con el tipo
+              MOVIMIENTO_NINGUNO. Si no se llama a PNJ_Ruta() puede
+              producirse un cuelgue. Por defecto la librería
+              porporciona esta propiedad de modo que pasa al PNJ a
+              movimiento aleatorio una vez que alcanza su destino.
+
+accion_seguir } Incluidas para evitar problemas si se usa a la vez
+objeto_seguir } la librería PERSEGUIR.h
+
+
+RUTINAS===============================================================
+PNJ_Ruta(pnj, tipo_movimiento, lugar_destino, tipo_ruta)
+             - Ver sección 4 para detalles.
+
+PNJpreRuta(pnj, nombre_array, longitud_array)
+             - Es llamada por PNJ_Ruta si
+             tipo_movimiento=MOVIMIENTO_PREFIJADO.  Se mantiene como
+             una rutina separada para mayor claridad y compatibilidad
+             [en la versión española la compatibilidad no es una
+             preocupación ya que no existía versión previa. Zak]
+
+DirDada(dir) - Es utilizada por la librería para insertar el texto
+             "hacia el norte" o el mensaje adecuado, al final de la
+             cadena "se marcha". Puede ser usada por los autores, si
+             la propiedad 'marcha' es una rutina el autor puede usar
+             DirDada como una regla para print, por ejemplo:
+
+                 print "El muro norte se halla ", (DirDada) obj_n, ".";
+
+ConduceA(dir, lugar, tipo_ruta)
+             -  Usada para encontrar a qué lugar se llega siguiendo la
+             dirección 'dir' desde el 'lugar' dado. El parámetro
+             'tipo_ruta' puede usarse para restringir el acceso a
+             través de puertas.
+
+MoverPNJDir(pnj, dir)
+             - Mueve al PNJ en la dirección dada. Usa ConduceA() para
+             saber a qué lugar llega y después llama a MoverPNJ() para
+             hacer el movimiento (e imprime el mensaje apropiado si el
+             movimiento puede ser visto por el jugador).
+
+MoverPNJ(pnj,destino,-,-)
+             - Esta función se define si el programador no ha incluído
+             la librería PERSEGUIR.h. Si en cambio esta librería ha
+             sido incluída, se usará la rutina MoverPNJ proporcionada
+             por ella. Si no ha sido incluida, PNJMovil.h proporciona
+             una versión propia (muy simplificada) de esta rutina.
+
+
+10. Problemas
+    ---------
+
+MoveClass, la librería original, antes de los cambios de la versión 8,
+había sido probada con muchos ejemplos, y era sólida. Los cambios han
+simplificado ligeramente el código, pero como con todos los cambios de
+código, esto es una oportunidad para que aparezcan nuevos errores. Se
+ha puesto mucho esfuerzo en mantener esta nueva versión compatible
+hacia atrás con la anterior. [En la traducción al español es posible
+que se hayan deslizado más errores aún. Por otro lado, en esta
+traducción no se ha contemplado la compatibilidad, puesto que no había
+versión anterior para InformatE. Zak]
+
+PNJMovil puede producir información de depuración si la constante
+DEBUG está definida al principio del programa y el nivel de traza se
+pone a un nivel 2 o más (comando 'trace 2'  durante el juego). Esto,
+junto con los restantes mensajes de depuración, pueden ayudarte a
+localizar la fuente de los problemas. Si PNJMovil te da problemas, por
+favor contacta conmigo, Zak McKraken, en la dirección que aparece al
+principio de este fichero. Si es posible, incluye una trascripción de
+la información de depuración. Por favor, no me envíes ficheros enormes
+antes de haberte puesto en contacto conmigo.
+
+
+
+11. Actualizaciones
+    ---------------
+
+La versión 9.0 simplemente define la constante WORDSIZE (si no la
+habia definido ya el compilador) y la usa internamente en una
+ocasión. Además, cambia los arrays que contienen las direcciones
+por arrays de tipo word.
+
+La versión en Español es una traducción de la versión 8.01 de
+MoveClass. Esta versión contenía al menos un bug, y además he hecho
+alguna mejora adicional, por eso la considero la versión 8.02. No
+obstante, paralelamente Alan seguirá actualizando su librería en
+inglés, así que para distinguir una de otra añado la E (de Español)
+al final:
+
+* La rutina ConduceA() utilizaba incorrectamente el parámetro
+  direccion, asumiendo que era el nombre de una propiedad de dirección
+  (como al_n, al_s), en lugar de un objeto brújula (obj_n, obj_s) que
+  es lo que era realmente. Por tanto la librería tal como venía no
+  funcionaba. 
+
+
+* La rutina MoverPNJDir() imprimía la dirección por la que el PNJ se
+  iba con un mensaje como "Manolo se marcha hacia el norte", pero en
+  cambio cuando el PNJ llegaba, el mensaje no indicaba desde dónde
+  sino tan solo "Manolo llega.". He corregido esta parte para que,
+  mientras sea posible deducirlo, se imprima algo como "Manolo llega
+  desde el norte."
+
+  Esto afecta a la propiedad 'llega' de los PNJMovil, que ahora recibe
+  la dirección *desde la que llega* el PNJ (en la librería original
+  recibía la dirección por la cual se marchaba). Además esta rutina
+  debe estar preparada para recibir como dirección el valor NULL, lo
+  que significaría que no es posible determinar desde qué dirección ha
+  llegado el PNJ.
+
+
+[He suprimido la lista de cambios de la librería inglesa, ya que no
+tiene interés para el autor español. Zak]
+
+

@@ -1,0 +1,81 @@
+! INFSP VERSION
+
+Constant Story "Ejemplo (2) de barra.h";
+Constant Headline  " en modo compuesto^";
+
+replace DrawStatusLine;
+
+Include "Parser";
+Include "Verblib";
+
+Include ">hora24.h";
+Include ">barra.h";
+
+objeto_barra_estado barra_estado
+  with
+    modo BE_COMPUESTO,
+    lineas_inv
+       BE_INV_TOTAL
+       BE_INV_NO
+       BE_INV_NO,
+    disposicion
+       1  1 true  BE_AVENTURA
+       45 1 true  BE_HORA_24
+       1  2 false BE_LOCALIDAD
+       30 2 false BE_PUNTUACION
+       47 2 false BE_TURNOS
+       65 2 false BE_HORA_AMPM
+       30 3 true  BE_TEXTO,
+    texto
+     [x;
+        switch (x)
+         {
+           1: "Segundo texto de prueba";
+           2: "Texto auxiliar 1";
+           3: "Texto auxiliar 2";
+         }
+     ];
+
+[ DrawStatusLine; barra_estado.dibujar(); ];
+
+
+Object hab "Habitación de pruebas"
+ with
+  description "Pon esperar, a cada turno aparecerá una barra de
+               estado nueva con solo cambiando unos parámetros
+               aleatoriamente.",
+  each_turn
+   [ num x noc Inv;
+      num=random(1,2,3);
+      x=random(BE_INV_TOTAL,BE_INV_NO);
+      barra_estado.cambiar_lineas_inv(num,x);
+      num=random(1,3,7);
+      noc=BE_NO_CAMBIAR;
+      Inv=random(true,false);
+      x=random(BE_AVENTURA,BE_LOCALIDAD,BE_TEXTO);
+      barra_estado.cambiar_disposicion(num,noc,noc,Inv,x);
+      num=random(2,4,5,6);
+      Inv=random(true,false);
+      x=random(BE_HORA_24,BE_PUNTUACION,BE_TURNOS,BE_HORA_AMPM);
+      barra_estado.cambiar_disposicion(num,noc,noc,Inv,x);
+#ifdef TARGET_ZCODE;
+      @erase_window -1;
+#ifnot;
+      glk($002A, gg_mainwin);
+#endif;
+      print "^^";
+      <Look>;
+   ],
+ has light;
+
+
+[ Initialise;
+
+  location=hab;
+  the_time=0;
+#ifdef TARGET_ZCODE;
+  print "^^^";
+#endif;
+];
+
+Include "SpanishG";

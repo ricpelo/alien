@@ -1,0 +1,99 @@
+<INTRO>
+<CENTRA>
+**********
+ZIPI
+**********
+</CENTRA>
+
+Este es un archivo de ejemplo para la utilidad Zipi (Z-InvisiPistas)
+que sirve para escribir soluciones para tus juegos de aventuras
+favoritos en forma de "pistas invisibles", que podrás compartir con
+otros aventureros.
+
+En este fichero de ejemplo podrás aprender más sobre Zipi.
+
+Zipi es (c) 1999 Zak McKraken
+
+</INTRO>
+
+<MENU>ZIPI
+  <MENU>Acerca de ZIPI
+    <PREG>¿Para qué sirve ZIPI?
+      <PISTA>Para compartir tu experiencia con los juegos de aventuras
+      <PISTA>Suministrando pistas a otros jugadores
+      <PISTA>Pero de forma "racionada", para no desvelarles todo el juego de una sola vez.
+    <PREG>¿Cómo creo mis propias pistas ZIPI?
+      <PISTA>Necesitas aprender el lenguaje ZTML para escribir los ficheros de pistas.
+      <PISTA>¡Pero es un lenguaje muy sencillo!
+    <PREG>¿Dónde aprendo ZTML?
+      <PISTA>Tienes un documento por aqui cerca que te lo explica...
+      <PISTA>Se llama Lenguaje.doc
+    <PREG>¿Qué hago con mi fichero ZTML una vez escrito?
+      <PISTA>Debes convertirlo a Inform
+      <PISTA>Necesitas una herramienta llamada gawk
+      <PISTA>Escribe: gawk -f zipi.awk mi_fichero.ztm > mi_fichero.inf
+    <PREG>¿Qué es el fichero .inf?
+      <PISTA>Es un fichero escrito en el lenguaje Inform
+      <PISTA>Inform es un lenguaje para programar aventuras conversacionales
+      <PISTA>Puedes aprender más sobre Inform en http://www.geocities.com/TimesSquare/Fortress/9939
+    <PREG>Tengo el fichero .inf ¿qué hago ahora?
+      <PISTA>Debes "compilarlo" para obtener el código Z
+      <PISTA>Para eso necesitas una herramienta llamada Inform
+      <PISTA>Escribe: inform mi_fichero.inf
+      <PISTA>Ahora tendrás mi_fichero.z5
+    <PREG>Tengo el fichero .z5 ¿Y ahora qué?
+      <PISTA>Ese fichero es el que puedes repartir a tus amigos o publicar en internet.
+    <PREG>¿Qué necesitarán mis amigos para poder ver el .z5?
+      <PISTA>Necesitan un programa llamado "interprete Z"
+      <PISTA>Hay muchos diferentes, según qué ordenador usen.
+      <PISTA>Uno de los más famosos es el llamado Frotz
+    <PREG>¿Necesitan mis amigos usar el mismo ordenador que yo?
+      <PISTA>No
+      <PISTA>Pueden tener cualquier otro ordenador
+      <PISTA>Todo lo que necesitan es conseguir el Frotz adecuado para su ordenador
+      <PISTA>...y tu fichero .z5 con las pistas.
+   </MENU>
+   
+   <MENU>Otras ideas parecidas
+     <PREG>¿UHS?
+       <PISTA>UHS es un sistema similar a este, pero mucho más sofisticado
+       <PISTA>La desventaja es que UHS no es gratuito
+     <PREG>¿Slag?
+       <PISTA>Slag es muy muy parecido a Zipi.
+       <PISTA>Slag también convierte las pistas de un lenguaje simple a Inform.
+       <PISTA>También origina menús, etc. 
+       <PISTA>De hecho Zipi está bastante copiado de Slag
+    <PREG>¿En qué se diferencia Zipi de Slag?
+       <PISTA>Zipi está en español
+       <PISTA>El lenguaje ZTML que usa Zipi es más sencillo que el usado por Slag
+       <PISTA>Zipi puede funcionar en un modo "sin menus", que funciona en cualquier ordenador (los menus dan problemas en algunos modelos).
+       <PISTA>Slag necesita Perl para funcionar, mientras que Zipi necesita Awk.
+       <PISTA>En linux, tanto Perl como Awk forman parte del sistema
+       <PISTA>Pero en Windows o DOS no hay ni Perl ni Awk
+       <PISTA>No obstante, awk es fácil de conseguir, fácil de instalar y ocupa mucho menos que Perl.
+    </MENU>
+  
+    <MENU>Sobre el autor
+      <PREG>¿Quién es el autor?
+        <PISTA>Zak McKraken
+        <PISTA>Quien, además, es autor de InformatE
+        <PISTA>Su dirección email es spinf@geocities.com
+        <PISTA>Y su página web http://www.geocities.com/TimesSquare/Fortress/9939
+     <PREG>Qué nombre más raro.
+        <PISTA>El autor es muy tímido y oculta su verdadero nombre
+   <MENU>Logotipo
+     <TEXTO>¿Cuál es el logo de Zipi?
+         Realmente no hay logo oficial, pero para probar las
+         posibilidades del "ascii art" he incluido aqui este:
+
+<NOFONT>
+    _____      _
+   |_  (_)_ __(_)
+    / /| | '_ \ |
+   /___|_| .__/_|
+         |_|
+</NOFONT>
+     <TEXTO>
+   </MENU>
+</MENU>
+
