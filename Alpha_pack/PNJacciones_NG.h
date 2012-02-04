@@ -270,35 +270,35 @@ Constant PNJ_PUERTA_CERRADA = 13;
   if (r == false) {
     ! Rutinas antesPNJ de la localidad de origen
     if (p provides antesPNJ) {
-  	  CapturarSalida();
-	    r = ImprimirOEjecutar(p, antesPNJ);
-	    FinCapturarSalida();
-	  
-  	  if (longitudcaptura > 0)
+      CapturarSalida();
+      r = ImprimirOEjecutar(p, antesPNJ);
+      FinCapturarSalida();
+
+      if (longitudcaptura > 0)
         if (SeVen(actor, jugador))
-      		MostrarSalidaCapturada();
-    		
-	    if (r) {
-	      RazonErrorPNJ = PNJ_IMPIDE_ANTES;
+          MostrarSalidaCapturada();
+
+      if (r) {
+        RazonErrorPNJ = PNJ_IMPIDE_ANTES;
         accion = aux1;
         uno = aux2;
         otro = aux3;
-	      rfalse;
-	    }
+        rfalse;
+      }
     }
   }
 
   if (r == false) {
     if (fin) {
-!  	  if (longitudcaptura > 0)
+!      if (longitudcaptura > 0)
 !        if (SeVen(actor, jugador))
-!      		MostrarSalidaCapturada();
+!          MostrarSalidaCapturada();
       rfalse;
     }
-    
+
     MoverPNJ(amover, i, ##Ir, direccion);
     uno = p;
-    
+
     if (RutinasDespuesPNJ() == false) {
       ! Mensaje de éxito  
       if (p == localizacion && mensaje == 2) {
@@ -307,14 +307,14 @@ Constant PNJ_PUERTA_CERRADA = 13;
         else
           self.marcha(direccion);
       }
-    
+
       if (parent(self) == localizacion && mensaje == 2) {
         direccion = NULL;
-    
+
         objectloop (i in brujula)
           if (ConduceA(i, localizacion, CAMINO_CUALQUIERA) == p)
             direccion = i;
-	
+
        	if (ZRegion(self.llega) == 3) {
           print "^", (The) self, " ", (string) self.llega;
           if (direccion ~= NULL)
@@ -325,9 +325,6 @@ Constant PNJ_PUERTA_CERRADA = 13;
       }
     }
       
-    if (self provides accion_despues)
-      self.accion_despues();
-
     accion = aux1;
     uno = aux2;
     otro = aux3;

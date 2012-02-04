@@ -36,7 +36,6 @@ Constant PNJ_INTENTA_COGERSE_A_SI_MISMO = 7;
 Constant PNJ_INTENTA_COGER_AL_JUGADOR = 8;
 Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
 
-
 [ RutinasAntesPNJ
   o r;
   
@@ -54,11 +53,11 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
     CapturarSalida();
     r = ImprimirOEjecutar(actor, antesPNJ);
     FinCapturarSalida();
-   
+
     if (longitudcaptura > 0)
       if (SeVen(actor, jugador))
-    		MostrarSalidaCapturada();
-    		
+        MostrarSalidaCapturada();
+
     if (r) {
       RazonErrorPNJ = PNJ_IMPIDE_ANTES;
       rtrue;
@@ -66,18 +65,18 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   }
 
   if (uno provides antesPNJ) {
-	  CapturarSalida();
-	  r = ImprimirOEjecutar(uno, antesPNJ);
-	  FinCapturarSalida();
-	  
-	  if (longitudcaptura > 0)
-	    if (SeVen(actor, jugador))
-    		MostrarSalidaCapturada();
+    CapturarSalida();
+    r = ImprimirOEjecutar(uno, antesPNJ);
+    FinCapturarSalida();
+
+    if (longitudcaptura > 0)
+      if (SeVen(actor, jugador))
+        MostrarSalidaCapturada();
     		
-	  if (r) {
-	    RazonErrorPNJ = PNJ_IMPIDE_ANTES;
-	    rtrue;
-	  }
+    if (r) {
+      RazonErrorPNJ = PNJ_IMPIDE_ANTES;
+      rtrue;
+    }
   }
   
   rfalse;
@@ -85,23 +84,23 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
 
 [ RutinasDespuesPNJ
   o r;
-  
+
   sw__var = accion;
-  
+
   if (uno provides despuesPNJ) {
     CapturarSalida();
     r = ImprimirOEjecutar(uno, despuesPNJ);
     FinCapturarSalida();
-    
+
     if (longitudcaptura > 0)
-	    if (SeVen(actor, jugador))
+      if (SeVen(actor, jugador))
         MostrarSalidaCapturada();
 
     if (r)
       rtrue;
   }
   
-  o = Topealcanzable(actor);
+  o = TopeAlcanzable(actor);
 
   ! Esto es por si el propio actor tiene su rutina despuesPNJ, para cambiar el mensaje por defecto:
   ! (c) Alpha
@@ -120,27 +119,27 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   i r;
 
   if (obj provides rutina) {
-  	CapturarSalida();
-	  r = ImprimirOEjecutar(obj, rutina);
-  	FinCapturarSalida();
-  	
-	  if (longitudcaptura > 0)
-	    if (SeVen(actor, jugador))
-		    MostrarSalidaCapturada();
+    CapturarSalida();
+    r = ImprimirOEjecutar(obj, rutina);
+    FinCapturarSalida();
+
+    if (longitudcaptura > 0)
+      if (SeVen(actor, jugador))
+      MostrarSalidaCapturada();
 		    
-	  if (r)
-	    rtrue;
+    if (r)
+      rtrue;
   }
   
   objectloop (i in obj)
-	  if (RecursivamenteEjecuta(i, rutina))
-	    rtrue;
+    if (RecursivamenteEjecuta(i, rutina))
+      rtrue;
 
   rfalse;
 ];
 
 [ SeVen quien1 quien2;
-  return Topealcanzable(quien1) == Topealcanzable(quien2);
+  return TopeAlcanzable(quien1) == TopeAlcanzable(quien2);
 ];
 
 
@@ -202,17 +201,17 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   ! caso no es necesario comprobar en ese caso si el PNJ puede
   ! "tocar" al ancestro común
   if (ancestro ~= quien) {
-  	! En otro caso, es que el PNJ está metido en algún sitio.
-  	! Vamos a comprobar que para llegar desde el pnj hasta el
-  	! ancestro común, sólo atravesamos recipientes abiertos
-  	i = parent(quien); 
+    ! En otro caso, es que el PNJ está metido en algún sitio.
+    ! Vamos a comprobar que para llegar desde el pnj hasta el
+    ! ancestro común, sólo atravesamos recipientes abiertos
+    i = parent(quien); 
     while (i ~= ancestro) {
       if (i has recipiente && i hasnt abierto)  {
-    		! Si encontramos un recipiente cerrado, el PNJ no
-  	    ! puede acceder al item, porque ni siquiera puede
-    		! acceder al ancestro común
-    		RazonErrorPNJ = PNJ_EN_RECIPIENTE_CERRADO;
-  	    rfalse;
+        ! Si encontramos un recipiente cerrado, el PNJ no
+        ! puede acceder al item, porque ni siquiera puede
+        ! acceder al ancestro común
+        RazonErrorPNJ = PNJ_EN_RECIPIENTE_CERRADO;
+        rfalse;
       }
       i = parent(i);
     }
@@ -231,25 +230,25 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
     i = parent(item);
     while (i ~= ancestro) {
       ! Si hay que aplicar las restricciones especiales de
-	    ! COGER, estas son: no se puede coger algo que pertenezca
+      ! COGER, estas son: no se puede coger algo que pertenezca
       ! a un ser animado, ni algo que sea parte de otra cosa.
-    	if (flag && i hasnt recipiente && i hasnt soporte) {
+      if (flag && i hasnt recipiente && i hasnt soporte) {
         if (i has animado) {
-  		    RazonErrorPNJ = PNJ_INTENTA_COGER_CRIATURA;
-	        rfalse;
-	      }
-    	  if (i has transparente) {
+          RazonErrorPNJ = PNJ_INTENTA_COGER_CRIATURA;
+          rfalse;
+        }
+        if (i has transparente) {
           RazonErrorPNJ = PNJ_INTENTA_COGER_SUBOBJETO;
           rfalse;
         }
-    		! Y si no, es que el item está dentro de otra cosa que
-    		! no es un recipiente ni soporte, por tanto
-    		! inaccesible.
-    		RazonErrorPNJ = PNJ_OBJETO_INACCESIBLE;
-    		rfalse;
-	    }
+        ! Y si no, es que el item está dentro de otra cosa que
+        ! no es un recipiente ni soporte, por tanto
+        ! inaccesible.
+        RazonErrorPNJ = PNJ_OBJETO_INACCESIBLE;
+        rfalse;
+      }
 
-	    ! Si no queremos plantear restricciones de Coger, sino
+      ! Si no queremos plantear restricciones de Coger, sino
       ! simplemente comprobar si se puede tocar o no, basta
       ! verificar que la cadena de contenedores no tenga un
       ! recipiente cerrado.
@@ -275,8 +274,8 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   ! Si no hay antepasado comun, es que objeto y PNJ están en
   ! diferentes habitaciones
   if (ancestro == 0) {
-  	RazonErrorPNJ = PNJ_OBJETO_NO_PRESENTE;
-	  rfalse;
+    RazonErrorPNJ = PNJ_OBJETO_NO_PRESENTE;
+    rfalse;
   }
 
   ! Si el antepasado común es el propio PNJ, es que el item está en
@@ -284,13 +283,13 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   ! caso no es necesario comprobar en ese caso si el PNJ puede
   ! "ver" al ancestro común
   if (ancestro ~= quien) {
-  	! En otro caso, es que el PNJ está metido en algún sitio.
-	  ! Vamos a comprobar que para llegar desde el pnj hasta el
-  	! ancestro común, no atravesamos ningun recipiente cerrado
-	  ! opaco.
-  	i = parent(quien); 
-   	while (i ~= ancestro) {
-	    if (i has recipiente && i hasnt abierto && i hasnt transparente) {
+    ! En otro caso, es que el PNJ está metido en algún sitio.
+    ! Vamos a comprobar que para llegar desde el pnj hasta el
+    ! ancestro común, no atravesamos ningun recipiente cerrado
+    ! opaco.
+    i = parent(quien); 
+    while (i ~= ancestro) {
+      if (i has recipiente && i hasnt abierto && i hasnt transparente) {
         RazonErrorPNJ = PNJ_EN_RECIPIENTE_CERRADO;
         rfalse;
       }
@@ -306,15 +305,15 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   ! decir, el propio recipiente que contiene al PNJ, ya ha pasado el
   ! test antes, no es necesario hacer más tests
   if (item ~= ancestro) {
-  	! Si no, hay que comprobar ahora si entre el ancestro común y
-	  ! el item hay alguna barrera.
-  	i = parent(item);
+    ! Si no, hay que comprobar ahora si entre el ancestro común y
+    ! el item hay alguna barrera.
+    i = parent(item);
     while (i ~= ancestro) {
       ! verificar que la cadena de contenedores no tenga un
       ! recipiente cerrado opaco.
       if (i has recipiente && i hasnt abierto && i hasnt transparente) {
         RazonErrorPNJ = PNJ_OBJETO_EN_RECIPIENTE_CERRADO;
-		    rfalse;
+        rfalse;
       }
       i = parent(i);
     }
@@ -364,14 +363,14 @@ Global streambufferpnj;
       style bold;
     }
     print (char) PNJBufAux->i;
-    if (i + 1 < longitudcaptura && ~~EsMayuscula(PNJBufAux->(i+1)) && n) {
+    if (i + 1 < longitudcaptura && ~~EsMayuscula(PNJBufAux->(i + 1)) && n) {
       n = false;
       style roman;
     }
   }
   style roman;
 ];
-#ENDIF;
+#endif;
 
 [ EsMayuscula c;
   return c == 'A' or 'B' or 'C' or 'D' or 'E' or 'F' or 'G' or 'H' or 'I' or
@@ -379,7 +378,7 @@ Global streambufferpnj;
               'R' or 'S' or 'T' or 'U' or 'V' or 'W' or 'X' or 'Y' or 'Z';
 ];
 
-#IFDEF TARGET_ZCODE;
+#ifdef TARGET_ZCODE;
 [ CapturarSalida;
   PNJBufAux-->0 = TAM_BUFFER_AUXILIAR - WORDSIZE;
   @output_stream 3 PNJBufAux;
@@ -397,5 +396,5 @@ Global streambufferpnj;
   for (i = 0 : i < longitudcaptura : i++)
     print (char) PNJBufAux->(i + WORDSIZE);
 ];
-#ENDIF;
+#endif;
 
