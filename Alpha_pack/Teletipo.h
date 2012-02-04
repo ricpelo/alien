@@ -41,12 +41,12 @@ class Teletipo
     gancho_despues 0, 
     hazPausaLetra [;
       if (self.pausaLetra > -1) {
-        EsperarTiempo(self.pausaLetra);
+        WaitDelay(self.pausaLetra);
       }
     ],
     hazPausaMensaje [ multi;
       if (self.pausaMensaje > -1) {
-        EsperarTecla(0, self.pausaMensaje * multi);
+        KeyDelay(self.pausaMensaje * multi);
       }
     ],
     pausaLetra 1,
@@ -89,7 +89,7 @@ class Teletipo
         }          
         switch (tipo_pausa) {
           SIN_PAUSA:     break;
-          ESPERAR_TECLA: EsperarTecla();
+          ESPERAR_TECLA: KeyDelay();
           PAUSA_NORMAL:  self.hazPausaMensaje(1);
           PAUSA_DOBLE:   self.hazPausaMensaje(2);
           PAUSA_TRIPLE:  self.hazPausaMensaje(3);

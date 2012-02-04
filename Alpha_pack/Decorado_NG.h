@@ -108,7 +108,7 @@ Constant TARGET_ZCODE;
 
 System_file;
 
-Message "Incluyendo módulo de objetos de decorados, por Zak";
+Message "Incluyendo Decorado_NG, por Zak y Sothoth";
 
 !
 ! Rutina que ejecuta rutinas si las encuentra

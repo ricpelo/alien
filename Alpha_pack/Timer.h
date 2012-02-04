@@ -18,31 +18,27 @@
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-System_file;
-
-
-#ifdef HandleGlkEvent;
-  Message "[Timer: Usando rutina HandleGlkEvent() proporcionada por el juego]";
-  Message "[Timer: IMPORTANTE: NO OLVIDES LLAMAR EN ESA RUTINA A...]";
-  Message "[Timer: ControlTimer.HandleGlk(ev, context, buffer) ]";
-#endif; ! HandleGlkEvent
+Message " _______________________________________________________________ ";
+Message "| Timer: IMPORTANTE: Si usas tu propia rutina HandleGlkEvent(), |";
+Message "| Timer:         no olvides llamar desde esa rutina a:          |";
+Message "| Timer:  ControlTimer.CT_HandleGlkEvent(ev, context, buffer)   |";
+Message "|_______________________________________________________________|";
 
 
 ! Nuestra particular versión de HandleGlkEvent:
 [ HandleGlkEvent ev context buffer;
-  ControlTimer.HandleGlk(ev, context, buffer);
+  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
+];
+
+! Nuestra particular versión de KeyDelay:
+[ KeyDelay delay;
+  return ControlTimer.CT_KeyDelay(delay);
 ];
 
 
-! Nuestra particular versión de EsperarTecla:
-[ EsperarTecla s delay;
-  return ControlTimer.CTEsperarTecla(s, delay);
-];
-
-
-! Nuestra particular versión de EsperarTiempo:
-[ EsperarTiempo espera;
-  return ControlTimer.CTEsperarTiempo(espera);
+! Nuestra particular versión de WaitDelay:
+[ WaitDelay delay;
+  return ControlTimer.CT_WaitDelay(delay);
 ];
 
 
@@ -112,18 +108,19 @@ Object ControlTimer
       self.duracion_maxima = max;
     ],
   with
-    CTEsperarTiempo [ espera;
-      glk($00D6, espera * 5);            ! request_timer_events
+    ! Nuestra propia versión de WaitDelay:
+    CT_WaitDelay [ delay;
+      glk($00D6, delay * 5) ;             ! request_timer_events
       while (1) {
-        glk($00C0, gg_arguments);        ! glk_select(gg_arguments);
+        glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
         if ((gg_arguments-->0) == 1) {
           glk($00D6, self.tick);
           break;
         }
       }
     ],
-    CTEsperarTecla [ s delay;             ! Nuestra propia versión de EsperarTecla
-      if (s) print (string) s;
+    ! Nuestra propia versión de KeyDelay:
+    CT_KeyDelay [ delay;
       glk($00D6, delay * 5);              ! glk_request_timer_events
       glk($00D2, gg_mainwin);             ! glk_request_char_event(gg_mainwin);
       while (1) {
@@ -139,7 +136,8 @@ Object ControlTimer
       glk($00D6, self.tick);
       return gg_arguments-->2;
     ],
-    HandleGlk [ev context buffer i t;     ! Nuestra versión de HandleGlkEvent
+    ! Nuestra versión de HandleGlkEvent:
+    CT_HandleGlkEvent [ev context buffer i t;
       context = context;
       self.contexto_handle_glk = true;
       switch (ev-->0) {
