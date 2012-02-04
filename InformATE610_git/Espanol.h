@@ -752,21 +752,23 @@ Array IdiomaNumeros table
                         retokenise = 1;
                         if (siguiente == 'mismo') {
                             ! Hay que borrar tres palabras:
-                            for (i = at: i < pars->((x+3) * 4 + 5) + pars->((x+3) * 4 + 4) + 1: i++) {
+                            for (i = at: i < pars->((x+3) * 4 + 5) + pars->((x+3) * 4 + 4): i++) {
                                 buf->i = ' ';
                             }
                         } else {
                             ! Hay que borrar dos palabras:
-                            for (i = at: i < pars->((x+2) * 4 + 5) + 1: i++) {
+                            for (i = at: i < pars->((x+3) * 4 + 5) - 1: i++) {
                                 buf->i = ' ';
                             }
                         }
                         break;
                     } else {
                         ! No hay más palabras; se queda en "-te a ti":
-                        for (i = at: i < pars->((x+2) * 4 + 5) + pars->((x+1) * 4 + 4) + 1: i++) {
+                        for (i = at: i < pars->((x+2) * 4 + 5) + pars->((x+2) * 4 + 4): i++) {
                             buf->i = ' ';
                         }
+                        retokenise = 1;
+                        break;
                     }
                 }
             }
@@ -1008,21 +1010,23 @@ Array IdiomaNumeros table
                         retokenise = 1;
                         if (siguiente == 'mismo') {
                             ! Hay que borrar tres palabras:
-                            for (i = at: i < pars-->((x+3) * 3 + 3) + pars-->((x+3) * 3 + 2) + 1: i++) {
+                            for (i = at: i < pars-->((x+3) * 3 + 3) + pars-->((x+3) * 3 + 2): i++) {
                                 buf->i = ' ';
                             }
                         } else {
                             ! Hay que borrar dos palabras:
-                            for (i = at: i < pars-->((x+2) * 3 + 3) + 1: i++) {
+                            for (i = at: i < pars-->((x+3) * 3 + 3) - 1: i++) {
                                 buf->i = ' ';
                             }
                         }
                         break;
                     } else {
                         ! No hay más palabras; se queda en "-te a ti":
-                        for (i = at: i < pars-->((x+2) * 3 + 3) + pars-->((x+1) * 3 + 2) + 1: i++) {
+                        for (i = at: i < pars-->((x+2) * 3 + 3) + pars-->((x+2) * 3 + 2): i++) {
                             buf->i = ' ';
                         }
+                        retokenise = 1;
+                        break;
                     }
                 }
             }
