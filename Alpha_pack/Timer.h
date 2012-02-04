@@ -40,6 +40,12 @@ System_file;
 ];
 
 
+! Nuestra particular versión de EsperarTiempo:
+[ EsperarTiempo espera;
+  return ControlTimer.CTEsperarTiempo(espera);
+];
+
+
 #ifndef VR;
   [ VR valor;
     if (ZRegion(valor) == 2)
@@ -54,7 +60,7 @@ Class GestorTimer
   with
     condicion true,          ! Si es false, no se ejecutará el evento
     duracion  0,             ! Número de ticks necesarios para ejecutarse
-    evento [; rfalse; ],     ! El evento a ejecutar
+    evento 0,                ! El evento a ejecutar
     AsignarGestor [ pos;     ! Añade este gestor a la lista de gestores
       return ControlTimer.AsignarGestor(self, pos);
     ],
@@ -106,6 +112,16 @@ Object ControlTimer
       self.duracion_maxima = max;
     ],
   with
+    CTEsperarTiempo [ espera;
+      glk($00D6, espera * 5);            ! request_timer_events
+      while (1) {
+        glk($00C0, gg_arguments);        ! glk_select(gg_arguments);
+        if ((gg_arguments-->0) == 1) {
+          glk($00D6, self.tick);
+          break;
+        }
+      }
+    ],
     CTEsperarTecla [ s delay;             ! Nuestra propia versión de EsperarTecla
       if (s) print (string) s;
       glk($00D6, delay * 5);              ! glk_request_timer_events
@@ -116,7 +132,7 @@ Object ControlTimer
           break;
         if ((gg_arguments-->0) == 1) {
           glk($00D3, gg_mainwin);         ! glk_cancel_char_event
-          glk($00D6, self.tick);
+          glk($00D6, self.tick);          ! glk_request_timer_events
           return 0;
         }
       }
@@ -138,7 +154,7 @@ Object ControlTimer
                 ! Si la condición se cumple:
                 if (VR(t.condicion)) {
                   ! Si el evento retorna true:
-                  if (t.evento()) {
+                  if (t.evento ~= 0 && t.evento()) {
                     break;
                   }
                 }
@@ -262,8 +278,7 @@ Object ControlTimer
     ],
     ReactivarTick [ t;                    ! Reactiva el timer (útil en algunos casos)
       t = self.tick;
-      self.DesactivarTick();
-      self.ActivarTick(t);
+      glk($00D6, t);                      ! glk_request_timer_events
     ],
     ActivarMutex [ g;                     ! Activa el mutex sobre un gestor
       self.mutex = g;

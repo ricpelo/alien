@@ -1,8 +1,8 @@
 #!/bin/sh
 
-cd ZIPI_NG
+cd Alpha_pack/ZIPI_NG
 ./compilar-zipi.sh
-cd ..
-front alien alien.inf $* +include_path=,lib,InformATE610_git,Alpha_Pack,ZIPI_NG
+cd ../..
+front alien alien.inf $* +include_path=,lib,Alpha_pack,Alpha_pack/ZIPI_NG,InformATE610_git
 meta.sh
 

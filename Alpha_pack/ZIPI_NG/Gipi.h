@@ -200,69 +200,99 @@ ZIPI_Otro Otro_vacio;
 !================================================================
 ! Rutinas de alto nivel (independientes de la plataforma
 !
-[ ZIPI_RunMenu _m   i j count cur key target redibujar ft;
+[ ZIPI_RunMenu _m top  i j count cur key target redibujar ft r;
 
-	redibujar = 1;
+  redibujar = 1;
 
-	cur = 0;
-	count = _m.#ZIPI_item / WORDSIZE;
-	ft = true;
+  cur = 0;
+  count = _m.#ZIPI_item / WORDSIZE; count = count + 2;
+  ft = true;
 
-	for(::) {
-		if (redibujar) {
-			ZIPI_PintaTitulo(_m.ZIPI_titulo);
-			redibujar = 0;
-		}
+  for (::) {
+    if (redibujar) {
+      ZIPI_PintaTitulo(_m.ZIPI_titulo);
+      redibujar = 0;
+    }
 
-		for(i = 0: i < count: i++) {
-			j = i + 3;
-			ZIPI_setcursor(5,j);
-			if (ft) {
-                        	tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
-	                        tt_computadora.visualiza();
-			} else {
-				style fixed;
-				print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
-				style roman;
-			}
-		}
-		ft = false;
-		j = cur + 3;
-		ZIPI_setcursor(2,j);
-		print ">";
-		ZIPI_setcursor(2, j);
-		key=ZIPI_tecla();
-		print " ";
-  	        if (key>ZIPI_EVENTO_HYPER) {
- 		 cur = key-ZIPI_EVENTO_HYPER - 2;
-		 if (cur==-1) key=27;
-		 else key=13;
-		}	 	
-		switch(key) {
-			'k', 'p', '-', '_', 129, -4:
-				cur--;
-				if (cur < 0) cur = count-1;
-				break;
-			'j', 'n', '=', '+', 130, -5:
-				cur++;
-				if (cur >= count) cur = 0;
-				break;
-			'q', 'Q', 27, 131, 10, 8, -2:
-				return;
+    for (i = 0: i < count - 2: i++) {
+      j = i + 3;
+      ZIPI_setcursor(5,j);
+      style fixed;
+      if ((_m.&ZIPI_item-->i).ZIPI_titulo ofclass Routine) (_m.&ZIPI_item-->i).ZIPI_titulo();
+      else print (string)(_m.&ZIPI_item-->i).ZIPI_titulo;
+      style roman;
+    }
 
-			132, 13, 'n', ' ', -3, -6:
-				target = _m.&ZIPI_item-->cur;
-				if (target ofclass ZIPI_Menu)
-					ZIPI_RunMenu(target);
-				else if (target ofclass ZIPI_Pista)
-					ZIPI_RunPista(target);
-				else
-					ZIPI_RunOtro(target);
+    j = i + 4;
+    ZIPI_setcursor(5,j);
 
-				redibujar = 1;
-				break;
-		}
-	}
+    if (ft) {
+      if (top) {
+        tt_computadora.visualiza("Salir");
+      } else {
+        tt_computadora.visualiza("Volver");
+      }
+    } else {
+      if (top) {
+        print (s_pre) "Salir";
+      } else {
+        print (s_pre) "Volver";
+      }
+    }
+
+    ft = false;
+    j = cur + 3;
+    ZIPI_setcursor(2, j);
+    print ">";
+    ZIPI_setcursor(2, j);
+    key = ZIPI_tecla();
+    print " ";
+
+    if (key > ZIPI_EVENTO_HYPER) {
+      cur = key - ZIPI_EVENTO_HYPER - 2;
+      if (cur == -1)
+        key = 27;
+      else
+        key = 13;
+    }
+
+    switch(key) {
+      'k', 'p', '-', '_', 129, -4:
+        do {
+          cur--;
+          if (cur == count - 2) cur--;
+          if (cur < 0) cur = count - 1;
+        } until ((_m.&ZIPI_item-->cur) ~= ZIPI_Separador);
+        break;
+      'j', 'n', '=', '+', 130, -5:
+        do {
+          cur++;
+          if (cur == count - 2) cur++;
+          if (cur >= count) cur = 0;
+        } until ((_m.&ZIPI_item-->cur) ~= ZIPI_Separador);
+        break;
+      'q', 'Q', 27, 131, 10, 8, -2:
+        rfalse;
+ 
+      132, 13, 'n', ' ', -3, -6:
+        if (cur == count - 1) rfalse;
+        if (cur == count - 2) break;
+        target = _m.&ZIPI_item-->cur;
+        if (target ofclass ZIPI_Menu)
+          ZIPI_RunMenu(target);
+        else if (target ofclass ZIPI_Pista)
+          ZIPI_RunPista(target);
+        else if (target provides ZIPI_cambiar)
+          target.ZIPI_cambiar();
+        else {
+          r = ZIPI_RunOtro(target);
+          if (r == 2) return r;
+        }
+        redibujar = 1;
+        break;
+    }
+  }
+  rfalse;
 ];
 
 [ ZIPI_RunPista _h   count cur key done;
@@ -284,8 +314,7 @@ ZIPI_Otro Otro_vacio;
 	 'p', 'P':
 	    cur++;
 	    print "(", cur, "/", count, ") ";
-            tt_computadora.escribe(0, _h.&ZIPI_pistas-->(cur-1));
-	    tt_computadora.visualiza();
+            print (string) (_h.&ZIPI_pistas-->(cur-1))
             print "^^";
 	    break;
 	 'q', 'Q', 27, 131, 10, 8:
