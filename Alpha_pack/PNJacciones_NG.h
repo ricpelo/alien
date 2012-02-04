@@ -199,141 +199,120 @@ Constant PNJ_PUERTA_CERRADA = 13;
 ! Acción IR
 !
 [ PNJIr amover direccion
-  i j p mensaje aux1 aux2 aux3 r fin;
-    
-  mensaje = 2;
-  p = parent(amover);
-  i = ConduceA(direccion, p, CAMINO_CUALQUIERA);
-  fin = false;
+  origen destino mensaje aux1 aux2 aux3 p r;
 
-  if (i == 0) {
+  mensaje = 2;
+  origen = parent(amover);
+  destino = ConduceA(direccion, origen, CAMINO_CUALQUIERA);
+
+  aux1 = accion; aux2 = uno; aux3 = otro;
+  accion = ##Ir; actor = amover; uno = origen; otro = direccion;
+  r = RutinasAntesPNJ();      ! Rutinas antesPNJ del actor y la localidad de origen
+
+  if (r) {
+    accion = aux1; uno = aux2; otro = aux3;
+    rfalse;
+  }
+
+  ! Rutinas antesPNJ de la localidad de destino
+  if (destino provides antesPNJ) {
+    CapturarSalida();
+    r = ImprimirOEjecutar(destino, antesPNJ);
+    FinCapturarSalida();
+
+    if (longitudcaptura > 0)
+      if (SeVen(actor, jugador))
+        MostrarSalidaCapturada();
+
+    if (r) {
+      accion = aux1; uno = aux2; otro = aux3;
+      rfalse;
+    }
+  }
+
+  ! Si llegamos hasta aquí, es porque ni el actor, ni la localidad de origen
+  ! ni la de destino se quejan.
+  
+  if (destino == 0) {
     RazonErrorPNJ = PNJ_SIN_SALIDA;
-!    amover.pnj_bloqueado();
+!      amover.pnj_bloqueado();
     #ifdef DEBUG;
-    if (parser_trace > 1)
-      print "[MoverPNJDir bloqueado: la dirección no lleva a ningún sitio]^";
+      if (parser_trace > 1)
+        print "[MoverPNJDir bloqueado: la dirección no lleva a ningún sitio]^";
     #endif;
     rfalse;
   }
-    
-  j = p.(direccion.direcc_puerta);
 
-  if (ZRegion(j) == 2)
-    j = j();
+  p = origen.(direccion.direcc_puerta);
 
-  if (j)
-    if (j has puerta)	{
-      ! pnj_abrir retorna: 2 para atravesar la puerta normalmente
-      !                    1 para atravesar la puerta pero impedir
-      !                    que se imprima el texto de
-      !                    "marchar/llegar"
-      !                    0 para impedir al PNJ que use esa puerta
-      if (j provides pnj_abrir) {
-        CapturarSalida();
-        mensaje = j.pnj_abrir(amover);
-        FinCapturarSalida();
-        
-        if (mensaje == false) {
-          RazonErrorPNJ = PNJ_PUERTA_BLOQUEADA;
-!          amover.pnj_bloqueado();
-          #ifdef DEBUG;
-          if (parser_trace > 1)
-            print "[MoverPNJDir bloqueado: ", (el) j, "'s pnj_abrir retornó falso]^";
-          #endif;
-          fin = true;
-!          rfalse;
-        }
-      } else if (j hasnt abierto) {
-        RazonErrorPNJ = PNJ_PUERTA_CERRADA;
-!        amover.pnj_bloqueado();
-        #ifdef DEBUG;
-        if (parser_trace > 1)
-          print "[MoverPNJDir bloqueado: ", (el) j, " está cerrad", (o)j, " y no tiene pnj_abrir]^";
-        #endif;
-        fin = true;
-!        rfalse;
-      }
-    }
+  if (ZRegion(p) == 2) p = p();
 
-  aux1 = accion; aux2 = uno; aux3 = otro;
-  accion = ##Ir; actor = amover; uno = i; otro = direccion;
-  r = RutinasAntesPNJ();                  ! Rutinas antesPNJ del actor y la localidad de destino
-
-  if (r) {
-    RazonErrorPNJ = PNJ_IMPIDE_ANTES;
-    accion = aux1;
-    uno = aux2;
-    otro = aux3;
-    rfalse;    
-  }
-
-  if (r == false) {
-    ! Rutinas antesPNJ de la localidad de origen
-    if (p provides antesPNJ) {
+  if (p && p has puerta)	{
+    ! pnj_abrir retorna: 2 para atravesar la puerta normalmente
+    !                    1 para atravesar la puerta pero impedir
+    !                    que se imprima el texto de
+    !                    "marchar/llegar"
+    !                    0 para impedir al PNJ que use esa puerta
+    if (p provides pnj_abrir) {
       CapturarSalida();
-      r = ImprimirOEjecutar(p, antesPNJ);
+      mensaje = p.pnj_abrir(amover);
       FinCapturarSalida();
-
-      if (longitudcaptura > 0)
-        if (SeVen(actor, jugador))
-          MostrarSalidaCapturada();
-
-      if (r) {
-        RazonErrorPNJ = PNJ_IMPIDE_ANTES;
-        accion = aux1;
-        uno = aux2;
-        otro = aux3;
+      
+      if (mensaje == false) {
+        RazonErrorPNJ = PNJ_PUERTA_BLOQUEADA;
+!          amover.pnj_bloqueado();
+        #ifdef DEBUG;
+          if (parser_trace > 1)
+            print "[MoverPNJDir bloqueado: El pnj_abrir ", (del) p, " retornó falso]^";
+        #endif;
         rfalse;
       }
-    }
-  }
-
-  if (r == false) {
-    if (fin) {
-!      if (longitudcaptura > 0)
-!        if (SeVen(actor, jugador))
-!          MostrarSalidaCapturada();
+    } else if (p hasnt abierto) {
+      RazonErrorPNJ = PNJ_PUERTA_CERRADA;
+!        amover.pnj_bloqueado();
+      #ifdef DEBUG;
+        if (parser_trace > 1)
+          print "[MoverPNJDir bloqueado: ", (el) p, " está cerrad", (o) p,
+                " y no tiene pnj_abrir]^";
+      #endif;
       rfalse;
     }
+  }
 
-    MoverPNJ(amover, i, ##Ir, direccion);
-    uno = p;
+  ! Movemos al PNJ:
+  MoverPNJ(amover, destino, ##Ir, direccion);
+  uno = destino;
 
-    if (RutinasDespuesPNJ() == false) {
-      ! Mensaje de éxito  
-      if (p == localizacion && mensaje == 2) {
-        if (ZRegion(self.marcha) == 3)  ! Imprimir el texto
-          print "^", (The) self, " ", (string) self.marcha, " ", (DirDada) direccion, ".^";
-        else
-          self.marcha(direccion);
-      }
-
-      if (parent(self) == localizacion && mensaje == 2) {
-        direccion = NULL;
-
-        objectloop (i in brujula)
-          if (ConduceA(i, localizacion, CAMINO_CUALQUIERA) == p)
-            direccion = i;
-
-       	if (ZRegion(self.llega) == 3) {
-          print "^", (The) self, " ", (string) self.llega;
-          if (direccion ~= NULL)
-            print " desde ", (el) direccion;
-          print ".^";
-        } else
-          self.llega(direccion);
-      }
+  r = RutinasDespuesPNJ();
+  accion = aux1; uno = aux2; otro = aux3;
+  
+  if (r == false) {
+    ! Mensaje de éxito  
+    if (origen == localizacion && mensaje == 2) {
+      if (ZRegion(self.marcha) == 3)  ! Imprimir el texto
+        print "^", (The) self, " ", (string) self.marcha, " ", (DirDada) direccion, ".^";
+      else
+        self.marcha(direccion);
     }
-      
-    accion = aux1;
-    uno = aux2;
-    otro = aux3;
+
+    if (parent(self) == localizacion && mensaje == 2) {
+      direccion = NULL;
+
+      objectloop (destino in brujula)
+        if (ConduceA(destino, localizacion, CAMINO_CUALQUIERA) == origen)
+          direccion = destino;
+
+     	if (ZRegion(self.llega) == 3) {
+        print "^", (The) self, " ", (string) self.llega;
+        if (direccion ~= NULL)
+          print " desde ", (el) direccion;
+        print ".^";
+      } else
+        self.llega(direccion);
+    }
     rtrue;
   }
-    
-  accion = aux1;
-  uno = aux2;
-  otro = aux3;
-  rfalse;
+
+  rfalse;      
 ];
 
