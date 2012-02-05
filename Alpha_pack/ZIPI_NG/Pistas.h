@@ -1206,7 +1206,7 @@ with
 
 
 [ ZIPI_Intro;
-  print "Desplázate con las flechas del cursor. Pulsa ", (s_in) "Enter", " para seleccionar, ", (s_in) "P", " para continuar, o ", (s_in) "Q", " para salir.";
+  print "Desplázate con las flechas del cursor. Pulsa ", (s_input) "Enter", " para seleccionar, ", (s_input) "P", " para continuar, o ", (s_input) "Q", " para salir.";
 ];
 
 

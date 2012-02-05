@@ -193,7 +193,7 @@ Include "EParser";
 Replace InitGlkWindow;
 Replace HandleGlkEvent;
 
-Include "SGW+DMX_NG";    ! Entre EParser y Acciones
+Include "SGW+DMX_NG";    ! Entre EParser y Gramatica
 Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
@@ -232,7 +232,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
   print "- Todos las imágenes del juego son dibujos originales de Manolo, diseñados para^";
   print "  la ocasión.^^";
   KeyDelay();
-  print "- ¿Has visto ya el documento ~", (s_b) "Holocubo.pdf", "~ usando la contraseña
+  print "- ¿Has visto ya el documento ~", (s_user1) "Holocubo.pdf", "~ usando la contraseña
            apropiada?^";
   print "  Contiene información muy interesante sobre el xenoforme.^^";
   KeyDelay();
@@ -242,7 +242,7 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 
 [ ImprimirPrompt;
-  print (s_in) "^> ";
+  print (s_input) "^> ";
 ];
 
 
@@ -465,7 +465,7 @@ Object barra_estado
         3: print " |";
       }
     ],
-    lineas_inv
+    lineas_inputv
       BE_INV_TOTAL;
 
 
@@ -4096,21 +4096,21 @@ Object pantalla "pantalla" aula
               print "Al mirar a la pantalla, ves el contenido del holocubo:^^";
             }
           }
-          print (s_b) "*** HOLOCUBO DE SEGURIDAD - PROTOCOLO DE EMERGENCIA: ***^^";
+          print (s_user1) "*** HOLOCUBO DE SEGURIDAD - PROTOCOLO DE EMERGENCIA: ***^^";
           print "En caso de emergencia, proceder a la autodestrucción del complejo
                  siguiendo el siguiente procedimiento:^^";
           print "1. Penetrar en la zona de emergencia (nivel -1, zona sur).^";
           print "2. Cerrar su única entrada para aislarla del exterior.^";
           print "3. Pulsar simultáneamente los botones rojo y azul, en ese orden, antes
                  de que vuelvan a su posición inicial.^^";
-          print (s_b) "*** NOTAS: ***^^";
+          print (s_user1) "*** NOTAS: ***^^";
           print "a. Tras la activación del protocolo, se abrirá el ascensor de emergencia
                  (nivel -2, zona norte).^";
           print "b. El ascensor será la única vía de salida mientras dure la emergencia.^";
           print "c. Se dispondrá de un máximo de diez minutos para evacuar el complejo.^";
           print "d. El protocolo no puede abortarse en ningún momento.^^";
-          print "[La clave para acceder al documento ~", (s_b) "Holocubo.pdf", "~ es ",
-                (s_b) "APOGEO", " (en mayúsculas).]^";
+          print "[La clave para acceder al documento ~", (s_user1) "Holocubo.pdf", "~ es ",
+                (s_user1) "APOGEO", " (en mayúsculas).]^";
           
           if (jason in LugarReal()) {
             HablaJason("¡Vamos a volar todo esto en pedazos!");
@@ -4712,9 +4712,9 @@ Object hueco_techo "Sala este de ventilación"
                  que una alucinación producto del hipnotizante ritmo del aire... Pero no:
                  lo que ves es muy real, así que algo no marcha bien... Nada bien...^";
           KeyDelay();
-          print (s_em) "^Dios santo... Pero... ¿qué...? ¿Qué es esto...?^";
+          print (s_emph) "^Dios santo... Pero... ¿qué...? ¿Qué es esto...?^";
           KeyDelay();
-          print (s_b) "^Oh... Dios... mío...^";
+          print (s_user1) "^Oh... Dios... mío...^";
           KeyDelay();
         }
     ];
@@ -4894,7 +4894,7 @@ Object vaina "vaina mucosa" hueco_techo
                  lo que puedes, pegando casi tu cara contra el nauseabundo capullo...
                  y entonces lo ves...";
           KeyDelay();
-          print (s_b) "^^¡VES A JASON DENTRO DE LA VAINA!";
+          print (s_user1) "^^¡VES A JASON DENTRO DE LA VAINA!";
         }
       }
       "";
@@ -5766,7 +5766,7 @@ Object jason "Jason" nave1
           HablaJason("No llevo nada encima.");
           rtrue;
         } else {
-          print (s_b) "^JASON: ", "~Llevo ";
+          print (s_user1) "^JASON: ", "~Llevo ";
           EscribirListaDesde(child(self), INFOTOTAL_BIT + ESPANOL_BIT + RECURSIVO_BIT);
           "~.";
         }
@@ -6136,7 +6136,7 @@ Object jason "Jason" nave1
             }
             if (~~(self.habla_en_vaina)) {
               self.habla_en_vaina = true;
-              print (s_b) "^¡ES JASON! ¡ESTÁ VIVO!^";
+              print (s_user1) "^¡ES JASON! ¡ESTÁ VIVO!^";
               rtrue;
             }
           }
@@ -6423,8 +6423,8 @@ Object computadora "Madre"
                              generador pseudoaleatorio. Indíqueme el valor de la nueva
                              semilla que aparece en el display, para que pueda calcular
                              el código correcto."); new_line;
-                 print "[Prueba usando ~", (s_in) "MADRE, LA SEMILLA ES n",
-                       "~, sustituyendo ~", (s_in) "n", "~ por el valor de la semilla.]^";
+                 print "[Prueba usando ~", (s_input) "MADRE, LA SEMILLA ES n",
+                       "~, sustituyendo ~", (s_input) "n", "~ por el valor de la semilla.]^";
               1: HablaMadre("El código de acceso se calcula a partir de la semilla del
                              generador pseudoaleatorio. A partir de la semilla que me
                              ha indicado, he calculado que el nuevo código de acceso es
@@ -7592,7 +7592,7 @@ Object detector_movimiento "detector de movimiento" rifle
           if (localizacion == laoscuridad) {
             ControlTimer.PrepararImpresion();
             t = true;
-            print (s_b) "^¡El detector capta movimiento aquí mismo!^";
+            print (s_user1) "^¡El detector capta movimiento aquí mismo!^";
           }
         } else {
           if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt ausente) {
@@ -7615,7 +7615,7 @@ Object detector_movimiento "detector de movimiento" rifle
         if (t) {
           if (self.primera_vez && hayTiempoReal) {
             self.primera_vez = false;
-            print (s_em) " [A partir de ahora, el detector de movimiento informará de la
+            print (s_emph) " [A partir de ahora, el detector de movimiento informará de la
                           presencia de la criatura a través de la barra de estado, en la
                           parte superior derecha, junto al contador de turnos. Por tanto,
                           no volverás a ver mensajes de este tipo en lo sucesivo. Un
@@ -7932,7 +7932,7 @@ Object autodestruccion
             if (t > 0) {
               ControlTimer.PrepararImpresion();
 
-              print (s_b) "^MEGAFONÍA: ", "~Falta";
+              print (s_user1) "^MEGAFONÍA: ", "~Falta";
 
               if (t > 1) {
                 print "n";
@@ -7960,7 +7960,7 @@ Object autodestruccion
           t = self.falta();
           ControlTimer.PrepararImpresion();
 
-          print (s_b) "^MEGAFONÍA: ", "~Falta";
+          print (s_user1) "^MEGAFONÍA: ", "~Falta";
 
           if (t > 1) {
             print "n";
@@ -8429,7 +8429,7 @@ Object tt_final
   print "~A·L·I·E·N: La aventura - Edición Especial~ ha sido diseñada
          para funcionar con el intérprete Gargoyle, que puedes
          descargar de la siguiente dirección:^^",
-         (s_pre) "http://code.google.com/p/garglk/downloads^";
+         (s_pref) "http://code.google.com/p/garglk/downloads^";
   KeyDelay();
   quit;
 ];
@@ -8541,9 +8541,9 @@ Object tt_final
       }
     } else {
       if (top) {
-        print (s_pre) "Salir";
+        print (s_pref) "Salir";
       } else {
-        print (s_pre) "Volver";
+        print (s_pref) "Volver";
       }
     }
 
@@ -9239,8 +9239,8 @@ Object timer_alien
 
 [ ComoHablar;
   print "[Para hablar con un personaje, usa la forma ~",
-        (s_in) "PERSONAJE, lo que sea", "~. Por ejemplo: ~",
-        (s_in) "JASON, QUÉ OPINAS DE MADRE";
+        (s_input) "PERSONAJE, lo que sea", "~. Por ejemplo: ~",
+        (s_input) "JASON, QUÉ OPINAS DE MADRE";
   "~.]";
 ];
 
@@ -9379,10 +9379,10 @@ Object timer_alien
   l = LugarReal();
 
   if (jason in l || (l == hueco_techo && jason in vaina && vaina has abierta)) {
-    print (s_b) "^JASON: ";
+    print (s_user1) "^JASON: ";
   } else {
     Damusix.TocarV(Transmisor_ogg);
-    print (s_b) "^JASON (por el comunicador): ";
+    print (s_user1) "^JASON (por el comunicador): ";
   }
     
   print "~", (string) msg1;
@@ -9422,7 +9422,7 @@ Object timer_alien
 [ HablaRobot msg;
   robot.ha_hablado = true;
   Damusix.TocarV(Robot_ogg);
-  print (s_b) "^ROBOT: ", "~", (string) msg, "~^";
+  print (s_user1) "^ROBOT: ", "~", (string) msg, "~^";
 ];
 
 
@@ -9438,9 +9438,9 @@ Object tt_computadora
     
   if (LugarReal() ~= nave1 or nave2) {
     Damusix.TocarV(Transmisor_ogg);
-    print (s_b) "^MADRE (por el comunicador): ";
+    print (s_user1) "^MADRE (por el comunicador): ";
   } else {
-    print (s_b) "^MADRE: ";
+    print (s_user1) "^MADRE: ";
   }
 
   print "~";
@@ -9513,7 +9513,7 @@ Object tt_computadora
   boton_oeste.descripcion = boton_oeste.descripcion_ya_pulsado;
   boton_este.pulsar = boton_este.pulsar_ya_pulsado;
   boton_este.descripcion = boton_este.descripcion_ya_pulsado;
-  print (s_b) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
+  print (s_user1) "^¡HAS ACTIVADO EL PROTOCOLO DE AUTODESTRUCCIÓN!^";
 ];
 
 
@@ -9553,34 +9553,6 @@ Object tt_computadora
   if (localizacion == entrada) {
     viewImageCenter(entrada.sgw_img);
   }
-];
-
-
-[ s_em text;
-  glk_set_style(style_Emphasized);
-  print (string) text;
-  glk_set_style(style_Normal);
-];
-
-
-[ s_in text;
-  glk_set_style(style_Input);
-  print (string) text;
-  glk_set_style(style_Normal);
-];
-
-
-[ s_pre text;
-  glk_set_style(style_Preformatted);
-  print (string) text;
-  glk_set_style(style_Normal);
-];
-
-
-[ s_b text;
-  glk_set_style(style_User1);
-  print (string) text;
-  glk_set_style(style_Normal);
 ];
 
 
@@ -10002,13 +9974,13 @@ Extend 'di' first
 
 
 [ GraficosSub;
-  print (s_em) "[Por favor, usa la forma ~", (s_in) "GRAFICOS SI",
-        (s_em) "~ o ~", (s_in) "GRAFICOS NO", (s_em) "~ para activar o
+  print (s_emph) "[Por favor, usa la forma ~", (s_input) "GRAFICOS SI",
+        (s_emph) "~ o ~", (s_input) "GRAFICOS NO", (s_emph) "~ para activar o
         desactivar, respectivamente, el uso de gráficos. También puedes
         cambiar el tamaño de la ventana gráfica usando ~",
-        (s_in) "GRAFICOS PEQUEÑOS", (s_em) "~, ~",
-        (s_in) "GRAFICOS MEDIANOS", (s_em) "~ o ~",
-        (s_in) "GRAFICOS GRANDES", (s_em) "~.]^";
+        (s_input) "GRAFICOS PEQUEÑOS", (s_emph) "~, ~",
+        (s_input) "GRAFICOS MEDIANOS", (s_emph) "~ o ~",
+        (s_input) "GRAFICOS GRANDES", (s_emph) "~.]^";
 ];
 
 
@@ -10030,30 +10002,30 @@ Extend 'di' first
 
 
 [ SonidoSub;
-  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO SI", (s_em) "~ o ~",
-        (s_in) "SONIDO NO", (s_em) "~ para activar o desactivar, respectivamente,
+  print (s_emph) "[Por favor, usa la forma ~", (s_input) "SONIDO SI", (s_emph) "~ o ~",
+        (s_input) "SONIDO NO", (s_emph) "~ para activar o desactivar, respectivamente,
         todos los efectos sonoros.]^";
 ];
 
 
 [ MusicaSub;
-  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO FONDO SI",
-        (s_em) "~ o ~", (s_in) "SONIDO FONDO NO", (s_em) "~ para activar
+  print (s_emph) "[Por favor, usa la forma ~", (s_input) "SONIDO FONDO SI",
+        (s_emph) "~ o ~", (s_input) "SONIDO FONDO NO", (s_emph) "~ para activar
         o desactivar, respectivamente, el sonido de fondo.]^";
 ];
 
 
 [ SonidoDetectorSub;
-  print (s_em) "[Por favor, usa la forma ~", (s_in) "SONIDO DETECTOR SI",
-        (s_em) "~ o ~", (s_in) "SONIDO DETECTOR NO", (s_em) "~ para activar
+  print (s_emph) "[Por favor, usa la forma ~", (s_input) "SONIDO DETECTOR SI",
+        (s_emph) "~ o ~", (s_input) "SONIDO DETECTOR NO", (s_emph) "~ para activar
         o desactivar, respectivamente, el sonido del detector de movimiento.]^";
 ];
 
 
 [ TeclearMalSub;
-  print (s_em) "[Por favor, usa la forma ~", (s_in) "TECLEA tal EN cual",
-        (s_em) "~. Por ejemplo: ~", (s_in) "TECLEA HOLA EN EL TECLADO",
-        (s_em) "~.]^";
+  print (s_emph) "[Por favor, usa la forma ~", (s_input) "TECLEA tal EN cual",
+        (s_emph) "~. Por ejemplo: ~", (s_input) "TECLEA HOLA EN EL TECLADO",
+        (s_emph) "~.]^";
 ];
 
 
@@ -10121,7 +10093,7 @@ Extend 'di' first
   hayGraficos = false;
   closeGraphicWindow();
   if (~~t) {
-    print (s_em) "[Desactivados los gráficos.]^";
+    print (s_emph) "[Desactivados los gráficos.]^";
   }
 ];
 
@@ -10134,7 +10106,7 @@ Extend 'di' first
 
 [ AyudarSub;
   print "Prueba a pedir ayuda a alguien. Si necesitas pistas más elaboradas, puedes usar
-         el sistema de pistas interactivas tecleando el comando ", (s_in) "PISTAS", ".^";
+         el sistema de pistas interactivas tecleando el comando ", (s_input) "PISTAS", ".^";
 ];
 
 
@@ -10210,14 +10182,14 @@ Extend 'di' first
 [ ActivarSalidasSub;
   mostrarSalidas = true;
 !  give mostrar_salidas ~oculto;
-  print (s_em) "[Activado el listado automático de salidas.]^";
+  print (s_emph) "[Activado el listado automático de salidas.]^";
 ];
 
 
 [ DesactivarSalidasSub;
   mostrarSalidas = false;
 !  give mostrar_salidas oculto;
-  print (s_em) "[Desactivado el listado automático de salidas.]^";
+  print (s_emph) "[Desactivado el listado automático de salidas.]^";
 ];
 
 
@@ -10308,14 +10280,14 @@ Endif;
 [ EncenderSonidoSub;
   haySonido = true;
   Damusix.ActivarAudio();
-  print (s_em) "[Activados todos los efectos sonoros.]^";
+  print (s_emph) "[Activados todos los efectos sonoros.]^";
 ];
 
 
 [ ApagarSonidoSub;
   haySonido = false;
   Damusix.DesactivarAudio();
-  print (s_em) "[Desactivados todos los efectos sonoros.]^";
+  print (s_emph) "[Desactivados todos los efectos sonoros.]^";
 ];
 
 
@@ -10324,7 +10296,7 @@ Endif;
   Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
 
   if (~~i) {
-    print (s_em) "[Activado el sonido de fondo.]^";
+    print (s_emph) "[Activado el sonido de fondo.]^";
   }
 ];
 
@@ -10332,21 +10304,21 @@ Endif;
 [ ApagarMusicaSub;
   haySonidoFondo = false;
   Damusix.VolumenCanal(CANAL_FONDO, 0);
-  print (s_em) "[Desactivado el sonido de fondo.]^";
+  print (s_emph) "[Desactivado el sonido de fondo.]^";
 ];
 
 
 [ EncenderSonidoDetectorSub;
   haySonidoDetector = true;
   Damusix.VolumenCanal(CANAL_DETECTOR, VOLUMEN_DETECTOR);
-  print (s_em) "[Activado el sonido del detector de movimiento.]^";
+  print (s_emph) "[Activado el sonido del detector de movimiento.]^";
 ];
 
 
 [ ApagarSonidoDetectorSub;
   haySonidoDetector = false;
   Damusix.VolumenCanal(CANAL_DETECTOR, 0);
-  print (s_em) "[Desactivado el sonido del detector de movimiento.]^";
+  print (s_emph) "[Desactivado el sonido del detector de movimiento.]^";
 ];
 
 
@@ -10395,12 +10367,12 @@ Endif;
          (c) 2008-2012 Alpha Aventuras^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
-  print (s_pre) "http://www.gnu.org/licenses/gpl.txt^";
+  print (s_pref) "http://www.gnu.org/licenses/gpl.txt^";
   print "^El código fuente del programa está disponible en Github:^^";
-  print (s_pre) "https://github.com/ricpelo/alien/tree/deluxe^";
+  print (s_pref) "https://github.com/ricpelo/alien/tree/deluxe^";
   KeyDelay();
   print "^Visítanos en:^^";
-  print (s_pre) "http://wiki.caad.es/Alpha_Aventuras^
+  print (s_pref) "http://wiki.caad.es/Alpha_Aventuras^
         http://sites.google.com/site/alphaaventuras^
         http://www.facebook.com/alphaaventuras^";
   KeyDelay();
@@ -10430,12 +10402,12 @@ Endif;
   switch (hayPistas) {
     0: hayPistas = 1;
        jason.hablar = computadora.hablar = robot.hablar = false;
-       print (s_em) "[Advertencia: Es sabido que la tentación de la ayuda es a veces
+       print (s_emph) "[Advertencia: Es sabido que la tentación de la ayuda es a veces
              tan fuerte que se suelen obtener pistas prematuramente. Por tanto,
              en cualquier momento durante el juego puedes poner ",
-             (s_in) "PISTAS NO", (s_em) ", y eso te impedirá obtener ayuda en la
+             (s_input) "PISTAS NO", (s_emph) ", y eso te impedirá obtener ayuda en la
              sesión de juego actual. Si sigues queriendo una pista, pon ",
-             (s_in) "PISTAS", (s_em) " otra vez.]^";
+             (s_input) "PISTAS", (s_emph) " otra vez.]^";
     1: ControlTimer.PausarTick();
        t = false;
        if (hayGraficos) {
@@ -10459,16 +10431,16 @@ Endif;
        clearTextWindow();
        ControlTimer.ReanudarTick();
        <<Mirar>>;
-    2: print (s_em) "[Las pistas han sido desactivadas.]^";
+    2: print (s_emph) "[Las pistas han sido desactivadas.]^";
   }
 ];
 
 
 [ PistasNoSub;
   switch (hayPistas) {
-    2:       print (s_em) "[Las pistas ya han sido desactivadas.]^";
+    2:       print (s_emph) "[Las pistas ya han sido desactivadas.]^";
     default: hayPistas = 2;
-             print (s_em) "[PISTAS desactivadas.]^";
+             print (s_emph) "[PISTAS desactivadas.]^";
   }
 ];
 
