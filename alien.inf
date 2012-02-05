@@ -9845,13 +9845,11 @@ Extend 'atornilla' last
   * noun 'con' held -> Girar;
 
 Extend 'saca' first
+  * multiinside 'de' 'dentro' 'de' noun -> Sacar
   *                                     -> SacarNadaDeNada
-  * 'a//'                               -> SacarNadaDeNada
-  * multiinside                         -> Sacar
-  * 'a//' multiinside                   -> Sacar;
-
-Extend 'saca' last
-  * multiinside 'de' 'dentro' 'de' noun -> Sacar;
+  * 'a//'                               -> SacarNadaDeNada;
+!  * multiinside                         -> Sacar
+!  * 'a//' multiinside                   -> Sacar;
 
 Extend 'coge' last
   * multiinside 'de' 'dentro' 'de' noun -> Sacar;

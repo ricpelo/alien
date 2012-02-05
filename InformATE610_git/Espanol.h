@@ -708,6 +708,26 @@ Array IdiomaNumeros table
     	EliminarDuplicados(buf, pars);
     }
 
+    ! Si la frase acaba en 'de' o 'del', quitamos esas dos partículas.
+    ! Si acaba en 'el', entendemos que se refiere a un pronombre, y lo
+    ! sustituimos por '-lo':
+    retokenise = 0;
+    x = pars->1 - 1;
+    word = pars-->(x * 2 + 1);
+    at   = pars->(x * 4 + 5);
+    len  = pars->(x * 4 + 4);
+    if (word == 'de') {
+        buf->at = ' '; buf->(at + 1) = ' ';
+        retokenise = 1;
+    } else if (word == 'del') {
+        buf->at = ' '; buf->(at + 1) = ' '; buf->(at + 2) = ' ';
+        retokenise = 1;
+    } else if (word == 'el') {
+        buf->1 = buf->1 + 1;
+        buf->at = '-'; buf->(at + 1) = 'l'; buf->(at + 2) = 'o';
+        retokenise = 1;
+    }
+
     ! Corrige el poblema siguiente:
     ! > SACA TODO
     ! ¿De dónde quieres sacar esas cosas?
@@ -716,7 +736,6 @@ Array IdiomaNumeros table
     ! Lo que hacemos es poner un espacio en la 'd' de 'del', para
     ! convertirlo en 'el', y así la tokenización quedaría:
     ! 'saca' 'todo' 'de' 'el' 'armario'
-    retokenise = 0;
     for (x = 0: x < pars->1: x++) {
         word = pars-->(x * 2 + 1);
         at   = pars->(x * 4 + 5);
@@ -966,6 +985,26 @@ Array IdiomaNumeros table
     	EliminarDuplicados(buf, pars);
     }
 
+    ! Si la frase acaba en 'de' o 'del', quitamos esas dos partículas.
+    ! Si acaba en 'el', entendemos que se refiere a un pronombre, y lo
+    ! sustituimos por '-lo':
+    retokenise = 0;
+    x = pars-->0 - 1;
+    word = pars-->(x * 3 + 1);
+    len  = pars-->(x * 3 + 2);
+    at   = pars-->(x * 3 + 3);
+    if (word == 'de') {
+        buf->at = ' '; buf->(at + 1) = ' ';
+        retokenise = 1;
+    } else if (word == 'del') {
+        buf->at = ' '; buf->(at + 1) = ' '; buf->(at + 2) = ' ';
+        retokenise = 1;
+    } else if (word == 'el') {
+        buf-->0 = buf-->0 + 1;
+        buf->at = '-'; buf->(at + 1) = 'l'; buf->(at + 2) = 'o';
+        retokenise = 1;
+    }
+
     ! Corrige el poblema siguiente:
     ! > SACA TODO
     ! ¿De dónde quieres sacar esas cosas?
@@ -974,7 +1013,6 @@ Array IdiomaNumeros table
     ! Lo que hacemos es poner un espacio en la 'd' de 'del', para
     ! convertirlo en 'el', y así la tokenización quedaría:
     ! 'saca' 'todo' 'de' 'el' 'armario'
-    retokenise = 0;
     for (x = 0: x < pars-->0: x++) {
         word = pars-->(x * 3 + 1);
         len  = pars-->(x * 3 + 2);

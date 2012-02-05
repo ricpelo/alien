@@ -368,7 +368,7 @@ Constant PARTICULA_TE = "te";
     }
 
  Dejar:
-    ! 2 mensajes de error, 1 aviso y 1 de éxito:
+    ! 3 mensajes de error, 1 aviso y 1 de éxito:
     !   1: Error, el objeto dejado no está en poder del jugador, pero
     !      está en la localidad.
     !   2: Error, el objeto dejado no está en poder del jugador ni en
@@ -377,6 +377,7 @@ Constant PARTICULA_TE = "te";
     !      puesta y la librería va a quitársela automáticamente para
     !      poder dejarla.
     !   4: Éxito
+    !   5: El objeto dejado ya está dentro (o sobre) el segundo
     switch(ml_n)
     {
      1: print "Para dejar ";
@@ -386,6 +387,8 @@ Constant PARTICULA_TE = "te";
      2: "No ", (lo) ml_o, " tienes.";
      3: "(primero te quitas ", (el) ml_o, ")";
      4: "Dejad", (o) ml_o, ".";
+     5: print_ret (_El) ml_o, " ya ", (esta) ml_o, " en ",
+        (el) otro, ".";
     }
 
   Sacar:
