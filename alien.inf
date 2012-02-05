@@ -554,7 +554,7 @@ Class Lugar
 
 
 Include "Moviles_NG";       ! La librería Moviles retocada por mí
-Include "PnjPuertas_NG";    ! La librería PnjPuertas retocada por mí (muy poco)
+Include "PNJpuertas_NG";    ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";      ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG";   ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";           ! Los temas de conversación
