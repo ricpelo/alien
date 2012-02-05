@@ -21,8 +21,8 @@ Constant TAM_BUFFER_AUXILIAR 300;
 #endif;
 
 Global RazonErrorPNJ;
-Array PNJBufAux->TAM_BUFFER_AUXILIAR;
-Global longitudcaptura;
+Array  PNJBufAux->TAM_BUFFER_AUXILIAR;
+Global longitudCaptura;
 
 ! Constantes de error usadas por PNJ
 Constant PNJ_IMPIDE_ANTES = 0;
@@ -50,13 +50,15 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   ! Esto es por si el propio actor tiene su rutina antesPNJ, por si quiere impedir la acción:
   ! (c) Alpha
   if (actor provides antesPNJ) {
-    CapturarSalida();
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      CapturarSalida();
+    #endif;
     r = ImprimirOEjecutar(actor, antesPNJ);
-    FinCapturarSalida();
-
-    if (longitudcaptura > 0)
-      if (SeVen(actor, jugador))
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      FinCapturarSalida();
+      if (longitudCaptura > 0 && SeVen(actor, jugador))
         MostrarSalidaCapturada();
+    #endif;
 
     if (r) {
       RazonErrorPNJ = PNJ_IMPIDE_ANTES;
@@ -65,14 +67,16 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   }
 
   if (uno provides antesPNJ) {
-    CapturarSalida();
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      CapturarSalida();
+    #endif;
     r = ImprimirOEjecutar(uno, antesPNJ);
-    FinCapturarSalida();
-
-    if (longitudcaptura > 0)
-      if (SeVen(actor, jugador))
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      FinCapturarSalida();
+      if (longitudCaptura > 0 && SeVen(actor, jugador))
         MostrarSalidaCapturada();
-    		
+    #endif;
+
     if (r) {
       RazonErrorPNJ = PNJ_IMPIDE_ANTES;
       rtrue;
@@ -88,13 +92,15 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   sw__var = accion;
 
   if (uno provides despuesPNJ) {
-    CapturarSalida();
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      CapturarSalida();
+    #endif;
     r = ImprimirOEjecutar(uno, despuesPNJ);
-    FinCapturarSalida();
-
-    if (longitudcaptura > 0)
-      if (SeVen(actor, jugador))
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      FinCapturarSalida();
+      if (longitudCaptura > 0 && SeVen(actor, jugador))
         MostrarSalidaCapturada();
+    #endif;
 
     if (r)
       rtrue;
@@ -119,14 +125,16 @@ Constant PNJ_OBJETO_ESCENARIO_O_ESTATICO = 9;
   i r;
 
   if (obj provides rutina) {
-    CapturarSalida();
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      CapturarSalida();
+    #endif;
     r = ImprimirOEjecutar(obj, rutina);
-    FinCapturarSalida();
+    #ifdef CAPTURAR_SALIDA_PNJ;
+      FinCapturarSalida();
+      if (longitudCaptura > 0 && SeVen(actor, jugador))
+        MostrarSalidaCapturada();
+		#endif;
 
-    if (longitudcaptura > 0)
-      if (SeVen(actor, jugador))
-      MostrarSalidaCapturada();
-		    
     if (r)
       rtrue;
   }
@@ -346,10 +354,10 @@ Global streambufferpnj;
   @copy $ffffffff sp;
   @copy streambufferpnj sp;
   @glk $0044 2 0; ! stream_close
-  @copy sp longitudcaptura;
+  @copy sp longitudCaptura;
   @copy sp 0;
 
-  if (longitudcaptura >= TAM_BUFFER_AUXILIAR)
+  if (longitudCaptura >= TAM_BUFFER_AUXILIAR)
     print "[** Error: se ha perdido texto en la captura **]^";
 
   return longitudcaptura;
@@ -357,13 +365,13 @@ Global streambufferpnj;
 
 [ MostrarSalidaCapturada i n;
   n = false;
-  for (i = 0 : i < longitudcaptura : i++) {
-    if (EsMayuscula(PNJBufAux->i) && i + 1 < longitudcaptura && EsMayuscula(PNJBufAux->(i + 1))) {
+  for (i = 0 : i < longitudCaptura : i++) {
+    if (EsMayuscula(PNJBufAux->i) && i + 1 < longitudCaptura && EsMayuscula(PNJBufAux->(i + 1))) {
       n = true;
       style bold;
     }
     print (char) PNJBufAux->i;
-    if (i + 1 < longitudcaptura && ~~EsMayuscula(PNJBufAux->(i + 1)) && n) {
+    if (i + 1 < longitudCaptura && ~~EsMayuscula(PNJBufAux->(i + 1)) && n) {
       n = false;
       style roman;
     }
@@ -386,14 +394,14 @@ Global streambufferpnj;
 
 [ FinCapturarSalida;
   @output_stream -3;
-  longitudcaptura=PNJBufAux-->0;
-  return longitudcaptura;
+  longitudCaptura=PNJBufAux-->0;
+  return longitudCaptura;
 ];
 
 [ MostrarSalidaCapturada
   i;
 
-  for (i = 0 : i < longitudcaptura : i++)
+  for (i = 0 : i < longitudCaptura : i++)
     print (char) PNJBufAux->(i + WORDSIZE);
 ];
 #endif;

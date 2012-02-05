@@ -243,7 +243,7 @@ Constant PNJ_PUERTA_CERRADA = 13;
       CapturarSalida();
       mensaje = p.pnj_abrir(amover);
       FinCapturarSalida();
-      longitudcaptura = 0;
+      longitudCaptura = 0;
       
       if (mensaje == false) {
         RazonErrorPNJ = PNJ_PUERTA_BLOQUEADA;
