@@ -505,6 +505,7 @@ Constant PARTICULA_TE = "te";
     ! 3: Error, el jugador intenta vaciar un objeto que no tiene nada
     !    dentro.
     ! 4: Error, el jugador intenta vaciar un objeto sobre sí mismo.
+    ! 5: Error, el jugador intenta vaciarse a sí mismo.
     ! [NOTA: No hay mensajes de éxito para esta acción, ya que en caso
     ! de haber superado los test anteriores, la librería genera
     ! finalmente la acción Transferir, la cual a su vez, generará la
@@ -513,14 +514,11 @@ Constant PARTICULA_TE = "te";
     ! acciones PonerSobre o Meter.
     switch(ml_n)
     {
-      1:
-        print_ret (_El) ml_o, " no puede tener cosas dentro.";
-      2:
-        print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
-      3:
-        print_ret (_El) ml_o, " ya ", (esta) ml_o, " vací", (o)ml_o, ".";
-      4:
-        "No puedes vaciar ", (el) ml_o, "sobre sí.";
+      1: print_ret (_El) ml_o, " no puede tener cosas dentro.";
+      2: print_ret (_El) ml_o, " ", (esta) ml_o, " cerrad", (o) ml_o, ".";
+      3: print_ret (_El) ml_o, " ya ", (esta) ml_o, " vací", (o)ml_o, ".";
+      4: "No puedes vaciar ", (el) ml_o, "sobre sí.";
+      5: "No puedes vaciarte a ti mismo.";
     }
 
   Dar:

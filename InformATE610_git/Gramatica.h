@@ -278,6 +278,7 @@ VerboIrregular "cambiar el dialecto del juego" with imperativo 'dialecto';
 
   Verb meta 'xobjeto'
     *                                 -> MostrarObjeto
+    * number                          -> MostrarObjeto
     * multi                           -> MostrarObjeto;
 
   #Ifdef TARGET_GLULX;

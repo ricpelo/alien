@@ -4112,9 +4112,6 @@ Constant SCORE__DIVISOR = 20;
 
 [ DentroDelAlcance_O domain nosearch context i ad n;
 
-!  multiexcept doesn't have otro parameter in scope
-   if (context==TOKEN_MULTIEXCEPTO && domain==aviso_avanzar) jump DontAccept;
-
 !  If the scope reason is unusual, don't parse.
 
       if (razon_alcance~=RAZON_PARSING or RAZON_HABLAR)
@@ -5200,10 +5197,11 @@ Object LibreriaInform "(Librería Inform)"
 [ RutinasAntes;
   if (RutinaPreJuego()~=0) rtrue;
   if (EjecutarRutinas(jugador,ordenes)~=0) rtrue;
-  if (localizacion~=0 && EjecutarRutinas(localizacion,antes)~=0) rtrue;
   razon_alcance=RAZON_REACCIONAR_ANTES; parser_uno=0;
-  BuscarEnAlcance(TopeAlcanzable(jugador),jugador,0); razon_alcance=RAZON_PARSING;
+  BuscarEnAlcance(TopeAlcanzable(jugador),jugador,0);
+  razon_alcance=RAZON_PARSING;
   if (parser_uno~=0) rtrue;
+  if (localizacion~=0 && EjecutarRutinas(localizacion,antes)~=0) rtrue;
   if (dat1>1 && EjecutarRutinas(dat1,antes)~=0) rtrue;
   rfalse;
 ];
@@ -6611,12 +6609,44 @@ Array magic_array -->         ! This is so nitfol can do typo correction /
     return res;
 ];
 
-#Endif;
-#Endif;
+#Endif; ! TARGET_
+#Endif; ! NITFOL_HOOKS
 
 ! ----------------------------------------------------------------------------
 
 ! ==============================================================================
+
+Object  LibraryExtensions "(Library Extensions)"
+  with  RunAll [ prop a1 a2 a3
+            obj rval max;
+            objectloop (obj in self)
+                if (obj provides prop && obj.prop ofclass Routine) {
+                    rval = obj.prop(a1, a2, a3);
+                    if (rval > max) max = rval;
+                }
+            return max;
+        ],
+        RunUntil [ prop exitval a1 a2 a3
+            obj rval;
+            objectloop (obj in self)
+                if (obj provides prop && obj.prop ofclass Routine) {
+                    rval = obj.prop(a1, a2, a3);
+                    if (rval == exitval) return rval;
+                }
+            return ~~exitval;
+        ],
+        RunWhile [ prop exitval a1 a2 a3
+            obj rval;
+            objectloop (obj in self)
+                if (obj provides prop && obj.prop ofclass Routine) {
+                    rval = obj.prop(a1, a2, a3);
+                    if (rval ~= exitval) return rval;
+                }
+            return exitval;
+        ],
+        ext_initialise 0,
+        ext_messages 0,
+  has   propio;
 
 Constant LIBRERIA_EPARSER;      ! Para el chequeo de dependencias
 

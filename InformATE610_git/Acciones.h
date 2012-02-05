@@ -1013,7 +1013,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 [ MoverObjetosFlotantes i k l m address flag;
   objectloop (i)
   {   address=i.&esta_en;
-      if (address~=0 && i hasnt ausente)
+      if (address~=0 && i hasnt ausente && ~~ContieneIndirectamente(jugador, i))
       {   if (ZRegion(address-->0)==2)
           {   if (i.esta_en() ~= 0) move i to localizacion; else remove i;
           }
@@ -1053,23 +1053,32 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 !   The handy SiONo routine, and some "meta" verbs
 ! ----------------------------------------------------------------------------
 
-[ SiONo i;
-  for (::)
-  {
-#Ifdef TARGET_ZCODE;
-      bufferaux->0=2;
-      parseaux->0=1;
-      if (localizacion == nothing || parent(jugador) == nothing)
-        read bufferaux parseaux;
-      else read bufferaux parseaux DibujarLineaEstado;
-#Ifnot; ! TARGET_GLULX;
-      KeyboardPrimitive(bufferaux, parseaux);
-#Endif; ! TARGET_
-      QuitarAcentos(bufferaux, parseaux);      ! [030305]
-      i=parseaux-->1;
-      if (i==SI1__WD or SI2__WD or SI3__WD) rtrue;
-      if (i==NO1__WD or NO2__WD or NO3__WD) rfalse;
-      M__L(##Finalizar,1); print "> ";
+[ SiONo i j;
+  for (::) {
+    #Ifdef TARGET_ZCODE;
+!    bufferaux->0=2;
+!    parseaux->0=1;
+    if (localizacion == nothing || parent(jugador) == nothing)
+      read bufferaux parseaux;
+    else read bufferaux parseaux DibujarLineaEstado;
+    j = parseaux->1;
+    #Ifnot; ! TARGET_GLULX;
+    KeyboardPrimitive(bufferaux, parseaux);
+    j = parseaux-->0;
+    #Endif; ! TARGET_
+    QuitarAcentos(bufferaux, parseaux);      ! [030305]
+    if (j) { ! se ha introducido al menos una palabra
+      #Ifdef TARGET_ZCODE;
+      if (parseaux->1) {
+      #Ifnot; ! TARGET_GLULX;
+      if (parseaux-->0) {
+      #Endif;
+        i = parseaux-->1;
+        if (i == SI1__WD or SI2__WD or SI3__WD) rtrue;
+        if (i == NO1__WD or NO2__WD or NO3__WD) rfalse;
+      }
+    }
+    M__L(##Finalizar,1 ); print "> ";
   }
 ];
 
@@ -1507,7 +1516,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   !  ancestor is o1.)
 
   while (o2~=0)
-  {   if (o1==o2) rtrue;
+  {   if (o1==o2) rtrue; if(o2 ofclass Class) rfalse;
       o2=parent(o2);
   }
   rfalse;
@@ -1807,6 +1816,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 ];
 
 [ VaciarEnSub i j k flag;
+  if (uno == jugador) return M__L(##VaciarEn,5);
   if (uno == otro) return M__L(##VaciarEn,4);
   if (ObjetoEsIntocable(uno)) return;
   if (uno hasnt recipiente) return M__L(##VaciarEn,1,uno);
@@ -2226,7 +2236,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 
   if (modomirar<3 && techo_de_visibilidad==localizacion)
   {   if ((allow_abbrev~=1) || (modomirar==2) || (localizacion hasnt visitado))
-      {   if (localizacion.describir~=NULL) EjecutarRutinas(localizacion,describir);
+      {   if (localizacion.&describir~=0) EjecutarRutinas(localizacion,describir);
           else
           {   if (localizacion.descripcion==0) ErrorDeEjecucion(11,localizacion);
               else ImprimirOEjecutar(localizacion,descripcion);
