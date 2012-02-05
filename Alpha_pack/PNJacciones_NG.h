@@ -199,7 +199,7 @@ Constant PNJ_PUERTA_CERRADA = 13;
 ! Acción IR
 !
 [ PNJIr amover direccion
-  origen destino mensaje aux1 aux2 aux3 p r;
+  origen destino mensaje aux1 aux2 aux3 p;
 
   mensaje = 2;
   origen = parent(amover);
@@ -207,27 +207,13 @@ Constant PNJ_PUERTA_CERRADA = 13;
 
   aux1 = accion; aux2 = uno; aux3 = otro;
   accion = ##Ir; actor = amover; uno = origen; otro = direccion;
-  r = RutinasAntesPNJ();      ! Rutinas antesPNJ del actor y la localidad de origen
 
-  if (r) {
-    accion = aux1; uno = aux2; otro = aux3;
-    rfalse;
-  }
+  if (RutinasAntesPNJ()) jump Salir; ! Rutinas antesPNJ del actor y la localidad de origen
 
   ! Rutinas antesPNJ de la localidad de destino
   if (destino provides antesPNJ) {
-    CapturarSalida();
-    r = ImprimirOEjecutar(destino, antesPNJ);
-    FinCapturarSalida();
-
-    if (longitudcaptura > 0)
-      if (SeVen(actor, jugador))
-        MostrarSalidaCapturada();
-
-    if (r) {
-      accion = aux1; uno = aux2; otro = aux3;
-      rfalse;
-    }
+    uno = destino;
+    if (RutinasAntesPNJ()) jump Salir;
   }
 
   ! Si llegamos hasta aquí, es porque ni el actor, ni la localidad de origen
@@ -235,12 +221,12 @@ Constant PNJ_PUERTA_CERRADA = 13;
   
   if (destino == 0) {
     RazonErrorPNJ = PNJ_SIN_SALIDA;
-!      amover.pnj_bloqueado();
+!    amover.pnj_bloqueado();
     #ifdef DEBUG;
       if (parser_trace > 1)
         print "[MoverPNJDir bloqueado: la dirección no lleva a ningún sitio]^";
     #endif;
-    rfalse;
+    jump Salir;
   }
 
   p = origen.(direccion.direcc_puerta);
@@ -257,36 +243,35 @@ Constant PNJ_PUERTA_CERRADA = 13;
       CapturarSalida();
       mensaje = p.pnj_abrir(amover);
       FinCapturarSalida();
+      longitudcaptura = 0;
       
       if (mensaje == false) {
         RazonErrorPNJ = PNJ_PUERTA_BLOQUEADA;
-!          amover.pnj_bloqueado();
+!        amover.pnj_bloqueado();
         #ifdef DEBUG;
           if (parser_trace > 1)
             print "[MoverPNJDir bloqueado: El pnj_abrir ", (del) p, " retornó falso]^";
         #endif;
-        rfalse;
+        jump Salir;
       }
     } else if (p hasnt abierto) {
       RazonErrorPNJ = PNJ_PUERTA_CERRADA;
-!        amover.pnj_bloqueado();
+!      amover.pnj_bloqueado();
       #ifdef DEBUG;
         if (parser_trace > 1)
           print "[MoverPNJDir bloqueado: ", (el) p, " está cerrad", (o) p,
                 " y no tiene pnj_abrir]^";
       #endif;
-      rfalse;
+      jump Salir;
     }
   }
 
   ! Movemos al PNJ:
   MoverPNJ(amover, destino, ##Ir, direccion);
-  uno = destino;
 
-  r = RutinasDespuesPNJ();
-  accion = aux1; uno = aux2; otro = aux3;
+  uno = destino;
   
-  if (r == false) {
+  if (RutinasDespuesPNJ() == false) {
     ! Mensaje de éxito  
     if (origen == localizacion && mensaje == 2) {
       if (ZRegion(self.marcha) == 3)  ! Imprimir el texto
@@ -310,9 +295,12 @@ Constant PNJ_PUERTA_CERRADA = 13;
       } else
         self.llega(direccion);
     }
+    accion = aux1; uno = aux2; otro = aux3;
     rtrue;
   }
 
-  rfalse;      
+.Salir;
+  accion = aux1; uno = aux2; otro = aux3;
+  rfalse;
 ];
 

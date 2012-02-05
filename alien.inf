@@ -553,6 +553,15 @@ Class Lugar
     ~luz;
 
 
+! Estas tres rutinas se definen en PNJactor_NG, pero vamos a probar con
+! versiones vacías de las mismas:
+Replace CapturarSalida;
+[ CapturarSalida; ];
+Replace FinCapturarSalida;
+[ FinCapturarSalida; ];
+Replace MostrarSalidaCapturada;
+[ MostrarSalidaCapturada; ];
+
 Include "Moviles_NG";       ! La librería Moviles retocada por mí
 Include "PNJpuertas_NG";    ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";      ! Librerías que hacen que un PNJ pueda coger y dejar
