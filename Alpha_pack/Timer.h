@@ -18,11 +18,14 @@
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Message " _______________________________________________________________ ";
-Message "| Timer: IMPORTANTE: Si usas tu propia rutina HandleGlkEvent(), |";
-Message "| Timer:         no olvides llamar desde esa rutina a:          |";
-Message "| Timer:  ControlTimer.CT_HandleGlkEvent(ev, context, buffer)   |";
-Message "|_______________________________________________________________|";
+Message " __________________________________________________________________";
+Message "|                  * TIMER:  I M P O R T A N T E *                 |";
+Message "|                  ===============================                 |";
+Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~EParser.h~;' |";
+Message "| 2. Si usas tu propia rutina HandleGlkEvent(),                    |";
+Message "|    no olvides llamar desde esa rutina a:                         |";
+Message "|    ControlTimer.CT_HandleGlkEvent(ev, context, buffer)           |";
+Message "|__________________________________________________________________|";
 
 
 ! Nuestra particular versión de HandleGlkEvent:
