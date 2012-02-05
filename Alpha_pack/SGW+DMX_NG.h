@@ -772,7 +772,6 @@ Default WIN_MAIN    = 2;
     rtrue;
 ];
 
-#ifndef KeyDelay;
 ! Espera X decimas de segundo por la pulsacion de una tecla
 [ KeyDelay tenths  key done ix;
    #ifdef TARGET_GLULX;
@@ -799,7 +798,6 @@ Default WIN_MAIN    = 2;
      return key;
    #endif; ! TARGET_
 ];
-#endif; ! KeyDelay
 
 #ifdef TARGET_ZCODE;
 ! Espera por la pulsacion de una tecla.
