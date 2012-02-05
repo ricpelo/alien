@@ -1727,6 +1727,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 [ PonerSobreSub ancestor;
   accion_recibir=##PonerSobre;
   if (otro == obj_abajo || jugador in otro) <<Dejar uno>>;
+  if (parent(uno) == otro) return M__L(##Dejar,5,uno);
   if (parent(uno)~=jugador) return M__L(##PonerSobre,1,uno);
 
   ancestor = AntepasadoComun(uno, otro);
@@ -1764,6 +1765,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 [ MeterSub ancestor;
   accion_recibir = ##Meter;
   if (otro==obj_abajo || jugador in otro) <<Dejar uno>>;
+  if (parent(uno) == otro) return M__L(##Dejar,5,uno);
   if (parent(uno)~=jugador) return M__L(##Meter,1,uno);
 
   ancestor = AntepasadoComun(uno, otro);
@@ -2282,10 +2284,15 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   M__L(##MirarDebajo,2);
 ];
 
-[ BuscarEnSub i f;
+[ ContenidoVisible o  i f;
+    objectloop (i in o) if (i hasnt oculto && i hasnt escenario) f++;
+    return f;
+];
+
+[ BuscarEnSub f;
   if (localizacion == LaOscuridad) return M__L (##BuscarEn, 1, uno);
   if (ObjetoEsIntocable(uno)) return;
-  objectloop (i in uno) if (i hasnt oculto && i hasnt escenario) f=1;
+  f = ContenidoVisible(uno);
   if (uno has soporte)
   {   if (f==0) return M__L(##BuscarEn,2,uno);
       return M__L(##BuscarEn,3,uno);
@@ -2295,7 +2302,6 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
       return M__L(##BuscarEn,5,uno);
   if (RutinasDespues()==1) rtrue;
 
-  i=children(uno);
   if (f==0) return M__L(##BuscarEn,6,uno);
   M__L(##BuscarEn,7,uno);
 ];
@@ -2355,8 +2361,8 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   give uno abierto;
   if (RutinasDespues()==1) rtrue;
   if (tate_callao==1) rtrue;
-  if (uno has recipiente && uno hasnt transparente && child(uno)~=0
-      && ContieneIndirectamente(uno,jugador)==0)
+  if (uno has recipiente && uno hasnt transparente && localizacion ~= laoscuridad
+      && ContenidoVisible(uno) ~= 0 && ContieneIndirectamente(uno,jugador)==0)
       return M__L(##Abrir,4,uno);
   M__L(##Abrir,5,uno);
 ];
@@ -2546,7 +2552,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
       accion = ##Lanzar;
   }
   if (uno has puesto) {
-      M__L (##Dejar, 3, uno);
+      M__L(##Dejar, 3, uno);
       <Desvestir uno>;
       if (uno has puesto && uno in jugador) rtrue;
   }
