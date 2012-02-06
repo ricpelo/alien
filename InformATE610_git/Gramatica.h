@@ -106,7 +106,6 @@ Endif;  ! ADMITIR_COMANDO_SALIDAS
 
 ! TODO: ¿De verdad son necesarias tantas formas inglesas de los comandos?
 
-#Ifndef NO_PUNTUACION;
 Verb meta 'puntuacion' 'puntos' 'puntuaci'
   *                                   -> Puntuacion
   * 'total'/'detallada'               -> PuntuacionTotal;
@@ -115,7 +114,6 @@ VerboIrregular "conocer la puntuación" with imperativo 'puntuacion' 'puntos';
 Verb meta 'total' 'pt'
   *                                   -> PuntuacionTotal;
 VerboIrregular "conocer la puntuación detallada" with imperativo 'total' 'pt';
-#Endif; ! NO_PUNTUACION
 
 Verb meta 'q//' 'quit' 'terminar' 'fin' 'acabar' 'abandonar'
   *                                   -> Finalizar;

@@ -1095,16 +1095,18 @@ Constant PARTICULA_TE = "te";
  }
 #Endif; ! NO_LUGARES
 
-#Ifndef NO_PUNTUACION;
   Puntuacion:
     ! Puntuación del juego. Puede activarse porque el jugador lo pide
     ! (con el verbo "PUNTUACION") o porque el juego ha terminado. En
     ! este ultimo caso, la variable "banderafin" valdrá true.
-    if (banderafin) print "En este juego, tu puntuación ha sido ";
-    else print "Hasta el momento tu puntuación es ";
-    print puntuacion, " de un total de ", PUNTUACION_MAX,
-	", en ", turnos, " turno";
-    if (turnos>1) print "s"; return;
+    switch (ml_n) {
+      1: if (banderafin) print "En este juego, tu puntuación ha sido ";
+         else print "Hasta el momento tu puntuación es ";
+         print puntuacion, " de un total de ", PUNTUACION_MAX,
+	 ", en ", turnos, " turno";
+         if (turnos>1) print "s"; return;
+      2: "No hay puntuación en este juego.";
+    }
 
   PuntuacionTotal:
     ! Puntuación en modo "explicativo". Puede activarse porque el
@@ -1125,9 +1127,8 @@ Constant PARTICULA_TE = "te";
 	" de la siguiente manera:^";
      2: "por encontrar objetos importantes";
      3: "por visitar lugares importantes";
-     4: "total (de ", PUNTUACION_MAX, ")";
+     4: print "total (de ", PUNTUACION_MAX, ")";
     }
-#Endif; ! NO_PUNTUACION
 
   Inv:
     ! Inventario

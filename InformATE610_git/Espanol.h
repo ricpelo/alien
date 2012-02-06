@@ -20,7 +20,7 @@ System_file;
 !   Parte I.   Asuntos preliminares
 ! ---------------------------------------------------------------------------
 
-Constant VersionIdioma = "Librería Española InformATE! 080625_git";
+Constant VersionIdioma = "Librería Española InformATE! 6/10+ git";
 
 ! Definición de caractéres "baratos". Esto permite que estas letras
 ! ocupen menos bits en la máquina Z. No funciona si se intenta la
@@ -490,10 +490,10 @@ Array IdiomaNumeros table
 	    	 'ú': buffer->i='u';
 	    	 'ü': buffer->i='u';
 	    	 'ñ': buffer->i='n';
-!	    	 '?': buffer->i=' ';
-!	    	 '¿': buffer->i=' ';
-!	    	 '!': buffer->i=' ';
-!		 '¡': buffer->i=' ' ;
+	    	 '?': buffer->i=' ';
+	    	 '¿': buffer->i=' ';
+	    	 '!': buffer->i=' ';
+		 '¡': buffer->i=' ';
 		}
 	    tokenise__(buffer, parse);
 	}
@@ -545,10 +545,10 @@ Array IdiomaNumeros table
 		  243: buffer->i='o';       ! 243: ó
 		  250, 252: buffer->i='u';  ! 250: ú, 252: ü
 		  241: buffer->i='n';       ! 241: ñ
-!	    	 '?': buffer->i=' ';
-!	    	 191: buffer->i=' ';
-!	    	 '!': buffer->i=' ';
-!		 161: buffer->i=' ' ;
+	    	  '?': buffer->i=' ';
+	    	  191: buffer->i=' ';
+	    	  '!': buffer->i=' ';
+		  161: buffer->i=' ';
 		}
 	    tokenise__(buffer, parse);
 	}
@@ -722,9 +722,9 @@ Array IdiomaNumeros table
     } else if (word == 'del') {
         buf->at = ' '; buf->(at + 1) = ' '; buf->(at + 2) = ' ';
         retokenise = 1;
-    } else if (word == 'el') {
-        buf->1 = buf->1 + 1;
+    } else if (word == 'el' && buf->1 < buf->0) {
         buf->at = '-'; buf->(at + 1) = 'l'; buf->(at + 2) = 'o';
+        (buf->1)++;
         retokenise = 1;
     }
 
@@ -999,9 +999,9 @@ Array IdiomaNumeros table
     } else if (word == 'del') {
         buf->at = ' '; buf->(at + 1) = ' '; buf->(at + 2) = ' ';
         retokenise = 1;
-    } else if (word == 'el') {
-        buf-->0 = buf-->0 + 1;
+    } else if (word == 'el' && buf-->0 < INPUT_BUFFER_LEN) {
         buf->at = '-'; buf->(at + 1) = 'l'; buf->(at + 2) = 'o';
+        (buf-->0)++;
         retokenise = 1;
     }
 

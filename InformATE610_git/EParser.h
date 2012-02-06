@@ -22,38 +22,83 @@ System_file;
 Ifdef INFIX; Ifndef DEBUG; Constant DEBUG; Endif; Endif;
 Ifdef STRICT_MODE; Ifndef DEBUG; Constant DEBUG; Endif; Endif;
 
-Constant NumSerieLib      = "080625_git";
-Constant RevisionLib      = "6/10+";
+Constant NumSerieLib      = "6/10+ git";
+Constant RevisionLib      = "6/10+ git";
 Constant VERSION_LIBRERIA = 610;
 Constant Grammar__Version = 2;
 
 Default CARACTER_COMENTARIO '!';
 
 ! Algunos avisos
-Message "InformATE! 6/10+";
+Message "InformATE! 6/10+ git";
+
+#Ifdef INFIX;
+Default DEBUG 0;
+#Endif; ! INFIX
+
+#Ifndef WORDSIZE;                   ! compiling with Z-code only compiler
+Constant TARGET_ZCODE;
+Constant WORDSIZE 2;
+#Endif; ! WORDSIZE
 
 #Ifdef TARGET_ZCODE;                ! desplazamientos en cabecera de Máquina-Z
 
+Constant HDR_ZCODEVERSION  $00;     ! byte
+Constant HDR_TERPFLAGS     $01;     ! byte
 Constant HDR_GAMERELEASE   $02;     ! word
 Constant HDR_HIGHMEMORY    $04;     ! word
+Constant HDR_INITIALPC     $06;     ! word
 Constant HDR_DICTIONARY    $08;     ! word
+Constant HDR_OBJECTS       $0A;     ! word
+Constant HDR_GLOBALS       $0C;     ! word
 Constant HDR_STATICMEMORY  $0E;     ! word
 Constant HDR_GAMEFLAGS     $10;     ! word
 Constant HDR_GAMESERIAL    $12;     ! six ASCII characters
+Constant HDR_ABBREVIATIONS $18;     ! word
+Constant HDR_FILELENGTH    $1A;     ! word
+Constant HDR_CHECKSUM      $1C;     ! word
 Constant HDR_TERPNUMBER    $1E;     ! byte
 Constant HDR_TERPVERSION   $1F;     ! byte
+Constant HDR_SCREENHLINES  $20;     ! byte
 Constant HDR_SCREENWCHARS  $21;     ! byte
+Constant HDR_SCREENWUNITS  $22;     ! word
+Constant HDR_SCREENHUNITS  $24;     ! word
+Constant HDR_FONTWUNITS    $26;     ! byte
+Constant HDR_FONTHUNITS    $27;     ! byte
+Constant HDR_ROUTINEOFFSET $28;     ! word
+Constant HDR_STRINGOFFSET  $2A;     ! word
+Constant HDR_BGCOLOUR      $2C;     ! byte
+Constant HDR_FGCOLOUR      $2D;     ! byte
+Constant HDR_TERMCHARS     $2E;     ! word
+Constant HDR_PIXELSTO3     $30;     ! word
 Constant HDR_TERPSTANDARD  $32;     ! two bytes
+Constant HDR_ALPHABET      $34;     ! word
+Constant HDR_EXTENSION     $36;     ! word
+Constant HDR_UNUSED        $38;     ! two words
+Constant HDR_INFORMVERSION $3C;     ! four ASCII characters
 
 #Ifnot; ! TARGET_GLULX              ! desplazamientos en cabecera Glulx y ROM
 
+Constant HDR_MAGICNUMBER   $00;     ! long word
+Constant HDR_GLULXVERSION  $04;     ! long word
+Constant HDR_RAMSTART      $08;     ! long word
+Constant HDR_EXTSTART      $0C;     ! long word
+Constant HDR_ENDMEM        $10;     ! long word
+Constant HDR_STACKSIZE     $14;     ! long word
+Constant HDR_STARTFUNC     $18;     ! long word
+Constant HDR_DECODINGTBL   $1C;     ! long word
+Constant HDR_CHECKSUM      $20;     ! long word
+Constant ROM_INFO          $24;     ! four ASCII characters
+Constant ROM_MEMORYLAYOUT  $28;     ! long word
+Constant ROM_INFORMVERSION $2C;     ! four ASCII characters
+Constant ROM_COMPVERSION   $30;     ! four ASCII characters
 Constant ROM_GAMERELEASE   $34;     ! short word
 Constant ROM_GAMESERIAL    $36;     ! six ASCII characters
 
 #Endif; ! TARGET_
 
 #Ifndef VN_1610;
-  Message fatalerror "*** La versión 6/10 necesita Inform v6.10 o superior ***";
+  Message fatalerror "*** La versión 6/10+ necesita Inform v6.10 o superior ***";
 #Endif; ! VN_
 
 Ifdef MODULE_MODE;
@@ -325,7 +370,13 @@ Global just_undone;                  ! Can't have two successive UNDOs
 ! (for linkage reasons, the task_* arrays are created not here but in verblib.h)
 ! ------------------------------------------------------------------------------
 
-Global turnos = 1;                   ! Number of turns of play so far
+#Ifndef sys_statusline_flag;
+Global sys_statusline_flag = 0;      ! non-zero if status line displays time
+#Endif;
+#Ifndef TURNO_INICIAL;
+Constant TURNO_INICIAL 0;            ! Traditionally 0 for Infocom, 1 for Inform
+#Endif;
+Global turnos = TURNO_INICIAL;       ! Number of turns of play so far
 Global la_hora = NULL;               ! Current time (in minutes since midnight)
 Global hora_freq = 1;                ! How often time is updated
 Global hora_incr;                    ! By how much
@@ -679,31 +730,44 @@ Global bestguess_score;              ! What did the best-guess object score?
 
 #Ifdef TARGET_ZCODE;
 
-  Constant INPUT_BUFFER_LEN = 120;   ! Length of buffer array (although we
-                                     ! leave an extra byte to allow for
-                                     ! interpreter bugs)
+Constant INPUT_BUFFER_LEN = 120;    ! Length of buffer array (although we
+                                    ! leave an extra byte to allow for
+                                    ! interpreter bugs)
 
-  Array buffer    -> 121;            ! Buffer for parsing main line of input
-  Array parse     -> 65;             ! Parse table mirroring it
-  Array buffer2   -> 121;            ! Buffers for supplementary questions
-  Array parse2    -> 65;             !
-  Array bufferaux -> 121;            ! usado en BuscarEnDiccionario [001115]
-  Array parseaux  -> 65;
-  Array buffer3   -> 121;            ! Buffer retaining input for "again"
+Array  buffer    -> 123;            ! Buffer for parsing main line of input
+#Ifdef VN_1630;
+Array  parse     buffer 63;         ! Parse table mirroring it
+Array  parse2    buffer 63;         !
+Array  parseaux  buffer 63
+#Ifnot;
+Array  parse     -> 65;             ! Parse table mirroring it
+Array  parse2    -> 65;             !
+Array  parseaux  -> 65;
+#Endif; ! VN_
+Array  buffer2   -> 123;            ! Buffers for supplementary questions
+Array  buffer3   -> 123;            ! Buffer retaining input for "again"
+Array  bufferaux -> 123;            ! usado en BuscarEnDiccionario [001110]
 
 #Ifnot; ! TARGET_GLULX
 
-  Constant INPUT_BUFFER_LEN = 260;   ! No extra byte necessary
-  Constant MAX_BUFFER_WORDS = 20;
-  Constant PARSE_BUFFER_LEN = 244;   ! 4 + MAX_BUFFER_WORDS*4;
+Constant INPUT_BUFFER_LEN = 260;    ! No extra byte necessary
+Constant MAX_BUFFER_WORDS = 20;
+Constant PARSE_BUFFER_LEN = 244;    ! 4 + MAX_BUFFER_WORDS*4;
 
-  Array buffer    -> INPUT_BUFFER_LEN;
-  Array parse     -> PARSE_BUFFER_LEN;
-  Array buffer2   -> INPUT_BUFFER_LEN;
-  Array parse2    -> PARSE_BUFFER_LEN;
-  Array bufferaux -> INPUT_BUFFER_LEN; ! usado en BuscarEnDiccionario [001110]
-  Array parseaux  -> PARSE_BUFFER_LEN;
-  Array buffer3   -> INPUT_BUFFER_LEN;
+#Ifdef VN_1630;
+Array  buffer    buffer INPUT_BUFFER_LEN;
+Array  buffer2   buffer INPUT_BUFFER_LEN;
+Array  buffer3   buffer INPUT_BUFFER_LEN;
+Array  bufferaux buffer INPUT_BUFFER_LEN; ! usado en BuscarEnDiccionario [001110]
+#Ifnot;
+Array  buffer    -> INPUT_BUFFER_LEN;
+Array  buffer2   -> INPUT_BUFFER_LEN;
+Array  buffer3   -> INPUT_BUFFER_LEN;
+Array  bufferaux -> INPUT_BUFFER_LEN;     ! usado en BuscarEnDiccionario [001110]
+#Endif;
+Array  parse     --> PARSE_BUFFER_LEN/WORDSIZE;
+Array  parse2    --> PARSE_BUFFER_LEN/WORDSIZE;
+Array  parseaux  --> PARSE_BUFFER_LEN/WORDSIZE;
 
 #Endif; ! TARGET_
 
@@ -752,6 +816,10 @@ Constant POSESIVO_PK  = $100;
 Constant DEFINIDO_PK   = $101;
 Constant INDEFINIDO_PK = $102;
 Global caso_nombre_corto;
+
+Global dict_start;
+Global dict_entry_size;
+Global dict_end;
 
 ! ----------------------------------------------------------------------------
 Include "Espanol";                   !  The natural language definition,
@@ -1346,7 +1414,7 @@ Object ParserInform "(Parser de Inform)"
 !  input at that prompt goes into parse2 instead of parse.
 
     if ((w == ANULAR1__WD or ANULAR2__WD or ANULAR3__WD) && (nw==1))
-    {   if (turnos==1)
+    {   if (turnos==TURNO_INICIAL)
         {   M__L(##Miscelanea,11); jump FreshInput;
         }
         if (bandera_deshacer==0)
@@ -1652,13 +1720,27 @@ Object ParserInform "(Parser de Inform)"
     if (palabra_verbo~=OTRAVEZ1__WD)
         for (i=0:i<INPUT_BUFFER_LEN:i++) buffer3->i=buffer->i;
 
-    if (gramatica_normal_tras==0)
-    {   i = EjecutarRutinas(actor, gramatica);
+    if (gramatica_normal_tras==0) {
+        j = palabra_verbonum;
+        i = EjecutarRutinas(actor, gramatica);
         #Ifdef DEBUG;
         if (parser_trace>=2 && actor.gramatica~=0 or NULL)
             print " [La propiedad Gramatica ha retornado ", i, "]^";
         #Endif;
+
+        #Ifdef TARGET_ZCODE;
+        if ((i ~= 0 or 1) &&
+            (UnsignedCompare(i, dict_start) < 0 ||
+             UnsignedCompare(i, dict_end) >= 0 ||
+             (i - dict_start) % dict_entry_size ~= 0)) {
+            usual_grammar_after = j;
+            i=-i;
+        }
+
+        #Ifnot; ! TARGET_GLULX
         if (i<0) { gramatica_normal_tras = palabra_verbonum; i=-i; }
+        #Endif;
+
         if (i == 1) {
             results-->0 = accion;
             results-->1 = 2;  ! [080625] Aquí va el número de parámetros
@@ -2170,7 +2252,7 @@ Object ParserInform "(Parser de Inform)"
 !  it is taken as conversation which the parser has no business in disallowing.
 
     if (actor~=jugador)
-    {   if (gramatica_normal_tras>0)
+    {   if (gramatica_normal_tras~=0)
         {   palabra_verbonum = gramatica_normal_tras;
             jump AlmostReParse;
         }
@@ -4774,39 +4856,58 @@ Constant SCORE__DIVISOR = 20;
 Object LibreriaInform "(Librería Inform)"
   with jugar
        [ i j k l;
-#Ifdef TARGET_ZCODE;
+       #Ifdef TARGET_ZCODE;
        interprete_estandar = HDR_TERPSTANDARD --> 0;
        modo_transcripcion = ((HDR_GAMEFLAGS --> 0) & 1);
-#Ifnot; ! TARGET_GLULX
+       sys_statusline_flag = ( (HDR_TERPFLAGS->0) & 2 ) / 2;
+       #Ifnot; ! TARGET_GLULX
        GGInitialise();
-#Endif; ! TARGET_
+       #Endif; ! TARGET_
 
 !       CambiarDefecto(no_puedes_ir, NOPUEDESIR__TX);
 
-#Ifdef TARGET_ZCODE;
-       buffer->0 = INPUT_BUFFER_LEN;
+       #Ifdef TARGET_ZCODE;
+       dict_start = HDR_DICTIONARY-->0;
+       dict_entry_size = dict_start->(dict_start->0 + 1);
+       dict_start = dict_start + dict_start->0 + 4;
+       dict_end = dict_start + (dict_start - 2)-->0 * dict_entry_size;
+       #Ifdef DEBUG;
+       if (dict_start > 0 && dict_end < 0 &&
+         ((-dict_start) - dict_end) % dict_entry_size == 0)
+           print "** Warning: grammar properties might not work correctly **^";
+       #Endif; ! DEBUG
+
+       buffer->0  = INPUT_BUFFER_LEN;
        buffer2->0 = INPUT_BUFFER_LEN;
        buffer3->0 = INPUT_BUFFER_LEN;
-       parse->0 = 64;
-       parse2->0 = 64;
-#Endif; ! TARGET_ZCODE
+       parse->0   = 15;
+       parse2->0  = 15;
+       #Endif; ! TARGET_ZCODE
 
        localizacion_real = LaOscuridad;
        jugador = objjugador; actor = jugador;
 
-#Ifdef TARGET_ZCODE;
+       #Ifdef TARGET_ZCODE;
        objeto_raiz = #largest_object-255;
-#Endif; ! TARGET_ZCODE
+       #Endif; ! TARGET_ZCODE
        objjugador.capacidad = LLEVAR_MAX; ! ### change?
+
        #Ifdef LanguageInitialise;
        LanguageInitialise();
        #Endif;
+
        new_line;
+       LibraryExtensions.RunAll(ext_initialise);
        j=Inicializar();
        punt_anterior = puntuacion;
        move jugador to localizacion;
+
        while (parent(localizacion)~=0) localizacion=parent(localizacion);
        localizacion_real = localizacion;
+
+       actor = jugador; ! resync, because player may have been changed in initialise()
+       localizacion_actor = localizacion;
+
        objectloop (i in jugador) give i movido ~oculto;
 
        if (j~=2) Anuncio();
@@ -4830,20 +4931,20 @@ Object LibreriaInform "(Librería Inform)"
        while (~~banderafin)
        {
            #Ifdef EnglishNaturalLanguage;
-               PronounOldEnglish();
-               old_itobj = ValorDelPronombre('it');
-               old_himobj = ValorDelPronombre('him');
-               old_herobj = ValorDelPronombre('her');
+           PronounOldEnglish();
+           old_itobj = ValorDelPronombre('it');
+           old_himobj = ValorDelPronombre('him');
+           old_herobj = ValorDelPronombre('her');
            #Endif;
 
-           .very__late__error;
+         .very__late__error;
 
-          #Ifndef NO_PUNTUACION;
+           #Ifndef NO_PUNTUACION;
            if (puntuacion ~= punt_anterior)
            {   if (modo_notificar==1) NotificarLaPuntuacion(); punt_anterior=puntuacion; }
-          #Endif; ! NO_PUNTUACION
+           #Endif; ! NO_PUNTUACION
 
-           .late__error;
+         .late__error;
 
            inputobjs-->0 = 0; inputobjs-->1 = 0;
            inputobjs-->2 = 0; inputobjs-->3 = 0; meta=false;
@@ -4889,7 +4990,7 @@ Object LibreriaInform "(Librería Inform)"
            banderamulti=false; amodo_noposeido=modo_noposeido; modo_noposeido=false;
            !  For implicit taking and multiple object detection
 
-          .begin__action;
+         .begin__action;
            dat1 = 0; dat2 = 0; i=inputobjs-->1;
            if (i>=1) dat1=inputobjs-->2;
            if (i>=2) dat2=inputobjs-->3;
@@ -4971,7 +5072,7 @@ Object LibreriaInform "(Librería Inform)"
 
            !  --------------------------------------------------------------
 
-           .turn__end;
+         .turn__end;
 
            !  No time passes if either (i) the verb was meta, or
            !  (ii) we've only had the implicit take antes the "real"
@@ -4980,86 +5081,50 @@ Object LibreriaInform "(Librería Inform)"
            if (modo_noposeido==1) { AnotarObjetosObtenidos(); continue; }
            if (meta) continue;
            if (~~banderafin) self.secuencia_fin_turno();
-       }
+           else if (TURNO_INICIAL ~= 1) turnos++;
+
+       } ! end of while()
 
            if (banderafin~=2) MasAlla();
            if (banderafin==0) jump very__late__error;
 
            print "^^    ";
+           #Ifdef TARGET_ZCODE;
+           #IfV5; style bold; #Endif; ! V5
+           #Ifnot; ! TARGET_GLULX
+           glk($0086, 5); ! set alert style
+           #Endif; ! TARGET_
+           print "***";
            if (banderafin==1) M__L(##Miscelanea,3);
            if (banderafin==2) M__L(##Miscelanea,4);
            if (banderafin>2)  { print " "; MensajeMuerte(); print " "; }
-           #Ifndef NO_PUNTUACION;
-             PuntuacionSub();
+           print "***";
+           #Ifdef TARGET_ZCODE;
+           #IfV5; style roman; #Endif; ! V5
+           #Ifnot; ! TARGET_GLULX
+           glk($0086, 0); ! set normal style
+           #Endif; ! TARGET_
+           #Ifdef NO_PUNTUACION;
+           print "^^";
+           #Ifnot;
+           print "^^^";
            #Endif; ! NO_PUNTUACION
+           PuntuacionSub();
            ActualizarEstatus();
            AfterGameOver();
-       ],
+       ], ! fin de la propiedad 'jugar'
 
-       secuencia_fin_turno
-       [ i j;
-
-           turnos++;
-           if (la_hora~=NULL)
-           {   if (hora_freq>=0) la_hora=la_hora+hora_freq;
-               else
-               {   hora_incr--;
-                   if (hora_incr==0)
-                   {   la_hora++;
-                       hora_incr = -hora_freq;
-                   }
-               }
-               la_hora=la_hora % 1440;
-           }
-
-           #Ifdef DEBUG;
-           if (debug_flag & 4 ~= 0)
-           {   for (i=0: i<relojes_activos: i++)
-               {   j=los_relojes-->i;
-                   if (j~=0)
-                   {   print (name) (j&~WORD_HIGHBIT), ": ";
-                       if (j & WORD_HIGHBIT) print "daemon";
-                       else
-                           print "reloj al que faltan ",
-                                 j.tiempo_restante, " turnos para dispararse";
-                       new_line;
-                   }
-               }
-           }
-           #Endif;
-
-           for (i=0: i<relojes_activos: i++)
-           {   if (banderafin) return;
-               j=los_relojes-->i;
-               if (j~=0)
-               {   if (j & WORD_HIGHBIT) EjecutarRutinas(j&~WORD_HIGHBIT,daemon);
-                   else
-                   {   if (j.tiempo_restante==0)
-                       {   PararReloj(j);
-                           EjecutarRutinas(j,tiempo_agotado);
-                       }
-                       else
-                           j.tiempo_restante=j.tiempo_restante-1;
-                   }
-               }
-           }
+       secuencia_fin_turno [;
+           AvanzarRelojMundial();
            if (banderafin) return;
-
-           razon_alcance=RAZON_CADA_TURNO; palabra_verbo=0;
-           EfectuarAccionesAlcance(localizacion);
-           BuscarEnAlcance(TopeAlcanzable(jugador), jugador, 0);
-           razon_alcance=RAZON_PARSING;
-
+           EjecutarRelojesYDaemons();
            if (banderafin) return;
-
+           EjecutarPropiedadesCadaTurno();
+           if (banderafin) return;
            PasaElTiempo();
-
            if (banderafin) return;
-
            AjustarLuz();
-
            if (banderafin) return;
-
            AnotarObjetosObtenidos();
        ],
 
@@ -5082,6 +5147,61 @@ Object LibreriaInform "(Librería Inform)"
            accion = sa; uno = sn; otro = ss;
        ],
   has  propio;
+
+[ AvanzarRelojMundial;
+  turnos++;
+  if (la_hora~=NULL) {
+      if (hora_freq >= 0) la_hora = la_hora + hora_freq;
+      else {
+          hora_incr--;
+          if (hora_incr == 0) {
+              la_hora++;
+               hora_incr = -hora_freq;
+          }
+      }
+      la_hora = la_hora % 1440;
+  }
+];
+
+[ EjecutarRelojesYDaemons i j;
+  #Ifdef DEBUG;
+  if (debug_flag & 4 ~= 0) {
+      for (i = 0: i < relojes_activos: i++) {
+          j = los_relojes-->i;
+          if (j ~= 0) {
+              print (name) (j&~WORD_HIGHBIT), ": ";
+              if (j & WORD_HIGHBIT) print "daemon";
+              else
+                  print "reloj al que faltan ",
+              j.tiempo_restante, " turnos para dispararse";
+              new_line;
+          }
+      }
+  }
+  #Endif;
+
+  for (i = 0: i < relojes_activos: i++) {
+      if (banderafin) return;
+      j = los_relojes-->i;
+      if (j ~= 0) {
+          if (j & WORD_HIGHBIT) EjecutarRutinas(j&~WORD_HIGHBIT, daemon);
+          else {
+              if (j.tiempo_restante == 0) {
+                  PararReloj(j);
+                  EjecutarRutinas(j, tiempo_agotado);
+              } else
+                  j.tiempo_restante = j.tiempo_restante - 1;
+          }
+      }
+  }
+];
+
+[ EjecutarPropiedadesCadaTurno;
+  razon_alcance = RAZON_CADA_TURNO; palabra_verbo = 0;
+  EfectuarAccionesAlcance(localizacion);
+  BuscarEnAlcance(TopeAlcanzable(jugador), jugador, 0);
+  razon_alcance = RAZON_PARSING;
+];
 
 #Ifdef TARGET_ZCODE;
 
@@ -5321,10 +5441,11 @@ Object LibreriaInform "(Librería Inform)"
 ! ----------------------------------------------------------------------------
 
 [ ActualizarEstatus;
-   if (la_hora==NULL)
-   {   lineaEstado1=puntuacion; lineaEstado2=turnos; }
-   else
-   {   lineaEstado1=la_hora/60; lineaEstado2=la_hora%60; }
+   if (sys_statusline_flag == 0 || la_hora == NULL) {
+       lineaEstado1 = puntuacion; lineaEstado2 = turnos;
+   } else  {
+       lineaEstado1 = la_hora / 60; lineaEstado2 = la_hora % 60;
+   }
 ];
 
 [ PonerLaHora t s;
@@ -5652,7 +5773,12 @@ Object LibreriaInform "(Librería Inform)"
    }
 !   if (f==1) new_line;
 ];
-#Endif;
+#Endif; ! DEBUG
+
+! ----------------------------------------------------------------------------
+!  Miscellaneous display routines used by DrawStatusLine and available for
+!  user.  Most of these vary according to which machine is being compiled to
+! ----------------------------------------------------------------------------
 
 #Ifdef TARGET_ZCODE;
 
@@ -5888,48 +6014,122 @@ statuswin_current = true;
 #Ifdef TARGET_ZCODE;
 
 #IfV5;
+
+#Iftrue (#version_number == 6);
 [ DibujarLineaEstado width posa posb;
-   @split_window 1; @set_window 1; @set_cursor 1 1; style reverse;
-   width = 0->33; posa = width-26; posb = width-13;
+   (0-->8) = (0-->8) &~ $$00000100;
+
+   StatusLineHeight(gg_statuswin_size);
+   ! Now clear the window. This isn't totally trivial. Our approach is to select the
+   ! fixed space font, measure its width, and print an appropriate
+   ! number of spaces. We round up if the screen isn't a whole number
+   ! of characters wide, and rely on window 1 being set to clip by default.
+   MoveCursor(1, 1);
+   @set_font 4 -> x;
+   width = ScreenWidth();
    spaces width;
-   @set_cursor 1 2;
+   ! Back to standard font for the display. We use output_stream 3 to
+   ! measure the space required, the aim being to get 50 characters
+   ! worth of space for the location name.
+   MoveCursor(1, 2);
+   @set_font 1 -> x;
    if (localizacion == LaOscuridad)
      print (name) localizacion;
-   else
-   {   FindVisibilityLevels();
-       if (techo_de_visibilidad == localizacion)
-           print (name) localizacion;
-       else print (The) techo_de_visibilidad;
+   else {
+     BuscarNivelesDeVisibilidad();
+     if (techo_de_visibilidad == localizacion) print (name) localizacion;
+     else                                      print (The) techo_de_visibilidad;
    }
-!   if ((0->1)&2 == 0)
-   if (la_hora == NULL)
-   {   if (width > 76)
-       {
-       #Ifndef NO_PUNTUACION;
-         @set_cursor 1 posa; print (string) PUNTUACION__TX, lineaEstado1;
-       #Endif; ! NO_PUNTUACION
-         @set_cursor 1 posb; print (string) JUGADAS__TX, lineaEstado2;
+   @get_wind_prop 1 3 -> width;
+   @get_wind_prop 1 13 -> charw;
+   charw = charw & $FF;
+   @output_stream 3 StorageForShortName;
+   print (string) PUNTUACION__TX, "00000";
+   @output_stream -3; scw = HDR_PIXELSTO3-->0 + charw;
+   @output_stream 3 StorageForShortName;
+   print (string) JUGADAS__TX, "00000";
+   @output_stream -3; mvw = HDR_PIXELSTO3-->0 + charw;
+   if (width - scw - mvw >= 50*charw) {
+       x = 1+width-scw-mvw;
+       @set_cursor 1 x; print (string) PUNTUACION__TX, lineaEstado1;
+       x = x+scw;
+       @set_cursor 1 x; print (string) JUGADAS__TX, lineaEstado2;
+   }
+   else {
+       @output_stream 3 StorageForShortName;
+       print "00000/00000";
+       @output_stream -3; scw = HDR_PIXELSTO3-->0 + charw;
+       if (width - scw >= 50*charw) {
+           x = 1+width-scw;
+           @set_cursor 1 x; print lineaEstado1, "/", lineaEstado2;
        }
-       if (width > 63 && width <= 76)
-       {
-       #Ifndef NO_PUNTUACION;
-         @set_cursor 1 posb; print lineaEstado1, "/", lineaEstado2;
-       #Ifnot;
-         posb = posb + 2;  ! Esto es porque en este caso no hay barra ('/')
-         @set_cursor 1 posb; print lineaEstado2;
-       #Endif; ! NO_PUNTUACION
-       }
    }
-   else
-   {   @set_cursor 1 posa;
-       print (string) HORA__TX;
-       IdiomaHoraDelDia(lineaEstado1, lineaEstado2);
-   }
-   @set_cursor 1 1; style roman; @set_window 0;
-];
-#Endif;
+   ! Reselect roman, as Infocom's interpreters interpreters go funny
+   ! if reverse is selected twice.
+   MainWindow();
+;
+#Endif; ! #version_number == 6
+
+#Endif; ! V5
 
 #Endif; ! TARGET_ZCODE
+
+#Ifndef DibujarLineaEstado;
+[ DibujarLineaEstado width posa posb;
+    #Ifdef TARGET_GLULX;
+    ! If we have no status window, we must not try to redraw it.
+    if (gg_statuswin == 0)
+        return;
+    #Endif;
+
+    ! If there is no player location, we shouldn't try to draw status window
+    if (localizacion == nothing || parent(jugador) == nothing)
+        return;
+
+    StatusLineHeight(gg_statuswin_size);
+    MoveCursor(1, 1);
+
+    width = ScreenWidth();
+    posa = width-26; posb = width-13;
+    spaces width;
+
+    MoveCursor(1, 2);
+    if (localizacion == laoscuridad) {
+        print (name) localizacion;
+    }
+    else {
+        BuscarNivelesDeVisibilidad();
+        if (techo_de_visibilidad == localizacion)
+            print (name) localizacion;
+        else
+            print (The) techo_de_visibilidad;
+    }
+
+    if (sys_statusline_flag && width > 53) {
+        MoveCursor(1, posa);
+        print (string) HORA__TX;
+        IdiomaHoraDelDia(lineaEstado1, lineaEstado2);
+    }
+    else {
+        if (width > 66) {
+            #Ifndef NO_PUNTUACION;
+            MoveCursor(1, posa);
+            print (string) PUNTUACION__TX, lineaEstado1;
+            #Endif;
+            MoveCursor(1, posb);
+            print (string) JUGADAS__TX, lineaEstado2;
+        }
+        #Ifndef NO_SCORE;
+        if (width > 53 && width <= 66) {
+            MoveCursor(1, posb);
+            print lineaEstado1, "/", lineaEstado2;
+        }
+        #Endif;
+    }
+
+    MainWindow(); ! set_window
+];
+#Endif;
 
 #Ifdef TARGET_GLULX;
 
@@ -5967,7 +6167,7 @@ statuswin_current = true;
         print (name) localizacion;
     }
     else {
-        FindVisibilityLevels();
+        BuscarNivelesDeVisibilidad();
         if (techo_de_visibilidad == localizacion)
             print (name) localizacion;
         else
@@ -5992,7 +6192,7 @@ statuswin_current = true;
       #Endif; ! NO_PUNTUACION
     }
 
-    glk($002F, gg_mainwin); ! set_window
+    MainWindow(); ! set_window
 ];
 
 [ Box__Routine maxwid arr ix lines lastnl parwin;

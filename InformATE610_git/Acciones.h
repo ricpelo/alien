@@ -1059,21 +1059,21 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 !    bufferaux->0=2;
 !    parseaux->0=1;
     if (localizacion == nothing || parent(jugador) == nothing)
-      read bufferaux parseaux;
-    else read bufferaux parseaux DibujarLineaEstado;
-    j = parseaux->1;
+      read buffer parse;
+    else read buffer parse DibujarLineaEstado;
+    j = parse->1;
     #Ifnot; ! TARGET_GLULX;
-    KeyboardPrimitive(bufferaux, parseaux);
-    j = parseaux-->0;
+    KeyboardPrimitive(buffer, parse);
+    j = parse-->0;
     #Endif; ! TARGET_
-    QuitarAcentos(bufferaux, parseaux);      ! [030305]
+    QuitarAcentos(buffer, parse);      ! [030305]
     if (j) { ! se ha introducido al menos una palabra
       #Ifdef TARGET_ZCODE;
-      if (parseaux->1) {
+      if (parse->1) {
       #Ifnot; ! TARGET_GLULX;
-      if (parseaux-->0) {
+      if (parse-->0) {
       #Endif;
-        i = parseaux-->1;
+        i = parse-->1;
         if (i == SI1__WD or SI2__WD or SI3__WD) rtrue;
         if (i == NO1__WD or NO2__WD or NO3__WD) rfalse;
       }
@@ -1402,17 +1402,25 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
 !   El sistema de puntuación
 ! ----------------------------------------------------------------------------
 
-#Ifndef NO_PUNTUACION;
-  [ PuntuacionSub;
-    M__L(##Puntuacion);
+[ PuntuacionSub;
+    #Ifdef NO_PUNTUACION;
+    if (banderafin == 0) M__L(##Puntuacion, 2);
+    #Ifnot;
+    L__M(##Puntuacion, 1);
     ImprimirRango();
-  ];
-#Endif; ! NO_PUNTUACION
+    #Endif; ! NO_PUNTUACION
+];
+
+#Ifndef PuntuacionTareas;
+[ PuntuacionTareas i;
+    return puntuacion_tareas->i;
+];
+#Endif;
 
 [ Conseguido num;
   if (tarea_hecha->num==0)
   {   tarea_hecha->num=1;
-      puntuacion = puntuacion + puntuacion_tareas->num;
+      puntuacion = puntuacion + PuntuacionTareas(num);
   }
 ];
 
@@ -1427,36 +1435,34 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   print m, " ";
 ];
 
-#Ifndef NO_PUNTUACION;
-  [ PuntuacionTotalSub i;
-    PuntuacionSub();
-    if (puntuacion == 0 || HAY_TAREAS == 1)
-      rfalse;
-    new_line;
-    M__L (##PuntuacionTotal, 1);
+[ PuntuacionTotalSub i;
+  PuntuacionSub();
+  if (puntuacion == 0 || HAY_TAREAS == 1)
+    rfalse;
+  new_line;
+  M__L (##PuntuacionTotal, 1);
 
-    for (i = 0: i < NUMERO_TAREAS: i++)
-      if (tarea_hecha->i == 1)
-      {
-        ImpNumAlin (puntuacion_tareas->i);
-        ImprimirTareas(i);
-      }
+  for (i = 0: i < NUMERO_TAREAS: i++)
+    if (tarea_hecha->i == 1)
+    {
+      ImpNumAlin (PuntuacionTareas(i));
+      ImprimirTareas(i);
+    }
 
-    if (puntos_cosas ~= 0)
-    {
-      ImpNumAlin (puntos_cosas);
-      M__L (##PuntuacionTotal, 2);
-    }
-    if (puntos_sitios ~= 0)
-    {
-      ImpNumAlin (puntos_sitios);
-      M__L (##PuntuacionTotal, 3);
-    }
-    new_line;
-    ImpNumAlin (puntuacion);
-    M__L (##PuntuacionTotal, 4);
-  ];
-#Endif; ! NO_PUNTUACION
+  if (puntos_cosas ~= 0)
+  {
+    ImpNumAlin (puntos_cosas);
+    M__L (##PuntuacionTotal, 2);
+  }
+  if (puntos_sitios ~= 0)
+  {
+    ImpNumAlin (puntos_sitios);
+    M__L (##PuntuacionTotal, 3);
+  }
+  new_line;
+  ImpNumAlin (puntuacion);
+  M__L (##PuntuacionTotal, 4);
+];
 
 ! ----------------------------------------------------------------------------
 !   Real verbs start here: Inventory
@@ -2165,7 +2171,7 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   }
 ];
 
-[ FindVisibilityLevels visibility_levels;
+[ BuscarNivelesDeVisibilidad visibility_levels;
   visibility_levels = 1;
   techo_de_visibilidad = parent(jugador);
   while ((parent(techo_de_visibilidad) ~= 0)
@@ -2178,92 +2184,94 @@ Constant SINARTICULO_BIT 4096;  ! No imprimir articulos, ni in ni definidos
   return visibility_levels;
 ];
 
-[ MirarSub allow_abbrev  visibility_levels i j k;
+[ MirarSub allow_abbrev  visibility_levels i j k nl_flag;
   if (parent(jugador)==0) return ErrorDeEjecucion(10);
 
-  .MovedByInitial;
-  if (localizacion == LaOscuridad)
-  {   techo_de_visibilidad = LaOscuridad;
-      AnotarLlegada();
-  }
-  else
-  {   visibility_levels = FindVisibilityLevels();
-      if (techo_de_visibilidad == localizacion)
-      {   AnotarLlegada();
-          if (techo_de_visibilidad ~= localizacion) jump MovedByInitial;
-      }
-  }
+.MovedByInitial;
 
+  if (localizacion == LaOscuridad) {
+    techo_de_visibilidad = LaOscuridad;
+    AnotarLlegada();
+  } else {
+    visibility_levels = BuscarNivelesDeVisibilidad();
+    if (techo_de_visibilidad == localizacion) {
+      AnotarLlegada();
+      if (techo_de_visibilidad ~= localizacion) jump MovedByInitial;
+    }
+  }
   !   Printing the top line: e.g.
   !   Octagonal Room (on the table) (as Frodo)
-
   new_line;
-#Ifdef TARGET_ZCODE;
+  #Ifdef TARGET_ZCODE;
   style bold;
-#Ifnot; ! TARGET_GLULX;
+  #Ifnot; ! TARGET_GLULX;
   glk($0086, 4); ! set subheader style
-#Endif; ! TARGET_
+  #Endif; ! TARGET_
   if (visibility_levels == 0) print (name) LaOscuridad;
-  else
-  {   if (techo_de_visibilidad ~= localizacion) print (The) techo_de_visibilidad;
-      else print (name) techo_de_visibilidad;
+  else {
+    if (techo_de_visibilidad ~= localizacion) print (The) techo_de_visibilidad;
+    else print (name) techo_de_visibilidad;
   }
-#Ifdef TARGET_ZCODE;
+  #Ifdef TARGET_ZCODE;
   style roman;
-#Ifnot; ! TARGET_GLULX;
+  #Ifnot; ! TARGET_GLULX;
   glk($0086, 0); ! set normal style
-#Endif; ! TARGET_
+  #Endif; ! TARGET_
 
-  for (j=1, i=parent(jugador):j<visibility_levels:j++, i=parent(i))
-      if (i has soporte) M__L(##Mirar,1,i);
-                      else M__L(##Mirar,2,i);
+  for (j = 1, i = parent(jugador): j < visibility_levels: j++, i = parent(i))
+    if (i has soporte) M__L(##Mirar, 1, i);
+    else               M__L(##Mirar, 2, i);
 
-  if (bandera_imprime_jugador==1) M__L(##Mirar,3,jugador);
+  if (bandera_imprime_jugador == 1) M__L(##Mirar, 3, jugador);
   new_line;
 
-   ! Reajuste de pronombres
-   #Ifndef PRONOMBRES_AMANO;
-     if (visibility_levels == 0)
-       LocalPronom (LaOscuridad);
-     else {
-       for (j = visibility_levels: j > 0: j--) {
-         for (i = jugador, k = 0: k < j: k++)
-           i = parent (i);
-         LocalPronom(i);
-       }
-     }
-   #Endif;
-
-  !   The room descripcion (if visible)
-
-  if (modomirar<3 && techo_de_visibilidad==localizacion)
-  {   if ((allow_abbrev~=1) || (modomirar==2) || (localizacion hasnt visitado))
-      {   if (localizacion.&describir~=0) EjecutarRutinas(localizacion,describir);
-          else
-          {   if (localizacion.descripcion==0) ErrorDeEjecucion(11,localizacion);
-              else ImprimirOEjecutar(localizacion,descripcion);
-          }
+  ! Reajuste de pronombres
+  #Ifndef PRONOMBRES_AMANO;
+    if (visibility_levels == 0)
+      LocalPronom(LaOscuridad);
+    else {
+      for (j = visibility_levels: j > 0: j--) {
+        for (i = jugador, k = 0: k < j: k++)
+          i = parent(i);
+        LocalPronom(i);
       }
+    }
+  #Endif;
+
+  ! The room descripcion (if visible)
+
+  if (modomirar < 3 && techo_de_visibilidad == localizacion) {
+    if ((allow_abbrev ~= 1) || (modomirar == 2) || (localizacion hasnt visitado)) {
+      if (localizacion.&describir ~= 0) EjecutarRutinas(localizacion, describir);
+      else {
+        if (localizacion.descripcion == 0) ErrorDeEjecucion(11, localizacion);
+        else ImprimirOEjecutar(localizacion, descripcion);
+      }
+    }
   }
 
-  if (visibility_levels == 0) Local (LaOscuridad);
-  else
-  {   for (i=jugador, j=visibility_levels: j>0: j--, i=parent(i))
-          give i banderaux;
+  if (techo_de_visibilidad == localizacion) nl_flag = 1;
 
-      for (j=visibility_levels: j>0: j--)
-      {   for (i=jugador, k=0: k<j: k++) i=parent(i);
-          if (i.descripcion_dentro~=0)
-          {   new_line; ImprimirOEjecutar(i,descripcion_dentro); }
-          Local(i);
+  if (visibility_levels == 0) Local(LaOscuridad);
+  else {
+    for (i = jugador, j = visibility_levels: j > 0: j--, i = parent(i))
+      give i banderaux;
+
+    for (j = visibility_levels: j > 0: j--) {
+      for (i = jugador, k = 0: k < j: k++) i = parent(i);
+      if (i.descripcion_dentro ~= 0) {
+        if (nl_flag) new_line; else nl_flag = 1;
+        ImprimirOEjecutar(i, descripcion_dentro);
       }
+      if (Local(i) ~= 0) nl_flag = 1;
+    }
   }
 
   RutinaMirar();
   PuntuacionLlegada();
 
   accion=##Mirar;
-  if (RutinasDespues()==1) rtrue;
+  if (RutinasDespues() == 1) rtrue;
 ];
 
 [ ExaminarSub i;
