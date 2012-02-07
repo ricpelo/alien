@@ -1,0 +1,11 @@
+Para que funcione el navegador interno de programas Inform en JEdit, hay que:
+
+- Instalar el plugin InformSidekick desde el gestor de plugins.
+
+- IMPORTANTE: Al final del archivo fuente de tu programa, pon un comentario,
+  como por ejemplo:
+
+  ! FIN
+
+  Si no lo haces, puede que no analice bien el código.
+
