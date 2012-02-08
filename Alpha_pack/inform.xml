@@ -1,0 +1,807 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE MODE SYSTEM "xmode.dtd">
+
+<MODE>
+      <!-- Syntax highlighting mode for the Inform language. You can find out more about inform at
+           http://www.gnelson.demon.co.uk/inform.html
+           And an inform language guide at
+           http://www.gnelson.demon.co.uk/dman/index.html
+        -->
+    <PROPS>
+        <!--
+        <PROPERTY NAME="commentStart" VALUE="/*" />
+        <PROPERTY NAME="commentEnd" VALUE="*/" />
+        -->
+        <PROPERTY NAME="lineComment" VALUE="!" />
+        <PROPERTY NAME="wordBreakChars" VALUE=",+-=&lt;&gt;/?^&amp;*" />
+
+        <!-- Auto indent -->
+        <PROPERTY NAME="indentOpenBrackets" VALUE="{[" />
+        <PROPERTY NAME="indentCloseBrackets" VALUE="}]" />
+        <PROPERTY NAME="indentNextLine"
+            VALUE="\s*(((if|while)\s*\(|else\s*|else\s+if\s*\(|for\s*\(.*\))[^{;]*)" />
+        <!-- set this to 'true' if you want to use GNU coding style -->
+        <PROPERTY NAME="doubleBracketIndent" VALUE="false" />
+
+        <PROPERTY NAME="filenameGlob" VALUE="*.(inf|h)" />
+    </PROPS>
+
+    <RULES
+            IGNORE_CASE="FALSE"
+            HIGHLIGHT_DIGITS="TRUE"
+            DIGIT_RE="(\$[\p{XDigit}]|[\p{Digit}])">
+        <EOL_SPAN TYPE="COMMENT1">!</EOL_SPAN>
+
+        <!-- strings can span lines -->
+        <SPAN TYPE="LITERAL1" DELEGATE="InformInnerText">
+            <BEGIN>"</BEGIN>
+            <END>"</END>
+        </SPAN>
+        <SPAN TYPE="LITERAL2">
+            <BEGIN>'</BEGIN>
+            <END>'</END>
+        </SPAN>
+
+        <!-- preprocessor statements -->
+        <EOL_SPAN TYPE="KEYWORD2" AT_WHITESPACE_END="TRUE">#</EOL_SPAN>
+        <EOL_SPAN TYPE="COMMENT1">!</EOL_SPAN>
+
+        <!-- special sequences that require special highlighting -->
+        <SEQ TYPE="OPERATOR">=</SEQ>
+        <SEQ TYPE="OPERATOR">==</SEQ>
+        <SEQ TYPE="OPERATOR">&gt;=</SEQ>
+        <SEQ TYPE="OPERATOR">&lt;=</SEQ>
+        <SEQ TYPE="OPERATOR">~=</SEQ>
+        <SEQ TYPE="OPERATOR">+</SEQ>
+        <SEQ TYPE="OPERATOR">-</SEQ>
+        <SEQ TYPE="OPERATOR">$</SEQ>
+        <SEQ TYPE="OPERATOR">/</SEQ>
+        <SEQ TYPE="OPERATOR">*</SEQ>
+        <SEQ TYPE="OPERATOR">&gt;</SEQ>
+        <SEQ TYPE="OPERATOR">&lt;</SEQ>
+        <SEQ TYPE="OPERATOR">%</SEQ>
+        <SEQ TYPE="OPERATOR">&amp;</SEQ>
+        <SEQ TYPE="OPERATOR">|</SEQ>
+        <SEQ TYPE="OPERATOR">^</SEQ>
+        <SEQ TYPE="OPERATOR">~</SEQ>
+        <SEQ TYPE="OPERATOR">}</SEQ>
+        <SEQ TYPE="OPERATOR">{</SEQ>
+        <SEQ TYPE="OPERATOR">]</SEQ>
+        <SEQ TYPE="OPERATOR">[</SEQ>
+
+        <SEQ TYPE="OPERATOR">.&amp;</SEQ>
+        <SEQ TYPE="OPERATOR">.#</SEQ>
+        <SEQ TYPE="OPERATOR">--></SEQ>
+
+        <!-- Function calls -->
+        <MARK_PREVIOUS TYPE="FUNCTION" MATCH_TYPE="OPERATOR">(</MARK_PREVIOUS>
+		<SEQ TYPE="OPERATOR">)</SEQ>
+        <MARK_PREVIOUS TYPE="FUNCTION" MATCH_TYPE="OPERATOR">::</MARK_PREVIOUS>
+
+        <MARK_PREVIOUS AT_WHITESPACE_END="FALSE"
+            MATCH_TYPE="OPERATOR"
+            TYPE="LABEL">:</MARK_PREVIOUS>
+
+        <MARK_PREVIOUS AT_WHITESPACE_END="TRUE"
+            MATCH_TYPE="LABEL"
+            TYPE="LABEL">,</MARK_PREVIOUS>
+
+	<MARK_FOLLOWING TYPE="LABEL">##</MARK_FOLLOWING>
+
+        <KEYWORDS>
+            <!-- operators -->
+            <KEYWORD1>hasnt</KEYWORD1>
+            <KEYWORD1>has</KEYWORD1>
+            <KEYWORD1>class</KEYWORD1>
+            <KEYWORD1>in</KEYWORD1>
+            <KEYWORD1>notin</KEYWORD1>
+            <KEYWORD1>ofclass</KEYWORD1>
+            <KEYWORD1>provides</KEYWORD1>
+            <KEYWORD1>or</KEYWORD1>
+
+            <!-- text-base conversion functions -->
+            <LITERAL2>char</LITERAL2>
+            <LITERAL2>string</LITERAL2>
+            <LITERAL2>address</LITERAL2>
+            <LITERAL2>name</LITERAL2>
+            <LITERAL2>_nombre_</LITERAL2>
+            <LITERAL2>o</LITERAL2>
+            <LITERAL2>n</LITERAL2>
+            <LITERAL2>a</LITERAL2>
+            <LITERAL2>an</LITERAL2>
+            <LITERAL2>the</LITERAL2>
+            <LITERAL2>The</LITERAL2>
+            <LITERAL2>el</LITERAL2>
+            <LITERAL2>_El</LITERAL2>
+            <LITERAL2>del</LITERAL2>
+            <LITERAL2>_Del</LITERAL2>
+            <LITERAL2>al</LITERAL2>
+            <LITERAL2>_Al</LITERAL2>
+
+            <LITERAL2>property</LITERAL2>
+            <LITERAL2>object</LITERAL2>
+
+            <!-- language semantics -->
+            <KEYWORD1>break</KEYWORD1>
+            <KEYWORD1>continue</KEYWORD1>
+            <KEYWORD1>do</KEYWORD1>
+                <KEYWORD1>until</KEYWORD1>
+            <KEYWORD1>for</KEYWORD1>
+            <KEYWORD1>give</KEYWORD1>
+            <KEYWORD1>if</KEYWORD1>
+                <KEYWORD1>else</KEYWORD1>
+            <KEYWORD1>inversion</KEYWORD1>
+            <KEYWORD1>jump</KEYWORD1>
+            <KEYWORD1>move</KEYWORD1>
+                <KEYWORD2>to</KEYWORD2>
+            <KEYWORD1>objectloop</KEYWORD1>
+            <KEYWORD1>remove</KEYWORD1>
+            <KEYWORD1>return</KEYWORD1>
+            <KEYWORD1>rfalse</KEYWORD1>
+            <KEYWORD1>rtrue</KEYWORD1>
+            <KEYWORD1>string</KEYWORD1>
+            <KEYWORD1>switch</KEYWORD1>
+            <KEYWORD1>while</KEYWORD1>
+
+            <!-- class keyworks -->
+            <KEYWORD1>with</KEYWORD1>
+<!--			<KEYWORD1>has</KEYWORD1> -->
+
+            <!-- built-in functions -->
+            <FUNCTION>new_line</FUNCTION>
+            <FUNCTION>print</FUNCTION>
+            <FUNCTION>print_ret</FUNCTION>
+            <FUNCTION>box</FUNCTION>
+            <FUNCTION>font</FUNCTION>
+                <KEYWORD2>on</KEYWORD2>
+                <KEYWORD2>off</KEYWORD2>
+            <FUNCTION>quit</FUNCTION>
+            <FUNCTION>read</FUNCTION>
+            <FUNCTION>restore</FUNCTION>
+            <FUNCTION>save</FUNCTION>
+            <FUNCTION>spaces</FUNCTION>
+            <FUNCTION>style</FUNCTION>
+                <KEYWORD2>roman</KEYWORD2>
+                <KEYWORD2>bold</KEYWORD2>
+                <KEYWORD2>underline</KEYWORD2>
+                <KEYWORD2>reverse</KEYWORD2>
+                <KEYWORD2>fixed</KEYWORD2>
+            <FUNCTION>score</FUNCTION>
+            <FUNCTION>time</FUNCTION>
+
+            <!-- Top-level keyworks -->
+            <KEYWORD3>Abbreviate</KEYWORD3>
+            <KEYWORD3>Array</KEYWORD3>
+            <KEYWORD3>Attribute</KEYWORD3>
+            <KEYWORD3>Class</KEYWORD3>
+            <KEYWORD3>Constant</KEYWORD3>
+            <KEYWORD3>Default</KEYWORD3>
+            <KEYWORD3>End</KEYWORD3>
+            <KEYWORD3>Endif</KEYWORD3>
+            <KEYWORD3>Extend</KEYWORD3>
+            <KEYWORD3>Global</KEYWORD3>
+            <KEYWORD3>Ifdef</KEYWORD3>
+            <KEYWORD3>Ifndef</KEYWORD3>
+            <KEYWORD3>Ifnot</KEYWORD3>
+            <KEYWORD3>Iftrue</KEYWORD3>
+            <KEYWORD3>Iffalse</KEYWORD3>
+            <KEYWORD3>Import</KEYWORD3>
+            <KEYWORD3>Include</KEYWORD3>
+            <KEYWORD3>Link</KEYWORD3>
+            <KEYWORD3>Lowstring</KEYWORD3>
+            <KEYWORD3>Message</KEYWORD3>
+            <KEYWORD3>Object</KEYWORD3>
+            <KEYWORD3>Property</KEYWORD3>
+            <KEYWORD3>Replace</KEYWORD3>
+            <KEYWORD3>Release</KEYWORD3>
+            <KEYWORD3>Serial</KEYWORD3>
+            <KEYWORD3>Switches</KEYWORD3>
+            <KEYWORD3>Statusline</KEYWORD3>
+            <KEYWORD3>System_file</KEYWORD3>
+            <KEYWORD3>Verb</KEYWORD3>
+            <KEYWORD3>private</KEYWORD3>
+
+            <LITERAL2>false</LITERAL2>
+            <LITERAL2>true</LITERAL2>
+            <LITERAL2>null</LITERAL2>
+            <LITERAL2>super</LITERAL2>
+            <LITERAL2>self</LITERAL2>
+
+            <INVALID>this</INVALID>
+            
+            <KEYWORD4>abierta</KEYWORD4>
+            <KEYWORD4>abierto</KEYWORD4>
+            <KEYWORD4>abrible</KEYWORD4>
+            <KEYWORD4>animado</KEYWORD4>
+            <KEYWORD4>ausente</KEYWORD4>
+            <KEYWORD4>banderaux</KEYWORD4>
+            <KEYWORD4>cerrojo</KEYWORD4>
+            <KEYWORD4>cerrojoechado</KEYWORD4>
+            <KEYWORD4>comestible</KEYWORD4>
+            <KEYWORD4>conmutable</KEYWORD4>
+            <KEYWORD4>encendido</KEYWORD4>
+            <KEYWORD4>entrable</KEYWORD4>
+            <KEYWORD4>escenario</KEYWORD4>
+            <KEYWORD4>estatico</KEYWORD4>
+            <KEYWORD4>femenina</KEYWORD4>
+            <KEYWORD4>femenino</KEYWORD4>
+            <KEYWORD4>general</KEYWORD4>
+            <KEYWORD4>hablable</KEYWORD4>
+            <KEYWORD4>luz</KEYWORD4>
+            <KEYWORD4>masculino</KEYWORD4>
+            <KEYWORD4>movido</KEYWORD4>
+            <KEYWORD4>neutro</KEYWORD4>
+            <KEYWORD4>nombreplural</KEYWORD4>
+            <KEYWORD4>nombreusado</KEYWORD4>
+            <KEYWORD4>oculto</KEYWORD4>
+            <KEYWORD4>oculta</KEYWORD4>
+            <KEYWORD4>prenda</KEYWORD4>
+            <KEYWORD4>propio</KEYWORD4>
+            <KEYWORD4>puerta</KEYWORD4>
+            <KEYWORD4>puesto</KEYWORD4>
+            <KEYWORD4>recipiente</KEYWORD4>
+            <KEYWORD4>soporte</KEYWORD4>
+            <KEYWORD4>transparente</KEYWORD4>
+            <KEYWORD4>valepuntos</KEYWORD4>
+            <KEYWORD4>visitado</KEYWORD4>
+            <KEYWORD4>abajo</KEYWORD4>
+            <KEYWORD4>adentro</KEYWORD4>
+            <KEYWORD4>adjetivos</KEYWORD4>
+            <KEYWORD4>afuera</KEYWORD4>
+            <KEYWORD4>al_e</KEYWORD4>
+            <KEYWORD4>al_n</KEYWORD4>
+            <KEYWORD4>al_ne</KEYWORD4>
+            <KEYWORD4>al_no</KEYWORD4>
+            <KEYWORD4>al_o</KEYWORD4>
+            <KEYWORD4>al_s</KEYWORD4>
+            <KEYWORD4>al_se</KEYWORD4>
+            <KEYWORD4>al_so</KEYWORD4>
+            <KEYWORD4>antes</KEYWORD4>
+            <KEYWORD4>arriba</KEYWORD4>
+            <KEYWORD4>articulo</KEYWORD4>
+            <KEYWORD4>articulos</KEYWORD4>
+            <KEYWORD4>cada_turno</KEYWORD4>
+            <KEYWORD4>cantidad</KEYWORD4>
+            <KEYWORD4>capacidad</KEYWORD4>
+            <KEYWORD4>con_llave</KEYWORD4>
+            <KEYWORD4>daemon</KEYWORD4>
+            <KEYWORD4>describir</KEYWORD4>
+            <KEYWORD4>descripcion</KEYWORD4>
+            <KEYWORD4>descripcion_dentro</KEYWORD4>
+            <KEYWORD4>despues</KEYWORD4>
+            <KEYWORD4>direcc_puerta</KEYWORD4>
+            <KEYWORD4>direcciones</KEYWORD4>
+            <KEYWORD4>esta_en</KEYWORD4>
+            <KEYWORD4>genero</KEYWORD4>
+            <KEYWORD4>gramatica</KEYWORD4>
+            <KEYWORD4>imperativo</KEYWORD4>
+            <KEYWORD4>inicial</KEYWORD4>
+            <KEYWORD4>irrelevante</KEYWORD4>
+            <KEYWORD4>listar_juntos</KEYWORD4>
+            <KEYWORD4>listarse</KEYWORD4>
+            <KEYWORD4>no_puedes_ir</KEYWORD4>
+            <KEYWORD4>nombre</KEYWORD4>
+            <KEYWORD4>nombre_corto</KEYWORD4>
+            <KEYWORD4>nombre_corto_indef</KEYWORD4>
+            <KEYWORD4>nombre_f</KEYWORD4>
+            <KEYWORD4>nombre_fp</KEYWORD4>
+            <KEYWORD4>nombre_m</KEYWORD4>
+            <KEYWORD4>nombre_mp</KEYWORD4>
+            <KEYWORD4>ordenes</KEYWORD4>
+            <KEYWORD4>parse_nombre</KEYWORD4>
+            <KEYWORD4>plural</KEYWORD4>
+            <KEYWORD4>puerta_a</KEYWORD4>
+            <KEYWORD4>reaccionar_antes</KEYWORD4>
+            <KEYWORD4>reaccionar_despues</KEYWORD4>
+            <KEYWORD4>salidas</KEYWORD4>
+            <KEYWORD4>si_abierto</KEYWORD4>
+            <KEYWORD4>si_apagado</KEYWORD4>
+            <KEYWORD4>si_cerrado</KEYWORD4>
+            <KEYWORD4>si_encendido</KEYWORD4>
+            <KEYWORD4>suma_al_alcance</KEYWORD4>
+            <KEYWORD4>tiempo_agotado</KEYWORD4>
+            <KEYWORD4>tiempo_restante</KEYWORD4>
+            <KEYWORD4>vida</KEYWORD4>
+            <KEYWORD4>laoscuridad</KEYWORD4>
+            <KEYWORD4>obj_abajo</KEYWORD4>
+            <KEYWORD4>obj_afuera</KEYWORD4>
+            <KEYWORD4>obj_arriba</KEYWORD4>
+            <KEYWORD4>obj_dentro</KEYWORD4>
+            <KEYWORD4>obj_e</KEYWORD4>
+            <KEYWORD4>obj_n</KEYWORD4>
+            <KEYWORD4>obj_ne</KEYWORD4>
+            <KEYWORD4>obj_no</KEYWORD4>
+            <KEYWORD4>obj_o</KEYWORD4>
+            <KEYWORD4>obj_s</KEYWORD4>
+            <KEYWORD4>obj_se</KEYWORD4>
+            <KEYWORD4>obj_so</KEYWORD4>
+            <KEYWORD4>objjugador</KEYWORD4>
+            <KEYWORD4>otro</KEYWORD4>
+            <KEYWORD4>uno</KEYWORD4>
+            <KEYWORD4>ActualizarPronombre</KEYWORD4>
+            <KEYWORD4>ActualizarTiempoReal</KEYWORD4>
+            <KEYWORD4>AlAlcance</KEYWORD4>
+            <KEYWORD4>AntesDelParsing</KEYWORD4>
+            <KEYWORD4>ArrancarDaemon</KEYWORD4>
+            <KEYWORD4>ArrancarReloj</KEYWORD4>
+            <KEYWORD4>BucleAlcance</KEYWORD4>
+            <KEYWORD4>BuscarEnDiccionario</KEYWORD4>
+            <KEYWORD4>CDefArt</KEYWORD4>
+            <KEYWORD4>CambiarDefecto</KEYWORD4>
+            <KEYWORD4>CambiarJugador</KEYWORD4>
+            <KEYWORD4>CaminarAOscuras</KEYWORD4>
+            <KEYWORD4>CasosLenguaje</KEYWORD4>
+            <KEYWORD4>CompararSinSigno</KEYWORD4>
+            <KEYWORD4>Conseguido</KEYWORD4>
+            <KEYWORD4>Crear__IN</KEYWORD4>
+            <KEYWORD4>Crear__IR</KEYWORD4>
+            <KEYWORD4>Curiosidades</KEYWORD4>
+            <KEYWORD4>DefArt</KEYWORD4>
+            <KEYWORD4>DentroDelAlcance</KEYWORD4>
+            <KEYWORD4>DibujarLineaEstado</KEYWORD4>
+            <KEYWORD4>DireccionDePalabra</KEYWORD4>
+            <KEYWORD4>DoMenu</KEYWORD4>
+            <KEYWORD4>DominioNombre</KEYWORD4>
+            <KEYWORD4>ElegirObjetos</KEYWORD4>
+            <KEYWORD4>ElementoCualquiera</KEYWORD4>
+            <KEYWORD4>EnglishNumber</KEYWORD4>
+            <KEYWORD4>ErrorParser</KEYWORD4>
+            <KEYWORD4>EscribirListaDesde</KEYWORD4>
+            <KEYWORD4>false</KEYWORD4>
+            <KEYWORD4>FijarPronombre</KEYWORD4>
+            <KEYWORD4>Grammar__Version</KEYWORD4>
+            <KEYWORD4>HayLuz</KEYWORD4>
+            <KEYWORD4>Historia</KEYWORD4>
+            <KEYWORD4>IdiomaContracciones</KEYWORD4>
+            <KEYWORD4>IdiomaGeneroAnimado</KEYWORD4>
+            <KEYWORD4>IdiomaGeneroInanimado</KEYWORD4>
+            <KEYWORD4>ImprimirOEjecutar</KEYWORD4>
+            <KEYWORD4>ImprimirRango</KEYWORD4>
+            <KEYWORD4>ImprimirTareas</KEYWORD4>
+            <KEYWORD4>ImprimirVerbo</KEYWORD4>
+            <KEYWORD4>IndefArt</KEYWORD4>
+            <KEYWORD4>indirect</KEYWORD4>
+            <KEYWORD4>Inicializar</KEYWORD4>
+            <KEYWORD4>IntentarNumero</KEYWORD4>
+            <KEYWORD4>InterpretarNombre</KEYWORD4>
+            <KEYWORD4>InterpretarNumero</KEYWORD4>
+            <KEYWORD4>JugadorA</KEYWORD4>
+            <KEYWORD4>Local</KEYWORD4>
+            <KEYWORD4>LongitudDePalabra</KEYWORD4>
+            <KEYWORD4>LugarNuevo</KEYWORD4>
+            <KEYWORD4>MasAlla</KEYWORD4>
+            <KEYWORD4>MensajeMuerte</KEYWORD4>
+            <KEYWORD4>MirarHaciaSub</KEYWORD4>
+            <KEYWORD4>nothing</KEYWORD4>
+            <KEYWORD4>NumSerieLib</KEYWORD4>
+            <KEYWORD4>ObjetoEsIntocable</KEYWORD4>
+            <KEYWORD4>PalabraEnPropiedad</KEYWORD4>
+            <KEYWORD4>PararDaemon</KEYWORD4>
+            <KEYWORD4>PararReloj</KEYWORD4>
+            <KEYWORD4>PasaElTiempo</KEYWORD4>
+            <KEYWORD4>PermitirEmpujarDir</KEYWORD4>
+            <KEYWORD4>PonerAlAlcance</KEYWORD4>
+            <KEYWORD4>PonerLaHora</KEYWORD4>
+            <KEYWORD4>PrintShortName</KEYWORD4>
+            <KEYWORD4>PruebaDeAlcance</KEYWORD4>
+            <KEYWORD4>Release</KEYWORD4>
+            <KEYWORD4>RevisionLib</KEYWORD4>
+            <KEYWORD4>RutinaMirar</KEYWORD4>
+            <KEYWORD4>RutinaPostJuego</KEYWORD4>
+            <KEYWORD4>RutinaPreJuego</KEYWORD4>
+            <KEYWORD4>RutinasDespues</KEYWORD4>
+            <KEYWORD4>Serial</KEYWORD4>
+            <KEYWORD4>SiONo</KEYWORD4>
+            <KEYWORD4>SiguientePalabra</KEYWORD4>
+            <KEYWORD4>SiguientePalabraParar</KEYWORD4>
+            <KEYWORD4>SumarAlAlcance</KEYWORD4>
+            <KEYWORD4>true</KEYWORD4>
+            <KEYWORD4>Teclado</KEYWORD4>
+            <KEYWORD4>TieneFuenteDeLuz</KEYWORD4>
+            <KEYWORD4>Titular</KEYWORD4>
+            <KEYWORD4>TrasElPrompt</KEYWORD4>
+            <KEYWORD4>ValorDelPronombre</KEYWORD4>
+            <KEYWORD4>ValorOEjecutar</KEYWORD4>
+            <KEYWORD4>VerboDesconocido</KEYWORD4>
+            <KEYWORD4>ZRegion</KEYWORD4>
+            <LABEL>Abrir</LABEL>
+            <LABEL>ActivarAcciones</LABEL>
+            <LABEL>ActivarAcentos</LABEL>
+            <LABEL>ActivarComandos</LABEL>
+            <LABEL>ActivarNotificacion</LABEL>
+            <LABEL>ActivarRelojes</LABEL>
+            <LABEL>ActivarRutinas</LABEL>
+            <LABEL>ActivarTranscripcion</LABEL>
+            <LABEL>ActivarTraza</LABEL>
+            <LABEL>Agitar</LABEL>
+            <LABEL>Alcance</LABEL>
+            <LABEL>Apagar</LABEL>
+            <LABEL>Atacar</LABEL>
+            <LABEL>Atar</LABEL>
+            <LABEL>Bajar</LABEL>
+            <LABEL>Beber</LABEL>
+            <LABEL>Besar</LABEL>
+            <LABEL>BuscarEn</LABEL>
+            <LABEL>Cantar</LABEL>
+            <LABEL>Cerrar</LABEL>
+            <LABEL>Coger</LABEL>
+            <LABEL>Columpiar</LABEL>
+            <LABEL>Comer</LABEL>
+            <LABEL>Comprar</LABEL>
+            <LABEL>Consultar</LABEL>
+            <LABEL>Cortar</LABEL>
+            <LABEL>Dar</LABEL>
+            <LABEL>Dejar</LABEL>
+            <LABEL>DejarSalir</LABEL>
+            <LABEL>DesactivarAcciones</LABEL>
+            <LABEL>DesactivarAcentos</LABEL>
+            <LABEL>DesactivarComandos</LABEL>
+            <LABEL>DesactivarNotificacion</LABEL>
+            <LABEL>DesactivarRelojes</LABEL>
+            <LABEL>DesactivarRutinas</LABEL>
+            <LABEL>DesactivarTranscripcion</LABEL>
+            <LABEL>DesactivarTraza</LABEL>
+            <LABEL>DespertarOtro</LABEL>
+            <LABEL>Despertarse</LABEL>
+            <LABEL>Desvestir</LABEL>
+            <LABEL>Dialecto</LABEL>
+            <LABEL>DialectoCast</LABEL>
+            <LABEL>DialectoSud</LABEL>
+            <LABEL>Dormir</LABEL>
+            <LABEL>EcharCerrojo</LABEL>
+            <LABEL>ElMismo</LABEL>
+            <LABEL>Empujar</LABEL>
+            <LABEL>EmpujarDir</LABEL>
+            <LABEL>Encender</LABEL>
+            <LABEL>Entrar</LABEL>
+            <LABEL>Escuchar</LABEL>
+            <LABEL>Esperar</LABEL>
+            <LABEL>Examinar</LABEL>
+            <LABEL>Excavar</LABEL>
+            <LABEL>Fijar</LABEL>
+            <LABEL>Finaliza</LABEL>
+            <LABEL>Frotar</LABEL>
+            <LABEL>Gesticular</LABEL>
+            <LABEL>Girar</LABEL>
+            <LABEL>Hablar</LABEL>
+            <LABEL>HalladoPlural</LABEL>
+            <LABEL>Inv</LABEL>
+            <LABEL>InvAlto</LABEL>
+            <LABEL>InvAncho</LABEL>
+            <LABEL>Ir</LABEL>
+            <LABEL>IrAmbiguo</LABEL>
+            <LABEL>IrDonde</LABEL>
+            <LABEL>Lanzar</LABEL>
+            <LABEL>LeerComandos</LABEL>
+            <LABEL>ListaMiscelanea</LABEL>
+            <LABEL>Llenar</LABEL>
+            <LABEL>LoSiento</LABEL>
+            <LABEL>Lugares</LABEL>
+            <LABEL>Meter</LABEL>
+            <LABEL>Meterse</LABEL>
+            <LABEL>Mirar</LABEL>
+            <LABEL>MirarDebajo</LABEL>
+            <LABEL>Miscelanea</LABEL>
+            <LABEL>ModoM1</LABEL>
+            <LABEL>ModoM2</LABEL>
+            <LABEL>ModoM3</LABEL>
+            <LABEL>Mostrar</LABEL>
+            <LABEL>MostrarObjeto</LABEL>
+            <LABEL>MostrarVerbo</LABEL>
+            <LABEL>Nadar</LABEL>
+            <LABEL>NivelTraza</LABEL>
+            <LABEL>No</LABEL>
+            <LABEL>NoComprendido</LABEL>
+            <LABEL>Objetos</LABEL>
+            <LABEL>Oler</LABEL>
+            <LABEL>Orden</LABEL>
+            <LABEL>Pedir</LABEL>
+            <LABEL>Pensar</LABEL>
+            <LABEL>PonerA</LABEL>
+            <LABEL>PonerSobre</LABEL>
+            <LABEL>Predecible</LABEL>
+            <LABEL>Preguntar</LABEL>
+            <LABEL>Probar</LABEL>
+            <LABEL>Pronombres</LABEL>
+            <LABEL>Prompt</LABEL>
+            <LABEL>Puntuacion</LABEL>
+            <LABEL>PuntuacionTotal</LABEL>
+            <LABEL>Quemar</LABEL>
+            <LABEL>QuitarCerrojo</LABEL>
+            <LABEL>Recibir</LABEL>
+            <LABEL>RecibirLanzamiento</LABEL>
+            <LABEL>Reiniciar</LABEL>
+            <LABEL>Responder</LABEL>
+            <LABEL>Restaurar</LABEL>
+            <LABEL>Retorcer</LABEL>
+            <LABEL>Rezar</LABEL>
+            <LABEL>Sacar</LABEL>
+            <LABEL>Salidas</LABEL>
+            <LABEL>Salir</LABEL>
+            <LABEL>Salirse</LABEL>
+            <LABEL>Saltar</LABEL>
+            <LABEL>SaltarSobre</LABEL>
+            <LABEL>Salvar</LABEL>
+            <LABEL>Si</LABEL>
+            <LABEL>Soplar</LABEL>
+            <LABEL>Soso</LABEL>
+            <LABEL>Subir</LABEL>
+            <LABEL>Tacos</LABEL>
+            <LABEL>Tirar</LABEL>
+            <LABEL>Tocar</LABEL>
+            <LABEL>Transferir</LABEL>
+            <LABEL>Trepar</LABEL>
+            <LABEL>Vaciar</LABEL>
+            <LABEL>VaciarEn</LABEL>
+            <LABEL>Verificar</LABEL>
+            <LABEL>Vestir</LABEL>
+            <LABEL>XArbol</LABEL>
+            <LABEL>XIrA</LABEL>
+            <LABEL>XMover</LABEL>
+            <LABEL>XRobar</LABEL>
+            <KEYWORD4>accion</KEYWORD4>
+            <KEYWORD4>actor</KEYWORD4>
+            <KEYWORD4>banderafin</KEYWORD4>
+            <KEYWORD4>brujula</KEYWORD4>
+            <KEYWORD4>dialecto_sudamericano</KEYWORD4>
+            <KEYWORD4>etapa_inventario</KEYWORD4>
+            <KEYWORD4>jugador</KEYWORD4>
+            <KEYWORD4>la_hora</KEYWORD4>
+            <KEYWORD4>LibreriaInform</KEYWORD4>
+            <KEYWORD4>localizacion</KEYWORD4>
+            <KEYWORD4>localizacion_real</KEYWORD4>
+            <KEYWORD4>MensajesLibreria</KEYWORD4>
+            <KEYWORD4>modo_notificar</KEYWORD4>
+            <KEYWORD4>no_interpretar</KEYWORD4>
+            <KEYWORD4>np</KEYWORD4>
+            <KEYWORD4>ParserInform</KEYWORD4>
+            <KEYWORD4>PreguntaSiNo</KEYWORD4>
+            <KEYWORD4>puntuacion</KEYWORD4>
+            <KEYWORD4>puntuacion_tareas</KEYWORD4>
+            <KEYWORD4>tate_callao</KEYWORD4>
+            <KEYWORD4>turnos</KEYWORD4>
+            <KEYWORD4>velocidad_tiempo_real</KEYWORD4>
+            <KEYWORD4>ADMITIR_COMANDO_SALIDAS</KEYWORD4>
+            <KEYWORD4>ADMITIR_INFINITIVOS</KEYWORD4>
+            <KEYWORD4>ANIMA_PE</KEYWORD4>
+            <KEYWORD4>ANULAR1__WD</KEYWORD4>
+            <KEYWORD4>ANULAR2__WD</KEYWORD4>
+            <KEYWORD4>ANULAR3__WD</KEYWORD4>
+            <KEYWORD4>APAGADO_BIT</KEYWORD4>
+            <KEYWORD4>ATASCADO_PE</KEYWORD4>
+            <KEYWORD4>BANDERAUX_BIT</KEYWORD4>
+            <KEYWORD4>BREVE_BIT</KEYWORD4>
+            <KEYWORD4>CODIGO_REPARSE</KEYWORD4>
+            <KEYWORD4>CURIOSIDADES__WD</KEYWORD4>
+            <KEYWORD4>DE1__WD</KEYWORD4>
+            <KEYWORD4>DE2__WD</KEYWORD4>
+            <KEYWORD4>DE3__WD</KEYWORD4>
+            <KEYWORD4>DE4__WD</KEYWORD4>
+            <KEYWORD4>DEBUG</KEYWORD4>
+            <KEYWORD4>DEFINIDO_BIT</KEYWORD4>
+            <KEYWORD4>DEFINIDO_PK</KEYWORD4>
+            <KEYWORD4>DESPUES11_WD</KEYWORD4>
+            <KEYWORD4>DESPUES1__WD</KEYWORD4>
+            <KEYWORD4>DESPUES21_WD</KEYWORD4>
+            <KEYWORD4>DESPUES2__WD</KEYWORD4>
+            <KEYWORD4>DESPUES31_WD</KEYWORD4>
+            <KEYWORD4>DESPUES3__WD</KEYWORD4>
+            <KEYWORD4>ELCUAL__TX</KEYWORD4>
+            <KEYWORD4>ENCENDIDO_BIT</KEYWORD4>
+            <KEYWORD4>ESASC__TX</KEYWORD4>
+            <KEYWORD4>ESCENARIO_PE</KEYWORD4>
+            <KEYWORD4>ESO_BIT</KEYWORD4>
+            <KEYWORD4>ESO__TX</KEYWORD4>
+            <KEYWORD4>ESPANOL_BIT</KEYWORD4>
+            <KEYWORD4>EXCEPTO_PE</KEYWORD4>
+            <KEYWORD4>G_FEMENINO</KEYWORD4>
+            <KEYWORD4>G_MASCULINO</KEYWORD4>
+            <KEYWORD4>G_PLURAL</KEYWORD4>
+            <KEYWORD4>HASTAQUI_PE</KEYWORD4>
+            <KEYWORD4>HAY2__TX</KEYWORD4>
+            <KEYWORD4>HAYP2__TX</KEYWORD4>
+            <KEYWORD4>HAYPOCOS_PE</KEYWORD4>
+            <KEYWORD4>HAYP__TX</KEYWORD4>
+            <KEYWORD4>HAY_BIT</KEYWORD4>
+            <KEYWORD4>HAY_CURIOSIDADES</KEYWORD4>
+            <KEYWORD4>HAY_TAREAS</KEYWORD4>
+            <KEYWORD4>HAY__TX</KEYWORD4>
+            <KEYWORD4>HORA__TX</KEYWORD4>
+            <KEYWORD4>INDENTAR_BIT</KEYWORD4>
+            <KEYWORD4>INFOPARCIAL_BIT</KEYWORD4>
+            <KEYWORD4>INFOTOTAL_BIT</KEYWORD4>
+            <KEYWORD4>JUGADAS__TX</KEYWORD4>
+            <KEYWORD4>KKFINAL_PE</KEYWORD4>
+            <KEYWORD4>LLEVAR_MAX</KEYWORD4>
+            <KEYWORD4>MAX_RELOJES</KEYWORD4>
+            <KEYWORD4>MI_BIT</KEYWORD4>
+            <KEYWORD4>MMULTI_PE</KEYWORD4>
+            <KEYWORD4>MULTI_PE</KEYWORD4>
+            <KEYWORD4>MUYPOCO_PE</KEYWORD4>
+            <KEYWORD4>NADA_PE</KEYWORD4>
+            <KEYWORD4>NADA__TX</KEYWORD4>
+            <KEYWORD4>NO1__WD</KEYWORD4>
+            <KEYWORD4>NO2__WD</KEYWORD4>
+            <KEYWORD4>NO3__WD</KEYWORD4>
+            <KEYWORD4>NOPUEDESIR__TX</KEYWORD4>
+            <KEYWORD4>NOTIENES_PE</KEYWORD4>
+            <KEYWORD4>NOVEO_PE</KEYWORD4>
+            <KEYWORD4>NUEVALINEA_BIT</KEYWORD4>
+            <KEYWORD4>NULL</KEYWORD4>
+            <KEYWORD4>NUMERO_PE</KEYWORD4>
+            <KEYWORD4>NUMERO_TAREAS</KEYWORD4>
+            <KEYWORD4>OBJETO_SACO</KEYWORD4>
+            <KEYWORD4>OCULTAR_BIT</KEYWORD4>
+            <KEYWORD4>OOPS1__WD</KEYWORD4>
+            <KEYWORD4>OOPS2__WD</KEYWORD4>
+            <KEYWORD4>OOPS3__WD</KEYWORD4>
+            <KEYWORD4>OSCURIDAD__TX</KEYWORD4>
+            <KEYWORD4>OTRAVEZ1__WD</KEYWORD4>
+            <KEYWORD4>OTRAVEZ2__WD</KEYWORD4>
+            <KEYWORD4>OTRAVEZ3__WD</KEYWORD4>
+            <KEYWORD4>OTRO1__WD</KEYWORD4>
+            <KEYWORD4>OTRO2__WD</KEYWORD4>
+            <KEYWORD4>OTRO3__WD</KEYWORD4>
+            <KEYWORD4>OTRO_BIT</KEYWORD4>
+            <KEYWORD4>PATRON_NULO</KEYWORD4>
+            <KEYWORD4>PLURAL_BIT</KEYWORD4>
+            <KEYWORD4>PREGUNTAAMBITO_PE</KEYWORD4>
+            <KEYWORD4>PREVIOYO__TX</KEYWORD4>
+            <KEYWORD4>PRONOM_PE</KEYWORD4>
+            <KEYWORD4>PUNTOS_LUGAR</KEYWORD4>
+            <KEYWORD4>PUNTOS_OBJETO</KEYWORD4>
+            <KEYWORD4>PUNTUACION1__WD</KEYWORD4>
+            <KEYWORD4>PUNTUACION2__WD</KEYWORD4>
+            <KEYWORD4>PUNTUACION_MAX</KEYWORD4>
+            <KEYWORD4>PUNTUACION__TX</KEYWORD4>
+            <KEYWORD4>QKEY1__KY</KEYWORD4>
+            <KEYWORD4>QKEY1__TX</KEYWORD4>
+            <KEYWORD4>QKEY2__KY</KEYWORD4>
+            <KEYWORD4>QKEY2__TX</KEYWORD4>
+            <KEYWORD4>QUIEN__TX</KEYWORD4>
+            <KEYWORD4>RAZON_BUCLEALCANCE</KEYWORD4>
+            <KEYWORD4>RAZON_CADA_TURNO</KEYWORD4>
+            <KEYWORD4>RAZON_HABLAR</KEYWORD4>
+            <KEYWORD4>RAZON_PARSING</KEYWORD4>
+            <KEYWORD4>RAZON_REACCIONAR_ANTES</KEYWORD4>
+            <KEYWORD4>RAZON_REACCIONAR_DESPUES</KEYWORD4>
+            <KEYWORD4>RAZON_TESTALCANCE</KEYWORD4>
+            <KEYWORD4>RECUPERAR__WD</KEYWORD4>
+            <KEYWORD4>RECURSIVO_BIT</KEYWORD4>
+            <KEYWORD4>REINICIAR__WD</KEYWORD4>
+            <KEYWORD4>RKEY__TX</KEYWORD4>
+            <KEYWORD4>RPG_CRIATURA</KEYWORD4>
+            <KEYWORD4>RPG_FALLO</KEYWORD4>
+            <KEYWORD4>RPG_MULTI</KEYWORD4>
+            <KEYWORD4>RPG_MULTIDENTRO</KEYWORD4>
+            <KEYWORD4>RPG_MULTIEXCEPTO</KEYWORD4>
+            <KEYWORD4>RPG_MULTIPOSEIDO</KEYWORD4>
+            <KEYWORD4>RPG_NOMBRE</KEYWORD4>
+            <KEYWORD4>RPG_NUMERO</KEYWORD4>
+            <KEYWORD4>RPG_POSEIDO</KEYWORD4>
+            <KEYWORD4>RPG_PREPOSICION</KEYWORD4>
+            <KEYWORD4>RPG_REPARSE</KEYWORD4>
+            <KEYWORD4>SALVO1__WD</KEYWORD4>
+            <KEYWORD4>SALVO2__WD</KEYWORD4>
+            <KEYWORD4>SALVO3__WD</KEYWORD4>
+            <KEYWORD4>SI1__WD</KEYWORD4>
+            <KEYWORD4>SI2__WD</KEYWORD4>
+            <KEYWORD4>SI3__WD</KEYWORD4>
+            <KEYWORD4>SIEMPRE_BIT</KEYWORD4>
+            <KEYWORD4>SINARTICULO_BIT</KEYWORD4>
+            <KEYWORD4>SIN_DIRECCIONES</KEYWORD4>
+            <KEYWORD4>TAMANIO_LISTA_ENCAJAN</KEYWORD4>
+            <KEYWORD4>TECLAANT1__KY</KEYWORD4>
+            <KEYWORD4>TECLAANT2__KY</KEYWORD4>
+            <KEYWORD4>TECLAANT__TX</KEYWORD4>
+            <KEYWORD4>TECLASIG1__KY</KEYWORD4>
+            <KEYWORD4>TECLASIG2__KY</KEYWORD4>
+            <KEYWORD4>TECLASIG__TX</KEYWORD4>
+            <KEYWORD4>TERMINAR1__WD</KEYWORD4>
+            <KEYWORD4>TERMINAR2__WD</KEYWORD4>
+            <KEYWORD4>TIEMPO_REAL</KEYWORD4>
+            <KEYWORD4>TODO1__WD</KEYWORD4>
+            <KEYWORD4>TODO2__WD</KEYWORD4>
+            <KEYWORD4>TODO3__WD</KEYWORD4>
+            <KEYWORD4>TODO4__WD</KEYWORD4>
+            <KEYWORD4>TODO5__WD</KEYWORD4>
+            <KEYWORD4>TOKEN_CRIATURA</KEYWORD4>
+            <KEYWORD4>TOKEN_ESPECIAL</KEYWORD4>
+            <KEYWORD4>TOKEN_FINAL</KEYWORD4>
+            <KEYWORD4>TOKEN_MULTI</KEYWORD4>
+            <KEYWORD4>TOKEN_MULTIDENTRO</KEYWORD4>
+            <KEYWORD4>TOKEN_MULTIEXCEPTO</KEYWORD4>
+            <KEYWORD4>TOKEN_MULTIPOSEIDO</KEYWORD4>
+            <KEYWORD4>TOKEN_NOMBRE</KEYWORD4>
+            <KEYWORD4>TOKEN_NUMERO</KEYWORD4>
+            <KEYWORD4>TOKEN_POSEIDO</KEYWORD4>
+            <KEYWORD4>TOKEN_TEMA</KEYWORD4>
+            <KEYWORD4>TT_ALCANCE</KEYWORD4>
+            <KEYWORD4>TT_ELEMENTAL</KEYWORD4>
+            <KEYWORD4>TT_FILTRO_ATRIB</KEYWORD4>
+            <KEYWORD4>TT_FILTRO_RUTINA</KEYWORD4>
+            <KEYWORD4>TT_ILEGAL</KEYWORD4>
+            <KEYWORD4>TT_PREPOSICION</KEYWORD4>
+            <KEYWORD4>TT_RPG</KEYWORD4>
+            <KEYWORD4>TUMISMO__TX</KEYWORD4>
+            <KEYWORD4>VERBO_PE</KEYWORD4>
+            <KEYWORD4>Y1__WD</KEYWORD4>
+            <KEYWORD4>Y2__WD</KEYWORD4>
+            <KEYWORD4>Y3__WD</KEYWORD4>
+            <KEYWORD4>YANOPRON_PE</KEYWORD4>
+            <KEYWORD4>YO1__WD</KEYWORD4>
+            <KEYWORD4>YO2__WD</KEYWORD4>
+            <KEYWORD4>YO3__WD</KEYWORD4>
+            <KEYWORD4>Y__TX</KEYWORD4>
+            <KEYWORD4>adjectives_table</KEYWORD4>
+            <KEYWORD4>actions_table</KEYWORD4>
+            <KEYWORD4>classes_table</KEYWORD4>
+            <KEYWORD4>identifiers_table</KEYWORD4>
+            <KEYWORD4>preactions_table</KEYWORD4>
+            <KEYWORD4>version_number</KEYWORD4>
+            <KEYWORD4>largest_object</KEYWORD4>
+            <KEYWORD4>strings_offset</KEYWORD4>
+            <KEYWORD4>code_offset</KEYWORD4>
+            <KEYWORD4>dict_par1</KEYWORD4>
+            <KEYWORD4>dict_par2</KEYWORD4>
+            <KEYWORD4>dict_par3</KEYWORD4>
+            <KEYWORD4>actual_largest_object</KEYWORD4>
+            <KEYWORD4>static_memory_offset</KEYWORD4>
+            <KEYWORD4>array_names_offset</KEYWORD4>
+            <KEYWORD4>readable_memory_offset</KEYWORD4>
+            <KEYWORD4>cpv__start</KEYWORD4>
+            <KEYWORD4>cpv__end</KEYWORD4>
+            <KEYWORD4>ipv__start</KEYWORD4>
+            <KEYWORD4>ipv__end</KEYWORD4>
+            <KEYWORD4>array__start</KEYWORD4>
+            <KEYWORD4>array__end</KEYWORD4>
+            <KEYWORD4>lowest_attribute_number</KEYWORD4>
+            <KEYWORD4>highest_attribute_number</KEYWORD4>
+            <KEYWORD4>attribute_names_array</KEYWORD4>
+            <KEYWORD4>lowest_property_number</KEYWORD4>
+            <KEYWORD4>highest_property_number</KEYWORD4>
+            <KEYWORD4>property_names_array</KEYWORD4>
+            <KEYWORD4>lowest_action_number</KEYWORD4>
+            <KEYWORD4>highest_action_number</KEYWORD4>
+            <KEYWORD4>action_names_array</KEYWORD4>
+            <KEYWORD4>lowest_fake_action_number</KEYWORD4>
+            <KEYWORD4>highest_fake_action_number</KEYWORD4>
+            <KEYWORD4>fake_action_names_array</KEYWORD4>
+            <KEYWORD4>lowest_routine_number</KEYWORD4>
+            <KEYWORD4>highest_routine_number</KEYWORD4>
+            <KEYWORD4>routines_array</KEYWORD4>
+            <KEYWORD4>routine_names_array</KEYWORD4>
+            <KEYWORD4>routine_flags_array</KEYWORD4>
+            <KEYWORD4>lowest_global_number</KEYWORD4>
+            <KEYWORD4>highest_global_number</KEYWORD4>
+            <KEYWORD4>globals_array</KEYWORD4>
+            <KEYWORD4>global_names_array</KEYWORD4>
+            <KEYWORD4>global_flags_array</KEYWORD4>
+            <KEYWORD4>lowest_array_number</KEYWORD4>
+            <KEYWORD4>highest_array_number</KEYWORD4>
+            <KEYWORD4>arrays_array</KEYWORD4>
+            <KEYWORD4>array_names_array</KEYWORD4>
+            <KEYWORD4>array_flags_array</KEYWORD4>
+            <KEYWORD4>lowest_constant_number</KEYWORD4>
+            <KEYWORD4>highest_constant_number</KEYWORD4>
+            <KEYWORD4>constants_array</KEYWORD4>
+            <KEYWORD4>constant_names_array</KEYWORD4>
+            <KEYWORD4>lowest_class_number</KEYWORD4>
+            <KEYWORD4>highest_class_number</KEYWORD4>
+            <KEYWORD4>class_objects_array</KEYWORD4>
+            <KEYWORD4>lowest_object_number</KEYWORD4>
+            <KEYWORD4>highest_object_number</KEYWORD4>
+
+        </KEYWORDS>
+    </RULES>
+    <RULES SET="InformInnerText" IGNORE_CASE="FALSE" DEFAULT="LITERAL1">
+        <SEQ TYPE="OPERATOR">^</SEQ>
+        <SEQ TYPE="OPERATOR">~</SEQ>
+        <SEQ TYPE="OPERATOR">@</SEQ>
+        <SEQ TYPE="OPERATOR">\</SEQ>
+
+        <!-- escaping the @ symbol -->
+        <SEQ TYPE="LITERAL2">@@</SEQ>
+    </RULES>
+</MODE>

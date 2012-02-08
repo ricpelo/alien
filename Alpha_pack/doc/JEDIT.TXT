@@ -9,3 +9,6 @@ Para que funcione el navegador interno de programas Inform en JEdit, hay que:
 
   Si no lo haces, puede que no analice bien el código.
 
+- El archivo inform.xml de /usr/share/jedit/modes/inform.xml puede sustituirse
+  por el que hay aquí, para que resalte la sintaxis de InformATE.
+
