@@ -1412,11 +1412,11 @@
                 oops_from = 0;
 
                 ! ...explain any inferences made (using the pattern)...
-#Ifdef IMPRIMIR_DEDUCCIONES;
+#Ifdef IMPRIMIR_DEDUCCIONES;                   ! (c) Alpha
                 if (inferfrom ~= 0) {
                     print "("; PrintCommand(inferfrom); print ")^";
                 }
-#Endif;
+#Endif;                                        ! (c) Alpha
                 ! ...copy the action number, and the number of parameters...
 
                 results-->0 = action_to_be;
