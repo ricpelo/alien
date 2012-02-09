@@ -431,6 +431,9 @@ Verb 'wake' 'awake' 'awaken'
 #Include "infix";
 #Endif;
 
+Default d_obj NULL;
+Default u_obj NULL;
+
 ! ==============================================================================
 
 Constant LIBRARY_GRAMMAR;       ! for dependency checking

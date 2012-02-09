@@ -19,13 +19,15 @@
 ! Parser Replace Section
 ! ------------------------------------
 ! Rutinas Hackeadas:
-!                   DictionaryLookup		BUG
-!                   BestGuess                   SP PATCH        
-!                   Identical                       SP PATCH        
-!                   PrefaceByArticle           SP PATCH        
+!                   DictionaryLookup          BUG
+!                   BestGuess                 SP PATCH        
+!                   Identical                 SP PATCH        
+!                   PrefaceByArticle          SP PATCH        
 !                   TryGivenObject            SP PATCH        
 !                   NounDomain                SP PATCH        
-!                   Indefart                       SP PATCH        
+!                   Indefart                  SP PATCH        
+!                   CInDefArt                 SP PATCH        
+!                   Parser__parse             SP PATCH       
 
 
 ! Definicion de bufferaux y parseraux, usados en DictionaryLookup [001115]
@@ -245,9 +247,9 @@
         artval=(o.&articles)-->(acode+short_name_case*LanguageCases);
         if (artval) { ! infsp hack para admitir valor 0 en slot de 'articles' property.
          if (capitalise)
-            print (Cap) artval, " ";
+            print (Cap) artval;
          else
-            print (string) artval, " ";
+            print (string) artval;
         }
         if (pluralise) return;
         print (PSN__) o; return;
@@ -388,6 +390,7 @@
             return k;
         }
         if (k == 0) jump NoWordsMatch;
+        wn = j;
     }
 
     ! The default algorithm is simply to count up how many words pass the
@@ -781,7 +784,15 @@
     PrefaceByArticle(o, 2); indef_mode = i;
 ];
 
-
+[ CInDefArt o i;
+    i = indef_mode; indef_mode = true;
+    if (o has proper) { indef_mode = NULL; print "a ",(PSN__) o; indef_mode = i; return; }
+    if (o provides article) {
+        PrintCapitalised(o, article, 1); print " ", (PSN__) o; indef_mode = i;
+        return;
+    }
+    PrefaceByArticle(o, 2, 0, 1); indef_mode = i;
+];
 
 ! #############################################################################
 
@@ -919,7 +930,29 @@
             jump ReType;
         }
         #Endif; ! TARGET_
-        for (i=0 : i<INPUT_BUFFER_LEN : i++) buffer->i = buffer3->i;
+        if (WordAddress(verb_wordnum) == buffer + WORDSIZE) { ! not held back
+            ! splice rest of buffer onto end of buffer3
+            #Ifdef TARGET_ZCODE;
+            i = buffer3->1;
+            #Ifnot; ! TARGET_GLULX
+            i = buffer3-->0;
+            #Endif;
+            while (buffer3->(i + WORDSIZE - 1) == ' ' or '.')
+                i--;
+            j = i - WordLength(verb_wordnum);  ! amount to move buffer up by
+            if (j > 0) {
+                for (m=INPUT_BUFFER_LEN-1 : m>=WORDSIZE+j : m--)
+                    buffer->m = buffer->(m-j);
+                #Ifdef TARGET_ZCODE;
+                buffer->1 = buffer->1 + j;
+                #Ifnot; ! TARGET_GLULX
+                buffer-->0 = buffer-->0 + j;
+                #Endif;
+            }
+            for (m=WORDSIZE : m<WORDSIZE+i : m++) buffer->m = buffer3->m;
+            if (j < 0) for (:m<WORDSIZE+i-j : m++) buffer->m = ' ';
+        } else
+            for (i=0 : i<INPUT_BUFFER_LEN : i++) buffer->i = buffer3->i;
         jump ReParse;
     }
 
@@ -1235,31 +1268,68 @@
 
                     pcount++;
                     if (line_ttype-->pcount == PREPOSITION_TT) {
-                        while (line_ttype-->pcount == PREPOSITION_TT) pcount++;
+                        ! skip ahead to a preposition word in the input
+                        do {
+                            l = NextWord();
+                        } until ((wn > num_words) ||
+                                 (l && (l->#dict_par1) & 8 ~= 0));
+
+                        if (wn > num_words) {
+                            #Ifdef DEBUG;
+                            if (parser_trace >= 2)
+                                print " [Look-ahead aborted: prepositions missing]^";
+                            #Endif;
+                            jump LineFailed;
+                        }
+
+                        do {
+                            if (PrepositionChain(l, pcount) ~= -1) {
+                                ! advance past the chain
+                                if ((line_token-->pcount)->0 & $20 ~= 0) {
+                                    pcount++;
+                                    while ((line_token-->pcount ~= ENDIT_TOKEN) &&
+                                           ((line_token-->pcount)->0 & $10 ~= 0))
+                                        pcount++;
+                                } else {
+                                    pcount++;
+                                }
+                            } else {
+                                ! try to find another preposition word
+                                do {
+                                    l = NextWord();
+                                } until ((wn >= num_words) ||
+                                         (l && (l->#dict_par1) & 8 ~= 0));
+
+                                 if (l && (l->#dict_par1) & 8) continue;
+
+                                ! lookahead failed
+                                #Ifdef DEBUG;
+                                if (parser_trace >= 2)
+                                    print " [Look-ahead aborted: prepositions don't match]^";
+                                #endif;
+                                jump LineFailed;
+                            }
+                            l = NextWord();
+                        } until (line_ttype-->pcount ~= PREPOSITION_TT);
+
+                        ! put back the non-preposition we just read
+                        wn--;
 
                         if ((line_ttype-->pcount == ELEMENTARY_TT) && (line_tdata-->pcount == NOUN_TOKEN)) {
-
-                            ! Advance past the last preposition
-
-                            while (wn < num_words) {
-                                l=NextWord();
-                                if ( l && (l->#dict_par1) &8 ) {   ! if preposition
-                                    l = Descriptors();  ! skip past THE etc
-                                    if (l~=0) etype=l;  ! don't allow multiple objects
-                                    l = NounDomain(actors_location, actor, NOUN_TOKEN);
-                                    #Ifdef DEBUG;
-                                    if (parser_trace >= 2) {
-                                        print " [Advanced to ~noun~ token: ";
-                                        if (l == REPARSE_CODE) print "re-parse request]^";
-                                        if (l == 1) print "but multiple found]^";
-                                        if (l == 0) print "error ", etype, "]^";
-                                        if (l >= 2) print (the) l, "]^";
-                                    }
-                                    #Endif; ! DEBUG
-                                    if (l == REPARSE_CODE) jump ReParse;
-                                    if (l >= 2) advance_warning = l;
-                                }
+                            l = Descriptors();  ! skip past THE etc
+                            if (l~=0) etype=l;  ! don't allow multiple objects
+                            l = NounDomain(actors_location, actor, NOUN_TOKEN);
+                            #Ifdef DEBUG;
+                            if (parser_trace >= 2) {
+                                print " [Advanced to ~noun~ token: ";
+                                if (l == REPARSE_CODE) print "re-parse request]^";
+                                if (l == 1) print "but multiple found]^";
+                                if (l == 0) print "error ", etype, "]^";
+                                if (l >= 2) print (the) l, "]^";
                             }
+                            #Endif; ! DEBUG
+                            if (l == REPARSE_CODE) jump ReParse;
+                            if (l >= 2) advance_warning = l;
                         }
                     }
                     break;
@@ -1480,6 +1550,7 @@
             } ! end of if(token ~= ENDIT_TOKEN) else
         } ! end of for(pcount++)
 
+        .LineFailed;
         ! The line has failed to match.
         ! We continue the outer "for" loop, trying the next line in the grammar.
 

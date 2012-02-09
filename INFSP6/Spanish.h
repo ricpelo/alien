@@ -35,6 +35,7 @@ Replace PrefaceByArticle;
 Replace Identical;
 Replace TryGivenObject;
 Replace Indefart;
+Replace CInDefArt;
 Replace BestGuess;
 Replace NounDomain;
 Replace Parser__parse;
@@ -1846,8 +1847,8 @@ Constant PARTICULA_TE  = "te";
     !   4: Exito
     switch(n)
     {
-     1: if (x1 has animate)                                          ! (c) Alpha
-          "Para dejar ", (al)x1, " deberías tener", (lo) x1, ".";    ! (c) Alpha
+     1: if (x1 has animate)
+          "Para dejar ", (al)x1, " deberías tener", (lo) x1, ".";
         "Para dejar ", (the)x1, " deberías tener", (lo) x1, ".";
      2: "No ", (lo) x1, " tienes.";
      3: "(primero te quitas ", (the) x1, ")";
@@ -2447,8 +2448,8 @@ Constant PARTICULA_TE  = "te";
     ! la comma, como p.ej: PEPE XADASDGG, SALTA
 
      26: print "(primero tratas de ", (coge)"r ";
-         if (x1 has animate) print (al) x1;       ! (c) Alpha
-         else                print (the) x1;      ! (c) Alpha
+         if (x1 has animate) print (al) x1;
+         else                print (the) x1;
          ")"; ! infsp I6
 
     ! Si la gramática especifica que una acción debe efectuarse
@@ -2812,8 +2813,8 @@ Constant PARTICULA_TE  = "te";
     switch(n)
     {
      1: print "No creo que empujar ";
-        if (x1 has animate) print (al) x1;     ! (c) Alpha
-        else                print (the) x1;    ! (c) Alpha
+        if (x1 has animate) print (al) x1;
+        else                print (el) x1;
         " sirva para nada.";
      2: "Eso no es una dirección.";
      3: "No, no puedes en esa dirección.";

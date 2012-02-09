@@ -1374,7 +1374,29 @@ Object  InformParser "(Inform Parser)"
             jump ReType;
         }
         #Endif; ! TARGET_
-        for (i=0 : i<INPUT_BUFFER_LEN : i++) buffer->i = buffer3->i;
+        if (WordAddress(verb_wordnum) == buffer + WORDSIZE) { ! not held back
+            ! splice rest of buffer onto end of buffer3
+            #Ifdef TARGET_ZCODE;
+            i = buffer3->1;
+            #Ifnot; ! TARGET_GLULX
+            i = buffer3-->0;
+            #Endif;
+            while (buffer3->(i + WORDSIZE - 1) == ' ' or '.')
+                i--;
+            j = i - WordLength(verb_wordnum);  ! amount to move buffer up by
+            if (j > 0) {
+                for (m=INPUT_BUFFER_LEN-1 : m>=WORDSIZE+j : m--)
+                    buffer->m = buffer->(m-j);
+                #Ifdef TARGET_ZCODE;
+                buffer->1 = buffer->1 + j;
+                #Ifnot; ! TARGET_GLULX
+                buffer-->0 = buffer-->0 + j;
+                #Endif;
+            }
+            for (m=WORDSIZE : m<WORDSIZE+i : m++) buffer->m = buffer3->m;
+            if (j < 0) for (:m<WORDSIZE+i-j : m++) buffer->m = ' ';
+        } else
+            for (i=0 : i<INPUT_BUFFER_LEN : i++) buffer->i = buffer3->i;
         jump ReParse;
     }
 
@@ -1406,8 +1428,9 @@ Object  InformParser "(Inform Parser)"
 
         if (i == 1) {
             results-->0 = action;
-            results-->1 = noun;
-            results-->2 = second;
+            results-->1 = 2;             ! Number of parameters
+            results-->2 = noun;
+            results-->3 = second;
             rtrue;
         }
         if (i ~= 0) { verb_word = i; wn--; verb_wordnum--; }
@@ -1689,31 +1712,68 @@ Object  InformParser "(Inform Parser)"
 
                     pcount++;
                     if (line_ttype-->pcount == PREPOSITION_TT) {
-                        while (line_ttype-->pcount == PREPOSITION_TT) pcount++;
+                        ! skip ahead to a preposition word in the input
+                        do {
+                            l = NextWord();
+                        } until ((wn > num_words) ||
+                                 (l && (l->#dict_par1) & 8 ~= 0));
+
+                        if (wn > num_words) {
+                            #Ifdef DEBUG;
+                            if (parser_trace >= 2)
+                                print " [Look-ahead aborted: prepositions missing]^";
+                            #Endif;
+                            jump LineFailed;
+                        }
+
+                        do {
+                            if (PrepositionChain(l, pcount) ~= -1) {
+                                ! advance past the chain
+                                if ((line_token-->pcount)->0 & $20 ~= 0) {
+                                    pcount++;
+                                    while ((line_token-->pcount ~= ENDIT_TOKEN) &&
+                                           ((line_token-->pcount)->0 & $10 ~= 0))
+                                        pcount++;
+                                } else {
+                                    pcount++;
+                                }
+                            } else {
+                                ! try to find another preposition word
+                                do {
+                                    l = NextWord();
+                                } until ((wn >= num_words) ||
+                                         (l && (l->#dict_par1) & 8 ~= 0));
+
+                                 if (l && (l->#dict_par1) & 8) continue;
+
+                                ! lookahead failed
+                                #Ifdef DEBUG;
+                                if (parser_trace >= 2)
+                                    print " [Look-ahead aborted: prepositions don't match]^";
+                                #endif;
+                                jump LineFailed;
+                            }
+                            l = NextWord();
+                        } until (line_ttype-->pcount ~= PREPOSITION_TT);
+
+                        ! put back the non-preposition we just read
+                        wn--;
 
                         if ((line_ttype-->pcount == ELEMENTARY_TT) && (line_tdata-->pcount == NOUN_TOKEN)) {
-
-                            ! Advance past the last preposition
-
-                            while (wn < num_words) {
-                                l=NextWord();
-                                if ( l && (l->#dict_par1) &8 ) {   ! if preposition
-                                    l = Descriptors();  ! skip past THE etc
-                                    if (l~=0) etype=l;  ! don't allow multiple objects
-                                    l = NounDomain(actors_location, actor, NOUN_TOKEN);
-                                    #Ifdef DEBUG;
-                                    if (parser_trace >= 2) {
-                                        print " [Advanced to ~noun~ token: ";
-                                        if (l == REPARSE_CODE) print "re-parse request]^";
-                                        if (l == 1) print "but multiple found]^";
-                                        if (l == 0) print "error ", etype, "]^";
-                                        if (l >= 2) print (the) l, "]^";
-                                    }
-                                    #Endif; ! DEBUG
-                                    if (l == REPARSE_CODE) jump ReParse;
-                                    if (l >= 2) advance_warning = l;
-                                }
+                            l = Descriptors();  ! skip past THE etc
+                            if (l~=0) etype=l;  ! don't allow multiple objects
+                            l = NounDomain(actors_location, actor, NOUN_TOKEN);
+                            #Ifdef DEBUG;
+                            if (parser_trace >= 2) {
+                                print " [Advanced to ~noun~ token: ";
+                                if (l == REPARSE_CODE) print "re-parse request]^";
+                                if (l == 1) print "but multiple found]^";
+                                if (l == 0) print "error ", etype, "]^";
+                                if (l >= 2) print (the) l, "]^";
                             }
+                            #Endif; ! DEBUG
+                            if (l == REPARSE_CODE) jump ReParse;
+                            if (l >= 2) advance_warning = l;
                         }
                     }
                     break;
@@ -1934,6 +1994,7 @@ Object  InformParser "(Inform Parser)"
             } ! end of if(token ~= ENDIT_TOKEN) else
         } ! end of for(pcount++)
 
+        .LineFailed;
         ! The line has failed to match.
         ! We continue the outer "for" loop, trying the next line in the grammar.
 
@@ -3390,7 +3451,7 @@ Constant SCORE__DIVISOR = 20;
     for (i=0 : i<number_matched : i++) {
         while (match_list-->i == -1) {
             if (i == number_matched-1) { number_matched--; break; }
-            for (j=i : j<number_matched : j++) {
+            for (j=i : j<number_matched-1 : j++) {
                 match_list-->j = match_list-->(j+1);
                 match_scores-->j = match_scores-->(j+1);
             }
@@ -3797,7 +3858,7 @@ Constant SCORE__DIVISOR = 20;
         #Endif; ! DEBUG
         if (parser_one == 0) parser_one = RunRoutines(thing, react_after);
       EACH_TURN_REASON:
-        if (thing.each_turn == 0 or NULL) return;
+        if (thing.&each_turn == 0) return;
         #Ifdef DEBUG;
         if (parser_trace >= 2)
               print "[Considering each_turn for ", (the) thing, "]^";
@@ -4030,6 +4091,7 @@ Constant SCORE__DIVISOR = 20;
             return k;
         }
         if (k == 0) jump NoWordsMatch;
+        wn = j;
     }
 
     ! The default algorithm is simply to count up how many words pass the
@@ -5663,6 +5725,7 @@ statuswin_current = true;
 ];
 
 [ RestoreColours;    ! L61007
+    gg_statuswin_cursize = -1;
     if (clr_on) { ! check colour has been used
         SetColour(clr_fg, clr_bg, 2); ! make sure both sets of variables are restored
         SetColour(clr_fgstatus, clr_bgstatus, 1, true);
@@ -6229,9 +6292,9 @@ Array StorageForShortName -> 160 + WORDSIZE;
     if (o provides articles) {
         artval=(o.&articles)-->(acode+short_name_case*LanguageCases);
         if (capitalise)
-            print (Cap) artval, " ";
+            print (Cap) artval;
         else
-            print (string) artval, " ";
+            print (string) artval;
         if (pluralise) return;
         print (PSN__) o; return;
     }
@@ -6302,7 +6365,9 @@ Array StorageForShortName -> 160 + WORDSIZE;
 
 [ Indefart o i;
     i = indef_mode; indef_mode = true;
-    if (o has proper) { indef_mode = NULL; print (PSN__) o; return; }
+    if (o has proper) {
+        indef_mode = NULL; print (PSN__) o; indef_mode = i; return;
+    }
     if (o provides article) {
         PrintOrRun(o, article, 1); print " ", (PSN__) o; indef_mode = i;
         return;
@@ -6312,7 +6377,9 @@ Array StorageForShortName -> 160 + WORDSIZE;
 
 [ CInDefArt o i;
     i = indef_mode; indef_mode = true;
-    if (o has proper) { indef_mode = NULL; print (PSN__) o; return; }
+    if (o has proper) {
+        indef_mode = NULL; print (PSN__) o; indef_mode = i; return;
+    }
     if (o provides article) {
         PrintCapitalised(o, article, 1); print " ", (PSN__) o; indef_mode = i;
         return;
@@ -6454,7 +6521,7 @@ Object  LibraryExtensions "(Library Extensions)"
                     rval = obj.prop(a1, a2, a3);
                     if (rval == exitval) return rval;
                 }
-            return ~exitval;
+            return ~~exitval;
         ],
         RunWhile [ prop exitval a1 a2 a3
             obj rval;
