@@ -58,7 +58,7 @@ Message "|__________________________________________________________________|";
 Class GestorTimer
   with
     condicion true,          ! Si es false, no se ejecutará el evento
-    duracion  0,             ! Número de ticks necesarios para ejecutarse
+    duracion 0,              ! Número de ticks necesarios para ejecutarse
     evento 0,                ! El evento a ejecutar
     AsignarGestor [ pos;     ! Añade este gestor a la lista de gestores
       return ControlTimer.AsignarGestor(self, pos);
@@ -84,6 +84,7 @@ Object ControlTimer
     tick 0,                               ! Duración del tick (en milisegundos)
     tick_pausado -1,                      ! Aquí se guarda el tick cuando se pausa
     tick_pospuesto -1,                    ! Tick asignado durante un evento
+    condicion true,                       ! ¿Se deben ejecutar los timers?
     contador_ticks 1,                     ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                              ! Semáforo de exclusión mutua
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
@@ -142,43 +143,45 @@ Object ControlTimer
     ! Nuestra versión de HandleGlkEvent:
     CT_HandleGlkEvent [ev context buffer i t;
       context = context;
-      self.contexto_handle_glk = true;
       switch (ev-->0) {
         1: ! evtype_Timer == 1
-          self.ReiniciarImpresion();
-          for (i = 0: i < self.#gestores / WORDSIZE: i++) {
-            t = self.&gestores-->i;
-            ! Si hay gestor y su duración es múltiplo del tick:
-            if (t ~= 0 && self.contador_ticks % t.duracion == 0) {
-              ! Si no hay mutex o lo tiene asignado el gestor t:
-              if (self.mutex == 0 or t) {
-                ! Si la condición se cumple:
-                if (VR(t.condicion)) {
-                  ! Si el evento retorna true:
-                  if (t.evento ~= 0 && t.evento()) {
-                    break;
-                  }
-                }
-              }
-            }
-          }
-          ! Contador cíclico entre 1 y duracion_maxima:
-          if (self.contador_ticks >= self.duracion_maxima) {
-            self.contador_ticks = 1;
-          } else {
-            self.contador_ticks++;
-          }
-          self.contexto_handle_glk = false;
-          if (self.tick_pospuesto ~= -1) {
-            self.ActivarTick(self.tick_pospuesto);
-            self.tick_pospuesto = -1;
-          }
-          ! Si se ha imprimido algo en algún gestor, restauramos:
-          if (self.ha_imprimido_algo) {
-            return self.RestaurarLineaOrdenes(buffer);
-          } else {
-            return 1;
-          }
+           self.contexto_handle_glk = true;
+           if (self.condicion) {  ! Ver PausarTimers() y ReanudarTimers()
+             self.ReiniciarImpresion();
+             for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+               t = self.&gestores-->i;
+               ! Si hay gestor y su duración es múltiplo del tick:
+               if (t ~= 0 && self.contador_ticks % t.duracion == 0) {
+                 ! Si no hay mutex o lo tiene asignado el gestor t:
+                 if (self.mutex == 0 or t) {
+                   ! Si la condición del gestor se cumple:
+                   if (VR(t.condicion)) {
+                     ! Si el evento retorna true:
+                     if (t.evento ~= 0 && t.evento()) {
+                       break;
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           ! Contador cíclico entre 1 y duracion_maxima:
+           if (self.contador_ticks >= self.duracion_maxima) {
+             self.contador_ticks = 1;
+           } else {
+             self.contador_ticks++;
+           }
+           self.contexto_handle_glk = false;
+           if (self.tick_pospuesto ~= -1) {
+             self.ActivarTick(self.tick_pospuesto);
+             self.tick_pospuesto = -1;
+           }
+           ! Si se ha imprimido algo en algún gestor, restauramos:
+           if (self.ha_imprimido_algo) {
+             return self.RestaurarLineaOrdenes(buffer);
+           } else {
+             return 1;
+           }
       }
     ],
     BuscarPosicion [ g i pos;             ! Da la posición de un gestor en el array
@@ -265,19 +268,25 @@ Object ControlTimer
         glk($00D6, t);                    ! glk_request_timer_events
       }
     ],
-    PausarTick [;                         ! Detiene el timer temporalmente
+    PausarTick [;                         ! Detiene el tick temporalmente
       self.tick_pausado = self.tick;
       self.DesactivarTick();
     ],
-    ReanudarTick [;                       ! Reanuda el timer detenido
+    ReanudarTick [;                       ! Reanuda el tick detenido
       self.ActivarTick(self.tick_pausado);
       self.tick_pausado = 0;
     ],
-    DesactivarTick [;                     ! Desactiva el timer
+    PausarTimers [;                       ! Detiene los timers pero el tiempo sigue corriendo
+      self.condicion = false;
+    ],
+    ReanudarTimers [;                     ! Reanuda los timers
+      self.condicion = true;
+    ],
+    DesactivarTick [;                     ! Desactiva el tick
       self.AsignarTick(0);
       self.ActivarTick();
     ],
-    ReactivarTick [ t;                    ! Reactiva el timer (útil en algunos casos)
+    ReactivarTick [ t;                    ! Reactiva el tick (útil en algunos casos)
       t = self.tick;
       glk($00D6, t);                      ! glk_request_timer_events
     ],
