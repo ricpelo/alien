@@ -3353,13 +3353,13 @@ Constant SCORE__DIVISOR = 20;
 
     if (multi_context == MULTI_TOKEN && action_to_be == ##Take) {
         for (i=1,low=0 : i<=multiple_object-->0 : i++)
-            if (ScopeTest(multiple_object-->i, actor)) low++;
+            if (ScopeCeiling(multiple_object-->i)==ScopeCeiling(actor)) low++;
         #Ifdef DEBUG;
         if (parser_trace >= 4) print "   Token 2 plural case: number with actor ", low, "^";
         #Endif; ! DEBUG
         if (take_all_rule == 2 || low > 0) {
             for (i=1,low=0 : i<=multiple_object-->0 : i++) {
-                if (ScopeTest(multiple_object-->i, actor)) {
+                if (ScopeCeiling(multiple_object-->i) == ScopeCeiling(actor)) {
                     low++;
                     multiple_object-->low = multiple_object-->i;
                 }
