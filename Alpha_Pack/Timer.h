@@ -80,12 +80,17 @@ Object ControlTimer
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
     contexto_handle_glk false,            ! Estamos en un evento
     longitud 0,                           ! Longitud del buffer a restaurar
-    RestaurarLineaOrdenes [ buffer;       ! Restaura la línea de órdenes
+    RestaurarLineaOrdenes [ buffer        ! Restaura la línea de órdenes
+      tick_anterior;
       if (deadflag ~= 0) {
+        tick_anterior = self.tick;
         self.DesactivarTick();
         ! Todo el cuerpo del 'if' está copiado de la librería:
         if (deadflag ~= 2) AfterLife();
-        if (deadflag == 0) return 1;
+        if (deadflag == 0) {
+          self.ActivarTick(tick_anterior);
+          return 1;
+        }
         print "^^    ";
         #Ifdef TARGET_ZCODE;
         #IfV5; style bold; #Endif; ! V5
@@ -309,8 +314,8 @@ Object ControlTimer
       self.condicion = true;
     ],
     DesactivarTick [;                     ! Desactiva el tick
-      self.AsignarTick(0);
-      self.ActivarTick();
+      self.tick = 0;
+      glk($00D6, 0);
     ],
     ReactivarTick [ t;                    ! Reactiva el tick (útil en algunos casos)
       t = self.tick;
@@ -322,7 +327,7 @@ Object ControlTimer
     DesactivarMutex [;                    ! Desactiva el mutex si lo hubiera
       self.mutex = 0;
     ],
-    Restart [ i;                        ! Pone todas las propiedades a sus valores por defecto
+    Reiniciar [ i;                        ! Pone todas las propiedades a sus valores por defecto
       self.DesactivarTick();
       self.tick = 0;
       self.tick_pausado = -1;
