@@ -144,9 +144,6 @@ Global dibujarEstado = false;
 ! La imagen que representa la oscuridad:
 Global SGW_IMAGEN_OSCURIDAD = Oscuridad_jpg;
 
-! Usado en VerboDesconocido:
-Global objetoVerboDesconocido = 0;
-
 
 
 ! ====================================================================
@@ -416,59 +413,7 @@ Include "VerbLib";
 ];
 
 
-! Cambiar el comentario si se desean mensajes en primera persona
-! La librería Mensajes normal se incluye automáticamente.
-! Include "Mensajes";
-! Include "Msg1P";
-
-! Esto es para poder usar las palabras 'abrir', 'cerrar',... como temas de conversación,
-! y, al mismo tiempo, poder usarlas como infinitivos de verbos. Además, permite usar
-! simplemente el nombre de un objeto como sinónimo de 'examinar objeto' (copiado de
-! Transilvania Corruption, de Alien Soft, y mejorado por mí):
-[ UnknownVerb x obj;
-  ! Atención: ahora que copio y pego las líneas de gramática de los siguientes verbos
-  ! en infinitivo, CREO que ya no hace falta los siguientes 'if', pero los dejo por
-  ! si acaso:
-  if (x == 'abrir')    return 'abre';
-  if (x == 'cerrar')   return 'cierra';
-  if (x == 'cortar')   return 'corta';
-  if (x == 'sacar')    return 'saca';
-  if (x == 'cargar')   return 'carga';
-  if (x == 'recargar') return 'recarga';
-  if (x == 'salir')    return 'sal';
-  if (x == 'arreglar') return 'arregla';
-  if (x == 'reparar')  return 'repara';
-
-  objectloop (obj ofclass Object && TestScope(obj)) {
-    if (obj ofclass DecoradoAmpliado && obj.interpretar_nombre(x)) {
-      return 'examinar.falso';
-    } else if (obj ~= player) {
-      if (WordInProperty(x, obj, name) ||
-          WordInProperty(x, obj, name_m) ||
-          WordInProperty(x, obj, name_f) ||
-          WordInProperty(x, obj, name_mp) ||
-          WordInProperty(x, obj, name_fp)) {
-        objetoVerboDesconocido = obj;
-        return 'examinar.falso';
-      }
-    }
-  }
-  rfalse;
-];
-
-
-Verb 'examinar.falso'
-   *                   -> ExaminarFalso;
-
-
-[ ExaminarFalsoSub;
-  noun = objetoVerboDesconocido;
-  PronounNotice(noun);
-  <<Examine noun>>;
-];
-
-
-
+Include "ExaminarFalso";
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
 Include "barra";          ! Para cambiar la barra de estado
 
@@ -608,43 +553,12 @@ Include "PnjPuertas_NG";  ! La librería PnjPuertas retocada por mí (muy poco)
 Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
-Include "Decorado";       ! Objetos de decorado
+Include "Decorado_NG";    ! Objetos de decorado
 Include "Teletipo";       ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
 Include "Timer";          ! Mi librería de eventos temporizados
 Include "IntNombre";      ! Poder usar adjetivos como en InformATE
 
-
-class DecoradoAmpliado
-  class Decorado
-  with
-    interpretar_nombre [ x i n;
-      n = (self.#describe) / (3 * WORDSIZE);
-      for (i = 0: i < n: i++) {
-        if ((self.&describe)-->(i * 3) == x) {
-          self.description = VR((self.&describe)-->(i * 3 + 1));
-          self.gender = (self.&describe)-->(i * 3 + 2);
-          self.number = x;
-          objetoVerboDesconocido = self;
-          rtrue;
-        }
-      }
-    ],
-    before [;
-      ! Esto hay que ponerlo, o no se podrá examinar nada:
-      Examine:
-        rfalse;
-
-      Take: "No puedes hacerlo, ya que está", (n) self, " fij", (o) self,
-             " en su sitio.";
-      Push: print_ret (The) self,
-               " no parece que pueda", (n) self, " ser empujad", (o) self, ".";
-      Smell: "No parece que huela", (n) self, " a nada especial.";
-      Listen: "No produce", (n) self, " ningún sonido.";
-      Search: "No hay nada que buscar en eso.";
-      Touch: "No notas nada especial al tacto.";
-      default: "No hay ninguna razón para hacer eso.";
-  ];
 
 
 class EscenarioAbrible
@@ -943,7 +857,7 @@ Object nave1 "Interior de la nave"
 
 
 Object decorado_nave1 nave1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_instrumentos "Los paneles de instrumentación están llenos de indicadores y
                        botones por todas partes. En un lateral también se aprecia
@@ -1305,7 +1219,7 @@ Object traje_jason "traje de Jason" compartimento_trajes
 ! El decorado de los trajes:
 
 Object decorado_traje
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_guantes "Sujetos firmemente al resto del traje, son flexibles y muy cómodos.",
     desc_botas "Recias y fuertes, para su uso en cualquier entorno.",
@@ -1363,7 +1277,7 @@ Object traje_inutil "restos del traje de Jason"
     
 
 Object decorado_traje_inutil
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_guantes "Los guantes han perdido su estanqueidad con el resto del traje.",
     desc_botas "Las botas están llenas de barro y de la misma sustancia pegajosa que
@@ -1401,7 +1315,7 @@ Object nave2 "Parte posterior de la nave"
 
 
 Object decorado_nave2 nave2
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes en esta zona de la nave resultan más austeras y frías.",
     before [;
@@ -1621,7 +1535,7 @@ Object exterior1 "Junto a la nave"
 
 
 Object decorado_exterior1 exterior1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_niebla "Es un efecto provocado por la intensa lluvia, que te impide ver con
                  claridad los límites exteriores de la colonia.",
@@ -1708,7 +1622,7 @@ Object junto_procesador "Junto al procesador atmosférico"
 
 
 Object decorado_junto_procesador junto_procesador
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "La lluvia y otros fenómenos atmosféricos han hecho mella en la otrora
                   lisa y pulida superficie de la pared del complejo.",
@@ -2051,7 +1965,7 @@ Object unidad_central "unidad central" procesador
 
 
 Object decorado_procesador procesador
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_cables "Los cables entran y salen por decenas de la unidad central.",
     desc_tubos "Metros y metros de tubos lisos y estriados serpentean por la sala y hacia
@@ -2206,7 +2120,7 @@ Object exterior3 "Exterior de la colonia"
 
 
 Object decorado_exterior3 exterior3
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_lodo "Una superficie de polvo y arena forma el barro que se acumula en las
                suelas de tus botas. Y sobre dicha superficie, montones de tuercas y
@@ -2277,7 +2191,7 @@ Object junto_puerta "Junto a la entrada de acceso al complejo"
 
 
 Object decorado_junto_puerta junto_puerta
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_edificio "Desde aquí te parece enorme, frío y estéril. Nadie diría que es una
                    estructura diseñada para albergar vida.",
@@ -2385,7 +2299,7 @@ class Laberinto
 
 
 Object decorado_laberinto
-  class DecoradoAmpliado
+  class Decorado
   with
     found_in [;
       return LugarReal() ofclass Laberinto;
@@ -2454,7 +2368,7 @@ class Balcon
 
 
 Object decorado_balcon
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_mineral "El Vibrantium es un mineral muy valioso y escaso. Esta veta es
                   particularmente rica; no hay más que ver el brillo tan puro que emite.",
@@ -2694,7 +2608,7 @@ Object oficina "Oficina"
 
 
 Object decorado_oficina oficina
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_cuadros [;
       print "Se ve que al responsable le encantaba la antigua práctica, habitual en los
@@ -2917,7 +2831,7 @@ Object enfermeria "Enfermería"
 
 
 Object decorado_enfermeria enfermeria
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_armarios "Los armarios tienen puertas en su parte superior y cajones en la
                    inferior, y están salpicados de sangre.",
@@ -3085,7 +2999,7 @@ Object laboratorio "Laboratorio"
 
 
 Object decorado_laboratorio laboratorio
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_tubos "La mayor variedad de probetas y tubos de ensayo que hayas visto nunca
                 en una misma sala. No queda ninguno en pie... Todos están rodando por
@@ -3391,7 +3305,7 @@ Object despensa "Despensa"
 
 
 Object decorado_despensa despensa
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_frigorifico "Los alimentos se congelan en esa especie de gigantesco armario
                       frigorífico. Está cerrado, y no parece abrirse.",
@@ -3474,7 +3388,7 @@ Object comedor1 "Comedor"
 
 
 Object decorado_comedor comedor1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_mesas "Las mesas se alinean ordenadamente, fijas como están al suelo y, salvo una,
                 todas se encuentran bastante limpias.",
@@ -3523,7 +3437,7 @@ Object cocina "Cocina"
 
 
 Object decorado_cocina cocina
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_barras "Es una superficie rectangular, lisa y alargada, que tiene como finalidad
                  la de servir de soporte a las bandejas de comida. Se pierde por el
@@ -3779,7 +3693,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
 
 
 Object decorado_pasillo emergencia_pasillo
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes están absolutamente desnudas, salvo por unas flechas
                   dibujadas sobre un diseño rayado y una letra ~E~ tan alta como la
@@ -4101,7 +4015,7 @@ Object aula "Aula"
 
 
 Object decorado_aula aula
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_patas "Son, sencillamente, las patas que sujetan la mesa del docente.",
     describe
@@ -4298,7 +4212,7 @@ Object seguridad "Sala de seguridad"
 
 
 Object decorado_seguridad seguridad
-  class DecoradoAmpliado
+  class Decorado
   with
     visto_en_seguridad,
     desc_cables [;
@@ -4804,7 +4718,7 @@ Object ventilacion1
 
 
 Object decorado_ventilacion1 ventilacion1
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_ventiladores [;
       print "Pequeños pero potentes ingenios que giran veloces absorbiendo aire
@@ -4932,7 +4846,7 @@ Object abrazacaras "araña" hueco_techo
 
 
 Object decorado_hueco hueco_techo
-  class DecoradoAmpliado
+  class Decorado
   with
     desc_paredes "Las paredes están prácticamente cubiertas por esa sustancia viscosa tan
                   desagradable.",

@@ -45,7 +45,7 @@
 !  referenciado, y asi se lo notificara al parser, actualizando ademas
 !   los siguientes campos del objeto decorado_celda:
 !
-!   cantidad  -> Toma el valor de la palabra usada por el jugador
+!   palabra -> Toma el valor de la palabra usada por el jugador
 !               ('pared')
 !   descripcion -> Toma el valor de la cadena que sigue a 'pared', en
 !              la propiedad describir es decir "Paredes lugubres y
@@ -78,10 +78,10 @@
 !  Deja las paredes en paz, no son mas que decorado.
 !
 !  Incluso, si quisieras particularizar para un objeto concreto,
-!  podrias examinar la propiedad cantidad, que te dira que palabra ha
+!  podrias examinar la propiedad palabra, que te dira que palabra ha
 !  usado el jugador. Por ejemplo:
 !
-!  Empujar: if (self.cantidad=='techo') "No llegas.",
+!  Empujar: if (self.palabra=='techo') "No llegas.",
 !           "Deja ", (el) self, " en paz.";
 !
 !
@@ -93,8 +93,8 @@
 !  Puede evitarse redefiniendo habilmente la rutina nombre_corto en el
 !  objeto derivado de la clase, y cambiandolo por algo como:
 !
-!     if (self.cantidad=='instalacion') print "instalacion";
-!     else print (address) self.cantidad;
+!     if (self.palabra=='instalacion') print "instalacion";
+!     else print (address) self.palabra;
 !     rtrue;
 !
 !  Pero evidentemente habria que particularizarlo para cada caso.
@@ -108,22 +108,18 @@ Constant TARGET_ZCODE;
 
 System_file;
 
-Message "Incluyendo módulo de objetos de decorados, por Zak";
+Message "Incluyendo Decorado_NG, por Zak y Sothoth";
 
 !
 ! Rutina que ejecuta rutinas si las encuentra
 !
-Ifndef VR;
+#ifndef VR;
 [ VR valor;
-
-!print "[VR: ", valor, " --> ", ZRegion( valor ), " ]^";
-
- if ( ZRegion( valor ) == 2 )
-  return valor();
- else
-  return valor;
+! print "[VR: ", valor, " --> ", ZRegion(valor), " ]^";
+  if (ZRegion(valor) == 2) return valor();
+  else                     return valor;
 ];
-EndIf;
+#endif;
 
 !
 ! CLASE DECORADO
@@ -152,16 +148,48 @@ EndIf;
 !
 class Decorado
   with
-    description 0,
-    number 0,
-    describe 0,
-    gender 0,
-    sinonimos 0,
+    description 0,  ! La descripción del objeto
+    palabra_real 0, ! La palabra exacta que ha usado el jugador
+    gender 0,       ! El género del objeto
+    describe 0,     ! El array de descripciones
+    sinonimos 0,    ! El array de sinónimos
+    palabra 0,      ! Si es un sinónimo, la palabra correspondiente en 'describir'.
+                    ! Si no lo es, vale lo mismo que 'palabra_real'
     short_name [;
-      print (address) self.number;
+      print (address) self.palabra;
       rtrue;
     ],
-    parse_name [ i n w c r f m j p;
+    buscar_nombre [ x i j;   ! Se usa en ExaminarFalso
+      for (i = 0: i < (self.#describe) / (3 * WORDSIZE): i++) {
+        if ((self.&describe)-->(i * 3) == x) {
+          self.description = VR((self.&describe)-->(i * 3 + 1));
+          self.gender = (self.&describe)-->(i * 3 + 2);
+          self.palabra = x;
+          self.palabra_real = x;
+          PronounNotice(self);
+          rtrue;
+        }
+      }
+      if (self.sinonimos == 0) return false;
+      for (j = 0: j < (self.#sinonimos) / (3 * WORDSIZE): j++) {
+        if ((self.&sinonimos)-->(j * 3) == x) {
+          for (i = 0: i < n: i++) {
+            if ((self.&describe)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
+              self.description = VR((self.&describe)-->(i * 3 + 1));
+              self.palabra = (self.&describe)-->(i * 3);
+              self.palabra_real = (self.&sinonimos)-->(j * 3);
+              self.gender = (self.&sinonimos)-->(j * 3 + 2);
+              if (self.gender == -1) {
+                self.gender = (self.&describe)-->(i * 3 + 2);
+              }
+              PronounNotice(self);
+              rtrue;
+            }
+          }
+        }
+      }
+    ],
+    parse_name [ i n w c r f j p;
       self.description = 0;
       n = (self.#describe) / (3 * WORDSIZE);
 
@@ -173,12 +201,10 @@ class Decorado
 
       while (true) {
         w = NextWordStopped(); if (w == -1) return c;
-
         if (w == 'de' or 'del') {
           w = NextWordStopped(); if (w == -1) return c;
           r++;
         }
-
         if (w == 'el' or 'la' or 'los' or 'las') {
           w = NextWordStopped(); if (w == -1) return c;
           r++;
@@ -198,8 +224,10 @@ class Decorado
             f = true;
             if (self.description == 0) {
               self.description = VR((self.&describe)-->(i * 3 + 1));
-              self.number = w;
+              self.palabra = w;
+              self.palabra_real = w;
               self.gender = (self.&describe)-->(i * 3 + 2);
+              PronounNotice(self);
             }
             c++;
             if (r > 0) {
@@ -210,12 +238,11 @@ class Decorado
         }
 
         if ((~~f) && self.sinonimos ~= 0) {
-          m = (self.#sinonimos) / (3 * WORDSIZE);
-          for (j = 0 : j < m : j++) {
+          for (j = 0: j < (self.#sinonimos) / (3 * WORDSIZE): j++) {
 .synonymContinue;
             if ((self.&sinonimos)-->(j * 3) == w) {
               f = false;
-              for (i = 0 : i < n : i++) {
+              for (i = 0: i < n: i++) {
                 if ((self.&describe)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
                   if (p == NULL) {
                     p = (self.&describe)-->(i * 3);
@@ -227,7 +254,8 @@ class Decorado
                   }
                   if (self.description == 0) {
                     self.description = VR((self.&describe)-->(i * 3 + 1));
-                    self.number = (self.&describe)-->(i * 3);
+                    self.palabra = (self.&describe)-->(i * 3);
+                    self.palabra_real = (self.&sinonimos)-->(j * 3);
                     self.gender = (self.&sinonimos)-->(j * 3 + 2);
                     if (self.gender == -1) {
                       self.gender = (self.&describe)-->(i * 3 + 2);
@@ -245,6 +273,7 @@ class Decorado
                 }
                 break;
               } else {
+                PronounNotice(self);
                 return c;
               }
             }
@@ -254,7 +283,15 @@ class Decorado
     ],
     before [;
       Examine: rfalse;
-      default: "Déjalo, sólo es decorado.";
+      Take:    "No puedes hacerlo, ya que está", (n) self, " fij", (o) self,
+               " en su sitio.";
+      Push:    print_ret (The) self, " no parece que pueda", (n) self,
+               " ser empujad", (o) self, ".";
+      Smell:   "No parece que huela", (n) self, " a nada especial.";
+      Listen:  "No produce", (n) self, " ningún sonido.";
+      Search:  "No hay nada que buscar en eso.";
+      Touch:   "No notas nada especial al tacto.";
+      default: "No hay ninguna razón para hacer eso.";
     ],
   has
     scenery concealed;

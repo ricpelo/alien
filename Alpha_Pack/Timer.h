@@ -19,6 +19,7 @@
 
 
 Message " __________________________________________________________________";
+Message "|                                                                  |";
 Message "|                  * TIMER:  I M P O R T A N T E *                 |";
 Message "|                  ===============================                 |";
 Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;'  |";
