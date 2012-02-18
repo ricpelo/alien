@@ -18,43 +18,46 @@
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-System_file;
-
-
-#ifdef HandleGlkEvent;
-  Message "[TIMER: Usando rutina HandleGlkEvent() proporcionada por el juego]";
-  Message "[TIMER: -> IMPORTANTISIMO: NO OLVIDES LLAMAR EN ESA RUTINA A...]";
-  Message "[TIMER: -> < ControlTimer.HandleGlk(ev, context, buffer) > ]";
-#endif; ! HandleGlkEvent
+Message " __________________________________________________________________";
+Message "|                  * TIMER:  I M P O R T A N T E *                 |";
+Message "|                  ===============================                 |";
+Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;'  |";
+Message "| 2. Si usas tu propia rutina HandleGlkEvent(),                    |";
+Message "|    no olvides llamar desde esa rutina a:                         |";
+Message "|    ControlTimer.CT_HandleGlkEvent(ev, context, buffer)           |";
+Message "|__________________________________________________________________|";
 
 
 ! Nuestra particular versión de HandleGlkEvent:
 [ HandleGlkEvent ev context buffer;
-  ControlTimer.HandleGlk(ev, context, buffer);
+  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
+];
+
+! Nuestra particular versión de KeyDelay:
+[ KeyDelay delay;
+  return ControlTimer.CT_KeyDelay(delay);
 ];
 
 
-! Nuestra particular versión de EsperarTecla:
-[ EsperarTecla s delay;
-  return ControlTimer.CTEsperarTecla(s, delay);
-];
+! Nuestra particular versión de WaitDelay:
+![ WaitDelay delay;
+!  return ControlTimer.CT_WaitDelay(delay);
+!];
 
 
 #ifndef VR;
-  [ VR valor;
-    if (ZRegion(valor) == 2)
-      return valor();
-    else
-      return valor;
-  ];
+[ VR valor;
+  if (ZRegion(valor) == 2) return valor();
+  else                     return valor;
+];
 #endif;
 
 
 class GestorTimer
   with
     condicion true,          ! Si es false, no se ejecutará el evento
-    duracion  0,             ! Número de ticks necesarios para ejecutarse
-    evento [; rfalse; ],     ! El evento a ejecutar
+    duracion 0,              ! Número de ticks necesarios para ejecutarse
+    evento 0,                ! El evento a ejecutar
     AsignarGestor [ pos;     ! Añade este gestor a la lista de gestores
       return ControlTimer.AsignarGestor(self, pos);
     ],
@@ -79,6 +82,7 @@ Object ControlTimer
     tick 0,                               ! Duración del tick (en milisegundos)
     tick_pausado -1,                      ! Aquí se guarda el tick cuando se pausa
     tick_pospuesto -1,                    ! Tick asignado durante un evento
+    condicion true,                       ! ¿Se deben ejecutar los timers?
     contador_ticks 1,                     ! El contador de ticks (va de 1 a duracion_maxima en ciclo)
     mutex 0,                              ! Semáforo de exclusión mutua
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
@@ -106,62 +110,82 @@ Object ControlTimer
       self.duracion_maxima = max;
     ],
   with
-    CTEsperarTecla [ s delay;             ! Nuestra propia versión de EsperarTecla
-      if (s) print (string) s;
-      glk($00D6, delay * 5);              ! glk_request_timer_events
-      glk($00D2, gg_mainwin);             ! glk_request_char_event(gg_mainwin);
+    ! Nuestra propia versión de WaitDelay:
+    CT_WaitDelay [ delay;
+      glk($00D6, delay * 5) ;             ! request_timer_events
       while (1) {
         glk($00C0, gg_arguments);         ! glk_select(gg_arguments);
-        if ((gg_arguments-->0) == 2)      ! 2 = evType_CharInput
-          break;
         if ((gg_arguments-->0) == 1) {
-          glk($00D3, gg_mainwin);         ! glk_cancel_char_event
           glk($00D6, self.tick);
-          return 0;
+          break;
         }
       }
-      glk($00D6, self.tick);
-      return gg_arguments-->2;
     ],
-    HandleGlk [ev context buffer i t;     ! Nuestra versión de HandleGlkEvent
+    ! Nuestra propia versión de KeyDelay:
+    CT_KeyDelay [ delay
+      key done ix;
+      glk($00D2, gg_mainwin); ! request_char_event
+      glk($00D6, delay * 5);  ! request_timer_events
+      while (~~done) {
+        glk($00C0, gg_event); ! select
+        ix = HandleGlkEvent(gg_event, 1, gg_arguments);
+        if (ix == 2) {
+          key = gg_arguments-->0;
+          done = true;
+        }
+        else if (ix >= 0 && gg_event-->0 == 1 or 2) {
+          key = gg_event-->2;
+          done = true;
+        }
+      }
+      glk($00D3, gg_mainwin); ! cancel_char_event
+      glk($00D6, self.tick);  ! request_timer_events
+      return key;
+    ],
+    ! Nuestra versión de HandleGlkEvent:
+    CT_HandleGlkEvent [ev context buffer
+      i t;
       context = context;
-      self.contexto_handle_glk = true;
       switch (ev-->0) {
         1: ! evtype_Timer == 1
-          self.ReiniciarImpresion();
-          for (i = 0: i < self.#gestores / WORDSIZE: i++) {
-            t = self.&gestores-->i;
-            ! Si hay gestor y su duración es múltiplo del tick:
-            if (t ~= 0 && self.contador_ticks % t.duracion == 0) {
-              ! Si no hay mutex o lo tiene asignado el gestor t:
-              if (self.mutex == 0 or t) {
-                ! Si la condición se cumple:
-                if (VR(t.condicion)) {
-                  ! Si el evento retorna true:
-                  if (t.evento()) {
-                    break;
-                  }
-                }
-              }
-            }
-          }
-          ! Contador cíclico entre 1 y duracion_maxima:
-          if (self.contador_ticks >= self.duracion_maxima) {
-            self.contador_ticks = 1;
-          } else {
-            self.contador_ticks++;
-          }
-          self.contexto_handle_glk = false;
-          if (self.tick_pospuesto ~= -1) {
-            self.ActivarTick(self.tick_pospuesto);
-            self.tick_pospuesto = -1;
-          }
-          ! Si se ha imprimido algo en algún gestor, restauramos:
-          if (self.ha_imprimido_algo) {
-            return self.RestaurarLineaOrdenes(buffer);
-          } else {
-            return 1;
-          }
+           if (context == 1) return 1;  ! character input request
+           self.contexto_handle_glk = true;
+           if (self.condicion) {  ! Ver PausarTimers() y ReanudarTimers()
+             self.ReiniciarImpresion();
+             for (i = 0: i < self.#gestores / WORDSIZE: i++) {
+               t = self.&gestores-->i;
+               ! Si hay gestor y su duración es múltiplo del tick:
+               if (t ~= 0 && self.contador_ticks % t.duracion == 0) {
+                 ! Si no hay mutex o lo tiene asignado el gestor t:
+                 if (self.mutex == 0 or t) {
+                   ! Si la condición del gestor se cumple:
+                   if (VR(t.condicion)) {
+                     ! Si el evento retorna true:
+                     if (t.evento ~= 0 && t.evento()) {
+                       break;
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           ! Contador cíclico entre 1 y duracion_maxima:
+           if (self.contador_ticks >= self.duracion_maxima) {
+             self.contador_ticks = 1;
+           } else {
+             self.contador_ticks++;
+           }
+           self.contexto_handle_glk = false;
+           if (self.tick_pospuesto ~= -1) {
+             self.ActivarTick(self.tick_pospuesto);
+             self.tick_pospuesto = -1;
+           }
+           ! Si se ha imprimido algo en algún gestor, restauramos:
+           if (self.ha_imprimido_algo) {
+             return self.RestaurarLineaOrdenes(buffer);
+           } else {
+             return 1;
+           }
       }
     ],
     BuscarPosicion [ g i pos;             ! Da la posición de un gestor en el array
@@ -248,22 +272,27 @@ Object ControlTimer
         glk($00D6, t);                    ! glk_request_timer_events
       }
     ],
-    PausarTick [;                         ! Detiene el timer temporalmente
+    PausarTick [;                         ! Detiene el tick temporalmente
       self.tick_pausado = self.tick;
       self.DesactivarTick();
     ],
-    ReanudarTick [;                       ! Reanuda el timer detenido
+    ReanudarTick [;                       ! Reanuda el tick detenido
       self.ActivarTick(self.tick_pausado);
       self.tick_pausado = 0;
     ],
-    DesactivarTick [;                     ! Desactiva el timer
+    PausarTimers [;                       ! Detiene los timers pero el tiempo sigue corriendo
+      self.condicion = false;
+    ],
+    ReanudarTimers [;                     ! Reanuda los timers
+      self.condicion = true;
+    ],
+    DesactivarTick [;                     ! Desactiva el tick
       self.AsignarTick(0);
       self.ActivarTick();
     ],
-    ReactivarTick [ t;                    ! Reactiva el timer (útil en algunos casos)
+    ReactivarTick [ t;                    ! Reactiva el tick (útil en algunos casos)
       t = self.tick;
-      self.DesactivarTick();
-      self.ActivarTick(t);
+      glk($00D6, t);                      ! glk_request_timer_events
     ],
     ActivarMutex [ g;                     ! Activa el mutex sobre un gestor
       self.mutex = g;
@@ -271,7 +300,7 @@ Object ControlTimer
     DesactivarMutex [;                    ! Desactiva el mutex si lo hubiera
       self.mutex = 0;
     ],
-    Reiniciar [ i;                        ! Pone todas las propiedades a sus valores por defecto
+    Restart [ i;                        ! Pone todas las propiedades a sus valores por defecto
       self.DesactivarTick();
       self.tick = 0;
       self.tick_pausado = -1;

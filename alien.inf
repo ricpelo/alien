@@ -190,6 +190,7 @@ Replace QuitarAcentos;
 
 
 
+Replace KeyDelay;
 Include "Parser";
 
 Replace InitGlkWindow;
@@ -201,24 +202,24 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
 
 [ Amusing;
   print "- La aventura está basada en una idea original de Manolo (nuestro grafista).^^";
-  EsperarTecla();
+  KeyDelay();
   print "- La primera versión de A·L·I·E·N fue desarrollada hace más de quince años.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Esa primera versión la escribió Manolo en Spectrum usando el PAWS original^";
   print "  comprado a AD.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Inicialmente, esta aventura iba a ser un remake de ese ~clásico~, pero durante^";
   print "  el proceso decidimos ampliar bastante más la historia.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Hay una segunda parte de la versión original en Spectrum perdida en una casette^";
   print "  olvidada dentro de alguna caja extraviada en casa de Manolo.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- El ~laberinto~ inicial estaba formado sólo por cinco localidades, para después^";
   print "  pasar a tener más de 70, y finalmente acabar teniendo alrededor de 30.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Esta Edición Especial es una versión muy, muy mejorada de la versión original^";
   print "  que se publicó en 2008.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- La versión original de A·L·I·E·N publicada en 2008 recibió los siguientes^";
   print "  galardones:^^";
   print "  * La Comp Más Monstruosa (2008):^";
@@ -230,14 +231,14 @@ Include "alien.bli";     ! Los recursos gráficos de la aventura
   print "      veces en la misma categoría)^";
   print "    - Premiada en las siguientes categorías: Interactividad, Jugabilidad,^";
   print "      Mejores PSIs y Mejor PSI (por Jason)^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Todos las imágenes del juego son dibujos originales de Manolo, diseñados para^";
   print "  la ocasión.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- ¿Has visto ya el documento ~", (s_b) "Holocubo.pdf", "~ usando la contraseña
            apropiada?^";
   print "  Contiene información muy interesante sobre el xenoforme.^^";
-  EsperarTecla();
+  KeyDelay();
   print "- Si te estás preguntado para qué sirve la palanca... Efectivamente: no sirve^";
   print "  para nada en absoluto.^^";
 ];
@@ -608,7 +609,7 @@ Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
 Include "Decorado";       ! Objetos de decorado
-Include "Escr_NG";        ! Teletipo para sacar mensajes letra a letra
+Include "Teletipo";       ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
 Include "Timer";          ! Mi librería de eventos temporizados
 Include "IntNombre";      ! Poder usar adjetivos como en InformATE
@@ -863,7 +864,7 @@ Object nave1 "Interior de la nave"
                  acabais de pasar, se observan chorros de aire y vapor saliendo de todas
                  los rincones del cubículo y, tras varios segundos, la compuerta exterior
                  se abre, dejando vía libre para que podáis salir de la nave.^";
-          EsperarTecla();
+          KeyDelay();
           "^Lentamente vais bajando por la rampa de acceso. La lluvia impregna vuestros
            trajes, y vuestros pies tocan finalmente el barro de la superficie." ;
         } else {
@@ -874,7 +875,7 @@ Object nave1 "Interior de la nave"
                  acabas de pasar, se observan chorros de aire y vapor saliendo de todas
                  los rincones del cubículo y, tras varios segundos, la compuerta exterior
                  se abre, dejando vía libre para que puedas salir de la nave.^";
-          EsperarTecla();
+          KeyDelay();
           "^Lentamente vas bajando por la rampa de acceso. La lluvia impregna tu
            traje, y tus pies tocan finalmente el barro de la superficie." ;
         }
@@ -927,7 +928,7 @@ Object nave1 "Interior de la nave"
           t = true;
           ApagarGraficosSub(true);
         }
-        EsperarTecla();
+        KeyDelay();
         clearMainWindow();
         tt_final.visualiza();
         Damusix.TocarV(Grito_Jason_ogg);
@@ -1660,7 +1661,7 @@ Object junto_procesador "Junto al procesador atmosférico"
             HablaJason("Y tome su linterna. Está muy oscuro ahí dentro.");
           }
           viewImageCenter(self.sgw_img); ! Por si acaso coincide con un trueno
-          EsperarTecla();
+          KeyDelay();
         }
     ],
     antesPNJ [;
@@ -1818,8 +1819,7 @@ Object panel_control "panel de control" junto_procesador
                batería. ";
         if (puerta_procesador hasnt open) {
           print "En el display puedes leer ~";
-          tt_computadora.escribe(0, "Semilla: 9957. ¿Código?");
-          tt_computadora.visualiza();
+          tt_computadora.visualiza("Semilla: 9957. ¿Código?");
           print "~.";
         }
       } else {
@@ -1863,8 +1863,7 @@ Object panel_control "panel de control" junto_procesador
           give self ~general;
           bateria.energia = 0;
           print "El display dice: ~";
-          tt_computadora.escribe(0, "Código correcto. Acceso permitido.");
-          tt_computadora.visualiza();
+          tt_computadora.visualiza("Código correcto. Acceso permitido.");
           Damusix.TocarV(Chispazo_ogg, 100);
           "~^^La puerta se abre y, a continuación, una enorme chispa salta de los bornes de
           conexión de la batería. Finalmente, el panel de control se apaga por falta de
@@ -1875,8 +1874,7 @@ Object panel_control "panel de control" junto_procesador
           if (self.codigo_viejo == 0) {
             self.codigo_viejo = 1;
             print "El display dice: ~";
-            tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
-            tt_computadora.visualiza();
+            tt_computadora.visualiza("Código incorrecto. Acceso denegado.");
             print "~^^Parece que ese código ya no sirve, después de que el sistema de
                       control del panel se haya reiniciado.^";
             if (SeVen(player, jason)) {
@@ -1895,14 +1893,12 @@ Object panel_control "panel de control" junto_procesador
             rtrue; 
           } else {
             print "El display insiste: ~";
-            tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
-            tt_computadora.visualiza();
+            tt_computadora.visualiza("Código incorrecto. Acceso denegado.");
             "~. Habrá que buscar el nuevo código.";
           }
         } else {
           print "El display muestra: ~";
-          tt_computadora.escribe(0, "Código incorrecto. Acceso denegado.");
-          tt_computadora.visualiza();
+          tt_computadora.visualiza("Código incorrecto. Acceso denegado.");
           "~.";
         }
       Receive:
@@ -1941,8 +1937,7 @@ Object panel_control "panel de control" junto_procesador
                  zumbido. En la pantalla aparecen símbolos y caracteres que indican
                  que el sistema de control del panel se está reiniciando. Finalmente,
                  en el display puedes leer: ~";
-          tt_computadora.escribe(0, "Semilla: 9957. ¿Código?");
-          tt_computadora.visualiza();
+          tt_computadora.visualiza("Semilla: 9957. ¿Código?");
           "~.";
         }
       LetGo:
@@ -2016,7 +2011,7 @@ Object procesador "Procesador atmosférico"
                    a la criatura acercarse cada vez más deprisa hasta tu posición. Por tu
                    mente pasa entonces una única idea: ~Ojalá estuviera Jason aquí...~.
                    Instantes después, todo es oscuridad y silencio...^^";
-            EsperarTecla();
+            KeyDelay();
             Bandera_Fin(1);
             "Cuando despiertas, notas que sólo puedes mover los ojos. Estás completamente
              inmóvil, atrapado dentro de una especie de capullo gelatinoso de una enorme
@@ -2038,7 +2033,7 @@ Object procesador "Procesador atmosférico"
                    de un sólo movimiento lo atrapa por el cuello y sale corriendo por la
                    puerta del procesador atmosférico. Comienzas a respirar de nuevo cuando
                    te das cuenta de que estás solo...^";
-            EsperarTecla();
+            KeyDelay();
             <Look>;
           }
         }
@@ -3333,7 +3328,7 @@ class ZonaNorte
                terrible, y su larga cola se enrosca rodeando tu cuello. La hinchazón que
                provoca en tu laringe te hace sentir con dolorosa precisión que algo desciende
                por tu esófago, justo antes de perder el conocimiento...^";
-        EsperarTecla();
+        KeyDelay();
         Bandera_Fin(1);
         print "^Cuando despiertas, notas un regusto amargo en la boca, y la garganta te duele
                horrores. Pero lo peor no es eso... Algo se mueve dentro de ti... Algo que
@@ -3628,7 +3623,7 @@ Object balcon4
               print "Al no haber energía en el montacargas, desciendes lentamente apoyándote
                      en los salientes disponibles y finalmente alcanzas el nivel -1...^";
             }
-            EsperarTecla();
+            KeyDelay();
             rfalse;
           }
         }
@@ -3705,7 +3700,7 @@ Object balcon8
           } else {
             print "^";
           }
-          EsperarTecla();
+          KeyDelay();
           rfalse;
         }
     ];
@@ -3777,7 +3772,7 @@ Object emergencia_pasillo "Pasillo de emergencia"
         if (self hasnt visited) {
           print "Al cruzar la puerta te das cuenta de que has accedido... ¡al área de
                  emergencia!";
-          EsperarTecla();
+          KeyDelay();
           print "^";
         }
     ];
@@ -4457,21 +4452,21 @@ Object boton_reproducir "botón Reproducir" consola
       }
       print ", donde varias personas vestidas con batas blancas caminan aquí y allá
              llevando materiales y anotando datos.^";
-      EsperarTecla();
+      KeyDelay();
       print "^¡Un momento! ¡En una especie de jaula de contención se vislumbra claramente
              la figura del monstruo! ¡Lo tienen encerrado para estudiarlo! Ahora lo
              entiendes todo... Ese monstruo es un arma demasiado poderosa para ser
              ignorada, y ese laboratorio no es más que el lugar donde pretendían sacar
              partido de su potencial destructivo. El ansia de poder de estos burócratas
              es aún mayor de lo que esperabas...^";
-      EsperarTecla();
+      KeyDelay();
       print "^¿Qué...? ¡El monstruo ha roto la cabina de contención y se escapa! ¡Dios
              santo... qué carnicería! No puedes seguir manteniendo la mirada en la
              pantalla, pero casi puedes oir la sangre derramándose al salir de sus
              destrozados cuerpos. ¡Malditos sean mil veces los responsables de esta
              masacre! Por su culpa, todo este complejo ha pasado a convertirse en un
              enorme cementerio.^";
-      EsperarTecla();
+      KeyDelay();
       print "^Cuando por fin reúnes el valor suficiente para seguir mirando, ves que la
              grabación se ha detenido, y que la consola indica que hay otra grabación
              pendiente de ser visionada.^";
@@ -4487,13 +4482,13 @@ Object boton_reproducir "botón Reproducir" consola
              documentos oficiales y sus potentísimos equipos informáticos. En un momento
              dado, el que parece de mayor graduación dice algo y los demás abandonan la
              habitación.^";
-      EsperarTecla();
+      KeyDelay();
       print "^Una vez que se ve por fin solo, se levanta y se dirige hacia uno de los
              muchos cuadros que tiene en la pared del fondo. Lo retira y... ¡ves que
              detrás hay una caja fuerte! El pez gordo introduce ahora la combinación de
              la caja, y a continuación la abre. El monitor lo ha mostrado bien claro: el
              número de la combinación es el 111582.^";
-      EsperarTecla();
+      KeyDelay();
       print "^El hombre saca algo de su bolsillo... Es un objeto no muy grande, en forma
              rectangular... Finalmente, lo mete en la caja fuerte y la cierra, volviendo
              a colocar el cuadro en su posición original.^";
@@ -4862,11 +4857,11 @@ Object hueco_techo "Sala este de ventilación"
                  un momento tu mente te hace creer que lo que tienes ante ti no es más
                  que una alucinación producto del hipnotizante ritmo del aire... Pero no:
                  lo que ves es muy real, así que algo no marcha bien... Nada bien...^";
-          EsperarTecla();
+          KeyDelay();
           print (s_em) "^Dios santo... Pero... ¿qué...? ¿Qué es esto...?^";
-          EsperarTecla();
+          KeyDelay();
           print (s_b) "^Oh... Dios... mío...^";
-          EsperarTecla();
+          KeyDelay();
         }
     ];
 
@@ -5044,7 +5039,7 @@ Object vaina "vaina mucosa" hueco_techo
           print "Espera... Un momento... No puedes creer lo que ves... Te acercas todo
                  lo que puedes, pegando casi tu cara contra el nauseabundo capullo...
                  y entonces lo ves...";
-          EsperarTecla();
+          KeyDelay();
           print (s_b) "^^¡VES A JASON DENTRO DE LA VAINA!";
         }
       }
@@ -6929,7 +6924,7 @@ Object alien procesador
         self.primera_vez = false;
         viewImageCenter(procesador.sgw_img);
         Damusix.PararCanal(CANAL_FONDO);
-        EsperarTecla();
+        KeyDelay();
         Damusix.TocarV(Rugido_ogg);
         clearTextWindow();
         print "^De pronto, observas aterrado que un ser de aspecto grotescamente
@@ -6942,7 +6937,7 @@ Object alien procesador
                amenazadoras uñas. Al separarse completamente de la pared en la que se
                encontraba escondido, puedes ver su larga cola, que mueve con una
                velocidad y precisión asombrosas.^";
-        EsperarTecla();
+        KeyDelay();
         v = Damusix.QueVolumenCanal(CANAL_FONDO);
         Damusix.AsignarCanal(procesador.sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
         Damusix.TocarCanal(CANAL_FONDO);
@@ -7185,7 +7180,7 @@ Object robot "robot de mantenimiento" exterior3,
       Examine:
         if (self hasnt general) {
           viewImageCenter(Robot_jpg);
-          EsperarTecla();
+          KeyDelay();
           viewImageCenter(exterior3.sgw_img);
         }
       PushDir:
@@ -7252,7 +7247,7 @@ Object robot "robot de mantenimiento" exterior3,
                  funcionando! ¡Casi puedes oler el oxígeno a través de tu traje!^^
                  La peor parte se la lleva el robot: toda su energía se ha consumido en su
                  última operación, y yace inerte en el suelo como un trasto más.^";
-          EsperarTecla();
+          KeyDelay();
           "^Ya no será necesario llevar trajes atmosféricos para poder respirar. Y en cuanto
            a la linterna, una vez que has reestablecido la luz eléctrica en toda la
            instalación, está claro que no hace falta llevarla encendida.";
@@ -8268,7 +8263,7 @@ Object ruido_puerta_rota
 
 
 Object tt_inicial1
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 250,
@@ -8284,7 +8279,7 @@ Object tt_inicial1
 
 
 Object tt_inicial2
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8306,7 +8301,7 @@ Object tt_inicial2
 
 
 Object tt_inicial3
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8327,7 +8322,7 @@ Object tt_inicial3
 
 
 Object tt_inicial4
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8344,7 +8339,7 @@ Object tt_inicial4
 
 
 Object tt_inicial5
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8358,7 +8353,7 @@ Object tt_inicial5
 
 
 Object tt_escape1
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8399,7 +8394,7 @@ Object tt_escape1
 
 
 Object tt_escape2
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8419,7 +8414,7 @@ Object tt_escape2
 
 
 Object tt_final
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8553,7 +8548,7 @@ Object tt_final
   }
 
   print "Copyright (c) 2008-2012 Alpha Aventuras";
-  EsperarTecla();
+  KeyDelay();
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
@@ -8572,14 +8567,14 @@ Object tt_final
          para funcionar con el intérprete Gargoyle, que puedes
          descargar de la siguiente dirección:^^",
          (s_pre) "http://code.google.com/p/garglk/downloads^";
-  EsperarTecla();
+  KeyDelay();
   quit;
 ];
 
 
 ! Rutina principal y obligatoria de todo juego InformATE
 [ Initialise r v;
-  if (EsperarTecla(0, 30)) {
+  if (KeyDelay(30)) {
     hayTeletipo = false;
   };
   IniciarGraficosSonidos();
@@ -8633,8 +8628,7 @@ Object tt_final
       j = i + 3;
       ZIPI_setcursor(5,j);
       if (ft && hayTeletipo) {
-        tt_computadora.escribe(0, (_m.&ZIPI_item-->i).ZIPI_titulo);
-        tt_computadora.visualiza();
+        tt_computadora.visualiza((_m.&ZIPI_item-->i).ZIPI_titulo);
       } else {
         style fixed;
         if ((_m.&ZIPI_item-->i).ZIPI_titulo ofclass Routine) (_m.&ZIPI_item-->i).ZIPI_titulo();
@@ -8648,11 +8642,10 @@ Object tt_final
 
     if (ft) {
       if (top) {
-        tt_computadora.escribe(0, "Salir");
+        tt_computadora.visualiza("Salir");
       } else {
-        tt_computadora.escribe(0, "Volver");
+        tt_computadora.visualiza("Volver");
       }
-      tt_computadora.visualiza();
     } else {
       if (top) {
         print (s_pre) "Salir";
@@ -8934,8 +8927,7 @@ ZIPI_Otro ZIPI_Restaurar
     .RFailed;
       glk($002F, gg_statuswin);
       StatusLineHeight(24);
-      tt_computadora.escribe(0, "^Error: no se ha podido cargar la partida");
-      tt_computadora.visualiza();
+      tt_computadora.visualiza("^Error: no se ha podido cargar la partida");
       rfalse;
     ];
 
@@ -8952,11 +8944,11 @@ ZIPI_Otro ZIPI_Salir
   if (~~hayGraficos) rtrue;
   for (i = 0 : i < 15 : i++) {
     viewImageCenter(ALIEN_Sin_Puntos_png, true);
-    EsperarTecla(0, 20);
+    KeyDelay(20);
   }
   for (i = 0 : i < 15 : i++) {
     viewImageCenter(Puntos_png, true);
-    EsperarTecla(0, 20);
+    KeyDelay(20);
   }
 ];
 
@@ -9348,7 +9340,7 @@ Object timer_alien
 
 [ HandleGlkEvent ev context buffer;
   SGW_HandleGlk(ev);
-  ControlTimer.HandleGlk(ev, context, buffer);
+  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
 ];
 
 
@@ -9382,19 +9374,19 @@ Object timer_alien
   Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, v, 1);
   Damusix.Touch(Intro_ogg, 1);
   tt_inicial1.visualiza();
-  for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); EsperarTecla(0, 20); }
-  EsperarTecla(0, 300);
+  for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); KeyDelay(20); }
+  KeyDelay(300);
   tt_inicial2.visualiza();
-  for (i = 0 : i < 15 : i++) { viewImageCenter(AI_png, true); EsperarTecla(0, 20); }
-  EsperarTecla(0, 900);
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AI_png, true); KeyDelay(20); }
+  KeyDelay(900);
   tt_inicial3.visualiza();
-  for (i = 0 : i < 15 : i++) { viewImageCenter(AIN_png, true); EsperarTecla(0, 20); }
-  EsperarTecla(0, 900);
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AIN_png, true); KeyDelay(20); }
+  KeyDelay(900);
   tt_inicial4.visualiza();
-  for (i = 0 : i < 15 : i++) { viewImageCenter(AIEN_png, true); EsperarTecla(0, 20); }
-  EsperarTecla(0, 800);
+  for (i = 0 : i < 15 : i++) { viewImageCenter(AIEN_png, true); KeyDelay(20); }
+  KeyDelay(800);
   tt_inicial5.visualiza();
-  EsperarTecla(0, 600);
+  KeyDelay(600);
   DibujaLogoAlien();
   if (v ~= 0) {
     glk($00D6, 500);                      ! request_timer_events
@@ -9542,7 +9534,7 @@ Object timer_alien
 
 
 Object tt_computadora
-  class Escritura
+  class Teletipo
   private
     sonido 1,
     elementos
@@ -9560,8 +9552,7 @@ Object tt_computadora
 
   print "~";
   
-  tt_computadora.escribe(0, msg);
-  tt_computadora.visualiza();
+  tt_computadora.visualiza(msg);
 
   print "~^";
 ];
@@ -10512,7 +10503,7 @@ Endif;
   print "    Manuel Millán Ruiz^";
   print "    Francisco Picazo Millán^";
   print "    Manuel I. Monge García^^";
-  EsperarTecla();
+  KeyDelay();
   print "Desarrollado usando el lenguaje Inform, de Graham Nelson,^";
   print "con la ayuda de las siguientes librerías:^^";
   print "- InformATE 6/10+, de Zak et al.^";
@@ -10529,7 +10520,7 @@ Endif;
   print "- Adaptación de Barra, de Presi^";
   print "- Adaptación de BajoNivel, de Zak y Baltasarq^";
   print "- Adaptación de ZIPI, de Zak";
-  EsperarTecla();
+  KeyDelay();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
          directa o indirectamente, en el desarrollo de esta aventura.^^
          (c) 2008-2012 Alpha Aventuras^^
@@ -10538,12 +10529,12 @@ Endif;
   print (s_pre) "http://www.gnu.org/licenses/gpl.txt^";
   print "^El código fuente del programa está disponible en Github:^^";
   print (s_pre) "https://github.com/ricpelo/alien/tree/deluxe^";
-  EsperarTecla();
+  KeyDelay();
   print "^Visítanos en:^^";
   print (s_pre) "http://wiki.caad.es/Alpha_Aventuras^
         http://sites.google.com/site/alphaaventuras^
         http://www.facebook.com/alphaaventuras^";
-  EsperarTecla();
+  KeyDelay();
   viewImageCenter(LugarReal().sgw_img);
 ];
 

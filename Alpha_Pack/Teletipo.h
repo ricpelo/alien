@@ -1,26 +1,17 @@
-! Escr_NG.h
+!
+! Teletipo.h
+!
 ! Presenta un vector de cadenas en pantalla.
 ! Hace una pausa tras cada cadena.
 ! Visualiza cada cadena caracter a caracter.
+! PrÃ¡cticamente copiado literalmente de Escr, de Baltasarq,
+! pero con muchas mejoras.
+!
 
 System_file;
 
-#ifndef  ESCR_LIB;
-Constant ESCR_LIB;
-
-Include "Array";
-
-Message "Compilando librería de escritura letra a letra. Baltasar, el arquero.";
-
-Constant MAX_TAM_BUFFER = 310;
-Array escr_buffer_lib --> MAX_TAM_BUFFER;
-
-#ifdef TARGET_GLULX;
-Constant ESCR_PRIMERA_LETRA 4;
-#endif;
-#ifdef TARGET_ZCODE;
-Constant ESCR_PRIMERA_LETRA 2;
-#endif;
+Constant TAM_BUFFER_TELETIPO = 310;
+Array buffer_teletipo --> TAM_BUFFER_TELETIPO;
 
 ! Tipos de mensaje:
 
@@ -43,50 +34,42 @@ Constant LETRA_CURSIVA = $$00100;
 Constant LETRA_FIJA    = $$01000;
 Constant LETRA_INVERSA = $$10000;
 
-! Hace lo mismo que EsperarTecla pero no espera teclas,
-! sólo timers:
-[ EsperarTimer espera;
-  glk($00D6, espera * 5);            ! request_timer_events
-  while (1) {
-    glk($00C0, gg_arguments);        ! glk_select(gg_arguments);
-    if ((gg_arguments-->0) == 1) {
-      ControlTimer.ReactivarTick();
-      break;
-    }
-  }
+#ifndef WaitDelay;
+[ WaitDelay delay;
+  return ControlTimer.CT_WaitDelay(delay);
 ];
+#endif;
 
-
-class Escritura
-  class Vector
-  private
-    sonido 0,
-    volumen 0,
+Class Teletipo
   with
+    elementos 0,
+    gancho_antes 0,
+    gancho_despues 0, 
     hazPausaLetra [;
-      if ( self.pausaLetra > -1 ) {
-        EsperarTimer(self.pausaLetra);
+      if (self.pausaLetra > -1) {
+        WaitDelay(self.pausaLetra);
       }
     ],
     hazPausaMensaje [ multi;
-      if ( self.pausaMensaje > -1 ) {
-        EsperarTecla(0, self.pausaMensaje * multi);
+      if (self.pausaMensaje > -1) {
+        KeyDelay(self.pausaMensaje * multi);
       }
     ],
     pausaLetra 1,
     pausaMensaje 150,
-    visualiza [ n p lon tipo_mensaje tipo_letra tipo_pausa;
-      escr_buffer_lib-->0 = MAX_TAM_BUFFER - ESCR_PRIMERA_LETRA;
+    visualiza [ str n p lon tipo_mensaje tipo_letra tipo_pausa;
+      if (str ~= 0) self.&elementos-->0 = str;
+      buffer_teletipo-->0 = TAM_BUFFER_TELETIPO - WORDSIZE;
 
       ! Para cada cadena a visualizar
-      for (n = 0 : n < self.longitud() : n++) {
+      for (n = 0: n < self.#elementos / WORDSIZE: n++) {
         ! Para cada una de las cadenas
         ! Convertirlas a vector
-        lon = PrintAnyToArray(escr_buffer_lib + WORDSIZE, MAX_TAM_BUFFER, (self.elemento(n)));
+        lon = PrintAnyToArray(buffer_teletipo + WORDSIZE, TAM_BUFFER_TELETIPO, self.&elementos-->n);
 
-        tipo_mensaje = self.elemento(n + 1);
-        tipo_letra = self.elemento(n + 2);
-        tipo_pausa = self.elemento(n + 3);
+        tipo_mensaje = self.&elementos-->(n + 1);
+        tipo_letra = self.&elementos-->(n + 2);
+        tipo_pausa = self.&elementos-->(n + 3);
         
         if (tipo_letra & LETRA_NORMAL)  style roman;
         if (tipo_letra & LETRA_NEGRITA) glk_set_style(style_User1);
@@ -96,23 +79,23 @@ class Escritura
 
         if (tipo_mensaje == POR_MENSAJE ||
            (tipo_mensaje == POR_LETRA && ~~hayTeletipo)) {
-          print (string) self.elemento(n);
+          print (string) self.&elementos-->n;
         } else {
-          if (self.sonido ~= 0) {
-            Damusix.TocarCanal(CANAL_TELETIPO);
+          if (self.gancho_antes ~= 0) {
+            self.gancho_antes();
           }
           ! Visualizar las letras una a una
-          for (p = ESCR_PRIMERA_LETRA : p < (lon + ESCR_PRIMERA_LETRA) : p++) {
-            print (char) escr_buffer_lib->p;
+          for (p = WORDSIZE : p < (lon + WORDSIZE) : p++) {
+            print (char) buffer_teletipo->p;
             self.hazPausaLetra();
           }
-          if (self.sonido ~= 0) {
-            Damusix.PararCanal(CANAL_TELETIPO);
+          if (self.gancho_despues ~= 0) {
+            self.gancho_despues();
           }
         }          
         switch (tipo_pausa) {
           SIN_PAUSA:     break;
-          ESPERAR_TECLA: EsperarTecla();
+          ESPERAR_TECLA: KeyDelay();
           PAUSA_NORMAL:  self.hazPausaMensaje(1);
           PAUSA_DOBLE:   self.hazPausaMensaje(2);
           PAUSA_TRIPLE:  self.hazPausaMensaje(3);
@@ -122,4 +105,4 @@ class Escritura
         n = n + 3;
       }
     ];
-#endif;
+
