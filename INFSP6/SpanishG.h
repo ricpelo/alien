@@ -82,16 +82,44 @@ System_file; ! for supress warnings in I6 environment
 ];
 
 ifdef ADMITIR_COMANDO_SALIDAS;
-  [ SalidasSub i flag flag2 j loc;
+  [ SalidasSub i flag flag2 j loc total;
     print "Salidas visibles:";
-    if (location == thedark)
-      loc = real_location;
-    else
-      loc = location;
+    if (location == thedark) loc = real_location;
+    else                     loc = location;
     j = 0;
     objectloop (i in compass) {
-      if (loc provides Salidas)
-        switch (loc.Salidas (i)) !se envia el objeto de la brujula como parametro
+      if (loc provides salidas)
+        switch (loc.salidas (i)) !se envia el objeto de la brujula como parametro
+        {
+          false:
+            flag  = false;           ! Show la salida si existe la
+            flag2 = false;           ! propiedad al_* y no es un string.
+          true:
+            j++;                     ! La dirección ya ha sido escrita.
+            flag2 = true;
+          2:
+            flag2 = true;            ! No imprimir esta.
+          default:
+            flag  = true;            ! Imprimirla siempre.
+        };  ! de switch
+
+        if (loc provides (i.door_dir) &&
+          metaclass (loc.(i.door_dir)) ~= nothing or string ||
+          flag == true && flag2 == false)
+        {
+          j++;
+        }  ! de if
+    }  ! de objectloop
+
+    if (j == 0)
+      " ninguna.";
+
+    total = j;
+    j = 0;
+
+    objectloop (i in compass) {
+      if (loc provides salidas)
+        switch (loc.salidas (i)) !se envia el objeto de la brujula como parametro
         {
           false:
             flag  = false;           ! Show la salida si existe la
@@ -111,14 +139,14 @@ ifdef ADMITIR_COMANDO_SALIDAS;
         {
           if (j == 0)
             print " ";
+          else if (j == total - 1)
+            print " y ";
           else
             print ", ";
           LanguageDirection (i.door_dir);
           j++;
         }  ! de if
     }  ! de objectloop
-    if (j == 0)
-      " ninguna.";
     ".";        ! ELIUK BLAU: antes hacia dos saltos de linea al final, cuando
                 ! en realidad debía hacer solo uno. (el otro salto lo agrega el PROMPT mismo)
   ];
@@ -818,94 +846,86 @@ Verb meta 'xlista'
 ! debe retornar 3, pero ante "caja de bolsa" debe retornar 1.
 !
 [ ParseNoun obj n dudas seguir gen p aux;
-
-    n=0;       ! numero de palabras reconocidas de momento
-    seguir=1;  ! =1 seguir mirando palabras para ver si las siguientes
+  n = 0;       ! numero de palabras reconocidas de momento
+  seguir = 1;  ! =1 seguir mirando palabras para ver si las siguientes
                ! se refieren a este mismo objeto
 
-    aux=aux;
-   #ifdef DEBUG;
-    aux=debug_flag;
-    debug_flag=0; ! Desactivar trazado de give (para no cansar con tanto 'nombreusado' cambiando continuamente)
-   #endif;
-    give obj ~nombreusado; ! resetear nombreusado (quitar nombreusado)
-    gen=5;    ! 1=masculino,        2=femenino,
-              ! 3=masculino plural, 4=femenino plural
-              ! 5=sin determinar
+  aux = aux;
+  #ifdef DEBUG;
+  aux = debug_flag;
+  debug_flag = 0; ! Desactivar trazado de give (para no cansar con tanto 'nombreusado' cambiando continuamente)
+  #endif;
+  give obj ~nombreusado; ! resetear nombreusado (quitar nombreusado)
+  gen = 7;  ! 0,1=masculino,        2=femenino,
+            ! 4,5=masculino plural, 6=femenino plural
+            ! 7=sin determinar
 
-    while(seguir)
-    {
-      p=NextWord();
-      if ((p=='de')&&(n==0)) return 0;
-    
-!     if (WordInProperty(p, obj, name))
-!         ! Una palabra que se refiere al objeto
-!     {
-!         n++;         ! la contamos
-!         n=n+dudas;   ! añadimos todos los "de" "la"...
-!                      ! que estaban sin contar
-!         dudas=0;     ! y resetamos el contador de "de"s
-!         continue;    ! volvemos al while
-!     }
-      if (WordInProperty(p, obj, name_f))
-          ! Una palabra que se refiere al objeto
-      {
-        if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
-        if (gen==5) gen=G_FEMENINO;
-        n++;            ! la contamos
-        n=n+dudas;      ! añadimos todos los "de" "la"...
-                        ! que estaban sin contar
-        dudas=0;        ! y resetamos el contador de "de"s
-!        print " --> es ahora femenino...." ; !infsp debug
-        continue;       ! volvemos al while
-      }
-      if (WordInProperty(p, obj, name_mp))
-          ! Una palabra que se refiere al objeto
-      {
-        if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
-        if (gen==5) gen=G_MASCULINO+G_PLURAL;
-        n++;            ! la contamos
-        n=n+dudas;      ! añadimos todos los "de" "la"...
-                        ! que estaban sin contar
-        dudas=0;        ! y resetamos el contador de "de"s
-        continue;       ! volvemos al while
-      }
-      if (WordInProperty(p, obj, name_fp))
-      {
-        if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
-        if (gen==5) gen=G_FEMENINO+G_PLURAL;
-        n++;            ! la contamos
-        n=n+dudas;      ! añadimos todos los "de" "la"...
-                        ! que estaban sin contar
-        dudas=0;        ! y resetamos el contador de "de"s
-        continue;       ! volvemos al while
-      }
+  while (seguir) {
+    p = NextWord();
+    if ((p == 'de') && (n == 0)) return 0;
+  
+!   if (WordInProperty(p, obj, name)) {
+!     ! Una palabra que se refiere al objeto
+!     n++;           ! la contamos
+!     n = n + dudas; ! añadimos todos los "de" "la"...
+!                    ! que estaban sin contar
+!     dudas = 0;     ! y resetamos el contador de "de"s
+!     continue;      ! volvemos al while
+!   }
+    if (WordInProperty(p, obj, name_f)) {
+      ! Una palabra que se refiere al objeto
+      if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
+      if (gen == 7) gen = G_FEMENINO;
+      n++;            ! la contamos
+      n = n + dudas;  ! añadimos todos los "de" "la"...
+                      ! que estaban sin contar
+      dudas = 0;      ! y resetamos el contador de "de"s
+!     print " --> es ahora femenino...." ; !infsp debug
+      continue;       ! volvemos al while
+    }
+    if (WordInProperty(p, obj, name_mp)) {
+      ! Una palabra que se refiere al objeto
+      if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
+      if (gen == 7) gen = G_MASCULINO + G_PLURAL;
+      n++;            ! la contamos
+      n = n + dudas;  ! añadimos todos los "de" "la"...
+                      ! que estaban sin contar
+      dudas = 0;      ! y resetamos el contador de "de"s
+      continue;       ! volvemos al while
+    }
+    if (WordInProperty(p, obj, name_fp)) {
+      if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
+      if (gen == 7) gen = G_FEMENINO + G_PLURAL;
+      n++;            ! la contamos
+      n = n + dudas;  ! añadimos todos los "de" "la"...
+                      ! que estaban sin contar
+      dudas = 0;      ! y resetamos el contador de "de"s
+      continue;       ! volvemos al while
+    }
     ! [I7] se cambio de lugar este if para buscar el name_m (o name)
     ! en ultimo lugar, debido a una interferencia q provoca la asignacion 'automatica' de 
     ! plural en los objetos I7
-      if (WordInProperty(p, obj, name_m))
-            ! Una palabra que se refiere al objeto
-      {
-        if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
-        if (gen==5) gen=G_MASCULINO;
-        n++;            ! la contamos
-        n=n+dudas;      ! añadimos todos los "de" "la"...
-                        ! que estaban sin contar
-        dudas=0;        ! y resetamos el contador de "de"s
-!        print " --> es ahora masculino...." ; !infsp debug
-        continue;       ! volvemos al while
-      }
-      if (WordInProperty(p, obj, adjectives))
-      {
-        if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
-        n++;            ! la contamos
-        n=n+dudas;      ! añadimos todos los "de" "la"...
-                        ! que estaban sin contar
-        dudas=0;        ! y resetamos el contador de "de"s
-!        print (the) obj," --> adjetivo detectado....^" ; !infsp debug
-        continue;       ! volvemos al while
-      }
-        
+    if (WordInProperty(p, obj, name_m)) {
+      ! Una palabra que se refiere al objeto
+      if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
+      if (gen == 7) gen = G_MASCULINO;
+      n++;            ! la contamos
+      n = n + dudas;  ! añadimos todos los "de" "la"...
+                      ! que estaban sin contar
+      dudas = 0;      ! y resetamos el contador de "de"s
+!     print " --> es ahora masculino...." ; !infsp debug
+      continue;       ! volvemos al while
+    }
+    if (WordInProperty(p, obj, adjectives)) {
+      if (p) dict_flags_of_noun = (p->#dict_par1) & $$01110100;
+      n++;            ! la contamos
+      n = n + dudas;  ! añadimos todos los "de" "la"...
+                      ! que estaban sin contar
+      dudas = 0;      ! y resetamos el contador de "de"s
+!     print (the) obj," --> adjetivo detectado....^" ; !infsp debug
+      continue;       ! volvemos al while
+    }
+      
     ! Si la palabra no fue reconocida, miraremos si se trata
     ! de 'de' o un artículo. En este caso mantenemos la duda y
     ! seguimos mirando palabras, hasta que una de ellas encaje
@@ -913,39 +933,36 @@ Verb meta 'xlista'
     ! han leido, o bien se encuentre una que no encaja en cuyo
     ! caso se retorna las que se habían encontrado antes del "de"
 
-      else if (p== 'el' or 'la' or 'los' or 'las' or
-         'de')
-      {
-        dudas++; continue;
-      }        
-      else seguir=0;   ! Si no fue reconocida, ni un articulo, ni "de"
+    else if (p== 'el' or 'la' or 'los' or 'las' or 'de') {
+      dudas++; continue;
+    }        
+    else seguir = 0;   ! Si no fue reconocida, ni un articulo, ni "de"
                        ! nos damos por vencidos
-   }! while block
-    
-    if (obj provides gender)
-        switch(gen)
-        { ! Los casos del switch estaban mal.
-          ! Bug corregido en 001030
-          1: give obj ~female ~pluralname; !infsp fix for I7 compatibility (en I7 no se puede asignar el 0 a gender, de 1 para arriba, sí)
-          2: give obj female ~pluralname;  !print " FEMALE GIVEN "; !infsp debug
-          3: give obj ~female pluralname;
-          4: give obj female pluralname;
-        }
+  }! while block
+  
+  if (obj provides gender)
+    switch (gen) { ! Los casos del switch estaban mal.
+      ! Bug corregido en 001030
+      0,1: give obj ~female ~pluralname; !infsp fix for I7 compatibility (en I7 no se puede asignar el 0 a gender, de 1 para arriba, sí)
+      2:   give obj female ~pluralname;  !print " FEMALE GIVEN "; !infsp debug
+      4,5: give obj ~female pluralname;
+      6:   give obj female pluralname;
+    }
 
-    if (gen<5) give obj nombreusado; !si el matcheo fue por adjetives, entonces gen=5
-                                     !   y nombreusado no se pone.                            
+  if (gen < 7) give obj nombreusado; !si el matcheo fue por adjetives, entonces gen = 7
+                                     !y nombreusado no se pone.                            
 !!    if (obj provides gender) obj.gender=gen; ! esta linea siempre esta comentariada
-    
-#ifdef DEBUG;
-    debug_flag=aux;
-#endif;
-!    if (parser_trace >= 7) ! imprimir el buffer recibido
-!    {
-!          print "^[ ParseNoun:  ";
-!          print "^      consulta por ", (the) obj, " --> palabras reconocidas ",n ;
-!    } 
-    return n; !retornar numero de palabras reconocidas
-    !return -1;
+  
+  #ifdef DEBUG;
+  debug_flag = aux;
+  #endif;
+! if (parser_trace >= 7) ! imprimir el buffer recibido
+! {
+!   print "^[ ParseNoun:  ";
+!   print "^      consulta por ", (the) obj, " --> palabras reconocidas ",n ;
+! } 
+  return n; !retornar numero de palabras reconocidas
+! return -1;
 ];    
 
 #Endif; ! def ParseNoun

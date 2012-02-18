@@ -81,9 +81,37 @@ Object ControlTimer
     contexto_handle_glk false,            ! Estamos en un evento
     longitud 0,                           ! Longitud del buffer a restaurar
     RestaurarLineaOrdenes [ buffer;       ! Restaura la línea de órdenes
-      if (deadflag == 1) {
+      if (deadflag ~= 0) {
+        self.DesactivarTick();
+        ! Todo el cuerpo del 'if' está copiado de la librería:
+        if (deadflag ~= 2) AfterLife();
+        if (deadflag == 0) return 1;
+        print "^^    ";
+        #Ifdef TARGET_ZCODE;
+        #IfV5; style bold; #Endif; ! V5
+        #Ifnot; ! TARGET_GLULX
+        glk($0086, 5); ! set alert style
+        #Endif; ! TARGET_
+        print "***";
+        if (deadflag == 1) L__M(##Miscellany, 3);
+        if (deadflag == 2) L__M(##Miscellany, 4);
+        if (deadflag > 2)  {
+          print " ";
+          DeathMessage();
+          print " ";
+        }
+        print "***";
+        #Ifdef TARGET_ZCODE;
+        #IfV5; style roman; #Endif; ! V5
+        #Ifnot; ! TARGET_GLULX
+        glk($0086, 0); ! set normal style
+        #Endif; ! TARGET_
+        #Ifdef NO_SCORE;
         print "^^";
-        L__M(##Miscellany, 3);
+        #Ifnot;
+        print "^^^";
+        #Endif; ! NO_SCORE
+        ScoreSub();
         DisplayStatus();
         AfterGameOver();
       }
