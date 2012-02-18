@@ -8563,7 +8563,7 @@ Object tt_final
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
-!  timer_espera_trueno.AsignarGestor();
+!  timer_espera_trueno.AsignarGestor(0);
   timer_trueno.AsignarGestor(1);
   timer_alien.AsignarGestor(2);
   timer_laberinto.AsignarGestor(3);

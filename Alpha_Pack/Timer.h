@@ -45,14 +45,6 @@ Message "|__________________________________________________________________|";
 !];
 
 
-#ifndef VR;
-[ VR valor;
-  if (ZRegion(valor) == 2) return valor();
-  else                     return valor;
-];
-#endif;
-
-
 class GestorTimer
   with
     condicion true,          ! Si es false, no se ejecutará el evento
@@ -160,7 +152,7 @@ Object ControlTimer
                  ! Si no hay mutex o lo tiene asignado el gestor t:
                  if (self.mutex == 0 or t) {
                    ! Si la condición del gestor se cumple:
-                   if (VR(t.condicion)) {
+                   if (ValueOrRun(t, condicion)) {
                      ! Si el evento retorna true:
                      if (t.evento ~= 0 && t.evento()) {
                        break;
