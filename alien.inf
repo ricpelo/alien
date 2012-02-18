@@ -413,7 +413,6 @@ Include "VerbLib";
 ];
 
 
-Include "ExaminarFalso";
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
 Include "barra";          ! Para cambiar la barra de estado
 
@@ -554,6 +553,7 @@ Include "PNJactor_NG";    ! Librerías que hacen que un PNJ pueda coger y dejar
 Include "PNJacciones_NG"; ! objetos como el PJ (poner detrás de Moviles y PnjPuertas)
 Include "Etemas";         ! Los temas de conversación
 Include "Decorado_NG";    ! Objetos de decorado
+Include "ExaminarFalso";  ! Poder examinar objetos sólo con su nombre
 Include "Teletipo";       ! Teletipo para sacar mensajes letra a letra
 Include "Pistas";         ! Las pistas creadas con ZIPI
 Include "Timer";          ! Mi librería de eventos temporizados
