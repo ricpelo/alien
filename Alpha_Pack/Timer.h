@@ -87,6 +87,7 @@ Object ControlTimer
     mutex 0,                              ! Semáforo de exclusión mutua
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
     contexto_handle_glk false,            ! Estamos en un evento
+    longitud 0,                           ! Longitud del buffer a restaurar
     RestaurarLineaOrdenes [ buffer;       ! Restaura la línea de órdenes
       if (deadflag == 1) {
         print "^^";
@@ -95,7 +96,8 @@ Object ControlTimer
         AfterGameOver();
       }
       L__M(##Prompt);
-      buffer-->0 = gg_event-->2;
+      buffer-->0 = self.longitud;
+      self.longitud = 0;
       glk($00D0, gg_mainwin, buffer + WORDSIZE,  ! glk_request_line_event
           INPUT_BUFFER_LEN - WORDSIZE, buffer-->0);
       return 1;
@@ -145,7 +147,6 @@ Object ControlTimer
     ! Nuestra versión de HandleGlkEvent:
     CT_HandleGlkEvent [ev context buffer
       i t;
-      context = context;
       switch (ev-->0) {
         1: ! evtype_Timer == 1
            if (context == 1) return 1;  ! character input request
@@ -248,6 +249,7 @@ Object ControlTimer
       if (~~(self.ha_imprimido_algo)) {
         self.ha_imprimido_algo = true;
         glk($00D1, gg_mainwin, gg_event); ! glk_cancel_line_event(gg_mainwin, gg_event);
+        self.longitud = gg_event-->2;
       }
     ],
     ReiniciarImpresion [;                 ! Reinicia el indicador de 'imprimido algo'

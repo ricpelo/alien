@@ -3993,7 +3993,7 @@ class BotonEmergencia
         }
       }
       Damusix.VolumenCanal(CANAL_TICTAC, vol);
-      Damusix.Touch(Tic_ogg);
+      Damusix.Tocar(Tic_ogg);
       switch (actor) {
         selfobj:
           "Al pulsar el botón, este se queda hundido y se oye un tic tac...";
@@ -7795,10 +7795,10 @@ Object detector_movimiento "detector de movimiento" rifle
           "^Jason apaga el detector de movimiento.";
         }
     ],
-    Touch [ s v;
+    tocar [ s v;
       v = Damusix.QueVolumenCanal(CANAL_DETECTOR);
       Damusix.AsignarCanal(s, CANAL_DETECTOR, v, SONIDO_BUCLE_INFINITO);
-      Damusix.Touch(s);
+      Damusix.Tocar(s);
     ],
     sonar [ s;
       if (Damusix.SonandoDeFondo(Sirena_ogg)) {
@@ -7806,7 +7806,7 @@ Object detector_movimiento "detector de movimiento" rifle
       }
       if (alien in LugarReal()) {
         if (Damusix.SonandoDeFondo(Detector5_ogg) == 0) {
-          self.Touch(Detector5_ogg);
+          self.Tocar(Detector5_ogg);
         }
       } else {
         if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt absent) {                   
@@ -7818,7 +7818,7 @@ Object detector_movimiento "detector de movimiento" rifle
             1: s = Detector5_ogg;
           }
           if (Damusix.SonandoDeFondo(s) == 0) {
-            self.Touch(s);
+            self.Tocar(s);
           }                           
         } else {
           Damusix.PararCanal(CANAL_DETECTOR);
@@ -8262,8 +8262,19 @@ Object ruido_puerta_rota
     ];
 
 
+Class MiTeletipo
+  class Teletipo,
+  with
+    gancho_antes [;
+      Damusix.TocarCanal(CANAL_TELETIPO);
+    ],
+    gancho_despues [;
+      Damusix.PararCanal(CANAL_TELETIPO);
+    ];
+
+
 Object tt_inicial1
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 250,
@@ -8279,7 +8290,7 @@ Object tt_inicial1
 
 
 Object tt_inicial2
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8301,7 +8312,7 @@ Object tt_inicial2
 
 
 Object tt_inicial3
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8322,7 +8333,7 @@ Object tt_inicial3
 
 
 Object tt_inicial4
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8339,7 +8350,7 @@ Object tt_inicial4
 
 
 Object tt_inicial5
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8353,7 +8364,7 @@ Object tt_inicial5
 
 
 Object tt_escape1
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8394,7 +8405,7 @@ Object tt_escape1
 
 
 Object tt_escape2
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8414,7 +8425,7 @@ Object tt_escape2
 
 
 Object tt_final
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     PausaMensaje 500,
@@ -8586,7 +8597,7 @@ Object tt_final
   viewImageCenter(Logo_Alpha_Aventuras_Corto_jpg);
   v = Damusix.QueVolumenCanal(CANAL_FONDO);
   Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
-  Damusix.Touch(Estancia_ogg);
+  Damusix.Tocar(Estancia_ogg);
   ZIPI_Intro();
 .Menu;
   r = ZIPI_RunMenu(ZIPI_Menu_Principal, true);
@@ -9372,7 +9383,7 @@ Object timer_alien
   viewImageCenter(Oscuridad_jpg);
   v = Damusix.QueVolumenCanal(CANAL_FONDO);
   Damusix.AsignarCanal(Intro_ogg, CANAL_FONDO, v, 1);
-  Damusix.Touch(Intro_ogg, 1);
+  Damusix.Tocar(Intro_ogg, 1);
   tt_inicial1.visualiza();
   for (i = 0 : i < 15 : i++) { viewImageCenter(A_png, true); KeyDelay(20); }
   KeyDelay(300);
@@ -9534,7 +9545,7 @@ Object timer_alien
 
 
 Object tt_computadora
-  class Teletipo
+  class MiTeletipo
   private
     sonido 1,
     elementos
@@ -9612,7 +9623,7 @@ Object tt_computadora
   Damusix.PararCanal(CANAL_TICTAC);
   Damusix.AsignarCanal(Sirena_ogg, CANAL_SIRENA, VOLUMEN_SIRENA,
                        SONIDO_BUCLE_INFINITO);
-  Damusix.Touch(Sirena_ogg);
+  Damusix.Tocar(Sirena_ogg);
   StartDaemon(autodestruccion);
   PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
   laberinto28.sgw_img = Ascensor_Abierto_jpg;
@@ -10577,7 +10588,7 @@ Endif;
        barra_estado.dibujar();
        v = Damusix.QueVolumenCanal(CANAL_FONDO);
        Damusix.AsignarCanal(Estancia_ogg, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
-       Damusix.Touch(Estancia_ogg);
+       Damusix.Tocar(Estancia_ogg);
        ZIPI_Empezar();
        v = Damusix.QueVolumenCanal(CANAL_FONDO);
        Damusix.AsignarCanal(LugarReal().sgw_mus, CANAL_FONDO, v, SONIDO_BUCLE_INFINITO);
