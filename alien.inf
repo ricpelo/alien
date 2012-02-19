@@ -471,7 +471,7 @@ Object barra_estado
 
 
 ! Hay que definirla antes de incluir Moviles_NG:
-class Lugar
+Class Lugar
   class LugarConRastro
   with
     sgw_mus Estancia_ogg,
@@ -489,6 +489,7 @@ class Lugar
       }
     ],
     number,
+    dibujado false,
     before [;
       Examine, Touch:
         if (noun == d_obj) {              ! Examinamos el suelo
@@ -9616,6 +9617,20 @@ Object tt_computadora
 ];
 
 
+[ EncenderGraficos;
+  hayGraficos = true;
+  openGraphicWindow(altoVentanaGrafica);
+  clearGraphicWindow();
+  if (location ~= thedark) {
+    if (LugarReal() provides sgw_img) {
+      viewImageCenter(LugarReal().sgw_img);
+    } else {
+      viewImageCenter(Logo_Alpha_Aventuras_jpg);
+    }
+  }
+];
+
+
 
 ! ====================================================================
 !
@@ -10149,16 +10164,7 @@ Extend 'di' first
 
 
 [ EncenderGraficosSub t;
-  hayGraficos = true;
-  openGraphicWindow(altoVentanaGrafica);
-  clearGraphicWindow();
-  if (location ~= thedark) {
-    if (LugarReal() provides sgw_img) {
-      viewImageCenter(LugarReal().sgw_img);
-    } else {
-      viewImageCenter(Logo_Alpha_Aventuras_jpg);
-    }
-  }
+  EncenderGraficos();
   if (~~t) {
     glk_set_style(style_Emphasized);
     print "[Activados los gráficos (tamaño ";
@@ -10557,4 +10563,6 @@ Endif;
 [ SacarNadaDeNadaSub;
   "¿Que saque qué de dónde?";
 ];
+
+Include "Mapeador";
 

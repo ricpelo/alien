@@ -148,13 +148,13 @@ Message "Incluyendo Decorado_NG, por Zak y Sothoth";
 !
 class Decorado
   with
-    description 0,  ! La descripción del objeto
-    palabra_real 0, ! La palabra exacta que ha usado el jugador
-    gender 0,       ! El género del objeto
-    describe 0,     ! El array de descripciones
-    sinonimos 0,    ! El array de sinónimos
-    palabra 0,      ! Si es un sinónimo, la palabra correspondiente en 'describir'.
-                    ! Si no lo es, vale lo mismo que 'palabra_real'
+    description 0,   ! La descripción del objeto
+    palabra_usada 0, ! La palabra exacta que ha usado el jugador
+    gender 0,        ! El género del objeto
+    describe 0,      ! El array de descripciones
+    sinonimos 0,     ! El array de sinónimos
+    palabra 0,       ! Si es un sinónimo, la palabra correspondiente en 'describir'.
+                     ! Si no lo es, vale lo mismo que 'palabra_usada'
     short_name [;
       print (address) self.palabra;
       rtrue;
@@ -162,10 +162,10 @@ class Decorado
     buscar_nombre [ x i j;   ! Se usa en ExaminarFalso
       for (i = 0: i < (self.#describe) / (3 * WORDSIZE): i++) {
         if ((self.&describe)-->(i * 3) == x) {
-          self.description = VR((self.&describe)-->(i * 3 + 1));
-          self.gender = (self.&describe)-->(i * 3 + 2);
-          self.palabra = x;
-          self.palabra_real = x;
+          self.description   = VR((self.&describe)-->(i * 3 + 1));
+          self.gender        = (self.&describe)-->(i * 3 + 2);
+          self.palabra       = x;
+          self.palabra_usada = x;
           PronounNotice(self);
           rtrue;
         }
@@ -175,12 +175,12 @@ class Decorado
         if ((self.&sinonimos)-->(j * 3) == x) {
           for (i = 0: i < n: i++) {
             if ((self.&describe)-->(i * 3) == (self.&sinonimos)-->(j * 3 + 1)) {
-              self.description = VR((self.&describe)-->(i * 3 + 1));
-              self.palabra = (self.&describe)-->(i * 3);
-              self.palabra_real = (self.&sinonimos)-->(j * 3);
-              self.gender = (self.&sinonimos)-->(j * 3 + 2);
+              self.description   = VR((self.&describe)-->(i * 3 + 1));
+              self.palabra       = (self.&describe)-->(i * 3);
+              self.palabra_usada = (self.&sinonimos)-->(j * 3);
+              self.gender        = (self.&sinonimos)-->(j * 3 + 2);
               if (self.gender == -1) {
-                self.gender = (self.&describe)-->(i * 3 + 2);
+                self.gender      = (self.&describe)-->(i * 3 + 2);
               }
               PronounNotice(self);
               rtrue;
@@ -223,10 +223,10 @@ class Decorado
             }
             f = true;
             if (self.description == 0) {
-              self.description = VR((self.&describe)-->(i * 3 + 1));
-              self.palabra = w;
-              self.palabra_real = w;
-              self.gender = (self.&describe)-->(i * 3 + 2);
+              self.description   = VR((self.&describe)-->(i * 3 + 1));
+              self.palabra       = w;
+              self.palabra_usada = w;
+              self.gender        = (self.&describe)-->(i * 3 + 2);
               PronounNotice(self);
             }
             c++;
@@ -253,12 +253,12 @@ class Decorado
                     }
                   }
                   if (self.description == 0) {
-                    self.description = VR((self.&describe)-->(i * 3 + 1));
-                    self.palabra = (self.&describe)-->(i * 3);
-                    self.palabra_real = (self.&sinonimos)-->(j * 3);
-                    self.gender = (self.&sinonimos)-->(j * 3 + 2);
+                    self.description   = VR((self.&describe)-->(i * 3 + 1));
+                    self.palabra       = (self.&describe)-->(i * 3);
+                    self.palabra_usada = (self.&sinonimos)-->(j * 3);
+                    self.gender        = (self.&sinonimos)-->(j * 3 + 2);
                     if (self.gender == -1) {
-                      self.gender = (self.&describe)-->(i * 3 + 2);
+                      self.gender      = (self.&describe)-->(i * 3 + 2);
                     }
                   }
                   f = true;
