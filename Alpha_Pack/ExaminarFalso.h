@@ -30,14 +30,14 @@ System_file;
 
 
 #ifdef UnknownVerb;
-Message " __________________________________________________________ ";
-Message "|                                                          |";
-Message "|           * ExaminarFalso: I M P O R T A N T E *         |";
-Mensaje "|           ======================================         |";
-Message "|  Usando rutina UnknownVerb() proporcionada por el juego  |";
-Message "|      NO OLVIDES USAR EN ESA RUTINA EL RESULTADO DE:      |";
-Message "|      ExaminarFalso: ExaminarFalso.EF_UnknownVerb(x)      |";
-Message "|__________________________________________________________|";
+Message " ___________________________________________________________ ";
+Message "|                                                           |";
+Message "|           * ExaminarFalso: I M P O R T A N T E *          |";
+Mensaje "|           ======================================          |";
+Message "|  Usando rutina UnknownVerb() proporcionada por el juego.  |";
+Message "|      NO OLVIDES USAR EN ESA RUTINA EL RESULTADO DE:       |";
+Message "|      ExaminarFalso: ExaminarFalso.EF_UnknownVerb(x)       |";
+Message "|___________________________________________________________|";
 #endif; ! UnknownVerb
 
 

@@ -27,22 +27,26 @@ Message "[ Incluyendo Mapeador.h ]";
 Global gg_mapa_win;
 Global ladoCuadrado = 41;
 
-Constant COLOR_LOCAL_MAP  = $ffffff;
-Constant COLOR_CURSOR_MAP = $00ff00;
-Constant COLOR_ACTUAL_MAP = $aaaaaa;
-Constant COLOR_PUERTA_MAP = $ff0000;
-Constant COLOR_UPDOWN_MAP = $0000ff;
-Constant COLOR_INOUT_MAP  = $0000ff;
+Default COLOR_LOCAL_MAP          = $ffffff;
+Default COLOR_CURSOR_MAP         = $00aaaa;
+Default COLOR_ACTUAL_MAP         = $aaaaaa;
+Default COLOR_PUERTA_ABIERTA_MAP = $00ff00;
+Default COLOR_PUERTA_CERRADA_MAP = $ff0000;
+Default COLOR_UPDOWN_MAP         = $0000ff;
+Default COLOR_INOUT_MAP          = $0000ff;
 
-Constant ALTO_VENTANA_MAPA = 700;
+Default ALTO_VENTANA_MAPA        = 700;
 
 Verb meta 'mapa'
   *                 -> Mapa;
 
-[ DibujarPuerta cenx ceny;
-  glk_window_fill_rect(gg_mapa_win, COLOR_PUERTA_MAP,
+[ DibujarPuertaMapa cenx ceny ck
+  color;
+  if (ck == 2) color = COLOR_PUERTA_ABIERTA_MAP;
+  else         color = COLOR_PUERTA_CERRADA_MAP;
+  glk_window_fill_rect(gg_mapa_win, color,
                        cenx - ladoCuadrado / 8, ceny - ladoCuadrado / 8,
-                       ladoCuadrado / 4, ladoCuadrado / 4);
+                       ladoCuadrado / 4 + 1, ladoCuadrado / 4 + 1);
 ];
 
 #ifndef LugarReal;
@@ -63,45 +67,45 @@ Verb meta 'mapa'
     glk_window_fill_rect(gg_mapa_win, color, posx - mitad, posy - mitad,
                          ladoCuadrado, ladoCuadrado);
     sep = ladoCuadrado + mitad;
-    ck = ComprobarSalida(sitio, e_to); 
+    ck = ComprobarSalidaMapa(sitio, e_to); 
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad, posy);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad, posy, ck);
       else {
         glk_window_fill_rect(gg_mapa_win, $ffffff, posx + mitad, posy,
                              sep - ladoCuadrado + 1, 1);
         DibujarMapa(sitio.e_to, posx + sep, posy, 0);
       }
     }
-    ck = ComprobarSalida(sitio, w_to); 
+    ck = ComprobarSalidaMapa(sitio, w_to); 
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx - mitad, posy);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx - mitad, posy, ck);
       else {
         glk_window_fill_rect(gg_mapa_win, $ffffff, posx - sep + mitad, posy,
                              sep - ladoCuadrado + 1, 1);
         DibujarMapa(sitio.w_to, posx - sep, posy, 0);
       }
     }
-    ck = ComprobarSalida(sitio, n_to); 
+    ck = ComprobarSalidaMapa(sitio, n_to); 
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx, posy - mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx, posy - mitad, ck);
       else {
         glk_window_fill_rect(gg_mapa_win, $ffffff, posx, posy - sep + mitad, 1,
                              sep - ladoCuadrado + 1);
         DibujarMapa(sitio.n_to, posx, posy - sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, s_to);
+    ck = ComprobarSalidaMapa(sitio, s_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx, posy + mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx, posy + mitad, ck);
       else {
         glk_window_fill_rect(gg_mapa_win, $ffffff, posx, posy + mitad, 1,
                              sep - ladoCuadrado + 1);
         DibujarMapa(sitio.s_to, posx, posy + sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, nw_to);
+    ck = ComprobarSalidaMapa(sitio, nw_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx - mitad, posy - mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx - mitad, posy - mitad, ck);
       else {
         for (x = posx - sep + mitad, y = posy - sep + mitad : x <= posx - mitad : x++, y++) {
           glk_window_fill_rect(gg_mapa_win, $ffffff, x, y, 1, 1);
@@ -109,9 +113,9 @@ Verb meta 'mapa'
         DibujarMapa(sitio.nw_to, posx - sep, posy - sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, ne_to);
+    ck = ComprobarSalidaMapa(sitio, ne_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad, posy - mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad, posy - mitad, ck);
       else {
         for (x = posx + mitad, y = posy - mitad : x <= posx + sep - mitad : x++, y--) {
           glk_window_fill_rect(gg_mapa_win, $ffffff, x, y, 1, 1);
@@ -119,9 +123,9 @@ Verb meta 'mapa'
         DibujarMapa(sitio.ne_to, posx + sep, posy - sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, sw_to);
+    ck = ComprobarSalidaMapa(sitio, sw_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx - mitad, posy + mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx - mitad, posy + mitad, ck);
       else {
         for (x = posx - sep + mitad, y = posy + sep - mitad : x <= posx - mitad : x++, y--) {
           glk_window_fill_rect(gg_mapa_win, $ffffff, x, y, 1, 1);
@@ -129,9 +133,9 @@ Verb meta 'mapa'
         DibujarMapa(sitio.sw_to, posx - sep, posy + sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, se_to);
+    ck = ComprobarSalidaMapa(sitio, se_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad, posy + mitad);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad, posy + mitad, ck);
       else {
         for (x = posx + mitad, y = posy + mitad : x <= posx + sep - mitad : x++, y++) {
           glk_window_fill_rect(gg_mapa_win, $ffffff, x, y, 1, 1);
@@ -139,9 +143,9 @@ Verb meta 'mapa'
         DibujarMapa(sitio.se_to, posx + sep, posy + sep, 0);
       }
     }
-    ck = ComprobarSalida(sitio, u_to);
+    ck = ComprobarSalidaMapa(sitio, u_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad / 2, posy - mitad / 2);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad / 2, posy - mitad / 2 + mitad / 4, ck);
                                         
       glk_window_fill_rect(gg_mapa_win, COLOR_UPDOWN_MAP, posx + mitad / 2,
                            posy - mitad / 2, 1, mitad);
@@ -152,9 +156,9 @@ Verb meta 'mapa'
                              posy - mitad / 2 + x, 1, 1);
       }
     }
-    ck = ComprobarSalida(sitio, d_to);
+    ck = ComprobarSalidaMapa(sitio, d_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad / 2, posy - mitad / 2);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad / 2, posy + mitad / 2 - mitad / 4, ck);
 
       glk_window_fill_rect(gg_mapa_win, COLOR_UPDOWN_MAP, posx + mitad / 2,
                            posy - mitad / 2, 1, mitad);
@@ -165,10 +169,10 @@ Verb meta 'mapa'
                              posy + mitad / 2 - x, 1, 1);
       }
     }
-    ck = ComprobarSalida(sitio, in_to);
+    ck = ComprobarSalidaMapa(sitio, in_to);
     posx = posx - mitad / 3;
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx + mitad / 2, posy);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad / 2 - mitad / 4, posy, ck);
 
       glk_window_fill_rect(gg_mapa_win, COLOR_INOUT_MAP, posx - mitad / 2,
                            posy, mitad, 1);
@@ -179,9 +183,9 @@ Verb meta 'mapa'
                              posy + x, 1, 1);
       }
     }
-    ck = ComprobarSalida(sitio, out_to);
+    ck = ComprobarSalidaMapa(sitio, out_to);
     if (ck) {
-      if (ck == 2) DibujarPuerta(posx - mitad / 2 + mitad / 4, posy); 
+      if (ck == 2 or 3) DibujarPuertaMapa(posx - mitad / 2 + mitad / 4, posy, ck);
  
       glk_window_fill_rect(gg_mapa_win, COLOR_INOUT_MAP, posx - mitad / 2,
                            posy, mitad, 1);
@@ -200,6 +204,10 @@ Verb meta 'mapa'
   clearMainWindow();
   DibujarMapa(sitio, cenx, ceny, 1);
   objectloop (o ofclass Lugar) o.dibujado = false;
+  ImprimirNombreSitioMapa(sitio);
+];
+
+[ ImprimirNombreSitioMapa sitio;
   print (name) sitio;
 ];
 
@@ -211,19 +219,22 @@ Verb meta 'mapa'
   #endif;
 ];
 
-[ ComprobarSalida sitio dir
+[ ComprobarSalidaMapa sitio dir
   destino;
   if (sitio provides dir) {
     destino = sitio.dir;
-    if (ZRegion(destino) == 3) return 3;
+    if (ZRegion(destino) == 3) return 4;
     if (ZRegion(destino) == 2) destino = destino();
-    if (destino && destino has door) return 2;
+    if (destino && destino has door) {
+      if (destino has open) return 2;
+      else                  return 3;
+    }
     return EsMapeable(sitio.dir);
   }
   rfalse;
 ];
 
-[ DestinoSalida sitio dir
+[ DestinoSalidaMapa sitio dir
   destino;
   if (sitio provides dir) {
     destino = sitio.dir;
@@ -236,9 +247,9 @@ Verb meta 'mapa'
   }
 ];
 
-[ ValidarYRefrescar sitio dir cenx ceny;
-  if (ComprobarSalida(sitio, dir) == 1 or 2) {
-    sitio = DestinoSalida(sitio, dir);
+[ ValidarYRefrescarMapa sitio dir cenx ceny;
+  if (ComprobarSalidaMapa(sitio, dir) == 1 or 2 or 3) {
+    sitio = DestinoSalidaMapa(sitio, dir);
     RefrescarMapa(sitio, cenx, ceny);
   }
   return sitio;
@@ -281,18 +292,18 @@ Verb meta 'mapa'
                             ladoCuadrado = ladoCuadrado - 20;
                             RefrescarMapa(sitio, cenx, ceny);
                           }
-      -5, '2', 'n', 'N':  sitio = ValidarYRefrescar(sitio, s_to,   cenx, ceny);
-      -4, '8', 'y', 'Y':  sitio = ValidarYRefrescar(sitio, n_to,   cenx, ceny);
-      -2, '4', 'g', 'G':  sitio = ValidarYRefrescar(sitio, w_to,   cenx, ceny);
-      -3, '6', 'j', 'J':  sitio = ValidarYRefrescar(sitio, e_to,   cenx, ceny);
-      '7', 't', 'T':      sitio = ValidarYRefrescar(sitio, nw_to,  cenx, ceny);
-      '9', 'u', 'U':      sitio = ValidarYRefrescar(sitio, ne_to,  cenx, ceny);
-      '1', 'b', 'B':      sitio = ValidarYRefrescar(sitio, sw_to,  cenx, ceny);
-      '3', 'm', 'M':      sitio = ValidarYRefrescar(sitio, se_to,  cenx, ceny);
-      -12, 'a', 'A', '5': sitio = ValidarYRefrescar(sitio, u_to,   cenx, ceny); ! Inicio
-      -13, 'z', 'Z', '0': sitio = ValidarYRefrescar(sitio, d_to,   cenx, ceny); ! Fin
-      -6, '*':            sitio = ValidarYRefrescar(sitio, in_to,  cenx, ceny); ! Enter
-      -7, '.', '/':       sitio = ValidarYRefrescar(sitio, out_to, cenx, ceny); ! Retroceso
+      -5, '2', 'n', 'N':  sitio = ValidarYRefrescarMapa(sitio, s_to,   cenx, ceny);
+      -4, '8', 'y', 'Y':  sitio = ValidarYRefrescarMapa(sitio, n_to,   cenx, ceny);
+      -2, '4', 'g', 'G':  sitio = ValidarYRefrescarMapa(sitio, w_to,   cenx, ceny);
+      -3, '6', 'j', 'J':  sitio = ValidarYRefrescarMapa(sitio, e_to,   cenx, ceny);
+      '7', 't', 'T':      sitio = ValidarYRefrescarMapa(sitio, nw_to,  cenx, ceny);
+      '9', 'u', 'U':      sitio = ValidarYRefrescarMapa(sitio, ne_to,  cenx, ceny);
+      '1', 'b', 'B':      sitio = ValidarYRefrescarMapa(sitio, sw_to,  cenx, ceny);
+      '3', 'm', 'M':      sitio = ValidarYRefrescarMapa(sitio, se_to,  cenx, ceny);
+      -12, 'a', 'A', '5': sitio = ValidarYRefrescarMapa(sitio, u_to,   cenx, ceny); ! Inicio
+      -13, 'z', 'Z', '0': sitio = ValidarYRefrescarMapa(sitio, d_to,   cenx, ceny); ! Fin
+      -6, '*':            sitio = ValidarYRefrescarMapa(sitio, in_to,  cenx, ceny); ! Enter
+      -7, '.', '/':       sitio = ValidarYRefrescarMapa(sitio, out_to, cenx, ceny); ! Retroceso
       #ifdef DEBUG;
       ' ':                playerTo(sitio); jump Salir;
       #endif;
