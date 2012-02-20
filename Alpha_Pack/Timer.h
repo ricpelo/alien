@@ -87,12 +87,16 @@ Object ControlTimer
     ha_imprimido_algo true,               ! Para saber si hay que restaurar la línea de órdenes
     contexto_handle_glk false,            ! Estamos en un evento
     longitud 0,                           ! Longitud del buffer a restaurar
+    MiGlkRequestTimerEvents [ t;          ! Establece timer y reinicia contador
+      glk($00D6, t);                      ! glk_request_timer_events
+      self.contador_ticks = 1;
+    ],
     RestaurarLineaOrdenes [ buffer        ! Restaura la línea de órdenes
       tick_anterior;
       if (deadflag ~= 0) {
         tick_anterior = self.tick;
         self.DesactivarTick();
-        ! Todo el cuerpo del 'if' está copiado de la librería:
+        ! Todo el cuerpo del 'if' desde aquí está copiado de la librería:
         if (deadflag ~= 2) AfterLife();
         if (deadflag == 0) {
           self.ActivarTick(tick_anterior);
@@ -143,6 +147,15 @@ Object ControlTimer
         }
       }
       self.duracion_maxima = max;
+    ],
+    AsignarTick [ t;                      ! Asigna la duración del tick
+      ! Durante la ejecución de un evento, no se cambia el tick,
+      ! sino que se retrasa el cambio hasta terminar con el ciclo actual:
+      if (self.contexto_handle_glk) {
+        self.tick_pospuesto = t;
+      } else {
+        self.tick = t;
+      }
     ],
   with
     ! Nuestra propia versión de WaitDelay:
@@ -213,7 +226,6 @@ Object ControlTimer
            if (self.tick_pospuesto ~= -1) {
              self.ActivarTick(self.tick_pospuesto);
              self.tick_pospuesto = -1;
-             self.contador_ticks = 1;
            }
            ! Si se ha imprimido algo en algún gestor, restauramos:
            if (self.ha_imprimido_algo) {
@@ -309,15 +321,6 @@ Object ControlTimer
     ReiniciarImpresion [;                 ! Reinicia el indicador de 'imprimido algo'
       self.ha_imprimido_algo = false;
     ],
-    AsignarTick [ t;                      ! Asigna la duración del tick
-      ! Durante la ejecución de un evento, no se cambia el tick,
-      ! sino que se retrasa el cambio hasta terminar con el ciclo actual:
-      if (self.contexto_handle_glk) {
-        self.tick_pospuesto = t;
-      } else {
-        self.tick = t;
-      }
-    ],
     ActivarTick [ t;                      ! Activa el timer (opcionalmente, asignando el tick antes)
       if (t ~= 0) {
         self.AsignarTick(t);
@@ -325,8 +328,15 @@ Object ControlTimer
         t = self.tick;
       }
       if (~~(self.contexto_handle_glk)) {
-        glk($00D6, t);                    ! glk_request_timer_events
+        self.MiGlkRequestTimerEvents(t);
       }
+    ],
+    DesactivarTick [;                     ! Desactiva el tick
+      self.tick = 0;
+      self.MiGlkRequestTimerEvents(0);
+    ],
+    ReactivarTick [;                      ! Reactiva el tick (útil en algunos casos)
+      self.MiGlkRequestTimerEvents(self.tick);
     ],
     PausarTick [;                         ! Detiene el tick temporalmente
       self.tick_pausado = self.tick;
@@ -342,15 +352,6 @@ Object ControlTimer
     ReanudarTimers [;                     ! Reanuda los timers
       self.condicion = true;
     ],
-    DesactivarTick [;                     ! Desactiva el tick
-      self.tick = 0;
-      glk($00D6, 0);
-    ],
-    ReactivarTick [                       ! Reactiva el tick (útil en algunos casos)
-      t;
-      t = self.tick;
-      glk($00D6, t);                      ! glk_request_timer_events
-    ],
     ActivarMutex [ g;                     ! Activa el mutex sobre un gestor
       self.mutex = g;
     ],
@@ -365,8 +366,11 @@ Object ControlTimer
       self.tick_pospuesto = -1;
       self.duracion_maxima = 0;
       self.contador_ticks = 1;
+      self.condicion = true;
       self.mutex = 0;
       self.ha_imprimido_algo = true;
+      self.contexto_handle_glk = false;
+      self.longitud = 0;
       for (i = 0: i < self.#gestores / WORDSIZE: i++) {
         self.&gestores-->i = 0;
       }
