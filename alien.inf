@@ -1,7 +1,7 @@
 !% -~S
 !% -G
 !% $MAX_STATIC_DATA=20000
-!% $MAX_PROP_TABLE_SIZE=62840
+!% $MAX_PROP_TABLE_SIZE=63840
 !% $MAX_VERBS=200
 !% $MAX_ZCODE_SIZE=45000
 !% $MAX_VERBSPACE=4500
@@ -8478,12 +8478,12 @@ Object tt_final
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
   viewImageCenter(Nave1_jpg);
-!  timer_espera_trueno.AsignarGestor(0);
-  timer_trueno.AsignarGestor(1);
-  timer_alien.AsignarGestor(2);
-  timer_laberinto.AsignarGestor(3);
-  timer_bateria.AsignarGestor(4);
-  timer_autodestruccion.AsignarGestor(5);
+! timer_espera_trueno.AgregarGestor();
+  timer_trueno.AgregarGestor();
+  timer_alien.AgregarGestor();
+  timer_laberinto.AgregarGestor();
+  timer_bateria.AgregarGestor();
+  timer_autodestruccion.AgregarGestor();
   ControlTimer.ActivarTick(TIMER_TICK);
 ];
 
@@ -9131,7 +9131,7 @@ Object timer_espera_trueno
     evento [;
       timer_trueno.hay_trueno = false;
       ControlTimer.DesactivarMutex();
-      self.EliminarGestor();
+      self.SustituirGestor(timer_trueno);
       ControlTimer.ActivarTick(TIMER_TICK);
       viewImageCenter(LugarReal().sgw_img);
       rtrue; ! Hace que el resto de los eventos se salten hasta el siguiente tick
@@ -9149,13 +9149,14 @@ Object timer_trueno
     ],
     hay_trueno false,
     preparar_espera_trueno [;
-      ControlTimer.AsignarGestor(timer_espera_trueno, 0);
+      self.SustituirGestor(timer_espera_trueno);
       ControlTimer.ActivarMutex(timer_espera_trueno);
       ControlTimer.ActivarTick(100);
       self.hay_trueno = true;
     ],
     evento [ l r p;
       l = LugarReal();
+      r = random(100);
       if (l == nave1 or nave2 && r < 35) {
         r = 20 * random(5);
         if (r >= 65) {
@@ -9164,7 +9165,7 @@ Object timer_trueno
           } else {
             viewImageCenter(Nave2_Trueno_jpg);
           }
-          Damusix.TocarV(Trueno_ogg, random(4));
+          Damusix.TocarV(Trueno_ogg, random(4) * 4);
           self.preparar_espera_trueno();
         }
       } else if (EsExterior(l) && r < 38) {
@@ -9178,6 +9179,7 @@ Object timer_trueno
           self.preparar_espera_trueno();
         }
       }
+      rtrue;
     ];
 
 
