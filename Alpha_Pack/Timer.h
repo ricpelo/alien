@@ -18,15 +18,15 @@
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Message " __________________________________________________________________";
-Message "|                                                                  |";
-Message "|                  * TIMER:  I M P O R T A N T E *                 |";
-Message "|                  ===============================                 |";
-Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;'  |";
-Message "| 2. Si usas tu propia rutina HandleGlkEvent(),                    |";
-Message "|    no olvides llamar desde esa rutina a:                         |";
-Message "|    ControlTimer.CT_HandleGlkEvent(ev, context, buffer)           |";
-Message "|__________________________________________________________________|";
+Message " _________________________________________________________________";
+Message "|                                                                 |";
+Message "|                  * TIMER:  I M P O R T A N T E *                |";
+Message "|                  ===============================                |";
+Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;' |";
+Message "| 2. Si usas tu propia rutina HandleGlkEvent(),                   |";
+Message "|    no olvides llamar desde esa rutina a:                        |";
+Message "|    ControlTimer.CT_HandleGlkEvent(ev, context, buffer)          |";
+Message "|_________________________________________________________________|";
 
 
 ! Nuestra particular versión de HandleGlkEvent:
@@ -48,35 +48,39 @@ Message "|__________________________________________________________________|";
 
 Class GestorTimer
   with
-    condicion true,          ! Si es false, no se ejecutará el evento
-    duracion 0,              ! Número de ticks necesarios para ejecutarse
-    evento 0,                ! El evento a ejecutar
-    AgregarGestor [;         ! Agrega este gestor en un hueco de la lista
+    condicion true,             ! Si es false, no se ejecutará el evento
+    duracion 0,                 ! Número de ticks necesarios para ejecutarse
+    evento 0,                   ! El evento a ejecutar
+    AgregarGestor [;            ! Agrega este gestor en un hueco de la lista
       return ControlTimer.AgregarGestor(self);
     ],
-    InsertarGestor [ pos;    ! Inserta este gestor empujando los demás
+    InsertarGestor [ pos;       ! Inserta este gestor empujando los demás
       return ControlTimer.InsertarGestor(self, pos);
     ],
-    AsignarGestor [ pos;     ! Coloca este gestor en una posición de la lista
+    AsignarGestor [ pos;        ! Coloca este gestor en una posición de la lista
       return ControlTimer.AsignarGestor(self, pos);
     ],
-    EliminarGestor [;        ! Elimina este gestor de la lista de gestores
+    EliminarGestor [;           ! Elimina este gestor de la lista de gestores
       return ControlTimer.EliminarGestor(self, 0);
     ],
-    ActivarMutex [;          ! Activa el mutex sobre este gestor
+    ActivarMutex [;             ! Activa el mutex sobre este gestor
       ControlTimer.ActivarMutex(self);
     ],
-    PosicionDelGestor [;     ! En qué posición está dentro del array
+    PosicionDelGestor [;        ! En qué posición está dentro del array
       return ControlTimer.BuscarPosicion(self);
     ],
-    SustituirGestor [ nuevo;
+    SustituirGestor [ nuevo;    ! Sustituye este gestor por el nuevo
       return ControlTimer.SustituirGestor(self, nuevo);
+    ],
+    IntercambiarConGestor [ g;  ! Intercambia este gestor con otro
+      return ControlTimer.IntercambiarGestores(self, g);
     ];
 
 
 Object ControlTimer
   private
-    gestores 0 0 0 0 0 0 0 0 0 0,         ! Array de gestores de eventos
+    gestores 0 0 0 0 0 0 0 0 0 0          ! Array de gestores de eventos
+             0 0 0 0 0 0 0 0 0 0,
     duracion_maxima 0,                    ! Duración máxima entre los gestores (en nº de ticks) 
     tick 0,                               ! Duración del tick (en milisegundos)
     tick_pausado -1,                      ! Aquí se guarda el tick cuando se pausa
@@ -158,6 +162,9 @@ Object ControlTimer
       }
     ],
   with
+    DentroDeEvento [;                     ! Si se está ejecutando un evento desde el timer
+      return self.contexto_handle_glk;
+    ],
     ! Nuestra propia versión de WaitDelay:
     CT_WaitDelay [ delay;
       glk($00D6, delay * 5) ;             ! request_timer_events
@@ -254,6 +261,15 @@ Object ControlTimer
       }
       return -1;
     ],
+    IntercambiarGestores [ g1 g2          ! Intercambia la posición de dos gestores
+      pos1 pos2;
+      pos1 = self.BuscarPosicion(g1);
+      pos2 = self.BuscarPosicion(g2);
+      if (pos1 == -1 || pos2 == -1) return -1;
+      self.&gestores-->pos1 = g2;
+      self.&gestores-->pos2 = g1;
+      rtrue;
+    ],
     AgregarGestor [ g                     ! Agrega un nuevo gestor en un hueco libre
       pos;
       pos = self.BuscarPosicion(0);
@@ -321,7 +337,7 @@ Object ControlTimer
     ReiniciarImpresion [;                 ! Reinicia el indicador de 'imprimido algo'
       self.ha_imprimido_algo = false;
     ],
-    ActivarTick [ t;                      ! Activa el timer (opcionalmente, asignando el tick antes)
+    ActivarTick [ t;                      ! Activa el tick (opcionalmente, asignando el tick antes)
       if (t ~= 0) {
         self.AsignarTick(t);
       } else {
@@ -346,10 +362,10 @@ Object ControlTimer
       self.ActivarTick(self.tick_pausado);
       self.tick_pausado = 0;
     ],
-    PausarTimers [;                       ! Detiene los timers pero el tiempo sigue corriendo
+    PausarGestores [;                     ! No ejecuta los eventos, pero el tiempo sigue corriendo
       self.condicion = false;
     ],
-    ReanudarTimers [;                     ! Reanuda los timers
+    ReanudarGestores [;                   ! Reanuda la ejecución de los eventos
       self.condicion = true;
     ],
     ActivarMutex [ g;                     ! Activa el mutex sobre un gestor

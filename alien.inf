@@ -53,6 +53,8 @@ Constant NO_SCORE;
 ! Hay curiosidades al final del juego
 Constant AMUSING_PROVIDED;
 
+Constant IMPRIMIR_DESCRIPCION_MAPA;
+
 ! Rutas de los móviles:
 !Constant RUTA_NINGUNA = 0;
 !Constant RUTA_ALEATORIA = 1;
@@ -659,7 +661,7 @@ Object nave1 "Interior de la nave"
                  disponen los dos únicos asientos del vehículo. Sus angostas paredes
                  aumentan la sensación de claustrofobia y los enormes ventanales ofrecen
                  una vista desoladora del exterior.",
-    out_to puerta_nave,
+    e_to puerta_nave,
     w_to nave2,
     sgw_img Nave1_jpg,
     sgw_mus Nave_ogg,
@@ -984,8 +986,8 @@ Object puerta_nave "compuerta de la nave" nave1
         return 2;
       }
     ],
-    out_to exterior1,
-    in_to nave1,
+    e_to exterior1,
+    w_to nave1,
     interior nave1,
     exterior exterior1,
     before [;
@@ -1517,7 +1519,7 @@ Object exterior1 "Junto a la nave"
                  La temperatura es elevada, y la sensación de agobio, palpable.",
     sgw_img Exterior1_jpg,
     sgw_mus Lluvia_ogg,
-    in_to puerta_nave,
+    w_to puerta_nave,
     s_to exterior3,
     n_to junto_procesador,
     antesPNJ [;
@@ -9228,11 +9230,11 @@ Object timer_laberinto
         }
         if (~~hayTiempoReal) rtrue;
         if (alien notin l) {
-          alien.seHaMovido = false;
+          alien.se_ha_movido = false;
           if (alien.condicion_movimiento()) {
             alien.movimiento();
           }
-          if (alien.seHaMovido) {
+          if (alien.se_ha_movido) {
             detector_movimiento.each_turn();
             barra_estado.dibujar();
           }
@@ -9264,12 +9266,6 @@ Object timer_alien
     evento [;
       alien.each_turn();
     ];
-
-
-[ HandleGlkEvent ev context buffer;
-  SGW_HandleGlk(ev);
-  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
-];
 
 
 [ ComoHablar;
@@ -10566,5 +10562,15 @@ Endif;
   "¿Que saque qué de dónde?";
 ];
 
+
 Include "Mapeador";
+
+
+[ HandleGlkEvent ev context buffer;
+  SGW_HandleGlk(ev);
+  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
+  Mapa_HandleGlkEvent(ev, context, buffer);
+];
+
+! Fin del código
 
