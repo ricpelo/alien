@@ -53,7 +53,7 @@ Constant NO_SCORE;
 ! Hay curiosidades al final del juego
 Constant AMUSING_PROVIDED;
 
-Constant IMPRIMIR_DESCRIPCION_MAPA;
+!Constant IMPRIMIR_DESCRIPCION_MAPA;
 
 ! Rutas de los móviles:
 !Constant RUTA_NINGUNA = 0;

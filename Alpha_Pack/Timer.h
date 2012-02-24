@@ -23,27 +23,27 @@ Message "|                                                                 |";
 Message "|                  * TIMER:  I M P O R T A N T E *                |";
 Message "|                  ===============================                |";
 Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;' |";
-Message "| 2. Si usas tu propia rutina HandleGlkEvent(),                   |";
-Message "|    no olvides llamar desde esa rutina a:                        |";
-Message "|    ControlTimer.CT_HandleGlkEvent(ev, context, buffer)          |";
+Message "| 2. En tu rutina HandleGlkEvent() (créala si no la tienes ya),   |";
+Message "|    llama a ControlTimer.CT_HandleGlkEvent(ev, context, buffer)  |";
 Message "|_________________________________________________________________|";
 
 
-! Nuestra particular versión de HandleGlkEvent:
-[ HandleGlkEvent ev context buffer;
-  ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
-];
-
-! Nuestra particular versión de KeyDelay:
-[ KeyDelay delay;
-  return ControlTimer.CT_KeyDelay(delay);
-];
+!! Nuestra particular versión de HandleGlkEvent:
+![ HandleGlkEvent ev context buffer;
+!  return ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
+!];
 
 
 ! Nuestra particular versión de WaitDelay:
 ![ WaitDelay delay;
 !  return ControlTimer.CT_WaitDelay(delay);
 !];
+
+
+! Nuestra particular versión de KeyDelay:
+[ KeyDelay delay;
+  return ControlTimer.CT_KeyDelay(delay);
+];
 
 
 Class GestorTimer

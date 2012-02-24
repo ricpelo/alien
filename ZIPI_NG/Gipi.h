@@ -86,21 +86,7 @@ ZIPI_Otro Otro_vacio;
 !________________________________________________________________
 #ifdef TARGET_GLULX;
 [ ZIPI_tecla ;
-    glk($00D2, gg_statuswin); ! glk_request_char_event(gg_statuswin);
-    glk(258, gg_statuswin); ! glk_request_hyperlink_event
-    while(1) 
-    {
-        glk($00C0, gg_arguments); ! glk_select(gg_arguments);
-        if ((gg_arguments-->0) == 2) { ! 2=evType_CharInput
-            glk(259, gg_statuswin); ! glk_cancel_hyperlink_event
-            return gg_arguments-->2;
-	}
-        if ((gg_arguments-->0) == 8) {  ! evType_Hyperlink
-            glk(211, gg_statuswin); ! glk_cancel_char_event
-	    print "^^YAY^^";
-            return gg_arguments-->2 + ZIPI_EVENTO_HYPER;
-	}
-    }
+  return KeyDelay();
 ];
 #ifnot;
 [ ZIPI_tecla tecla;

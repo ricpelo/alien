@@ -200,6 +200,7 @@ Verb meta 'mapa'
 [ ImprimirBarraEstadoMapa sitio;
   glk($002F, gg_statuswin); ! select
   glk($002A, gg_statuswin); ! clear
+  glk($0086, style_SubHeader);
   ImprimirNombreSitioMapa(sitio);
   glk($0025, gg_statuswin, gg_arguments, gg_arguments + WORDSIZE); ! window_get_size
   glk($002B, gg_statuswin, gg_arguments-->0 - 11, 0); ! locate
@@ -331,7 +332,25 @@ Verb meta 'mapa'
   StatusLineHeight(20);
   glk($0086, style_SubHeader);
   glk($002B, gg_statuswin, 0, 0); ! locate
-  print "lksdjflsdlfksdfkl^slkdjfskdljfskljf^klsdfkljsdfklsjdf^sldjlsjkdsklf";
+  print "Ayuda del mapa";
+  glk($0086, style_Normal);
+
+  print "^
+         ^ ", (s_em) "Cursor arriba", ", ", (s_em) "8", ", ", (s_em) "Y", ": ", (s_b) "Norte",
+           "       ", (s_em) "7", ", ", (s_em) "T", ": ", (s_b) "Noroeste",
+        "^ ", (s_em) "Cursor abajo", ", ", (s_em) "2", ", ", (s_em) "N", ": ", (s_b) "Sur",
+           "          ", (s_em) "9", ", ", (s_em) "U", ": ", (s_b) "Noreste",
+        "^ ", (s_em) "Cursor izquierda", ", ", (s_em) "4", ", ", (s_em) "G", ": ", (s_b) "Oeste",
+           "    ", (s_em) "1", ", ", (s_em) "B", ": ", (s_b) "Suroeste",
+        "^ ", (s_em) "Cursor derecha", ", ", (s_em) "6", ", ", (s_em) "J", ": ", (s_b) "Este",
+           "       ", (s_em) "3", ", ", (s_em) "M", ": ", (s_b) "Sureste",
+        "^ ", (s_em) "Inicio", ", ", (s_em) "5", ": ", (s_b) "Arriba",
+           "                ", (s_em) "Enter", ", ", (s_em) "*", ": ", (s_b) "Entrar",
+        "^ ", (s_em) "Fin", ", ", (s_em) "0", ": ", (s_b) "Abajo",
+           "                    ", (s_em) "Retroceso", ", ", (s_em) "/", ", ", (s_em) ".", ": ", (s_b) "Salir",
+        "^ ", (s_em) "Z", ", ", (s_em) "+", ": ", (s_b) "Acercar",
+           "                    ", (s_em) "X", ", ", (s_em) "-", ": ", (s_b) "Alejar";
+
   KeyDelay();
   StatusLineHeight(1);
   glk($0086, style_SubHeader);
@@ -349,7 +368,7 @@ Verb meta 'mapa'
   RefrescarMapa(sitio, cenx, ceny);
   while (true) {
     g_sitio = sitio;
-    tecla = KeyCharPrimitive(); ! Con KeyDelay() no se activan los eventos HandleGlkEvent
+    tecla = KeyDelay();
     glk_window_get_size(gg_mapa_win, gg_arguments, gg_arguments + WORDSIZE);
     cenx = (gg_arguments-->0) / 2; ! ancho / 2
     ceny = (gg_arguments-->1) / 2; ! alto / 2
