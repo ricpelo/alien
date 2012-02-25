@@ -192,6 +192,9 @@ Verb meta 'mapa'
   clearMainWindow();
   if (sitio provides sgw_img) drawImageSGW(gg_objwin, sitio.sgw_img, POS_CENTRADO,
                                            BORDEWIN, BORDEWIN);
+  glk_window_get_size(gg_mapa_win, gg_arguments, gg_arguments + WORDSIZE);
+  glk_window_fill_rect(gg_mapa_win, $ffffff, 0, 0, gg_arguments-->0, gg_arguments-->1);
+  glk_window_fill_rect(gg_mapa_win, $000000, 2, 2, gg_arguments-->0 - 4, gg_arguments-->1 - 4);
   DibujarMapa(sitio, cenx, ceny, 1);
   objectloop (o ofclass Lugar) o.dibujado = false;
   ImprimirBarraEstadoMapa(sitio);
@@ -273,7 +276,7 @@ Verb meta 'mapa'
                                 70, wintype_Graphics, GG_BIGWIN_ROCK);
     #ifnot;
     gg_bigwin = glk_window_open(gg_mainwin, winmethod_Above + winmethod_Proportional,
-                                75, wintype_Graphics, GG_BIGWIN_ROCK);
+                                100, wintype_Graphics, GG_BIGWIN_ROCK);
     #endif;
   }
   if (gg_bigwin == 0) return;
@@ -323,13 +326,16 @@ Verb meta 'mapa'
   }
 ];
 
-[ AyudaMapa sitio cenx ceny;
+[ AyudaMapa sitio cenx ceny
+  altura;
   glk_window_clear(gg_mainwin);
   glk_window_clear(gg_mapa_win);
   glk_window_clear(gg_objwin);
   glk_window_clear(gg_statuswin);
-  glk($002F, gg_statuswin);
-  StatusLineHeight(20);
+  glk($002F, gg_statuswin); ! select
+  glk_window_get_size(gg_statuswin, gg_arguments, gg_arguments + WORDSIZE);
+  altura = gg_arguments-->1;
+  StatusLineHeight(12);
   glk($0086, style_SubHeader);
   glk($002B, gg_statuswin, 0, 0); ! locate
   print "Ayuda del mapa";
@@ -349,10 +355,11 @@ Verb meta 'mapa'
         "^ ", (s_em) "Fin", ", ", (s_em) "0", ": ", (s_b) "Abajo",
            "                    ", (s_em) "Retroceso", ", ", (s_em) "/", ", ", (s_em) ".", ": ", (s_b) "Salir",
         "^ ", (s_em) "Z", ", ", (s_em) "+", ": ", (s_b) "Acercar",
-           "                    ", (s_em) "X", ", ", (s_em) "-", ": ", (s_b) "Alejar";
-
+           "                    ", (s_em) "Q", ": ", (s_b) "Salir",
+        "^ ", (s_em) "X", ", ", (s_em) "-", ": ", (s_b) "Alejar";
+  print "^^ [ Pulsa una tecla para continuar ]";
   KeyDelay();
-  StatusLineHeight(1);
+  StatusLineHeight(altura);
   glk($0086, style_SubHeader);
   glk($002F, gg_mainwin);   ! select
   RefrescarMapa(sitio, cenx, ceny);
