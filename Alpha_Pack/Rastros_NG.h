@@ -12,11 +12,9 @@
 ! VERSION:   1.0
 ! PARA:   Ser usada sobre InformATE en su version 6-10
 ! URLs:   http://www.arrakis.es/~meliton/
-!        http://www.geocities.com/TimesSquare/Fortress/9939/
-!    http://www.geocities.com/jsjlogin/equipate/
-! USO:    'include "Rastros"' tras el 'include "Gramatica"' y
-!               antes del 'include "Moviles"' o 'include "Automata"'
-!               si es que alguno de estos está siendo incluído
+!         http://www.geocities.com/TimesSquare/Fortress/9939/
+!         http://www.geocities.com/jsjlogin/equipate/
+! USO:    'Include "Rastros"' tras el 'Include "Gramatica"'.
 !
 !----------------------------------------------------------------------------
 
@@ -73,7 +71,7 @@ Global indiceConRastro = 0;
 !  rastreado, por ejemplo, mediante diversos sentidos
 !
 Ifndef TipoRastro;
-class TipoRastro
+Class TipoRastro
   with
     name 'rastro' 'rastros' 'olor',
     !
@@ -629,37 +627,34 @@ Endif;
 !
 ! Rutina que ejecuta rutinas si las encuentra
 !
-Ifndef VR;
+#ifndef VR;
 [ VR valor;
-  !print "[VR: ", valor, " --> ", ZRegion( valor ), " ]^";
-
-  if (ZRegion(valor) == 2)
-    return valor();
-  else
-    return valor;
+! print "[VR: ", valor, " --> ", ZRegion(valor), " ]^";
+  if (ZRegion(valor) == 2) return valor();
+  else                     return valor;
 ];
-EndIf;
+#endif;
 
 !
 ! Rutina de decir direcciones
 !
-Ifndef DirDada;
+#ifndef DirDada;
 [ DirDada i;
-  switch(i) {
-    n_obj:       print "hacia el norte";
-    s_obj:       print "hacia el sur";
-    e_obj:       print "hacia el este";
-    w_obj:       print "hacia el oeste";
-    ne_obj:      print "hacia el noreste";
-    nw_obj:      print "hacia el noroeste";
-    se_obj:      print "hacia el sureste";
-    sw_obj:      print "hacia el suroeste";
-    u_obj:  print "hacia arriba";
+  switch (i) {
+    n_obj:   print "hacia el norte";
+    s_obj:   print "hacia el sur";
+    e_obj:   print "hacia el este";
+    w_obj:   print "hacia el oeste";
+    ne_obj:  print "hacia el noreste";
+    nw_obj:  print "hacia el noroeste";
+    se_obj:  print "hacia el sureste";
+    sw_obj:  print "hacia el suroeste";
+    u_obj:   print "hacia arriba";
     d_obj:   print "hacia abajo";
-    in_obj: print "hacia el interior";
-    out_obj:  print "hacia el exterior";
-    default:     print "hacia ", (the) i;           ! (c) Alpha
+    in_obj:  print "hacia el interior";
+    out_obj: print "hacia el exterior";
+    default: print "hacia ", (the) i;           ! (c) Alpha
   }
 ];
-Endif;
+#endif;
 
