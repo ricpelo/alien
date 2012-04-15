@@ -23,7 +23,7 @@ Message "|                                                                 |";
 Message "|                  * TIMER:  I M P O R T A N T E *                |";
 Message "|                  ===============================                |";
 Message "| 1. Pon 'Replace KeyDelay;' justo antes de 'Include ~Parser.h~;' |";
-Message "| 2. En tu rutina HandleGlkEvent() (créala si no la tienes ya),   |";
+Message "| 2. En tu rutina HandleGlkEvent() (creala si no la tienes ya),   |";
 Message "|    llama a ControlTimer.CT_HandleGlkEvent(ev, context, buffer)  |";
 Message "|_________________________________________________________________|";
 

@@ -183,6 +183,7 @@ Replace ZIPI_RunOtro;
 ! Nuestra versión elimina también los signos de admiración e interrogación:
 Replace QuitarAcentos;
 
+Replace EncenderGraficos;
 
 
 ! ====================================================================
@@ -416,7 +417,7 @@ Include "VerbLib";
 
 
 Include "Rastros_NG";     ! Mis rastros son: sangre del alien, cable blanco y cable negro
-Include "barra";          ! Para cambiar la barra de estado
+Include "Barra";          ! Para cambiar la barra de estado
 
 
 Object barra_estado
@@ -10447,7 +10448,6 @@ Endif;
   print "- Decorado_NG (adaptación de Decorado, de Zak y Mel Hython)^";
   print "- Escr_NG (adaptación de Escr, de Baltasarq)^";
   print "- Adaptación de Barra, de Presi^";
-  print "- Adaptación de BajoNivel, de Zak y Baltasarq^";
   print "- Adaptación de ZIPI, de Zak";
   KeyDelay();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
