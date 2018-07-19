@@ -9986,10 +9986,6 @@ Extend 'empuja' first
   * 'a//' noun 'a//'/'hacia' door              -> EmpujarHaciaPuerta
   * 'a//' noun door                            -> EmpujarHaciaPuerta;
 
-
-Verb 'dentro' 'adentro'
-  *                 -> Enter;
-
 Verb 'bloquea'
   * noun            -> Lock
   * noun 'con' held -> Lock;
