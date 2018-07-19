@@ -6792,7 +6792,9 @@ Object alien procesador
       }
       "";
     ],
+    llega_por 0,
     llega [ dir;
+      self.llega_por = dir;
       ControlTimer.PrepararImpresion();
       if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
           self.perseguido == player && self.time_left > 0) {
@@ -6893,6 +6895,12 @@ Object alien procesador
 !        self.capricho = 50;
 !      }
 !    ],
+    react_before [;
+      Go:
+        if (noun == self.llega_por) {
+          "¡", (The) self, " está justo en esa dirección y te bloquea el paso!";
+        }
+    ],
     before [;
       Disparar:
         if (rifle notin player) {
@@ -8106,6 +8114,7 @@ Object sacador_de_aliens
       }
       ! Sacamos al alien del juego
       give self general;
+      self.llega_por = 0;
       self.agujero = parent(alien);
       remove alien;
       give alien absent;
@@ -8131,6 +8140,7 @@ Object sacador_de_aliens
       give self ~general;
       ! Volvemos a meter al alien en el juego, pero en un túnel aleatorio:
       give alien ~absent;
+      self.llega_por = 0;
       s = self.seleccionar_salida();
       move alien to s;     ! antes era self.agujero
       if (LugarReal() == s) {
