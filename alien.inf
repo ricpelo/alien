@@ -308,10 +308,13 @@ Object LibraryMessages
       Take:
         if (lm_n == 1) {
           print "Recoges ";
-          if (lm_o has moved) {
-            print (the) lm_o;
+          ! Corrige fallo de la librería: no se puede usar lm_o aquí, no sé por qué.
+          ! En su lugar, hay que usar noun.
+          ! Ver INFSP6/Spanish.h línea 3908.
+          if (noun has moved) {
+            print (the) noun;
           } else {
-            print (a) lm_o;
+            print (a) noun;
           }
           ".";
         }
