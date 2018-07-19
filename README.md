@@ -1,6 +1,6 @@
 # A·L·I·E·N: La aventura - Edición Especial
 
-Copyright (c) 2008-2012 Alpha Aventuras
+Copyright (c) 2008-2018 Alpha Aventuras
 
 El [código fuente](https://github.com/ricpelo/alien) es software
 libre publicado bajo la licencia [GNU GPL
@@ -17,8 +17,6 @@ de GNU para más información.
 Para contactar con el autor, puede usar los siguientes medios:
 
 - Email: alpha.aventuras@gmail.com
-- Web actual: http://rickyniano.wixsite.com/alphaaventuras
-- Web antigua: http://sites.google.com/site/alphaaventuras
 - Facebook: https://www.facebook.com/alphaaventuras
 - WikiCAAD: http://wiki.caad.es/Alpha_Aventuras
 

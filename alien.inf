@@ -9,7 +9,7 @@
 !
 ! "A·L·I·E·N" - Edición Especial
 !
-! Copyright (c) 2008-2012 Ricardo Pérez López (Alpha Aventuras)
+! Copyright (c) 2008-2018 Ricardo Pérez López (Alpha Aventuras)
 !
 
 ! This program is free software: you can redistribute it and/or modify
@@ -36,11 +36,11 @@
 
 
 Constant Story "~A·L·I·E·N~: La aventura - Edición Especial";
-Constant Headline "^(c) 2008-2012 Alpha Aventuras^^
+Constant Headline "^(c) 2008-2018 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
 Release 1;
-Serial "120123";
+!Serial "120123";
 
 ! Queremos usar el comando 'Salidas'
 Constant ADMITIR_COMANDO_SALIDAS;
@@ -8481,7 +8481,7 @@ Object tt_final
     DibujaLogoAlien();
   }
 
-  print "Copyright (c) 2008-2012 Alpha Aventuras";
+  print "Copyright (c) 2008-2018 Alpha Aventuras";
   KeyDelay();
   clearMainWindow();
   ! Desde el primer momento, dibujamos la primera pantalla y activamos el timer:
@@ -10416,7 +10416,7 @@ Endif;
 [ CreditosSub;
   viewImageCenter(Logo_Alpha_Aventuras_jpg);
   print "A·L·I·E·N: LA AVENTURA - EDICIÓN ESPECIAL^";
-  print "(c) 2008-2012 Alpha Aventuras^^";
+  print "(c) 2008-2018 Alpha Aventuras^^";
   print "- PROGRAMACIÓN Y DISEÑO:^";
   print "    Ricardo Pérez López^^";
   print "- GRÁFICOS E IDEA ORIGINAL:^";
@@ -10438,7 +10438,7 @@ Endif;
   KeyDelay();
   print "Desarrollado usando el lenguaje Inform, de Graham Nelson,^";
   print "con la ayuda de las siguientes librerías:^^";
-  print "- InformATE 6/10+, de Zak et al.^";
+  print "- INFSP6, de INFSP Task Team.^";
   print "- Adaptación de SGW+DMX, de Eliuk Blau^";
   print "- Damusix, de Eliuk Blau^";
   print "- PNJactor_NG y PNJacciones_NG (adaptaciones de los originales de Zak y Carlos)^";
@@ -10454,17 +10454,17 @@ Endif;
   KeyDelay();
   print "^^Nuestro agradecimiento a todos los integrantes del CAAD que nos han ayudado,
          directa o indirectamente, en el desarrollo de esta aventura.^^
-         (c) 2008-2012 Alpha Aventuras^^
+         (c) 2008-2018 Alpha Aventuras^^
          Este programa es software libre, publicado bajo la licencia GNU GPL v3.
          El texto completo de la licencia se encuentra en la siguiente dirección:^^";
   print (s_pre) "http://www.gnu.org/licenses/gpl.txt^";
   print "^El código fuente del programa está disponible en Github:^^";
-  print (s_pre) "https://github.com/ricpelo/alien/tree/deluxe^";
+  print (s_pre) "https://github.com/ricpelo/alien^";
   KeyDelay();
   print "^Visítanos en:^^";
   print (s_pre) "http://wiki.caad.es/Alpha_Aventuras^
-        http://sites.google.com/site/alphaaventuras^
         http://www.facebook.com/alphaaventuras^";
+  print "^Contacta con nosotros en ", (s_pre) "alpha.aventuras@@64gmail.com", ".^";
   KeyDelay();
   viewImageCenter(LugarReal().sgw_img);
 ];
