@@ -304,7 +304,7 @@ Object LibraryMessages
                "No puedes pasar a través ", (del) lm_o, ".";
              }
         }
-        
+
       Take:
         if (lm_n == 1) {
           print "Recoges ";
@@ -401,20 +401,20 @@ Include "VerbLib";
 !  if (LugarReal() == nave1 or nave2) {
 !    PonerAlAlcance(computadora);
 !  }
-  
+
   ! Ponemos la compuerta de la nave al alcance de la computadora, para que pueda abrirla
   ! aunque no estemos físicamente delante de la puerta:
   if (actor == computadora) {
     PlaceInScope(puerta_nave);
     PlaceInScope(compartimento_trajes);
   }
-  
+
   ! Así le puedes decir "jason, sigueme" o "jason, quedate" incluso aunque no esté en la
   ! misma localidad que tú:
   if (action_to_be == ##Seguir or ##Quedar or ##Wait && actor == jason) {
     PlaceInScope(player);
   }
-  
+
   rfalse;
 ];
 
@@ -517,7 +517,7 @@ Class Lugar
           } else {
             "Tuberías y estructuras metálicas recorren el techo.";
           }
-        }        
+        }
     ],
     after [;
       Go:
@@ -696,11 +696,11 @@ Object nave1 "Interior de la nave"
   !                                  jason.perseguido == jugador);
             rfalse;
           }
-              
+
           if (puerta_nave hasnt open) {
             rfalse;
           }
-          
+
           k = 0;
           ! Comprueba si el jugador lleva puesto el traje. Para ello, recorre todos los
           ! objetos del jugador en busca de uno que sea de la clase TrajeAtmosferico y
@@ -722,7 +722,7 @@ Object nave1 "Interior de la nave"
               if (i ofclass TrajeAtmosferico)
                 t = i;
             }
-            
+
             ! Si no lleva ningún traje atmosférico, intenta cogerlo:
             if (t == 0) {
   !            PNJ_Ruta(jason, MOVIMIENTO_NINGUNO);
@@ -812,9 +812,9 @@ Object nave1 "Interior de la nave"
             "Sales al exterior sin problemas, protegido por tu traje atmosférico.";
           }
         }
-!        print " A continuación, Madre cierra la compuerta de la nave.^";      
+!        print " A continuación, Madre cierra la compuerta de la nave.^";
       }
-    ],      
+    ],
     after [ jason_viene;
       Go:
         ! Si venimos de fuera:
@@ -908,7 +908,7 @@ Object decorado_nave1 nave1
       'indicador'    [; return self.desc_instrumentos; ] 0
       'botones'      [; return self.desc_instrumentos; ] G_PLURAL
       'boton'        [; return self.desc_instrumentos; ] 0
-      'ventanales'   [; return self.desc_ventanales; ] G_PLURAL 
+      'ventanales'   [; return self.desc_ventanales; ] G_PLURAL
       'ventanal'     [; return self.desc_ventanales; ] 0
       'ventanas'     [; return self.desc_ventanales; ] G_FEMENINO + G_PLURAL
       'ventana'      [; return self.desc_ventanales; ] G_FEMENINO
@@ -941,8 +941,8 @@ Object nave "nave"
         }
         rtrue;
     ];
- 
-    
+
+
 Object descompresion "cámara de descompresión"
   with
     name_m 'habitaculo',
@@ -1020,7 +1020,7 @@ Object puerta_nave "compuerta de la nave" nave1
 
 Object compartimento_trajes "compartimento de trajes" nave1
   class Contenedor
-  class EscenarioAbrible  
+  class EscenarioAbrible
   with
     name 'compartimento',
     adjectives 'trajes' 'atmosfericos',
@@ -1032,7 +1032,7 @@ Object compartimento_trajes "compartimento de trajes" nave1
     ],
   has
     transparent;
-    
+
 
 Object cargador "cargador" nave1
   with
@@ -1064,7 +1064,7 @@ Object cargador "cargador" nave1
         } else {
           "No tienes nada que recargar.";
         }
-        
+
       Insert:
         if (second == self) {
           if (noun ~= bateria) {
@@ -1187,7 +1187,7 @@ Object tu_traje "traje" compartimento_trajes
           print_ret "Ya llevas puesto ", (the) traje_jason, ".";
         }
     ];
-    
+
 
 Object traje_jason "traje de Jason" compartimento_trajes
   class TrajeAtmosferico
@@ -1274,7 +1274,7 @@ Object traje_inutil "restos del traje de Jason"
     description "Esto es lo que ha quedado del traje de Jason tras su enfrentamiento con
                  la criatura. Tiene una generosa hendidura en un lateral. Sin duda, está
                  del todo inservible.",
-    initial "El traje de Jason reposa inservible en el suelo de la sala.", 
+    initial "El traje de Jason reposa inservible en el suelo de la sala.",
     before [;
       Examine:
         rfalse;
@@ -1283,7 +1283,7 @@ Object traje_inutil "restos del traje de Jason"
     ],
   has
     pluralname;
-    
+
 
 Object decorado_traje_inutil
   class Decorado
@@ -1339,7 +1339,7 @@ Object decorado_nave2 nave2
 
 Object armario "armario" nave2
   class Contenedor
-  class EscenarioAbrible  
+  class EscenarioAbrible
   with
     name 'armario',
     descripcion_real "Un armario metálico, de aspecto plateado y liso. Sobresale de una
@@ -1394,7 +1394,7 @@ Object linterna "linterna" armario
             print ". Está encendida";
           }
         }
-        
+
         if (bateria notin self) {
           ". Además, le falta la batería.";
         } else {
@@ -1497,7 +1497,7 @@ Object bateria "batería" linterna
       if (~~((p ofclass Lugar) || (p ofclass Movil) || (bateria in player))) {
         print "Está colocada en ", (the) p, ". ";
       }
-      
+
       "Actualmente está al ", self.nivel_carga(), "% de su capacidad.";
     ],
     nivel_carga [; return (self.energia * 100) / MAX_NIVEL_CARGA; ],
@@ -1668,10 +1668,10 @@ Object cables "cables" junto_procesador
           "Incluso mojados como están, no te provocan ni siquiera un ligero
            calambre, lo que te hace pensar que por ellos no circula energía.";
         }
-        
+
       SwitchOn:
         <<Tie noun second>>;
-      
+
       Receive:
         <<Tie noun second>>;
 
@@ -1689,7 +1689,7 @@ Object cables "cables" junto_procesador
   has
     scenery pluralname;
 
-    
+
 Object puerta_procesador "puerta del procesador atmosférico" junto_procesador
   class PNJPuerta
   class EscenarioAbrible
@@ -1706,7 +1706,7 @@ Object puerta_procesador "puerta del procesador atmosférico" junto_procesador
     in_to procesador,
     out_to junto_procesador,
     interior procesador,
-    exterior puerta_procesador,     
+    exterior puerta_procesador,
     before [;
       Open:
         if (self hasnt open) {
@@ -1813,7 +1813,7 @@ Object panel_control "panel de control" junto_procesador
                 HablaJason("¡Ey! ¿Es que alguien está mintiendo por aquí?");
               }
             }
-            rtrue; 
+            rtrue;
           } else {
             print "El display insiste: ~";
             tt_computadora.visualiza("Código incorrecto. Acceso denegado.");
@@ -1846,7 +1846,7 @@ Object panel_control "panel de control" junto_procesador
         if (bateria notin self) {
           "Está lleno de cables de varios colores.";
         }
-        
+
       Receive:
         print "Metes la batería dentro del panel y ajustas varios cables sueltos a sus
                bornes, ";
@@ -1871,7 +1871,7 @@ Object panel_control "panel de control" junto_procesador
           "Sacas la batería, soltando los cables que la mantenían unida al panel de
            control.";
         }
-    ],                 
+    ],
   has
     scenery container open;
 
@@ -1899,7 +1899,7 @@ Object procesador "Procesador atmosférico"
       Go:
         if (noun == out_obj && alien.comportamiento > 0 && rifle notin player) {
           "¡No te vayas sin dejar aquí el arma de Jason! Podría serte de mucha utilidad.";
-        } 
+        }
     ],
     each_turn [;
       self.comprobar_segunda_parte();
@@ -1992,7 +1992,7 @@ Object decorado_procesador procesador
       'charco'   [; return self.desc_charcos; ] 0
       'agua'     [; return self.desc_charcos; ] G_FEMENINO;
 
-      
+
 Object conexiones "caja de conexiones" procesador
   class Contenedor
   class EscenarioAbrible
@@ -2029,7 +2029,7 @@ Object conexiones "caja de conexiones" procesador
             ! Se intenta abrir la caja con algo
             if (self has locked && second ~= destornillador) {
               print_ret (The) second, " no sirve para quitar el tornillo.";
-            }        
+            }
             if (self hasnt locked) {
               "La caja ya está lo bastante abierta como para poder trabajar con su
                contenido.";
@@ -2052,7 +2052,7 @@ Object conexiones "caja de conexiones" procesador
         keep_silent = 1;  ! Para que no diga que abres la caja a continuación
         <Open self>;     ! Abres la caja (pero el intérprete no dice nada)
         keep_silent = 0;  ! Vuelves a la situación normal
-        rtrue;    
+        rtrue;
     ],
   has
     female lockable locked;
@@ -2163,7 +2163,7 @@ Object "piezas metálicas" exterior3
   has
     scenery;
 
-    
+
 Object ascensor_arriba "ascensor de emergencia"
   with
     name 'ascensor' 'elevador' 'cubiculo' 'emergencia',
@@ -2470,7 +2470,7 @@ Object montacargas "montacargas"
         print self.nivel, "...^";
     ],
   has
-    scenery enterable;    
+    scenery enterable;
 
 
 ! La propiedad general indica que no es la primera vez que entramos aquí con la puerta
@@ -2512,7 +2512,7 @@ Object puerta_rara "puerta del complejo" entrada
       }
     ],
     ! "La puerta, de aspecto infranqueable, se alza formidable en la entrada al complejo.",
-!    si_cerrada "La puerta tiene un aspecto muy extraño y parece imposible de abrir.", 
+!    si_cerrada "La puerta tiene un aspecto muy extraño y parece imposible de abrir.",
     when_open "Un enorme agujero de forma irregular abre el paso a través de la puerta.",
     out_to junto_puerta,
     in_to entrada,
@@ -2708,14 +2708,14 @@ Object "ordenadores de la oficina" oficina
     ],
   has
     scenery;
-    
-    
+
+
 Object "mesa" oficina
   with
     name 'mesa' 'escritorio',
     adjectives 'fondo',
     description "Esto sí que es un escritorio amplio y con clase. Te recuerda el estilo
-                 clásico de las antiguas mesas de abogado propias del S. XX (salvo por               
+                 clásico de las antiguas mesas de abogado propias del S. XX (salvo por
                  la falta de madera, naturalmente). Más allá de su recargado estilo
                  decorativo, tan sólo destacar las pilas de documentos garabateados y
                  mecanoimpresos que descansan sobre su superficie.",
@@ -2729,8 +2729,8 @@ Object "mesa" oficina
     ],
   has
     scenery;
-                 
-                 
+
+
 ! El cuadro se crea cuando has visto las grabaciones de la cámara de seguridad
 
 Object cuadro "cuadro"
@@ -2915,7 +2915,7 @@ Object cajon "cajón" enfermeria
         <<Close self>>;
     ];
 
-    
+
 Object "sangre" enfermeria
   with
     name_f 'sangre',
@@ -2933,7 +2933,7 @@ Object "sangre" enfermeria
          el tiempo.";
     ],
   has
-    scenery;                 
+    scenery;
 
 
 ! El atributo general indica si se ha vaciado
@@ -3038,7 +3038,7 @@ Object decorado_laboratorio laboratorio
         return ".";
       }
     ],
-    desc_sangre 
+    desc_sangre
     before [;
       Touch, Taste:
         switch (self.number) {
@@ -3105,7 +3105,7 @@ Object area_contencion "área de contención" laboratorio
   has
     scenery;
 
-        
+
 Object bisturi "bisturí láser" laboratorio
   with
     name_m 'bisturi' 'laser',
@@ -3131,7 +3131,7 @@ Object camara_seguridad "cámara de seguridad"
     description [;
       if (procesador.arreglado()) {
         print "Es una cámara de seguridad que se mueve lentamente a izquierda y derecha
-               y que emite una parpadeante luz roja junto al objetivo."; 
+               y que emite una parpadeante luz roja junto al objetivo.";
       } else {
         print "Es una cámara de seguridad que parece no estar funcionando.";
       }
@@ -3174,7 +3174,7 @@ Object abrazacaras_oscuridad thedark
     each_turn [;
       if (real_location ofclass ZonaNorte) {
         real_location.each_turn();
-      } 
+      }
     ],
   has
     concealed;
@@ -3218,7 +3218,7 @@ class ZonaNorte
             "El casco te impide oir nada con claridad.";
           }
         }
- 
+
       Go:
         if (noun == s_obj) {
           if (self.ZonaNorte::contador_muerte >= 10) {
@@ -3353,7 +3353,7 @@ Object decorado_despensa despensa
       'manzanas'    [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
       'manzana'     [; return self.desc_m_p_m; ] G_FEMENINO
       'peras'       [; return self.desc_m_p_m; ] G_FEMENINO + G_PLURAL
-      'pera'        [; return self.desc_m_p_m; ] G_FEMENINO      
+      'pera'        [; return self.desc_m_p_m; ] G_FEMENINO
       'melocotones' [; return self.desc_m_p_m; ] G_PLURAL
       'melocoton'   [; return self.desc_m_p_m; ] 0
       'expositores' [; return self.desc_expositores; ] G_PLURAL
@@ -3377,8 +3377,8 @@ Object "zona frigorífica" despensa
     ],
   has
     scenery female;
-        
-    
+
+
 Object comedor1 "Comedor"
   class Complejo
   class ZonaNorte
@@ -3403,7 +3403,7 @@ Object decorado_comedor comedor1
                 todas se encuentran bastante limpias.",
     desc_bandejas "Algunas bandejas se alinean en la barra como soldados en formación,
                    mientras que otras reposan toscamente en una de las mesas.",
-    desc_comida "Es sólo comida putrefacta.", 
+    desc_comida "Es sólo comida putrefacta.",
     before [;
       Eat, Take:
         if (self.number == 'comida') {
@@ -3511,7 +3511,7 @@ Object balcon2
     s_to laberinto11,
     w_to oficina;
 
-    
+
 Object balcon3
   class Balcon,
   with
@@ -3635,7 +3635,7 @@ Object balcon12
     nivel -2,
     posicion s_obj,
     sgw_img Balcon_Este_Sur_jpg,
-    cant_go "Este nivel aún está sin terminar. No hay más salidas.",    
+    cant_go "Este nivel aún está sin terminar. No hay más salidas.",
     e_to laberinto36,
     w_to laberinto28,
     u_to balcon8,
@@ -3724,7 +3724,7 @@ Object "letra ~E~" emergencia_pasillo
                  del pasillo. Te informa de que estás en la zona de emergencia.",
   has
     scenery;
-      
+
 
 Object "diseño rayado" emergencia_pasillo
   with
@@ -3752,7 +3752,7 @@ Object puerta_emergencia "puerta" emergencia_pasillo
         "";
       }
     ],
-    when_closed "La puerta de emergencia está cerrada.", 
+    when_closed "La puerta de emergencia está cerrada.",
     when_open "La puerta de emergencia está abierta.",
     in_to emergencia_pasillo,
     out_to balcon8,
@@ -3778,7 +3778,7 @@ Object puerta_emergencia "puerta" emergencia_pasillo
             "¡Sería una locura abrir la puerta con ese monstruo al otro lado!";
           }
         }
-        
+
       Unlock:
         if (self hasnt locked) {
           print "(La puerta ya no está bloqueada, y no necesitas de nuevo la tarjeta para
@@ -3845,13 +3845,13 @@ Object ranura "ranura" balcon8
           print (The) noun, " no parece entrar en la ranura.^";
           rtrue;
         }
-        
+
         <<Unlock puerta_emergencia noun>>;
     ],
   has
     female scenery container;
-    
-    
+
+
 Object emergencia_oeste "Sala oeste de emergencia"
   class SalaEmergencia
   class ZonaEmergencia
@@ -3934,7 +3934,7 @@ class BotonEmergencia
       } else {
         "^Desde lejos oyes que el botón de la otra sala salta a su posición inicial.";
       }
-        
+
       if (jason in parent(self)) {
         HablaJason("El botón ha saltado y ahora está como al principio.");
         rtrue;
@@ -3996,7 +3996,7 @@ Object boton_oeste "botón azul" emergencia_oeste
           jason:
             HablaJason("¡Esto parece que funciona!");
         }
-        
+
         ! Se activa la autodestrucción:
         QuintaParte();
       }
@@ -4180,7 +4180,7 @@ Object pantalla "pantalla" aula
           print "d. El protocolo no puede abortarse en ningún momento.^^";
           print "[La clave para acceder al documento ~", (s_b) "Holocubo.pdf", "~ es ",
                 (s_b) "APOGEO", " (en mayúsculas).]^";
-          
+
           if (jason in LugarReal()) {
             HablaJason("¡Vamos a volar todo esto en pedazos!");
             jason.Tell = false;
@@ -4230,7 +4230,7 @@ Object decorado_seguridad seguridad
         PonerCableBlanco();
         move rastro_cable_blanco to seguridad;
       }
-      if (~~(camara_seguridad.visto_en_laboratorio)) {      
+      if (~~(camara_seguridad.visto_en_laboratorio)) {
         decorado_seguridad.visto_en_seguridad = true;
         PonerCableNegro();
         move rastro_cable_negro to seguridad;
@@ -4484,7 +4484,7 @@ Object habitat "hábitat"
   has
     scenery;
 
-   
+
 Object laberinto3
   class Laberinto,
   with
@@ -4492,14 +4492,14 @@ Object laberinto3
     e_to aula,
     w_to balcon1;
 
-      
+
 Object laberinto6
   class Laberinto,
   with
     n_to balcon3,
     w_to balcon4;
 
-    
+
 Object laberinto7
   class Laberinto,
   with
@@ -4557,7 +4557,7 @@ Object laberinto18
         default: rfalse;
       }
     ];
-    
+
 
 Object laberinto19
   class Laberinto,
@@ -5021,7 +5021,7 @@ Object vaina "vaina mucosa" hueco_techo
         ! Se intenta abrir la vaina con algo
         if (self has locked && second ~= bisturi) {
           "Necesitarás algún objeto cortante para poder abrir esa sustancia tan rígida.";
-        }        
+        }
         if (self hasnt locked) {
           "La vaina ya está suficientemente abierta.";
         }
@@ -5173,7 +5173,7 @@ Object jason "Jason" nave1
                                   }
         default: rfalse;
       }
-        
+
       s1 = NextWord();
       f = 0;
 
@@ -5193,12 +5193,12 @@ Object jason "Jason" nave1
         f = 1;
         s1 = NextWord();
       }
-      
+
       s2 = NextWord();
 
       if (s2 == 'traje') {
         verb_wordnum++;
-        
+
         switch(s1) {
           'tu': o = traje_jason;
           'mi': o = tu_traje;
@@ -5228,7 +5228,7 @@ Object jason "Jason" nave1
         }
 
         action = a;
-        
+
         if (f == 1) {
           noun = o;
           second = selfobj;
@@ -5460,7 +5460,7 @@ Object jason "Jason" nave1
       if (o == 0) {
         o = noun;
       }
-      
+
       if (~~(PuedeVer(self, o))) {
         HablaJason("No puedo ver eso que dice.");
         rfalse;
@@ -5552,7 +5552,7 @@ Object jason "Jason" nave1
               HablaJason("De acuerdo, pero antes me pondré el traje atmosférico.");
               print "^";
             }
-          }          
+          }
         }
         move self to exterior1;
         puerta_nave.cerrar();
@@ -5560,7 +5560,7 @@ Object jason "Jason" nave1
         "Jason sale al exterior protegido por su traje espacial. A continuación,
          Madre cierra la compuerta de la nave.";
       }
-       
+
       self.orden_ir(out_obj);
       rtrue;
     ],
@@ -5586,7 +5586,7 @@ Object jason "Jason" nave1
           }
         }
       }
-      rtrue;    
+      rtrue;
     ],
     orders [ tmp;
       if (self.comprobar_inconsciencia()) {
@@ -5603,18 +5603,18 @@ Object jason "Jason" nave1
         HablaJason("Supongo que los jefes están para decir que no...");
         rtrue;
 
-      Go:        
+      Go:
         if (noun == in_obj) {
           self.orden_entrar();
           rtrue;
         }
-        
+
         if (noun == out_obj) {
           self.orden_salir();
           rtrue;
         }
-        
-        if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR && 
+
+        if (self.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
             self.perseguido ~= player) {
           HablaJason("Ahora mismo estoy siguiendo a ", self.perseguido, ".");
           rtrue;
@@ -5631,7 +5631,7 @@ Object jason "Jason" nave1
           }
           rtrue;
         }
-        
+
         self.orden_ir(noun);
         rtrue;
 
@@ -5650,7 +5650,7 @@ Object jason "Jason" nave1
 
       Exit, GetOff:
         self.orden_salir();
-        rtrue;                
+        rtrue;
 
       Subir:
         if (montacargas in parent(self)) {
@@ -5677,13 +5677,13 @@ Object jason "Jason" nave1
 
         self.orden_ir(d_obj);
         rtrue;
-                
+
       Strong, Mild:
         print "Jason te mira con cara de pocos amigos, y más que decir, escupe:^";
         HablaJason("Está jugando con fuego...");
         rtrue;
 
-      Take, Remove:        
+      Take, Remove:
         if (noun in self) {
           HablaJason("Ya tenía ", noun, ".");
           rtrue;
@@ -5695,7 +5695,7 @@ Object jason "Jason" nave1
 
         self.intentar_coger();
         rtrue;
-        
+
       Drop:
         if (noun == rifle && noun in self) {
           HablaJason("Ni hablar. No pienso despegarme de mi arma.");
@@ -5707,10 +5707,10 @@ Object jason "Jason" nave1
           HablaJason("No llevo eso encima.");
           rtrue;
         }
-        
+
         PNJDejar(self, noun);
         rtrue;
-        
+
       Wear:
         if (~~(noun ofclass TrajeAtmosferico)) {
           HablaJason("No puedo ponerme eso.");
@@ -5720,7 +5720,7 @@ Object jason "Jason" nave1
         if (noun ~= traje_jason) {
           HablaJason("Lo siento; no es de mi talla.");
           rtrue;
-        }    
+        }
 
         if (noun notin self) {
           if (~~(PuedeVer(noun, self))) {
@@ -5746,7 +5746,7 @@ Object jason "Jason" nave1
         }
         give noun worn;
         HablaJason("Ya está. Me he puesto ", noun, ".");
-        rtrue;        
+        rtrue;
 
       Disrobe:
         if (noun in self && noun has worn) {
@@ -5762,7 +5762,7 @@ Object jason "Jason" nave1
           HablaJason("No puedo quitarme eso. No lo llevo puesto.");
           rtrue;
         }
-        
+
       Give:
         if (noun == nothing) {
           HablaJason("No entiendo qué quiere que le dé.");
@@ -5793,7 +5793,7 @@ Object jason "Jason" nave1
           HablaJason("No tengo eso.");
           rtrue;
         }
-        
+
       SwitchOn:
         if (noun in self || (noun == detector_movimiento && parent(noun) in self)) {
           if (noun hasnt on) {
@@ -5812,7 +5812,7 @@ Object jason "Jason" nave1
           HablaJason("No llevo ", noun, " encima para poder encenderl", noun, ".");
           rtrue;
         }
-        
+
       SwitchOff:
         if (noun in self || (noun == detector_movimiento && parent(noun) in self)) {
           if (noun has on) {
@@ -5827,7 +5827,7 @@ Object jason "Jason" nave1
           HablaJason("No llevo ", noun, " encima para poder apagarlo.");
           rtrue;
         }
-        
+
       Inv:
         ! Si le pides inventario de lo que lleva encima
         if (children(self) == 0) {
@@ -5838,7 +5838,7 @@ Object jason "Jason" nave1
           WriteListFrom(child(self), FULLINV_BIT + ENGLISH_BIT + RECURSE_BIT);
           "~.";
         }
-              
+
       Venir, Seguir:
         if (noun == nothing) {
           noun = player;
@@ -5873,10 +5873,10 @@ Object jason "Jason" nave1
           }
         }
 
-        HablaJason("De acuerdo. Le seguiré.");        
+        HablaJason("De acuerdo. Le seguiré.");
         PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
         rtrue;
-        
+
       Quedar, Wait:
         if (alien.comportamiento == 4 ||
             alien.comportamiento == 3 && (puerta_emergencia has open ||
@@ -5887,7 +5887,7 @@ Object jason "Jason" nave1
           HablaJason("¡No pienso quedarme quieto con esa cosa acechando!");
           rtrue;
         }
-        
+
         if (self.tipo_de_movimiento == MOVIMIENTO_NINGUNO) {
           HablaJason("Ya estoy más quieto que un muerto.");
         } else {
@@ -5895,12 +5895,12 @@ Object jason "Jason" nave1
           HablaJason("De acuerdo. Me quedaré aquí.");
         }
         rtrue;
-              
+
       Saludar:
         HablaJason("Será mejor no perder el tiempo en protocolos y centrarse en la
                     misión.");
         rtrue;
-      
+
       Disparar:
         if (rifle in self) {
           if (noun ~= nothing) {
@@ -5912,7 +5912,7 @@ Object jason "Jason" nave1
           HablaJason("¡No tengo nada con lo que disparar!");
           rtrue;
         }
-      
+
       SwitchOn:
         if (noun == detector_movimiento) {
           if (rifle in jason) {
@@ -5952,7 +5952,7 @@ Object jason "Jason" nave1
           HablaJason("Yo no sé hacerlo. Hágalo usted mismo.");
           rtrue;
         }
-      
+
       Push:
         if (noun == boton_este or boton_oeste && TestScope(noun, self)) {
           if (LugarReal() ~= parent(noun)) {
@@ -6026,12 +6026,12 @@ Object jason "Jason" nave1
       if (deadflag ~= 0) {
         rtrue;
       }
-      
+
       if (~~(self.Tell)) {
         self.Tell = true;
         rtrue;
       }
-      
+
       ! El alien va corriendo hacia nosotros:
       if ((alien.comportamiento == 3 &&
            ~~(puerta_emergencia hasnt open &&
@@ -6068,9 +6068,9 @@ Object jason "Jason" nave1
         }
         rtrue;
       }
-      
+
       ! Situaciones "normales":
-      if (alien.comportamiento == 0 or 1 or 2) {     
+      if (alien.comportamiento == 0 or 1 or 2) {
         if (self notin vaina) {
           if (random(100) < 20) {
             if (self in LugarReal()) {
@@ -6497,7 +6497,7 @@ Object computadora "Madre"
                              generador pseudoaleatorio. A partir de la semilla que me
                              ha indicado, he calculado que el nuevo código de acceso es
                              268741.");
-            } 
+            }
           tema_madre_salir:
             if (LugarReal() == nave1 or nave2) {
               HablaMadre("Para salir sólo tiene que pedirme que abra la puerta.");
@@ -6521,7 +6521,7 @@ Object computadora "Madre"
               HablaMadre("Los trajes atmosféricos de protección se encuentran
                           almacenados en un compartimento acoplado a una de las
                           paredes de la cabina.");
-            }            
+            }
           default:
             HablaMadre("Lo siento. No he podido identificar el sentido de sus palabras.");
             rtrue;
@@ -6655,7 +6655,7 @@ Object computadora "Madre"
           puerta_procesador:
             HablaMadre("El computador interno del complejo está dañado, y no me permite
                         accionar ninguna puerta.");
-            rtrue;          
+            rtrue;
           default:
             if (noun has door) {
               HablaMadre("El computador interno del complejo está dañado, y no me permite
@@ -6781,7 +6781,7 @@ Object alien procesador
     name_m 'alien' 'alienigena' 'bicho' 'monstruo' 'ser' 'xenomorfo' 'xenoforme',
     name_f 'criatura',
     gender G_MASCULINO,
-    description [; 
+    description [;
       print "Puedes apreciar que tiene una cabeza enorme, lisa, alargada de forma obscena
              hacia atrás, sin ojos, con una boca rebosante de afilados dientes, sobre
              una estructura semihumana de largos y delgados brazos y piernas, acabando
@@ -6931,7 +6931,7 @@ Object alien procesador
         3: self.short_name = "ser"; self.gender = G_MASCULINO;
       }
 
-      self.condicion_movimiento();      
+      self.condicion_movimiento();
 
       if (self in LugarReal()) {
         if (self.callado) {
@@ -7015,7 +7015,7 @@ Object alien procesador
             } else {
               self.time_left = 0;
             }
-                  
+
             self.oportunidad++;
             rtrue;
           }
@@ -7047,9 +7047,9 @@ Object alien procesador
             self.oportunidad = self.oportunidad + 3;
             rtrue;
           }
-        }   
+        }
       }
-      
+
       if (self.oportunidad >= 4) {
         print "^";
         self.muerte_final();
@@ -7152,7 +7152,7 @@ Object robot "robot de mantenimiento" exterior3,
     orders [;
       self.Tell = false;
 
-      Arreglar, Soldar:        
+      Arreglar, Soldar:
         if (noun == cables) {
           "Unes los extremos de varios cables entre sí, para ayudar al robot a soldarlos,
            pero te das cuenta de que, por mucho que pruebas a unir unos con otros, el
@@ -7178,7 +7178,7 @@ Object robot "robot de mantenimiento" exterior3,
           HablaRobot("No soldable. No soldable.");
           rtrue;
         }
-        
+
       NotUnderstood:
         <<Ask self>>;
       default:
@@ -7236,7 +7236,7 @@ Object "brazo derecho"
     name_fp 'manos',
     adjectives 'derecho' 'derecha' 'robot' 'androide',
     gender G_MASCULINO,
-    found_in robot robot_inutil,    
+    found_in robot robot_inutil,
     description "Su brazo derecho parece estar en buenas condiciones. El extremo del mismo
                  te recuerda a un rudimentario soldador.",
   has
@@ -7251,7 +7251,7 @@ Object "piernas"
     name_mp 'pies',
     adjectives 'robot' 'androide',
     gender G_FEMENINO + G_PLURAL,
-    found_in robot robot_inutil,    
+    found_in robot robot_inutil,
     description "¡Pero si no tiene piernas!",
   has
     scenery;
@@ -7263,7 +7263,7 @@ Object soldador "soldador"
     name_f 'punta',
     adjectives 'metalica' 'metalico' 'robot' 'androide',
     gender G_MASCULINO,
-    found_in robot robot_inutil,    
+    found_in robot robot_inutil,
     description "Es una punta metálica ligeramente decolorida y que emite un calor
                  apenas perceptible.",
     before [;
@@ -7321,7 +7321,7 @@ Object TemasRobot;
 Object tema_robot_puerta "la puerta" TemasRobot
   with
     name 'puerta' 'como' 'abierta' 'abrir' 'cerrada' 'cerrar';
-    
+
 Object tema_robot_robot "el robot" TemasRobot
   with
     name 'robot' 'androide' 'ti' 'si' 'mismo';
@@ -7330,20 +7330,20 @@ Object tema_robot_cortar_abrir "cortar o abrir" TemasRobot
   with
     name 'cortar' 'corta' 'abre' 'sacar' 'vaina' 'gelatina' 'mucosidad' 'moco' 'mocos'
            'viscosidad';
-    
+
 Object tema_robot_complejo "el complejo" TemasRobot
   with
     name 'complejo' 'colonia' 'minera' 'mina';
-  
+
 Object tema_robot_gente "la gente" TemasRobot
   with
     name 'gente' 'personas' 'humanos' 'alguien';
-    
+
 Object tema_robot_alien "el monstruo" TemasRobot
   with
     name 'alien' 'alienigena' 'monstruo' 'bicho' 'ser' 'criatura' 'xenoforme'
            'xenomorfo';
-    
+
 Object tema_robot_codigo "el código de acceso" TemasRobot
   with
     name 'codigo' 'clave' 'contrasena' 'panel' 'control' 'puerta' 'procesador';
@@ -7371,7 +7371,7 @@ Object tema_madre_compartimento "la compuerta" TemasComputadora
 Object tema_madre_planeta "el planeta" TemasComputadora
   with
     name 'planeta' 'superficie';
-    
+
 Object tema_madre_atmosfera "la atmósfera" TemasComputadora
   with
     name 'atmosfera' 'aire' 'respirar';
@@ -7492,11 +7492,11 @@ Object tema_jason_jason "jason" TemasJason
 Object tema_jason_rifle "el rifle" TemasJason
   with
     name 'rifle' 'arma' 'pistola';
-      
+
 Object tema_jason_comunicador "el comunicador" TemasJason
   with
     name 'comunicador' 'intercomunicador' 'transmisor';
-    
+
 Object tema_jason_colonia "la colonia" TemasJason
   with
     name 'colonia' 'minera' 'complejo';
@@ -7614,7 +7614,7 @@ Object detector_movimiento "detector de movimiento" rifle
         }
     ],
     primera_vez true,
-    presencia [ t; 
+    presencia [ t;
       if (deadflag ~= 0) {
         rtrue;
       }
@@ -7702,7 +7702,7 @@ Object detector_movimiento "detector de movimiento" rifle
     after [;
       SwitchOn:
         give self on;
-        
+
         if (rifle in jason) {
           jason.Tell = false;
           HablaJason("Déjeme hacerlo a mí...");
@@ -7732,7 +7732,7 @@ Object detector_movimiento "detector de movimiento" rifle
           self.Tocar(Detector5_ogg);
         }
       } else {
-        if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt absent) {                   
+        if (alien.distancia > 0 && alien.distancia < 6 && alien hasnt absent) {
           switch (alien.distancia) {
             5: s = Detector1_ogg;
             4: s = Detector2_ogg;
@@ -7742,14 +7742,14 @@ Object detector_movimiento "detector de movimiento" rifle
           }
           if (Damusix.SonandoDeFondo(s) == 0) {
             self.Tocar(s);
-          }                           
+          }
         } else {
           Damusix.PararCanal(CANAL_DETECTOR);
         }
       }
     ],
     ! Imprimir en cada turno la distancia al alien
-    each_turn [;    
+    each_turn [;
       if (rifle in player && self has on) {
         self.presencia();
       }
@@ -7761,7 +7761,7 @@ Object detector_movimiento "detector de movimiento" rifle
 Object comunicador "comunicador" selfobj
   with
     name 'comunicador' 'intercomunicador' 'transmisor',
-    description "El comunicador permite ponerte en contacto directamente con Jason y 
+    description "El comunicador permite ponerte en contacto directamente con Jason y
                  Madre. De esta forma, podrás hablar con ellos y oírles aunque no os
                  encontréis cerca uno del otro. Lo llevas acoplado a tu pabellón auditivo.",
     before [;
@@ -7775,7 +7775,7 @@ Object comunicador "comunicador" selfobj
         }
         rtrue;
       }
-    ],    
+    ],
   has
     worn;
 
@@ -8015,7 +8015,7 @@ Object autodestruccion
               print " para la autodestrucción.~^";
 
               self.falta_en_barra = t;
-              barra_estado.dibujar(); 
+              barra_estado.dibujar();
             }
           }
 
@@ -8023,7 +8023,7 @@ Object autodestruccion
             give self general;
             self.tiempo = 60;
           }
-          
+
         } else {
           t = self.falta();
           ControlTimer.PrepararImpresion();
@@ -8035,7 +8035,7 @@ Object autodestruccion
           }
 
           print " ", t, " segundo";
-          
+
           if (t > 1) {
             print "s";
           }
@@ -8367,7 +8367,7 @@ Object tt_final
         POR_MENSAJE LETRA_CURSIVA PAUSA_DOBLE
       "^~¿Jason?~^"
         POR_MENSAJE LETRA_CURSIVA PAUSA_DOBLE
-      "^~¡¿JASON?!~^"      
+      "^~¡¿JASON?!~^"
         POR_MENSAJE LETRA_INVERSA PAUSA_DOBLE
       "^Y el grito de dolor inenarrable proveniente de la garganta del marine coincide
        en el tiempo con el crujido de sus costillas al romperse...^"
@@ -8621,7 +8621,7 @@ Object tt_final
         break;
       'q', 'Q', 27, 131, 10, 8, -2:
         rfalse;
- 
+
       132, 13, 'n', ' ', -3, -6:
         if (cur == count - 1) rfalse;
         if (cur == count - 2) break;
@@ -8693,7 +8693,7 @@ ZIPI_Otro ZIPI_Tamano_Graficos
         GRAFICOS_PEQUENOS:   "Tamaño de gráficos: ", GRAFICOS_PEQUENOS,   " px. (PEQUEÑOS)";
         GRAFICOS_MEDIANOS:   "Tamaño de gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS, recomendado)";
         GRAFICOS_GRANDES:    "Tamaño de gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES)";
-        default:             "Tamaño de gráficos: ", altoVentanaGrafica,  " px.";          
+        default:             "Tamaño de gráficos: ", altoVentanaGrafica,  " px.";
       }
     ],
     ZIPI_cambiar [;
@@ -8741,7 +8741,7 @@ ZIPI_Otro ZIPI_Sonido_Fondo
         Damusix.VolumenCanal(CANAL_FONDO, VOLUMEN_FONDO);
       } else {
         Damusix.VolumenCanal(CANAL_FONDO, 0);
-      } 
+      }
     ],
     ZIPI_ejecutar [; rtrue; ];
 
@@ -8773,7 +8773,7 @@ ZIPI_Menu ZIPI_Accesibilidad
       ZIPI_Efecto_Teletipo
       ZIPI_Tiempo_Real;
 
-    
+
 ZIPI_Otro ZIPI_Efecto_Teletipo
   with
     ZIPI_titulo [;
@@ -8957,7 +8957,7 @@ ZIPI_Otro ZIPI_Salir
                         stylehint_Oblique, 1);
       glk_stylehint_set(wintype_TextBuffer, style_Alert,
                         stylehint_Weight, 1);
- 
+
       glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
                         stylehint_TextColor, $ffffff);
       glk_stylehint_set(wintype_TextBuffer, style_Emphasized,
@@ -9023,7 +9023,7 @@ ZIPI_Otro ZIPI_Salir
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextGrid, style_Normal,
                         stylehint_Justification, stylehint_just_LeftRight);
-         
+
       glk_stylehint_set(wintype_TextGrid, style_Input,
                         stylehint_TextColor, $00ff00);
       glk_stylehint_set(wintype_TextGrid, style_Input,
@@ -9034,7 +9034,7 @@ ZIPI_Otro ZIPI_Salir
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextGrid, style_Input,
                         stylehint_Weight, 1);
- 
+
       glk_stylehint_set(wintype_TextGrid, style_User1,
                         stylehint_TextColor, $ffffff);
       glk_stylehint_set(wintype_TextGrid, style_User1,
@@ -9045,7 +9045,7 @@ ZIPI_Otro ZIPI_Salir
                         stylehint_Proportional, 0);
       glk_stylehint_set(wintype_TextGrid, style_User1,
                         stylehint_Weight, 1);
-  
+
       glk_stylehint_set(wintype_TextGrid, style_User2,
                         stylehint_TextColor, $000000);
       glk_stylehint_set(wintype_TextGrid, style_User2,
@@ -9421,9 +9421,9 @@ Object timer_alien
     Damusix.TocarV(Transmisor_ogg);
     print (s_b) "^JASON (por el comunicador): ";
   }
-    
+
   print "~", (string) msg1;
-    
+
   if (obj1 ~= 0) {
     if (obj1 == traje_jason && actor == jason) {
       print "mi traje";
@@ -9431,19 +9431,19 @@ Object timer_alien
       print (the) obj1;
     }
   }
-    
+
   if (msg2 ~= 0) {
     print (string) msg2;
   }
-  
+
   if (obj2 ~= 0) {
     print (o) obj2;
   }
-    
+
   if (msg3 ~= 0) {
     print (string) msg3;
   }
-  
+
   if (obj3 ~= 0) {
     print (del) obj3;
   }
@@ -9451,7 +9451,7 @@ Object timer_alien
   if (msg4 ~= 0) {
     print (string) msg4;
   }
-  
+
   print "~^";
 ];
 
@@ -9470,9 +9470,9 @@ Object tt_computadora
     elementos
       "" POR_LETRA LETRA_FIJA SIN_PAUSA;
 
-  
+
 [ HablaMadre msg;
-    
+
   if (LugarReal() ~= nave1 or nave2) {
     Damusix.TocarV(Transmisor_ogg);
     print (s_b) "^MADRE (por el comunicador): ";
@@ -9481,7 +9481,7 @@ Object tt_computadora
   }
 
   print "~";
-  
+
   tt_computadora.visualiza(msg);
 
   print "~^";
@@ -9493,13 +9493,13 @@ Object tt_computadora
   Damusix.PararCanal(CANAL_DETECTOR);
   Damusix.PararCanal(CANAL_SIRENA);
   ControlTimer.DesactivarTick();
-  
+
   if (bf == 1) {
     autodestruccion.falta_en_barra = 0;
     barra_estado.dibujar();
     Damusix.TocarV(Grito_Jugador_ogg);
   }
-  
+
   deadflag = bf;
   rfalse;
 ];
@@ -9773,7 +9773,7 @@ Extend 'conecta' first
   * noun 'una' 'con' 'otra'   -> UnirEntreSi
   * noun 'unos' 'con' 'otros' -> UnirEntreSi
   * noun 'unas' 'con' 'otras' -> UnirEntreSi;
-  
+
 Verb 'desactiva'
   * noun -> SwitchOff;
 
@@ -9820,7 +9820,7 @@ Verb 'deten' 'para'
   * creature -> Quedar
   *          -> Quedar
   * 'aqui'   -> Quedar;
-  
+
 VerboIrregular "detenerse" with imperativo 'deten';
 VerboIrregular "pararse" with imperativo 'para';
 
@@ -9833,7 +9833,7 @@ Extend 'espera'
 
 Verb meta 'creditos'
   * -> Creditos;
-  
+
 Extend 'examina'
   * 'dentro' 'de' noun -> Search
   * 'en' noun          -> Search;
@@ -9862,7 +9862,7 @@ Extend 'cargar' last
 Ifdef DEBUG;
 Verb meta 'primera'
   *         -> PrimeraParte;
-  
+
 Verb meta 'segunda'
   *         -> SegundaParte;
 
@@ -9931,7 +9931,7 @@ Verb meta 'graficos'
   * 'pequenos'                      -> GraficosPequenos
   * 'medianos'                      -> GraficosMedianos
   * 'grandes'                       -> GraficosGrandes;
- 
+
 Extend 'sal' last
   * 'por' noun      -> GoIn;
 
@@ -10301,9 +10301,9 @@ Ifdef DEBUG;
 
 
 [ SegundaParteSub;
-  
+
   SegundaParte();
-  
+
   procesador.arreglar();
   move tu_traje to player;
   give tu_traje worn;
@@ -10350,7 +10350,7 @@ Ifdef DEBUG;
   move tarjeta to player;
   move holocubo to proyector;
   give proyector ~open;
-  
+
   PlayerTo(aula);
 ];
 
@@ -10390,7 +10390,7 @@ Endif;
   }
 ];
 
-  
+
 [ ApagarMusicaSub;
   haySonidoFondo = false;
   Damusix.VolumenCanal(CANAL_FONDO, 0);
@@ -10574,4 +10574,3 @@ Include "Mapeador";
 ];
 
 ! Fin del código
-
