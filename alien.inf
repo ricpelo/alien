@@ -9225,7 +9225,8 @@ Object timer_laberinto
             3: snd = Cueva_Oscura_ogg;
             4: if (alien notin l) {
                  snd = Monstruo_ogg;
-                 r = 100 / alien.distancia;
+                 if (alien.distancia == 0) r = 100;
+                 else                      r = 100 / alien.distancia;
                } else {
                  snd = Cueva_Oscura_ogg;
                }
