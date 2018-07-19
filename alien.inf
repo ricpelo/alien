@@ -665,8 +665,8 @@ Object nave1 "Interior de la nave"
                  disponen los dos únicos asientos del vehículo. Sus angostas paredes
                  aumentan la sensación de claustrofobia y los enormes ventanales ofrecen
                  una vista desoladora del exterior.",
-    e_to puerta_nave,
     w_to nave2,
+    out_to puerta_nave,
     sgw_img Nave1_jpg,
     sgw_mus Nave_ogg,
     Close [;
@@ -683,6 +683,9 @@ Object nave1 "Interior de la nave"
       Sentarse:
         "No es necesario sentarse para poder operar con los controles de la nave, ni
          para hablar con su computadora.";
+
+!      Exit:
+!        <<Go out_obj>>;
 
       Go:
         if (noun == out_obj) {
@@ -826,7 +829,7 @@ Object nave1 "Interior de la nave"
             print "Entras ";
           }
           print "al interior de la nave a través del compartimento de descompresión.^";
-          self.cerrar();
+          puerta_nave.cerrar();
           if (jason in self && jason.tipo_de_movimiento ~= MOVIMIENTO_PERSEGUIR) {
             PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
           } else {
@@ -919,6 +922,7 @@ Object decorado_nave1 nave1
 
 
 Object nave "nave"
+  class EscenarioAbrible
   with
     name_m 'vehiculo',
     name_f 'nave' 'alpha',
@@ -936,9 +940,7 @@ Object nave "nave"
           exterior1: "Parece más grande por fuera...";
         }
         rtrue;
-    ],
-  has
-    scenery;
+    ];
  
     
 Object descompresion "cámara de descompresión"
@@ -949,7 +951,7 @@ Object descompresion "cámara de descompresión"
     description "Es el recinto intermedio entre la nave y el exterior. Se usa para
                  acomodar la presión y la atmósfera al salir o entrar en la nave.",
     before [;
-      GoIn:
+      GoIn, Enter:
         <<Exit>>;
     ],
   has
@@ -990,8 +992,8 @@ Object puerta_nave "compuerta de la nave" nave1
         return 2;
       }
     ],
-    e_to exterior1,
-    w_to nave1,
+    out_to exterior1,
+    in_to nave1,
     interior nave1,
     exterior exterior1,
     before [;
@@ -1029,7 +1031,7 @@ Object compartimento_trajes "compartimento de trajes" nave1
         "No puede hacerse directamente. Pide ayuda a la computadora.";
     ],
   has
-    scenery transparent;
+    transparent;
     
 
 Object cargador "cargador" nave1
@@ -1523,7 +1525,7 @@ Object exterior1 "Junto a la nave"
                  La temperatura es elevada, y la sensación de agobio, palpable.",
     sgw_img Exterior1_jpg,
     sgw_mus Lluvia_ogg,
-    w_to puerta_nave,
+    in_to puerta_nave,
     s_to exterior3,
     n_to junto_procesador,
     antesPNJ [;
@@ -1536,7 +1538,7 @@ Object exterior1 "Junto a la nave"
       Go:
         ! Si venimos de dentro de la nave, Madre cierra la puerta automáticamente
         if (noun == out_obj) {
-          nave1.cerrar();
+          puerta_nave.cerrar();
         }
     ];
 
