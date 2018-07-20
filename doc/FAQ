@@ -9,25 +9,25 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
      Para instalar A·L·I·E·N en un sistema Windows sólo tienes que
      ejecutar el programa de instalación y seguir sus instrucciones.
-     Para empezar a jugar, selecciona: 
+     Para empezar a jugar, selecciona:
 
      Menú Inicio → Programas → Juegos Conversacionales →
-                   A·L·I·E·N: La aventura – Edición Especial → 
-                   Jugar a A·L·I·E·N: La aventura – Edición Especial. 
+                   A·L·I·E·N: La aventura – Edición Especial →
+                   Jugar a A·L·I·E·N: La aventura – Edición Especial.
 
   b) En Linux:
      ---------
 
      A·L·I·E·N para Linux se distribuye en forma de paquete .deb,
      listo para ser instalado en cualquier sistema Debian GNU/Linux
-     o derivados (Ubuntu, Guadalinex, Linex, etc.). Para instalarlo
+     o derivados (Ubuntu, Guadalinex, Linux Mint, etc.). Para instalarlo
      correctamente, sigue lo siguientes pasos (el orden es importante):
 
        i. Instala el intérprete Gargoyle descargando la versión adecuada
           para tu distribución y arquitectura hardware en la siguiente
           dirección:
 
-            http://code.google.com/p/garglk/downloads
+            https://github.com/garglk/garglk/releases
 
           o bien, usa el sistema de gestión de paquetes de tu distribución:
 
@@ -36,7 +36,7 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
       ii. Instala la aventura abriendo el siguiente enlace, que abrirá el
           paquete dentro del Centro de software o el Instalador de paquetes:
 
-            https://github.com/downloads/ricpelo/alien/alphaaventuras-alien-ee_081124-2_all.deb
+            https://github.com/ricpelo/alien/releases/download/180720/alphaaventuras-alien-ee_180720-1_all.deb
 
           o bien, descarga el archivo en tu carpeta personal y ejecuta las
           siguientes órdenes en una terminal:
@@ -51,11 +51,11 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
   c) En versión multiplataforma:
      ---------------------------
 
-     Esta versión no incorpora el intérprete Gargoyle, necesario para poder 
+     Esta versión no incorpora el intérprete Gargoyle, necesario para poder
      jugar a la aventura, por lo que si no lo tienes ya, tendrás que
      descargarlo desde la siguiente dirección:
 
-       http://code.google.com/p/garglk/downloads
+       https://github.com/garglk/garglk/releases
 
      e instalarlo correctamente, en función de tu arquitectura y tu sistema
      operativo. Asegúrate de usar una versión igual o superior a la 2011.1.
@@ -302,8 +302,7 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
    c) Contactar con nosotros por alguna de las las estas vías:
 
-      - email: alpha.aventuras@gmail.com
-      - web: http://sites.google.com/site/alphaaventuras
-      - facebook: https://www.facebook.com/alphaaventuras
-      - wikiCAAD: http://wiki.caad.es/Alpha_Aventuras
+      - Email: alpha.aventuras@gmail.com
+      - Facebook: https://www.facebook.com/alphaaventuras
+      - WikiCAAD: http://wiki.caad.es/Alpha_Aventuras
 

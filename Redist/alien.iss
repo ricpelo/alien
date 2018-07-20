@@ -3,7 +3,7 @@
 AppName=A·L·I·E·N
 OutputBaseFilename=ALIEN
 OutputDir=..
-AppVerName=A·L·I·E·N: La aventura - Edición Especial (120123)
+AppVerName=A·L·I·E·N: La aventura - Edición Especial (180720)
 DefaultDirName={pf}\Juegos Conversacionales\A·L·I·E·N - La aventura (Edición Especial)
 DefaultGroupName=Juegos Conversacionales\A·L·I·E·N - La aventura (Edición Especial)
 UninstallDisplayIcon={app}\Desinstalar.exe
@@ -25,7 +25,7 @@ Source: "CAAD Club de Aventuras AD.url"; DestDir: {app}
 Source: CAAD.ico; DestDir: {app}
 Source: copyright; DestDir: {app}
 Source: COPYING; DestDir: {app}
-Source: README; DestDir: {app}
+Source: README.md; DestDir: {app}
 Source: cover.jpg; DestDir: {app};
 Source: freetype6.dll; DestDir: {app}
 Source: garglk.ini; DestDir: {app}

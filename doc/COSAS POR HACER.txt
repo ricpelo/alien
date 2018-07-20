@@ -43,13 +43,13 @@ FINAL DEL JUEGO:
 
 Mirar fhablaoo para ver cómo hacer el menú con Glulx.
 
-- En el procedimiento de emergencia se explica que hay que pulsar "simultáneamente" los botones que hay en las localidades hangar1 y hangar3 (hay que cambiar las descripciones). Al hacerlo se activa la bomba y se abre el ascensor que está en wc1.
+- En el procedimiento de emergencia se explica que hay que pulsar "simultáneamente" los botones que hay en las localidades hangar1 y hangar3 (hay que cambiar las descripciones). Al hacerlo se activa la bomba y se abre el ascensor que está en wc1. [HECHO]
 
-- Para pulsar los dos botones a la vez hay que poner a Jason en un sitio y moverse al otro, y decirle por el comunicador que pulse el botón, y luego, inmediatamente, lo pulsas tú.
+- Para pulsar los dos botones a la vez hay que poner a Jason en un sitio y moverse al otro, y decirle por el comunicador que pulse el botón, y luego, inmediatamente, lo pulsas tú. [HECHO]
 
-- Al montarse en el ascensor hay una escena en la que el alien se cuelga y se produce una escena de "tensión"... con el alien colgado intentando subirse al ascensor, y Jason y tú dándole golpes hasta que se cae....
+- Al montarse en el ascensor hay una escena en la que el alien se cuelga y se produce una escena de "tensión"... con el alien colgado intentando subirse al ascensor, y Jason y tú dándole golpes hasta que se cae.... [HECHO]
 
-- Al final se sale en exterior3.
+- Al final se sale en exterior3. [HECHO]
 
 - Hay que irse con el holocubo. Jason te avisa cuando terminas de verlo (si está en la misma localidad que tú, es decir, en el aula). Y de todas formas no puedes activar los botones hasta que no tengas el holocubo en tu poder.
 

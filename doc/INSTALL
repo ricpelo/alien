@@ -8,7 +8,7 @@ intérprete Gargoyle, necesario para poder jugar a la aventura, por lo
 que si no lo tienes ya, tendrás que descargarlo desde la siguiente
 dirección:
 
-  http://code.google.com/p/garglk/downloads
+  https://github.com/garglk/garglk/releases
 
 e instalarlo correctamente, en función de tu arquitectura y tu sistema
 operativo. Asegúrate de usar una versión igual o superior a la 2011.1.
@@ -31,8 +31,7 @@ preparado para tu distribución Debian o Ubuntu. Para ello:
 1. Instala el paquete .deb binario de Gargoyle adecuado a tu
    arquitectura, que podrás encontrar en esta dirección:
 
-     http://code.google.com/p/garglk/downloads
-
+     https://github.com/garglk/garglk/releases
 
    También puedes instalar el paquete 'gargoyle-free' disponible en
    los repositorios de tu distribución, pero asegúrate de que sea una
@@ -41,11 +40,11 @@ preparado para tu distribución Debian o Ubuntu. Para ello:
 
      sudo apt-get install gargoyle-free
 
-2. Descarga el paquete alphaaventuras-alien-ee_versión_all.deb (donde
-   'versión' será el número de versión actual del paquete) e instálalo
+2. Descarga el paquete alphaaventuras-alien-ee_<versión>_all.deb (donde
+   <versión> será el número de versión actual del paquete) e instálalo
    ejecutando la siguiente orden en un terminal:
 
-     sudo gedit alphaaventuras-alien-ee_versión_all.deb
+     sudo gdebi alphaaventuras-alien-ee_<versión>_all.deb
 
 Si por alguna razón no te interesa instalar el paquete .deb y quieres
 usar esta versión multiplataforma, asegúrate de tener instaladas las
@@ -59,8 +58,7 @@ A·L·I·E·N usa las tipografías Liberation Mono y Linux Libertine O.
 Si tienes algún problema durante la instalación o el funcionamiento de
 la aventura, puedes contactar con nosotros mediante las siguientes vías:
 
-- email: alpha.aventuras@gmail.com
-- web: http://sites.google.com/site/alphaaventuras
-- facebook: https://www.facebook.com/alphaaventuras
-- wikiCAAD: http://wiki.caad.es/Alpha_Aventuras
+- Email: alpha.aventuras@gmail.com
+- Facebook: https://www.facebook.com/alphaaventuras
+- WikiCAAD: http://wiki.caad.es/Alpha_Aventuras
 

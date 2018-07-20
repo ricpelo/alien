@@ -40,7 +40,7 @@ Constant Headline "^(c) 2008-2018 Alpha Aventuras^^
                   Teclea CRÉDITOS si quieres saber más acerca de la aventura, o
                   AYUDA cuando estés bloqueado.^";
 Release 1;
-!Serial "120123";
+Serial "180720";
 
 ! Queremos usar el comando 'Salidas'
 Constant ADMITIR_COMANDO_SALIDAS;
