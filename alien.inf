@@ -9664,33 +9664,35 @@ Include "Decir";           ! Para poder usar DECIR ... A ...
 ! el jugador intenta usar verbos en infinitivo:
 
 Verb 'abrir'
-    * noun                              -> Open
-    * 'a//' creature                    -> Open
-    * noun 'con' held                   -> Unlock;
+  * noun                                -> Open
+  * 'a//' creature                      -> Open
+  * noun 'con' held                     -> Unlock;
 
 Verb 'cerrar'
-    * noun                              -> Close
-    * noun 'con' 'pestillo'             -> Lock
-    * noun 'con' held                   -> Lock;
+  * noun                                -> Close
+  * noun 'con' 'pestillo'               -> Lock
+  * noun 'con' held                     -> Lock;
 
 Verb 'cortar' 'rasgar'
-    * noun                              -> Cut
-    * noun 'con' held                   -> Cut;
+  * noun                                -> Cut
+  * noun 'con' held                     -> Cut;
 
 Verb 'sacar'
-  * multiinside 'de' noun             -> Remove
-  * 'a//' creature 'de' noun          -> Remove
-  *                                   -> SacarNadaDeNada
-  * 'a//'                             -> SacarNadaDeNada
-  * multiinside                       -> Remove
-  * 'a//' multiinside                 -> Remove;
+  *                                     -> SacarNadaDeNada
+  * 'a//'                               -> SacarNadaDeNada
+  * multiinside                         -> Take
+  * 'a//' multiinside                   -> Take
+  * multiinside 'de' noun               -> Remove
+  * 'a//' creature 'de' noun            -> Remove
+  * multiinside 'de' 'dentro' 'de' noun -> Remove;
 
 Verb 'salir'
-    *                                   -> Exit
-    * 'de' noun                         -> GetOff
-    * 'por' noun                        -> GoIn  ! [VERGIT] Descomentada
-    * 'fuera'                           -> Exit
-    * 'afuera'                          -> Exit;
+  *                                     -> Exit
+  * 'de' noun                           -> GetOff
+  * 'por' noun                          -> GoIn  ! [VERGIT] Descomentada
+  * 'fuera'                             -> Exit
+  * 'afuera'                            -> Exit;
+
 
 Verb 'gilipollas'
   *               -> Strong;
@@ -9961,8 +9963,8 @@ Extend 'atornilla' last
 Extend 'saca' first
   *                                     -> SacarNadaDeNada
   * 'a//'                               -> SacarNadaDeNada
-  * multiinside                         -> Remove
-  * 'a//' multiinside                   -> Remove;
+  * multiinside                         -> Take
+  * 'a//' multiinside                   -> Take;
 
 Extend 'saca' last
   * multiinside 'de' 'dentro' 'de' noun -> Remove;
