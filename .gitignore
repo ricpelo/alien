@@ -5,6 +5,7 @@ alien.ulx
 .alien.inf.swp
 *.o
 *.a
+ALIEN_EE_*.exe
 Empaquetar/*.dsc
 Empaquetar/*.tar.gz
 Empaquetar/*.deb
