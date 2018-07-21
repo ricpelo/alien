@@ -4590,9 +4590,11 @@ Object laberinto28
             if (holocubo notin player && holocubo notin jason) {
               if (pantalla has general) {
                 HablaJason("¡Tenemos que llevarnos el holocubo! ¡Necesitamos una prueba de lo que ha pasado aquí!");
+                jason.decir = false;
                 rtrue;
               } else {
                 HablaJason("¡No podemos irnos sin una prueba que demuestre lo que ha pasado aquí!");
+                jason.decir = false;
                 rtrue;
               }
             }
