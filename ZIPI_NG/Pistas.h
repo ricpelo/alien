@@ -780,7 +780,7 @@ with
        print "  Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':^";
        print "^";
        print "  a) En Windows estará en la ruta:^";
-       print "     @@92Program Files@@92Juegos Conversacionales@@92ALIEN - La aventura - Edición Especial@@92^";
+       print "     @@92Program Files@@92A·L·I·E·N - La aventura - Edición Especial@@92^";
        print "^";
        print "  b) En Linux, si instalaste la aventura con el paquete .deb, estará en:^";
        print "     /usr/share/games/alphaaventuras-alien-ee/^";
