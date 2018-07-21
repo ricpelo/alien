@@ -780,7 +780,7 @@ with
        print "  Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':^";
        print "^";
        print "  a) En Windows estará en la ruta:^";
-       print "     @@92Program Files@@92Juegos Conversacionales@@92ALIEN - La aventura - Edición Especial@@92^";
+       print "     @@92Archivos de programa (x86)@@92A·L·I·E·N - La aventura - Edición Especial@@92^";
        print "^";
        print "  b) En Linux, si instalaste la aventura con el paquete .deb, estará en:^";
        print "     /usr/share/games/alphaaventuras-alien-ee/^";
@@ -945,10 +945,9 @@ with
        print "^";
        print "   c) Contacta con nosotros por alguna de las las estas vías:^";
        print "^";
-       print "      - email: alpha.aventuras@@64gmail.com^";
-       print "      - web: http://sites.google.com/site/alphaaventuras^";
-       print "      - facebook: https://www.facebook.com/alphaaventuras^";
-       print "      - wikiCAAD: http://wiki.caad.es/Alpha_Aventuras^";
+       print "      - Email: alpha.aventuras@@64gmail.com^";
+       print "      - Facebook: https://www.facebook.com/alphaaventuras^";
+       print "      - WikiCAAD: http://wiki.caad.es/Alpha_Aventuras^";
        font on;
   ];
 ZIPI_Otro ZIPI_Otro16

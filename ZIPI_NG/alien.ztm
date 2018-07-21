@@ -144,7 +144,7 @@
   Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':
 
   a) En Windows estará en la ruta:
-     \Program Files\Juegos Conversacionales\ALIEN - La aventura - Edición Especial\
+     \Archivos de programa (x86)\A·L·I·E·N - La aventura - Edición Especial\
 
   b) En Linux, si instalaste la aventura con el paquete .deb, estará en:
      /usr/share/games/alphaaventuras-alien-ee/
@@ -295,10 +295,9 @@
 
    c) Contacta con nosotros por alguna de las las estas vías:
 
-      - email: alpha.aventuras@gmail.com
-      - web: http://sites.google.com/site/alphaaventuras
-      - facebook: https://www.facebook.com/alphaaventuras
-      - wikiCAAD: http://wiki.caad.es/Alpha_Aventuras
+      - Email: alpha.aventuras@gmail.com
+      - Facebook: https://www.facebook.com/alphaaventuras
+      - WikiCAAD: http://wiki.caad.es/Alpha_Aventuras
         </NOFONT>
       </TEXTO>
 
