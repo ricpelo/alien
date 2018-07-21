@@ -4020,7 +4020,15 @@ Object aula "Aula"
     ],
     sgw_img Aula_jpg,
     w_to laberinto3,
-    s_to laberinto7;
+    s_to laberinto7,
+    before [;
+      Go:
+        if (noun == w_obj or s_obj && alien.comportamiento == 3 && holocubo notin player &&
+            holocubo notin jason) {
+          HablaJason("¡Tenemos que llevarnos el holocubo! ¡La gente debe saber qué pasa aquí!");
+          rtrue;
+        }
+    ];
 
 
 Object decorado_aula aula
@@ -4579,6 +4587,15 @@ Object laberinto28
       Go:
         if (noun == in_obj) {
           if (ascensor has open) {
+            if (holocubo notin player && holocubo notin jason) {
+              if (pantalla has general) {
+                HablaJason("¡Tenemos que llevarnos el holocubo! ¡Necesitamos una prueba de lo que ha pasado aquí!");
+                rtrue;
+              } else {
+                HablaJason("¡No podemos irnos sin una prueba que demuestre lo que ha pasado aquí!");
+                rtrue;
+              }
+            }
             if (jason in self && jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
                 jason.perseguido == player) {
               t = false;
