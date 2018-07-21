@@ -11,7 +11,8 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
      ejecutar el programa de instalación y seguir sus instrucciones.
      Para empezar a jugar, selecciona:
 
-     Menú Inicio → Programas → A·L·I·E·N: La aventura – Edición Especial →
+     Menú Inicio → Programas → Juegos Conversacionales →
+                   A·L·I·E·N: La aventura – Edición Especial →
                    Jugar a A·L·I·E·N: La aventura – Edición Especial.
 
   b) En Linux:
@@ -112,7 +113,7 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 
       Localiza el archivo 'garglk.ini' en la siguiente ruta:
 
-        \Program Files\A·L·I·E·N - La aventura - Edición Especial\garglk.ini
+        \Program Files\Juegos Conversacionales\ALIEN - La aventura - Edición Especial\garglk.ini
 
       Ábrelo con el bloc de notas o con cualquier otro editor de texto sin formato.
       Recuerda que en Windows Vista, Windows 7 o superiores, tendrás que
