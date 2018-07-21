@@ -195,6 +195,7 @@ Include "Parser";
 
 Replace InitGlkWindow;
 Replace HandleGlkEvent;
+Replace IdentifyGlkObject;
 
 Include "SGW+DMX_NG";    ! Entre EParser y Acciones
 Include "alien.bli";     ! Los recursos gráficos de la aventura
@@ -338,7 +339,7 @@ Object LibraryMessages
               rtrue;
           10: rtrue;
           13: ! Reactivamos timer en caso de UNDO:
-              ControlTimer.ReactivarTick();
+!              ControlTimer.ReactivarTick();
               "[Retrocediendo al turno anterior.]";
           17: switch (random(4)) {
                 1: "Está muy oscuro y no puedes ver nada.";
@@ -10620,6 +10621,13 @@ Include "Mapeador";
   SGW_HandleGlk(ev);
   ControlTimer.CT_HandleGlkEvent(ev, context, buffer);
   Mapa_HandleGlkEvent(ev, context, buffer);
+];
+
+[ IdentifyGlkObject fase tipo ref rock;
+  SGW_IdentifyGlk(fase, tipo, ref, rock);
+  Damusix.IdentificarSonidos(fase);
+!  Mapa_IdentifyGlkObject(fase, tipo, ref, rock);
+  if (fase == 2) ControlTimer.ReactivarTick();
 ];
 
 ! Fin del código
