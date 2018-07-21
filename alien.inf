@@ -452,12 +452,12 @@ Object barra_estado
              } else {
                print " | Detector: ", 10 * alien.distancia, " m. ";
                switch (alien.sentido) {
-                 n_obj:      "N";
-                 s_obj:      "S";
-                 e_obj:      "E";
-                 w_obj:      "O";
+                 n_obj: "N";
+                 s_obj: "S";
+                 e_obj: "E";
+                 w_obj: "O";
                  u_obj: "AR";
-                 d_obj:  "AB";
+                 d_obj: "AB";
                }
              }
              rtrue;
@@ -1803,13 +1803,13 @@ Object panel_control "panel de control" junto_procesador
             if (SeVen(player, jason)) {
               if (SeVen(player, robot)) {
                 print "Jason se dirige al androide:^";
-                jason.Tell = false;
-                robot.Tell = false;
+                jason.decir = false;
+                robot.decir = false;
                 HablaJason("¿759812? ¡¿759812?! ¡Esa no es la clave, saco de tuercas!");
                 HablaRobot("Código... cambiado... cambiado...");
                 HablaJason("A ti sí que te voy a cambiar la cara como no te calles...");
               } else {
-                jason.Tell = false;
+                jason.decir = false;
                 HablaJason("¡Ey! ¿Es que alguien está mintiendo por aquí?");
               }
             }
@@ -2490,7 +2490,7 @@ Object entrada "Entrada al complejo"
       if (self hasnt general && puerta_viscosa in self && jason in self) {
         give self general;
         print "^Jason observa la puerta sellada con esa sustancia, y exclama:^";
-        jason.Tell = false;
+        jason.decir = false;
         HablaJason("¡Maldita sea! Tendremos que buscar otra forma de salir de aquí.
                      Y de paso... ¡mandar todo esto al infierno!");
       }
@@ -3772,7 +3772,7 @@ Object puerta_emergencia "puerta" emergencia_pasillo
             alien.comportamiento == 3 && alien in balcon8) {
           if (jason in LugarReal()) {
             HablaJason("Pero... ¿qué hace? ¡No abra la puerta con ese monstruo ahí!");
-            jason.Tell = false;
+            jason.decir = false;
             rtrue;
           } else {
             "¡Sería una locura abrir la puerta con ese monstruo al otro lado!";
@@ -4183,7 +4183,7 @@ Object pantalla "pantalla" aula
 
           if (jason in LugarReal()) {
             HablaJason("¡Vamos a volar todo esto en pedazos!");
-            jason.Tell = false;
+            jason.decir = false;
             PNJ_Ruta(jason, MOVIMIENTO_PERSEGUIR, player);
           }
 
@@ -5112,7 +5112,7 @@ Object jason "Jason" nave1
       }
     ],
     initial "^Jason, tu compañero de expedición, está junto a ti aguardando tus órdenes.",
-    Tell true,
+    decir true,
     ! Propiedad que indica si ya hemos sacado a Jason de la vaina:
     sacado [;
       return procesador.arreglado() && jason notin vaina;
@@ -5305,7 +5305,7 @@ Object jason "Jason" nave1
           sacador_de_aliens.meter_alien();
           PNJ_Ruta(alien, MOVIMIENTO_POR_META, entrada, CAMINO_SIN_PUERTAS);
           alien.comportamiento = 2;
-          self.Tell = false;
+          self.decir = false;
           StartTimer(self, 7);
           print "Sacas a Jason de la vaina. Parece inconsciente, y su dañado traje ha
                  perdido prácticamente toda su reserva de oxígeno. Inmediatamente le
@@ -5363,7 +5363,7 @@ Object jason "Jason" nave1
       }
 
       Ask:
-        self.Tell = false;
+        self.decir = false;
 
         tema = AveriguarTema(TemasJason);
         switch (tema) {
@@ -5593,7 +5593,7 @@ Object jason "Jason" nave1
         rtrue;
       }
 
-      self.Tell = false;
+      self.decir = false;
 
       Yes:
         HablaJason("¿Sí qué?");
@@ -6027,8 +6027,8 @@ Object jason "Jason" nave1
         rtrue;
       }
 
-      if (~~(self.Tell)) {
-        self.Tell = true;
+      if (~~(self.decir)) {
+        self.decir = true;
         rtrue;
       }
 
@@ -6276,7 +6276,7 @@ Object computadora "Madre"
 !    esta_en nave1 nave2,
     found_in [; rtrue; ],                   ! Está en todas partes
     gender G_FEMENINO,
-    Tell true,
+    decir true,
     grammar [;
       return -'madre,';
     ],
@@ -6304,7 +6304,7 @@ Object computadora "Madre"
     codigo_nuevo 0,
     life [ tema;
       Ask:
-        self.Tell = false;
+        self.decir = false;
         tema = AveriguarTema(TemasComputadora);
         switch (tema) {
           tema_madre_alien:
@@ -6415,7 +6415,7 @@ Object computadora "Madre"
                         humano más maleducado y desagradable con quien he tenido el
                         privilegio de trabajar.");
             if (jason notin vaina && (~~(procesador.arreglado()))) {
-              jason.Tell = false;
+              jason.decir = false;
               switch (random(3)) {
                 1: HablaJason("Me pitan los oídos. ¿Habláis de mi?");
                 2: HablaJason("Yo también te quiero, saco de circuitos.");
@@ -6529,7 +6529,7 @@ Object computadora "Madre"
         rtrue;
     ],
     orders [;
-      self.Tell = false;
+      self.decir = false;
 
       Yes:
         HablaMadre("Dígame cómo puedo ayudarle...");
@@ -6723,17 +6723,17 @@ Object computadora "Madre"
         3: HablaMadre("¿En qué puedo serle de utilidad?");
         4: HablaMadre("¿Puedo hacer algo por usted?"); PreguntaSiNo = 1;
       }
-      self.Tell = false;
+      self.decir = false;
     ],
     each_turn [;
       ! No muestra mensajes aleatorios cuando alien.comportamiento >= 3, para
       ! no molestar en momentos críticos:
-      if (self.Tell && deadflag == 0 && alien.comportamiento < 3) {
+      if (self.decir && deadflag == 0 && alien.comportamiento < 3) {
         if (random(100) < 5) {
           self.mensaje_aleatorio();
         }
       } else {
-        self.Tell = true;
+        self.decir = true;
       }
     ],
   has
@@ -7094,7 +7094,7 @@ Object robot "robot de mantenimiento" exterior3,
       Decir: <<Ask noun>>;
     ],
     ! Indica si el robot tiene permiso para decir algo aleatoriamente a continuación:
-    Tell true,
+    decir true,
     ! Indica si el robot ha hablado alguna vez (se actualiza en HablaRobot)
     ha_hablado false,
     before [;
@@ -7120,7 +7120,7 @@ Object robot "robot de mantenimiento" exterior3,
     ],
     life [ tema;
       Ask:
-        self.Tell = false;
+        self.decir = false;
         tema = AveriguarTema(TemasRobot);
         switch (tema) {
           tema_robot_alien:
@@ -7158,7 +7158,7 @@ Object robot "robot de mantenimiento" exterior3,
         rtrue;
     ],
     orders [;
-      self.Tell = false;
+      self.decir = false;
 
       Arreglar, Soldar:
         if (noun == cables) {
@@ -7190,12 +7190,12 @@ Object robot "robot de mantenimiento" exterior3,
       NotUnderstood:
         <<Ask self>>;
       default:
-        self.Tell = false;
+        self.decir = false;
         HablaRobot("Comando incorrecto.");
         rtrue;
     ],
     each_turn [;
-      if (self.Tell) {
+      if (self.decir) {
         if (self in junto_procesador && puerta_procesador hasnt open) {
           if (panel_control.codigo_viejo == 0) {
             HablaRobot("Código puerta... 759812... Código puerta... 759812...");
@@ -7206,7 +7206,7 @@ Object robot "robot de mantenimiento" exterior3,
           }
         }
       } else {
-        self.Tell = true;
+        self.decir = true;
       }
     ],
     mensaje_aleatorio [;
@@ -7612,7 +7612,7 @@ Object detector_movimiento "detector de movimiento" rifle
       SwitchOff:
         if (jason.sacado() || alien.comportamiento >= 1) {
           if (jason in LugarReal()) {
-            jason.Tell = false;
+            jason.decir = false;
             HablaJason("¿Está loco? Ese aparato es lo único que nos puede ayudar a
                         mantenernos con vida. ¿Y quiere apagarlo?");
             rtrue;
@@ -7712,7 +7712,7 @@ Object detector_movimiento "detector de movimiento" rifle
         give self on;
 
         if (rifle in jason) {
-          jason.Tell = false;
+          jason.decir = false;
           HablaJason("Déjeme hacerlo a mí...");
           "^Jason enciende el detector de movimiento.";
         }
@@ -7721,7 +7721,7 @@ Object detector_movimiento "detector de movimiento" rifle
         Damusix.PararCanal(CANAL_DETECTOR);
 
         if (rifle in jason) {
-          jason.Tell = false;
+          jason.decir = false;
           HablaJason("Déjeme hacerlo a mí...");
           "^Jason apaga el detector de movimiento.";
         }
@@ -8126,7 +8126,7 @@ Object sacador_de_aliens
           print "^De repente, el detector de movimiento enmudece... ¡Aquello que
                  estaba detectando ha desaparecido!^";
           if (jason in LugarReal() && random(100) < 50) {
-            jason.Tell = false;
+            jason.decir = false;
             HablaJason("¿Qué pasa? ¿Dónde se ha metido?");
           }
           rtrue;
@@ -10503,7 +10503,7 @@ Endif;
 [ PistasSub t v;
   switch (hayPistas) {
     0: hayPistas = 1;
-       jason.Tell = computadora.Tell = robot.Tell = false;
+       jason.decir = computadora.decir = robot.decir = false;
        print (s_em) "[Advertencia: Es sabido que la tentación de la ayuda es a veces
              tan fuerte que se suelen obtener pistas prematuramente. Por tanto,
              en cualquier momento durante el juego puedes poner ",
