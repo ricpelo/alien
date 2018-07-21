@@ -1413,7 +1413,7 @@ Object linterna "linterna" armario
           "Desgraciadamente, parece que se ha agotado la batería.";
         }
     ],
-    SwitchOn [;
+    encender [;
       if (player hasnt light && location == thedark &&
           real_location hasnt light) {
         viewImageCenter(real_location.sgw_img);
@@ -1422,7 +1422,7 @@ Object linterna "linterna" armario
       give self light;
       StartDaemon(self);
     ],
-    SwitchOff [;
+    apagar [;
       if (player hasnt light && location hasnt light) {
         viewImageCenter(SGW_IMAGEN_OSCURIDAD);
       }
@@ -1433,7 +1433,7 @@ Object linterna "linterna" armario
     after [;
       Open:
         if (self has on) {
-          self.SwitchOff();
+          self.apagar();
           "Abres la linterna. Al hacerlo, esta se apaga automáticamente. Dentro ves
            la batería que le suministra energía.";
         } else {
@@ -1442,9 +1442,9 @@ Object linterna "linterna" armario
           }
         }
       SwitchOn:
-        self.SwitchOn();
+        self.encender();
       SwitchOff:
-        self.SwitchOff();
+        self.apagar();
       Receive:
         print "Colocas la batería dentro de la linterna, y a continuación la cierras.^";
         keep_silent = 1;
@@ -1458,7 +1458,7 @@ Object linterna "linterna" armario
 
         if (bateria.energia <= 0) {
           bateria.energia = 0;
-          self.SwitchOff();
+          self.apagar();
           ControlTimer.PrepararImpresion();
           "^La linterna se ha quedado sin batería.";
         }
@@ -1605,7 +1605,7 @@ Object junto_procesador "Junto al procesador atmosférico"
               print "Jason ";
               if (linterna hasnt on) {
                 give linterna ~open;
-                linterna.SwitchOn();
+                linterna.encender();
                 print "enciende la linterna. A continuación, ";
               }
               print "se acerca a la puerta y se asoma al interior. Mueve el haz de
@@ -4134,6 +4134,14 @@ Object proyector "proyector" aula
     after [;
       SwitchOn:
         "Enciendes el proyector, y sobre la pantalla empiezan a desfilar imágenes.";
+
+      Open:
+        if (self has on) {
+          keep_silent = 1;
+          <SwitchOff self>;
+          keep_silent = 0;
+          "Al abrir el proyector, éste se apaga automáticamente.";
+        }
     ],
     invent [;
       if (inventory_stage == 2) {
@@ -4161,8 +4169,8 @@ Object pantalla "pantalla" aula
       Examine:
         if (proyector has on) {
           if (self hasnt general) {
+            give self general;
             if (jason.sacado()) {
-              give self general;
               Damusix.TocarV(Tension_ogg);
               sacador_de_aliens.meter_alien();
               alien.comportamiento = 3;
@@ -4187,7 +4195,10 @@ Object pantalla "pantalla" aula
           print "c. Se dispondrá de un máximo de diez minutos para evacuar el complejo.^";
           print "d. El protocolo no puede abortarse en ningún momento.^^";
           print "[La clave para acceder al documento ~", (s_b) "Holocubo.pdf", "~ es ",
-                (s_b) "APOGEO", " (en mayúsculas).]^";
+                (s_b) "APOGEO", " (en mayúsculas).]^^";
+
+          print "¡En el documento está todo! Todo lo necesario para demostrar quiénes son
+                 los culpables. ¡Hay que llevarse el holocubo y usarlo como prueba!^";
 
           if (jason in LugarReal()) {
             HablaJason("¡Vamos a volar todo esto en pedazos!");
@@ -4587,19 +4598,25 @@ Object laberinto28
       Go:
         if (noun == in_obj) {
           if (ascensor has open) {
-            if (holocubo notin player && holocubo notin jason) {
-              if (pantalla has general) {
-                HablaJason("¡Tenemos que llevarnos el holocubo! ¡Necesitamos una prueba de lo que ha pasado aquí!");
-                jason.decir = false;
-                rtrue;
-              } else {
-                HablaJason("¡No podemos irnos sin una prueba que demuestre lo que ha pasado aquí!");
-                jason.decir = false;
-                rtrue;
-              }
-            }
             if (jason in self && jason.tipo_de_movimiento == MOVIMIENTO_PERSEGUIR &&
                 jason.perseguido == player) {
+              if (holocubo notin player && holocubo notin jason) {
+                if (pantalla has general) {
+                  HablaJason("¡Tenemos que llevarnos el holocubo! ¡Necesitamos una prueba de lo que ha pasado aquí!");
+                  jason.decir = false;
+                  rtrue;
+                } else {
+                  HablaJason("¡No podemos irnos sin una prueba que demuestre lo que ha pasado aquí!");
+                  jason.decir = false;
+                  rtrue;
+                }
+              } else {
+                if (pantalla hasnt general) {
+                  HablaJason("¡No sabemos si algo de lo que llevamos podría servirnos de prueba contra estos cabrones! ¡Tenemos que estar seguros!");
+                  jason.decir = false;
+                  rtrue;
+                }
+              }
               t = false;
               if (hayGraficos) {
                 t = true;
@@ -5817,7 +5834,7 @@ Object jason "Jason" nave1
         if (noun in self || (noun == detector_movimiento && parent(noun) in self)) {
           if (noun hasnt on) {
             if (noun == linterna) {
-              linterna.SwitchOn();
+              linterna.encender();
             } else {
               give noun on;
             }
@@ -10324,7 +10341,7 @@ Ifdef DEBUG;
   move bateria to linterna;
   move linterna to player;
   move destornillador to player;
-  linterna.SwitchOn();
+  linterna.encender();
 !  puerta_procesador.abrir();
   move jason to junto_procesador;
 
@@ -10341,7 +10358,7 @@ Ifdef DEBUG;
   give tu_traje worn;
   move bateria to linterna;
   move linterna to player;
-  linterna.SwitchOn();
+  linterna.encender();
   give detector_movimiento on;
   puerta_procesador.abrir();
   junto_procesador.sgw_img = Junto_Procesador_Abierto_jpg;
@@ -10357,7 +10374,7 @@ Ifdef DEBUG;
   move bateria to linterna;
   move linterna to player;
   move destornillador to player;
-  linterna.SwitchOn();
+  linterna.encender();
   remove puerta_procesador;
   give puerta_procesador absent;
   move puerta_viscosa to entrada;
