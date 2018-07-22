@@ -80,24 +80,25 @@
     </TEXTO>
 
     <TEXTO>Algunos comandos útiles
-      ^SONIDO SI/NO . . . . : Activar o desactivar todos los efectos sonoros.
-      ^SONIDO FONDO SI/NO . : Activar o desactivar el sonido de fondo.
-      ^SONIDO DETECTOR SI/NO: Activar o desactivar el sonido del detector de movimiento.
-      ^GRAFICOS SI/NO . . . : Activar o desactivar la visualización de gráficos.
+      ^SONIDO SI/NO . . . . : Activa o desactiva todos los sonidos.
+      ^SONIDO FONDO SI/NO . : Activa o desactiva el sonido de fondo.
+      ^SONIDO DETECTOR SI/NO: Activa o desactiva el sonido del detector de movimiento.
+      ^GRAFICOS SI/NO . . . : Activa o desactiva la visualización de gráficos.
       ^GRAFICOS PEQUEÑOS/
       ^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión
       ^                       se mostrarán en tamaño MEDIANO).
       ^CONFIGURACION . . . .: Muestra un menú de opciones de gráficos y sonido.
-      ^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual.
-      ^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en
+      ^SALIDAS (o X) . . . .: Muestra las salidas visibles en la localidad actual.
+      ^SALIDAS SI/NO . . . .: Muestra (o no) automáticamente las salidas visibles en
       ^                       cada localidad.
-      ^SAVE (o GUARDAR) . . : Almacenar la situación actual en un archivo externo, para
+      ^SAVE (o GUARDAR) . . : Almacena la situación actual en un archivo externo, para
       ^                       poder volver a él en cualquier momento.
-      ^LOAD (o RECUPERAR) . : Recuperar una situación previamente guardada con SAVE o
+      ^LOAD (o RECUPERAR) . : Recupera una situación previamente guardada con SAVE o
       ^                       GUARDAR.
       ^AYUDA . . . . . . . .: Por si alguna vez te encuentras atascado.
-      ^REINICIAR . . . . . .: Volver a empezar desde el principio.
-      ^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual).
+      ^REINICIAR . . . . . .: Vuelve a empezar desde el principio.
+      ^ACABAR (o FIN) . . . : Sale de la aventura (cuidado: no guarda la situación actual).
+      ^MAPA . . . . . . . . : Muestra un mapa interactivo de las zonas ya visitadas.
     </TEXTO>
     
     <TEXTO>Consejos y ayudas

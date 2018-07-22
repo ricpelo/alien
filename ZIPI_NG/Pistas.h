@@ -712,24 +712,25 @@ ZIPI_Otro ZIPI_Otro5
 with
   ZIPI_titulo "Algunos comandos útiles",
   ZIPI_ejecutar [;
-       print "^SONIDO SI/NO . . . . : Activar o desactivar todos los efectos sonoros. ";
-       print "^SONIDO FONDO SI/NO . : Activar o desactivar el sonido de fondo. ";
-       print "^SONIDO DETECTOR SI/NO: Activar o desactivar el sonido del detector de movimiento. ";
-       print "^GRAFICOS SI/NO . . . : Activar o desactivar la visualización de gráficos. ";
+       print "^SONIDO SI/NO . . . . : Activa o desactiva todos los sonidos. ";
+       print "^SONIDO FONDO SI/NO . : Activa o desactiva el sonido de fondo. ";
+       print "^SONIDO DETECTOR SI/NO: Activa o desactiva el sonido del detector de movimiento. ";
+       print "^GRAFICOS SI/NO . . . : Activa o desactiva la visualización de gráficos. ";
        print "^GRAFICOS PEQUEÑOS/ ";
        print "^  MEDIANOS/GRANDES . : Cambia el tamaño de la ventana de gráficos (por omisión ";
        print "^                       se mostrarán en tamaño MEDIANO). ";
        print "^CONFIGURACION . . . .: Muestra un menú de opciones de gráficos y sonido. ";
-       print "^SALIDAS (o X) . . . .: Mostrar las salidas visibles en la localidad actual. ";
-       print "^SALIDAS SI/NO . . . .: Mostrar (o no) automáticamente las salidas visibles en ";
+       print "^SALIDAS (o X) . . . .: Muestra las salidas visibles en la localidad actual. ";
+       print "^SALIDAS SI/NO . . . .: Muestra (o no) automáticamente las salidas visibles en ";
        print "^                       cada localidad. ";
-       print "^SAVE (o GUARDAR) . . : Almacenar la situación actual en un archivo externo, para ";
+       print "^SAVE (o GUARDAR) . . : Almacena la situación actual en un archivo externo, para ";
        print "^                       poder volver a él en cualquier momento. ";
-       print "^LOAD (o RECUPERAR) . : Recuperar una situación previamente guardada con SAVE o ";
+       print "^LOAD (o RECUPERAR) . : Recupera una situación previamente guardada con SAVE o ";
        print "^                       GUARDAR. ";
        print "^AYUDA . . . . . . . .: Por si alguna vez te encuentras atascado. ";
-       print "^REINICIAR . . . . . .: Volver a empezar desde el principio. ";
-       print "^ACABAR (o FIN) . . . : Salir de la aventura (cuidado: no guarda la situación actual). ";
+       print "^REINICIAR . . . . . .: Vuelve a empezar desde el principio. ";
+       print "^ACABAR (o FIN) . . . : Sale de la aventura (cuidado: no guarda la situación actual). ";
+       print "^MAPA . . . . . . . . : Muestra un mapa interactivo de las zonas ya visitadas. ";
   ];
 ZIPI_Otro ZIPI_Otro6
 with
