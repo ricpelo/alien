@@ -406,6 +406,7 @@ Include "VerbLib";
   ! Ponemos la compuerta de la nave al alcance de la computadora, para que pueda abrirla
   ! aunque no estemos físicamente delante de la puerta:
   if (actor == computadora) {
+    PlaceInScope(nave);
     PlaceInScope(puerta_nave);
     PlaceInScope(compartimento_trajes);
   }
@@ -985,9 +986,12 @@ Object puerta_nave "compuerta de la nave" nave1
       }
     ],
     pnj_abrir [ act;
-      act = act;
       if (self hasnt open) {
-        print "La puerta de la nave está cerrada.^";
+        if (act == jason) {
+          HablaJason("¡No puedo entrar! ¡La compuerta de la nave está cerrada!");
+          rfalse;
+        }
+        print "^Alguien intenta entrar en la nave, pero la compuerta está cerrada.^";
         rfalse;
       } else {
         return 2;
@@ -1156,7 +1160,7 @@ class TrajeAtmosferico
 Object tu_traje "traje" compartimento_trajes
   class TrajeAtmosferico
   with
-    name 'mi' 'tu',
+    name 'mi' 'mio' 'tu' 'tuyo',
     ! Para poder decir: "coge mi traje", o "coge el traje rojo"
     adjectives 'rojo',
     ! Para que diga: "puedes ver tu traje"
@@ -1195,7 +1199,7 @@ Object traje_jason "traje de Jason" compartimento_trajes
   with
     ! Para poder decir: "jason, coge tu traje", "coge el traje de jason" o
     ! "coge el traje verde"
-    adjectives 'jason' 'verde',
+    adjectives 'jason' 'verde' 'suyo',
     ! No sé si es realmente necesario, pero lo pongo por si acaso...
     article "el",
     color "verde",
@@ -1771,6 +1775,12 @@ Object panel_control "panel de control" junto_procesador
     ],
     ! general sirve para indicar que la batería está puesta y tiene energía suficiente
     before [ t ;
+      Arreglar:
+        "Tendrás que ser más específico.";
+
+      Soldar:
+        "Así no conseguirás nada.";
+
       SwitchOn, Burn, SwitchOff:
         "No es algo que necesite encenderse o apagarse.";
       Teclear:
@@ -2690,13 +2700,13 @@ Object decorado_oficina oficina
       'pared'        [; return self.desc_paredes; ] G_FEMENINO;
 
 
-Object "ordenadores de la oficina" oficina
+Object "equipos de la oficina" oficina
   with
     name_m 'ordenador' 'computador' 'equipo',
-    name_f 'computadora' 'consola',
+    name_f 'consola',
     name_mp 'ordenadores' 'computadores' 'equipos',
     name_fp 'computadoras' 'consolas',
-!    adjetivos 'oficina',
+    adjectives 'oficina' 'informaticos',
     gender G_MASCULINO + G_PLURAL,
     description "Estos equipos tan potentes no son fáciles de encontrar... Todos
                  están apagados.",
@@ -2943,7 +2953,7 @@ Object jeringa "jeringa" cajon
   with
     name_f 'jeringuilla' 'inyeccion' 'jeringa' 'aguja',
     name_m 'inyectable',
-    adjetivo 'hipodermica',
+    adjectives 'hipodermica',
     gender G_FEMENINO,
     description [;
       print "Es una gruesa jeringa hipodérmica de 50 cc. y con una enorme aguja de unos
@@ -5409,6 +5419,8 @@ Object jason "Jason" nave1
               HablaJason("Con usted, amigo... Qué remedio...");
             } else if (EsExterior(parent(self))) {
               HablaJason("Bajo una lluvia de mil demonios.");
+            } else if (parent(self) == nave1 or nave2) {
+              HablaJason("En la nave.");
             } else {
               switch(random(2)) {
                 1: HablaJason("No tengo ni idea, pero le aseguro que no es un lugar
@@ -5572,12 +5584,19 @@ Object jason "Jason" nave1
         if (~~(procesador.arreglado())) {
           if (traje_jason notin jason) {
             if (PuedeVer(jason, traje_jason)) {
-              HablaJason("De acuerdo, pero antes cogeré el traje atmosférico.");
-              if (~~(self.intentar_coger(traje_jason))) {
-                rfalse;
+              if (traje_jason in player) {
+                HablaJason("De acuerdo, pero antes deme mi traje.");
+                print "^Le das a Jason su traje y, a continuación, se lo pone.^^";
+                move traje_jason to jason;
+                give traje_jason worn;
+              } else {
+                HablaJason("De acuerdo, pero antes cogeré el traje atmosférico.");
+                if (~~(self.intentar_coger(traje_jason))) {
+                  rfalse;
+                }
+                give traje_jason worn;
+                print "^";
               }
-              give traje_jason worn;
-              print "^";
             } else {
               HablaJason("No puedo salir de la nave. No llevo puesto mi traje, y
                           no lo veo por aquí.");
@@ -5876,7 +5895,7 @@ Object jason "Jason" nave1
           "~.";
         }
 
-      Venir, Seguir:
+      Venir, Seguir, VagueGo:
         if (noun == nothing) {
           noun = player;
         }
@@ -5933,17 +5952,30 @@ Object jason "Jason" nave1
         }
         rtrue;
 
+      Callar:
+        HablaJason("Hablar me ayuda a mantenerme alerta.");
+        rtrue;
+
       Saludar:
         HablaJason("Será mejor no perder el tiempo en protocolos y centrarse en la
                     misión.");
         rtrue;
 
-      Disparar:
+      Disparar, Dispararte, Dispararme:
         if (rifle in self) {
-          if (noun ~= nothing) {
-            "Jason dispara su arma contra ", (the) noun, ".";
+          if (noun == player || action == ##Dispararme) {
+            HablaJason("¿Tan pronto quiere dejar este mundo, señor?");
+            PreguntaSiNo = 1;
+            rtrue;
+          } else if (noun == jason || action == ##Dispararte) {
+            HablaJason("Esa no es la solución... todavía.");
+            rtrue;
+          } else if (jason in nave1 or nave2) {
+            HablaJason("Disparar dentro de la nave puede resultar muy peligroso, señor.");
+            rtrue;
           } else {
-            "Jason dispara su arma a un punto cualquiera.";
+            HablaJason("Será mejor que no desperdiciemos la munición.");
+            rtrue;
           }
         } else {
           HablaJason("¡No tengo nada con lo que disparar!");
@@ -6296,8 +6328,9 @@ Object jason_inerte "Jason"
 
 Object computadora "Madre"
   with
-    name 'madre',
-    adjectives 'nave' 'computadora' 'computador' 'ordenador',
+    name_f 'madre' 'computadora',
+    name_m 'computador' 'ordenador',
+    adjectives 'nave',
     description [;
       print "Madre es la computadora de la nave. Es lo último y más sofisticado en
              inteligencia artificial, aunque Jason prefiere el término ~estupidez
@@ -6602,9 +6635,12 @@ Object computadora "Madre"
               move descompresion to nave1;
               HablaMadre("Abriendo compuerta de la nave.");
               if (LugarReal() == nave1 or nave2 or exterior1) {
-                "^Se oye el rugido de los servomecanismos de la compuerta de la nave
-                 mientras se desplaza suavemente hacia arriba. Desde tu posición puedes
-                 observar el habitáculo de descompresión.";
+                print "^Se oye el rugido de los servomecanismos de la compuerta de la nave
+                       mientras se desplaza suavemente hacia arriba.";
+                if (LugarReal() ~= nave2) {
+                  " Desde tu posición puedes observar el habitáculo de descompresión.";
+                }
+                new_line;
               }
               rtrue;
             } else {
@@ -9843,10 +9879,11 @@ Verb 'sigue'
   * creature         -> Seguir
   * creature 'aqui'  -> Seguir;
 
-Verb 'ven'
+Verb 'ven' 'regresa'
   *                  -> Venir
   * 'aqui'           -> Venir
-  * 'conmigo'        -> Venir;
+  * 'conmigo'        -> Venir
+  * 'aqui' 'conmig'  -> Venir;
 
 Verb 'vamos'
   *                  -> Venir;
@@ -9866,6 +9903,11 @@ Verb 'queda'
 
 VerboIrregular "quedarse" with imperativo 'queda';
 
+Verb 'calla' 'callate'
+  *                 -> Callar;
+
+VerboIrregular "callarse" with imperativo 'calla';
+
 Verb 'deten' 'para'
   * creature -> Quedar
   *          -> Quedar
@@ -9877,6 +9919,11 @@ VerboIrregular "pararse" with imperativo 'para';
 Verb 'esperate'
   *          -> Wait
   * 'aqui'   -> Wait;
+
+Extend 'vuelve'
+  * 'aqui'           -> Venir
+  * 'conmigo'        -> Venir
+  * 'aqui' 'conmigo' -> Venir;
 
 Extend 'espera'
   * 'aqui'   -> Wait;
@@ -9941,9 +9988,15 @@ Extend 'saluda' first
   *                  -> Saludar;
 
 Verb 'dispara'
-  *                     -> Disparar
-  * noun                -> Disparar
-  * 'a//'/'contra' noun -> Disparar;
+  *                                  -> Disparar
+  * noun                             -> Disparar
+  * 'hacia'/'a//'/'contra'/'al' noun -> Disparar;
+
+Verb 'disparate'
+  *                -> Dispararte;
+
+Verb 'disparame'
+  *                -> Dispararme;
 
 Extend 'sientate' first
   *           -> Sentarse
@@ -10073,6 +10126,16 @@ Extend 'di' first
 !
 ! ====================================================================
 
+
+
+[ DispararteSub;
+  <<Disparar jason>>;
+];
+
+
+[ DispararmeSub;
+  <<Disparar player>>;
+];
 
 
 [ QuitarleTrajeSub;
@@ -10256,7 +10319,7 @@ Extend 'di' first
 
 
 [ ArreglarSub;
-  "¿Arreglar cómo?";
+  "¿Arreglarl", (o) noun, " cómo? Tendrás que ser más específico.";
 ];
 
 
@@ -10316,6 +10379,11 @@ Extend 'di' first
 
 [ QuedarSub;
   "Ahora mismo estás parado...";
+];
+
+
+[ CallarSub;
+  "No tiene mucho sentido mandarse callar a uno mismo...";
 ];
 
 
