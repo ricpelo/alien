@@ -286,7 +286,7 @@ Verb meta 'mapa'
       if (destino has open) return 2;
       else                  return 3;
     }
-    return EsMapeable(sitio.dir);
+    return EsMapeable(destino);
   }
   rfalse;
 ];
@@ -304,10 +304,14 @@ Verb meta 'mapa'
   }
 ];
 
-[ ValidarYRefrescarMapa sitio dir cenx ceny;
+[ ValidarYRefrescarMapa sitio dir cenx ceny
+  nuevo;
   if (ComprobarSalidaMapa(sitio, dir) == 1 or 2 or 3) {
-    sitio = DestinoSalidaMapa(sitio, dir);
-    RefrescarMapa(sitio, cenx, ceny);
+    nuevo = DestinoSalidaMapa(sitio, dir);
+    if (EsMapeable(nuevo)) {
+      sitio = nuevo;
+      RefrescarMapa(sitio, cenx, ceny);
+    }
   }
   return sitio;
 ];
