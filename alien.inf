@@ -113,7 +113,7 @@ Constant TIMER_DURACION_BATERIA = 5;
 
 
 ! Alto de la ventana gráfica:
-Global altoVentanaGrafica = GRAFICOS_MEDIANOS;
+Global altoVentanaGrafica = GRAFICOS_GRANDES;
 
 ! Hay gráficos o no:
 Global hayGraficos = true;
@@ -8774,8 +8774,8 @@ ZIPI_Otro ZIPI_Tamano_Graficos
       switch (altoVentanaGrafica) {
         GRAFICOS_MINUSCULOS: "Tamaño de gráficos: ", GRAFICOS_MINUSCULOS, " px. (MINÚSCULOS)";
         GRAFICOS_PEQUENOS:   "Tamaño de gráficos: ", GRAFICOS_PEQUENOS,   " px. (PEQUEÑOS)";
-        GRAFICOS_MEDIANOS:   "Tamaño de gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS, recomendado)";
-        GRAFICOS_GRANDES:    "Tamaño de gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES)";
+        GRAFICOS_MEDIANOS:   "Tamaño de gráficos: ", GRAFICOS_MEDIANOS,   " px. (MEDIANOS)";
+        GRAFICOS_GRANDES:    "Tamaño de gráficos: ", GRAFICOS_GRANDES,    " px. (GRANDES, recomendado)";
         default:             "Tamaño de gráficos: ", altoVentanaGrafica,  " px.";
       }
     ],
