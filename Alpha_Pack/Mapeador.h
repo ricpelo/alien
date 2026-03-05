@@ -37,7 +37,7 @@ Message "|__________________________________________________________________|";
 Constant GG_MAPAWIN_ROCK = 212;
 
 Global gg_mapawin;
-Global ladoCuadrado = 41;
+Global ladoCuadrado = 81;
 Global g_sitio = 0;              ! El sitio actual (se usa en Mapa_HandleGlkEvent)
 
 Default COLOR_LOCAL_MAP          = $ffffff;
@@ -224,7 +224,7 @@ Verb meta 'mapa'
     }
     ck = ComprobarSalidaMapa(sitio, out_to);
     if (ck) {
-      if (ck == 2 or 3) DibujarPuertaMapa(posx - mitad / 2 + mitad / 4, posy, ck);
+      if (ck == 2 or 3) DibujarPuertaMapa(posx + mitad / 2 - mitad / 4, posy, ck);
       glk_window_fill_rect(gg_mapawin, COLOR_INOUT_MAP, posx - mitad / 2,
                            posy, mitad, 1);
       for (x = 1 : x <= mitad / 4 : x++) {
@@ -256,8 +256,8 @@ Verb meta 'mapa'
   glk($0086, style_SubHeader);
   ImprimirNombreSitioMapa(sitio);
   glk($0025, gg_statuswin, gg_arguments, gg_arguments + WORDSIZE); ! window_get_size
-  glk($002B, gg_statuswin, gg_arguments-->0 - 11, 0); ! locate
-  print "| H = Ayuda";
+  glk($002B, gg_statuswin, gg_arguments-->0 - 16, 0); ! locate
+  print "| H = Ayuda Mapa";
   glk($002F, gg_mainwin);   ! select
   #ifdef IMPRIMIR_DESCRIPCION_MAPA;
   PrintOrRun(sitio, description);
