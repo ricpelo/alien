@@ -123,16 +123,16 @@
       Windows que instalen la aventura con el programa de instalación no
       necesitan comprobar esto, ya que Gargoyle se instala con la aventura.
 
-   b) Asegúrate de que exista el archivo 'garglk.ini' en la misma carpeta que
+   b) Asegúrate de que exista el archivo 'alien.ini' en la misma carpeta que
       la aventura. Para ello:
 
        i. Si usas Linux, y has instalado la aventura usando el paquete .deb,
           comprueba si existe el archivo en esta ruta:
 
-            /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+            /usr/share/games/alphaaventuras-alien-ee/alien.ini
 
       ii. Si estas usando la versión multiplataforma, comprueba simplemente
-          que el archivo 'garglk.ini' se encuentra en la misma carpeta que la
+          que el archivo 'alien.ini' se encuentra en la misma carpeta que la
           aventura 'alien.blb', junto al resto de los archivos incluidos.
 
    Si todo lo anterior no funciona, instala de nuevo la aventura.
@@ -142,7 +142,7 @@
       <TEXTO>Las letras se ven demasiado grandes o demasiado pequeñas
         <NOFONT>
 
-  Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':
+  Puedes cambiar el tamaño de las letras editando el archivo 'alien.ini':
 
   a) En Windows estará en la ruta:
      \Archivos de programa (x86)\A·L·I·E·N - La aventura - Edición Especial\
@@ -153,7 +153,7 @@
   c) En la versión multiplataforma lo encontrarás en la misma ruta que el resto
      de los archivos distribuidos con la aventura.
 
-  Cuando hayas abierto el archivo 'garglk.ini' con tu editor de textos favorito,
+  Cuando hayas abierto el archivo 'alien.ini' con tu editor de textos favorito,
   localiza las líneas que empiecen por 'monosize' y 'propsize'. Para ajustar el
   tamaño de las letras, simplemente cambia los números que aparezcan al lado.
   Poniendo números mayores, las letras se verán más grandes, y viceversa. Asegúrate

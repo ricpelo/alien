@@ -26,6 +26,7 @@ Section "Programa principal" SEC01
 SetOutPath "$INSTDIR"
 
 File "alien.blb"
+File "alien.ini"
 File "alien.ico"
 File "Alien.url"
 File "Alpha_Aventuras.url"
@@ -75,7 +76,7 @@ CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Web 
 CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Web Alpha Aventuras.lnk" \
 "$INSTDIR\Alpha_Aventuras.url"
 
-CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Desinstalar.lnk" \
+CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Desinstalar A·L·I·E·N.lnk" \
 "$INSTDIR\Uninstall.exe"
 
 SectionEnd

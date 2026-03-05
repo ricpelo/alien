@@ -757,16 +757,16 @@ with
        print "      Windows que instalen la aventura con el programa de instalación no^";
        print "      necesitan comprobar esto, ya que Gargoyle se instala con la aventura.^";
        print "^";
-       print "   b) Asegúrate de que exista el archivo 'garglk.ini' en la misma carpeta que^";
+       print "   b) Asegúrate de que exista el archivo 'alien.ini' en la misma carpeta que^";
        print "      la aventura. Para ello:^";
        print "^";
        print "       i. Si usas Linux, y has instalado la aventura usando el paquete .deb,^";
        print "          comprueba si existe el archivo en esta ruta:^";
        print "^";
-       print "            /usr/share/games/alphaaventuras-alien-ee/garglk.ini^";
+       print "            /usr/share/games/alphaaventuras-alien-ee/alien.ini^";
        print "^";
        print "      ii. Si estas usando la versión multiplataforma, comprueba simplemente^";
-       print "          que el archivo 'garglk.ini' se encuentra en la misma carpeta que la^";
+       print "          que el archivo 'alien.ini' se encuentra en la misma carpeta que la^";
        print "          aventura 'alien.blb', junto al resto de los archivos incluidos.^";
        print "^";
        print "   Si todo lo anterior no funciona, instala de nuevo la aventura.^";
@@ -778,7 +778,7 @@ with
   ZIPI_ejecutar [;
        font off;
        print "^";
-       print "  Puedes cambiar el tamaño de las letras editando el archivo 'garglk.ini':^";
+       print "  Puedes cambiar el tamaño de las letras editando el archivo 'alien.ini':^";
        print "^";
        print "  a) En Windows estará en la ruta:^";
        print "     @@92Archivos de programa (x86)@@92A·L·I·E·N - La aventura - Edición Especial@@92^";
@@ -789,7 +789,7 @@ with
        print "  c) En la versión multiplataforma lo encontrarás en la misma ruta que el resto^";
        print "     de los archivos distribuidos con la aventura.^";
        print "^";
-       print "  Cuando hayas abierto el archivo 'garglk.ini' con tu editor de textos favorito,^";
+       print "  Cuando hayas abierto el archivo 'alien.ini' con tu editor de textos favorito,^";
        print "  localiza las líneas que empiecen por 'monosize' y 'propsize'. Para ajustar el^";
        print "  tamaño de las letras, simplemente cambia los números que aparezcan al lado.^";
        print "  Poniendo números mayores, las letras se verán más grandes, y viceversa. Asegúrate^";

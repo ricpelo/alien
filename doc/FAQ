@@ -79,16 +79,16 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
       Windows que instalen la aventura con el programa de instalación no
       necesitan comprobar esto, ya que Gargoyle se instala con la aventura.
 
-   b) Asegúrate de que exista el archivo 'garglk.ini' en la misma carpeta que
+   b) Asegúrate de que exista el archivo 'alien.ini' en la misma carpeta que
       la aventura. Para ello:
 
        i. Si usas Linux, y has instalado la aventura usando el paquete .deb,
           comprueba si existe el archivo en esta ruta:
 
-            /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+            /usr/share/games/alphaaventuras-alien-ee/alien.ini
 
       ii. Si estas usando la versión multiplataforma, comprueba simplemente
-          que el archivo 'garglk.ini' se encuentra en la misma carpeta que la
+          que el archivo 'alien.ini' se encuentra en la misma carpeta que la
           aventura 'alien.blb', junto al resto de los archivos incluidos.
 
    c) A·L·I·E·N usa las tipografías Liberation Mono y Linux Libertine O. Si usas
@@ -106,14 +106,14 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
 3. LAS LETRAS SE VEN DEMASIADO GRANDES O DEMASIADO PEQUEÑAS.
 
    Si no encuentras confortable el tamaño de las letras durante el juego,
-   puedes cambiarlo editando el archivo 'garglk.ini'. Para ello:
+   puedes cambiarlo editando el archivo 'alien.ini'. Para ello:
 
    a) En Windows:
       -----------
 
-      Localiza el archivo 'garglk.ini' en la siguiente ruta:
+      Localiza el archivo 'alien.ini' en la siguiente ruta:
 
-        \Archivos de programa (x86)\A·L·I·E·N - La aventura - Edición Especial\garglk.ini
+        \Archivos de programa (x86)\A·L·I·E·N - La aventura - Edición Especial\alien.ini
 
       Ábrelo con el bloc de notas o con cualquier otro editor de texto sin formato.
       Recuerda que en Windows Vista, Windows 7 o superiores, tendrás que
@@ -123,23 +123,23 @@ PROBLEMAS Y PREGUNTAS FRECUENTES
       ---------
 
       Si has instalado la aventura usando el paquete .deb, localiza el
-      archivo 'garglk.ini' en la siguiente ruta:
+      archivo 'alien.ini' en la siguiente ruta:
 
-        /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+        /usr/share/games/alphaaventuras-alien-ee/alien.ini
 
       Ábrelo con privilegios de administrador usando tu editor de textos
       favorito. Por ejemplo:
 
-        $ sudo gedit /usr/share/games/alphaaventuras-alien-ee/garglk.ini
+        $ sudo gedit /usr/share/games/alphaaventuras-alien-ee/alien.ini
 
   c) En versión multiplataforma:
      ---------------------------
 
-     El archivo 'garglk.ini' debe encontrarse en la misma carpeta que el resto
+     El archivo 'alien.ini' debe encontrarse en la misma carpeta que el resto
      de los archivos incluidos en la aventura. Ábrelo usando tu editor de
      textos favorito.
 
-  Cuando hayas abierto el archivo 'garglk.ini' con tu editor de textos, localiza
+  Cuando hayas abierto el archivo 'alien.ini' con tu editor de textos, localiza
   las líneas que empiecen por 'monosize' y 'propsize'. Esa porción del archivo
   tendrá el siguiente aspecto:
 

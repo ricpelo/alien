@@ -9,7 +9,7 @@ rm -rf $DEST
 mkdir $DEST
 
 cp ../alien.blb $DEST
-cp ../garglk.ini $DEST
+cp ../alien.ini $DEST
 cp ../doc/COPYING $DEST
 cp ../Redist/copyright $DEST
 cp ../Redist/Alien.url $DEST
@@ -25,7 +25,7 @@ zip -r9 ${DEST}_${VER}.zip $DEST
 rm -r $DEST
 
 cp ../alien.blb                $SOURCE/usr/share/games/$BASE/
-cp ../garglk.ini               $SOURCE/usr/share/games/$BASE/
+cp ../alien.ini                $SOURCE/usr/share/games/$BASE/
 cp ../Redist/copyright         $SOURCE/usr/share/doc/$BASE/
 cp ../Redist/FAQ               $SOURCE/usr/share/doc/$BASE/
 cp ../Redist/holocubo.pdf      $SOURCE/usr/share/doc/$BASE/
