@@ -1,1 +1,1 @@
-/usr/share/doc/fonts-liberation/copyright
+/usr/share/doc/fonts-liberation2/copyright

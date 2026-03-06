@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VER=180720
+VER=260305
 BASE=alphaaventuras-alien-ee
 SOURCE=${BASE}_${VER}
 DEST=Alien_EE

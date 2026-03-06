@@ -2,7 +2,7 @@
 <ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
     <story>
         <identification>
-            <ifid>GLULX-1-180720-5E258D08</ifid>
+            <ifid>GLULX-1-260305-5E258D08</ifid>
             <format>glulx</format>
         </identification>
         <bibliographic>
@@ -39,11 +39,11 @@
         </contacts>
         <release>
             <version>1</version>
-            <releasedate>2018/07/20</releasedate>
+            <releasedate>2026/03/05</releasedate>
         </release>
         <colophon>
             <generator>Babble</generator>
-            <originated>2018/07/20</originated>
+            <originated>2026/03/05</originated>
         </colophon>
     </story>
 </ifindex>

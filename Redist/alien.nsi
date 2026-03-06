@@ -48,13 +48,13 @@ File "holocubo.pdf"
 File "instrucciones.pdf"
 File "Leame.ico"
 
+File /r "../../garglk/build/dist/*"
+
 File "Liberation License.txt"
 File "Libertine OFL.txt"
 
-File /r "../../garglk/build/dist/*"
-
-File "/usr/share/fonts/truetype/liberation2/*"
-File "/usr/share/fonts/opentype/linux-libertine/*"
+File "*.ttf"
+File "*.otf"
 
 WriteUninstaller "$INSTDIR\Uninstall.exe"
 
