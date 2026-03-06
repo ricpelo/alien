@@ -10,9 +10,16 @@ RequestExecutionLevel admin
 
 !define MUI_ABORTWARNING
 
+!define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN "$INSTDIR\gargoyle.exe"
 !define MUI_FINISHPAGE_RUN_PARAMETERS "alien.blb"
 !define MUI_FINISHPAGE_RUN_TEXT "Jugar a A·L·I·E·N"
+!define MUI_FINISHPAGE_RUN_FUNCTION LaunchGame
+
+Function LaunchGame
+  Exec '"$INSTDIR\gargoyle.exe" "alien.blb"'
+  Quit
+FunctionEnd
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
@@ -75,7 +82,7 @@ WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE" 
 CreateDirectory "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)"
 
 CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Jugar a A·L·I·E·N.lnk" \
-"$INSTDIR\glulxe.exe" "alien.blb" "$INSTDIR\alien.ico"
+"$INSTDIR\gargoyle.exe" "alien.blb" "$INSTDIR\alien.ico"
 
 CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Instrucciones.lnk" \
 "$INSTDIR\instrucciones.pdf" "" "$INSTDIR\Leame.ico"
@@ -104,7 +111,7 @@ SectionEnd
 Section "Acceso directo en escritorio" SEC02
 
 CreateShortcut "$DESKTOP\Jugar a A·L·I·E·N.lnk" \
-"$INSTDIR\glulxe.exe" "alien.blb" "$INSTDIR\alien.ico"
+"$INSTDIR\gargoyle.exe" "alien.blb" "$INSTDIR\alien.ico"
 
 SectionEnd
 
