@@ -57,6 +57,18 @@ WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 WriteRegStr HKCU "Software\ALIEN_EE" "" $INSTDIR
 
+WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE" \
+"DisplayName" "A·L·I·E·N: La aventura - Edición Especial"
+
+WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE" \
+"UninstallString" '"$INSTDIR\Uninstall.exe"'
+
+WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE" \
+"InstallLocation" "$INSTDIR"
+
+WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE" \
+"DisplayIcon" "$INSTDIR\alien.ico"
+
 CreateDirectory "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)"
 
 CreateShortcut "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)\Jugar a A·L·I·E·N.lnk" \
@@ -103,5 +115,6 @@ RMDir /r "$SMPROGRAMS\A·L·I·E·N - La aventura (Edición Especial)"
 RMDir /r "$INSTDIR"
 
 DeleteRegKey HKCU "Software\ALIEN_EE"
+DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ALIEN_EE"
 
 SectionEnd
