@@ -53,6 +53,9 @@ File "Libertine OFL.txt"
 
 File /r "../../garglk/build/dist/*"
 
+File "/usr/share/fonts/truetype/liberation2/*"
+File "/usr/share/fonts/opentype/linux-libertine/*"
+
 WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 WriteRegStr HKCU "Software\ALIEN_EE" "" $INSTDIR
